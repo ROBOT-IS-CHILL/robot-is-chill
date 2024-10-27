@@ -166,7 +166,7 @@ async def setup(bot):
             aliases = list(aliases)
             aliases.append(func.__name__)
             aliases = tuple(aliases)
-        pattern = rf"(?:{'|'.join(aliases)}){generate_pattern(list(params.values()))}"
+        pattern = rf"(?:{'|'.join(aliases)})/?{generate_pattern(list(params.values()))}"
         syntax = (f"\u001b[0;30m[\u001b[0;35m{'[0;30m|[0;35m'.join(aliases)}[0;30m]" if len(
             aliases) else "") + generate_syntax(params)
         class_name = func.__name__.replace("_", " ").title().replace(" ", "") + "Variant"
