@@ -308,4 +308,4 @@ LETTER_IGNORE = [
     "text_3d"
 ]
 
-
+MACRO_DEPTH_LIMIT = 5000

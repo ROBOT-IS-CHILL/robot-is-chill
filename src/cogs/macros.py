@@ -1,17 +1,43 @@
+from dataclasses import dataclass
 from enum import Enum, auto
 import math
 import re
 from random import random, seed
 from cmath import log
 from functools import reduce
-from typing import Optional, Callable, Self
+from typing import Callable, Self
 import json
 import time
 import base64
 import zlib
+import string
 
-from .. import errors
+from .. import errors, constants
 from ..types import Bot, BuiltinMacro
+
+@dataclass
+class MacroInput:
+    index: int
+
+class MacroTree:
+    arguments: list[str | MacroInput | Self]
+    def __init__(self): self.arguments = []
+
+class UnpackInputs: pass
+
+class ParserState(Enum):
+    # this is def one of the ways to do it
+    ROOT_VALUE = auto() # 
+    ROOT_STRING = auto() #
+    ROOT_TREE = auto()
+    ROOT_INPUT = auto() #
+    TREE_INPUT = auto() 
+    TREE_STRING = auto() #
+    TREE_TREE = auto()
+    TREE_VALUE = auto() #
+    TREE_BOUNDARY = auto()
+    INPUT = auto() #
+    STRING_ESC = auto() #
 
 class MacroCog:
 
@@ -500,7 +526,7 @@ class MacroCog:
     # but everything is in this god-forsaken language
 
     """
-    <start> ::= <root_string>? (<macro_tree> <root_string>?)*
+    <root> ::= <root_string>? (<macro_tree> <root_string>?)*
     <root_string> ::= (!("[" | "]") ANY)+
     <macro_tree> ::= "[" (<value> ("/" <value>)*)? "]"
     <value> ::= <input> | <string> | <macro_tree>
@@ -509,43 +535,119 @@ class MacroCog:
     <string> ::= (!("[" | "/" | "]") ANY)*
     """
 
-    class MacroTree:
-        arguments: list[str | Self]
-        def __init__(self): self.arguments = []
-
-    class ParserState(Enum):
-        ROOT = auto()
-        ROOT_STRING = auto()
-        ROOT_TREE = auto()
-        ROOT_INPUT = auto()
-        MACRO_TREE = auto()
-        TREE_INPUT = auto()
-        STRING_INPUT = auto()
-        VALUE = auto()
-        INPUT = auto()
-        STRING = auto()
-
-    def parse(string: str) -> list[str | MacroTree]:
+    def parse(source: str, inputs: list, mode: str) -> list[str | MacroTree]:
         root = []
-        source = string
         tree_stack = []
         tree_head = None
-        state_stack = [ParserState.ROOT]
+        state_stack = [ParserState.ROOT_VALUE]
         idx = 0
-        while idx < len(string):
+        register = None
+        while idx < len(source):
+            assert len(state_stack) < constants.MACRO_DEPTH_LIMIT, "Reached macro parsing depth limit"
+            char = source[idx]
             state = state_stack[-1]
-            if state == ParserState.ROOT:
+            if state == ParserState.ROOT_VALUE:
                 # either a root_string, an input, or a macro_tree
-                if string == "[":
+                if char == "[":
                     # macro_tree
-                    state_stack.append(ParserState.MACRO_TREE)
+                    state_stack[-1] = ParserState.ROOT_TREE
+                    state_stack.append(ParserState.TREE_VALUE)
                     tree_head = MacroTree()
                     tree_stack.append(tree_head)
+                    idx += 1
                     continue
-                if string == "$":
+                if char == "$":
+                    # input
+                    state_stack[-1] = ParserState.ROOT_INPUT
                     state_stack.append(ParserState.INPUT)
-                
+                    idx += 1
+                    continue
+                # if we've gotten here, it's a root_string
+                state_stack[-1] = ParserState.ROOT_STRING
+                register = [idx, idx]
+                continue
+            elif state == ParserState.ROOT_STRING:
+                register[1] = idx - 1 # Move the end of the string
+                if char in "[]$":
+                    # We've reached the end of the string
+                    start, end = register
+                    root.append(source[start : end])
+                    state_stack[-1] = ParserState.ROOT_VALUE
+                elif char == "\\":
+                    state_stack.append(ParserState.STRING_ESC)
+            elif state == ParserState.STRING_ESC:
+                register[1] = idx - 1
+                state_stack.pop()
+            elif state == ParserState.INPUT:
+                if char == "#":
+                    register = len(inputs)
+                elif char == "!":
+                    register = mode
+                elif char == "0":
+                    register = UnpackInputs
+                elif char in string.digits:
+                    start = idx
+                    while idx < len(source):
+                        char = source[idx]
+                        if not char in string.digits: break
+                        idx += 1
+                    index = int(source[start : idx])
+                    if index < 0 or index >= len(inputs):
+                        register = None
+                    else:
+                        register = inputs[index]
+                    state_stack.pop()
+                    continue
+                else:
+                    raise errors.MacroSyntaxError(idx, source, "malformed input specifier (must be #, !, or a number)")
+                state_stack.pop()
+            elif state == ParserState.ROOT_INPUT:
+                if register == UnpackInputs:
+                    root.append(inputs[0])
+                    for val in inputs[1:]:
+                        root.append("/")
+                        root.append(val)
+                else:
+                    root.append(register)
+                state_stack[-1] = ParserState.ROOT_VALUE
+                continue
+            elif state == ParserState.TREE_VALUE:
+                # either a string, input, or tree
+                if char == "[":
+                    # tree
+                    state_stack[-1] = ParserState.TREE_TREE
+                    state_stack.append(ParserState.TREE_VALUE)
+                    tree_head = MacroTree()
+                    tree_stack.append(tree_head)
+                    idx += 1
+                    continue
+                if char == "$":
+                    # input
+                    state_stack[-1] = ParserState.TREE_INPUT
+                    state_stack.append(ParserState.INPUT)
+                    idx += 1
+                    continue
+                # string
+                state_stack[-1] = ParserState.TREE_STRING
+                register = [idx, idx]
+                continue
+            elif state == ParserState.TREE_STRING:
+                register[1] = idx - 1 # Move the end of the string
+                if char in "]/":
+                    # We've reached the end of the string
+                    start, end = register
+                    tree_stack[-1].arguments.append(source[start : end])
+                    state_stack[-1] = ParserState.TREE_BOUNDARY
+                    continue
+                elif char in "[$":
+                    raise errors.MacroSyntaxError(idx, source, "implicit concatenation is no longer supported (try the [c] macro)")
+                elif char == "\\":
+                    state_stack.append(ParserState.STRING_ESC)
+            elif state == ParserState.TREE_
 
+
+            idx += 1
+# ?
 
 
 async def setup(bot: Bot):
