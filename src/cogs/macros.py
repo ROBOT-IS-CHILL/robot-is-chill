@@ -1,17 +1,17 @@
+from enum import Enum, auto
 import math
 import re
 from random import random, seed
 from cmath import log
 from functools import reduce
-from typing import Optional, Callable
+from typing import Optional, Callable, Self
 import json
 import time
 import base64
 import zlib
 
-from .. import constants, errors
+from .. import errors
 from ..types import Bot, BuiltinMacro
-
 
 class MacroCog:
 
@@ -494,83 +494,58 @@ class MacroCog:
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
-    def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
-        if init:
-            self.debug = []
-            self.variables = {}
-            self.found = 0
-        if macros is None:
-            macros = self.bot.macros
+    # fuck it
+    # there are zero good parsing options on pypa
+    # this might be a bit slow, 
+    # but everything is in this god-forsaken language
 
-        # Find each outmost pair of brackets
+    """
+    <start> ::= <root_string>? (<macro_tree> <root_string>?)*
+    <root_string> ::= (!("[" | "]") ANY)+
+    <macro_tree> ::= "[" (<value> ("/" <value>)*)? "]"
+    <value> ::= <input> | <string> | <macro_tree>
+    <input> ::= "$" ("!" | "#" | "0" | <nonzero_int>) 
+    <nonzero_int> ::= [1-9] [0-9]*
+    <string> ::= (!("[" | "/" | "]") ANY)*
+    """
 
-        while match := re.search(r"(?<!(?<!\\)\\)\[((?:\\[\[\]])?(?:[^\[\]]|(?:[^\\]\\[\[\]]))*?(?<!(?<!\\)\\))]", objects, re.RegexFlag.M): # there's probably a much better way to do this regex but i haven't found it
-            self.found += 1
-            if debug_info:
-                if self.found > constants.MACRO_LIMIT:
-                    self.debug.append(f"[Error] Reached step limit of {constants.MACRO_LIMIT}.")
-                    return None, self.debug
-            else:
-                assert self.found <= constants.MACRO_LIMIT, f"Too many macros in one render! The limit is {constants.MACRO_LIMIT}, while you reached {self.found}."
-            terminal = match.group(1)
-            if debug_info:
-                self.debug.append(f"[Step {self.found}] {objects}")
-            try:
-                objects = (
-                        objects[:match.start()] +
-                        self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[match.end():]
-                )
-            except errors.FailedBuiltinMacro as err:
-                if debug_info:
-                    self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
-                    return None, self.debug
-                raise err
-        if debug_info:
-            self.debug.append(f"[Out] {objects}")
-        return objects, self.debug if len(self.debug) else None
+    class MacroTree:
+        arguments: list[str | Self]
+        def __init__(self): self.arguments = []
 
-    def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug_info = False) -> str:
-        raw_macro, *macro_args = re.split(r"(?<!(?<!\\)\\)/", raw_variant)
-        if raw_macro in self.builtins:
-            try:
-                macro = self.builtins[raw_macro].function(*macro_args)
-                self.found -= 1
-            except Exception as err:
-                raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
-        elif raw_macro in macros:
-            macro = macros[raw_macro].value
-            macro = macro.replace("$#", str(len(macro_args)))
-            macro = macro.replace("$!", cmd)
-            macro_args = ["/".join(macro_args), *macro_args]
-            arg_amount = 0
-            iters = None
-            while iters != 0 and arg_amount <= constants.MACRO_ARG_LIMIT:
-                iters = 0
-                matches = [*re.finditer(r"\$(-?\d+|#|!)", macro)]
-                for match in reversed(matches):
-                    iters += 1
-                    arg_amount += 1
-                    if arg_amount > constants.MACRO_ARG_LIMIT:
-                        break
-                    argument = match.group(1)
-                    if argument == "#":
-                        self.debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
-                        infix = str(len(macro_args) - 1)
-                    elif argument == "!":
-                        infix = cmd
-                    else:
-                        argument = int(argument)
-                        try:
-                            infix = macro_args[argument]
-                        except IndexError:
-                            infix = "\0" + str(argument)
-                    if debug_info:
-                        self.debug.append(f"[Step {step}:{arg_amount}] {macro}")
-                    macro = macro[:match.start()] + infix + macro[match.end():]
-        else:
-            raise AssertionError(f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!")
-        return str(macro).replace("\0", "$")
+    class ParserState(Enum):
+        ROOT = auto()
+        ROOT_STRING = auto()
+        ROOT_TREE = auto()
+        ROOT_INPUT = auto()
+        MACRO_TREE = auto()
+        TREE_INPUT = auto()
+        STRING_INPUT = auto()
+        VALUE = auto()
+        INPUT = auto()
+        STRING = auto()
+
+    def parse(string: str) -> list[str | MacroTree]:
+        root = []
+        source = string
+        tree_stack = []
+        tree_head = None
+        state_stack = [ParserState.ROOT]
+        idx = 0
+        while idx < len(string):
+            state = state_stack[-1]
+            if state == ParserState.ROOT:
+                # either a root_string, an input, or a macro_tree
+                if string == "[":
+                    # macro_tree
+                    state_stack.append(ParserState.MACRO_TREE)
+                    tree_head = MacroTree()
+                    tree_stack.append(tree_head)
+                    continue
+                if string == "$":
+                    state_stack.append(ParserState.INPUT)
+                
+
 
 
 async def setup(bot: Bot):

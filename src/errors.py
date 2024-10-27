@@ -21,6 +21,10 @@ class InvalidFlagError(MiscError):
 
     args: cause"""
 
+class MacroSyntaxError(MiscError):
+    """A macro tree failed to parse.
+    
+    args: index, source, reason"""
 
 class BadTileProperty(BabaError):
     """Tried to make a tile a property but it's tooo big.
