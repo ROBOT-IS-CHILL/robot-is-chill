@@ -119,14 +119,15 @@ def handle_tiling(tile: Tile, grid, pos, tile_borders=False):
     adj_u = is_adjacent((w, x, y - 1, z), tile, grid, tile_borders)
     adj_l = is_adjacent((w, x - 1, y, z), tile, grid, tile_borders)
     adj_d = is_adjacent((w, x, y + 1, z), tile, grid, tile_borders)
-    adj_ru = adj_r and adj_u and is_adjacent(
-        (w, x + 1, y - 1, z), tile, grid, tile_borders)
-    adj_lu = adj_u and adj_l and is_adjacent(
-        (w, x - 1, y - 1, z), tile, grid, tile_borders)
-    adj_ld = adj_l and adj_d and is_adjacent(
-        (w, x - 1, y + 1, z), tile, grid, tile_borders)
-    adj_rd = adj_d and adj_r and is_adjacent(
-        (w, x + 1, y + 1, z), tile, grid, tile_borders)
+    if tile.tiling == TilingMode.DIAGONAL_TILING:
+        adj_ru = adj_r and adj_u and is_adjacent(
+            (w, x + 1, y - 1, z), tile, grid, tile_borders)
+        adj_lu = adj_u and adj_l and is_adjacent(
+            (w, x - 1, y - 1, z), tile, grid, tile_borders)
+        adj_ld = adj_l and adj_d and is_adjacent(
+            (w, x - 1, y + 1, z), tile, grid, tile_borders)
+        adj_rd = adj_d and adj_r and is_adjacent(
+            (w, x + 1, y + 1, z), tile, grid, tile_borders)
     tile.frame = constants.TILING_VARIANTS.get(get_bitfield(adj_r, adj_u, adj_l, adj_d, adj_ru, adj_lu, adj_ld, adj_rd))
 
 
