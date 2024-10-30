@@ -22,3 +22,4 @@ libby = {sprite = "libby", color = [4, 1], tiling = "character"}
 
 tuwih = {sprite = "tuwih", color = [3, 3], tiling = "character"}
 
+text_turquoise = {sprite = "text_turquoise", color = [5, 4], tiling = "none"}
