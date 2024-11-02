@@ -1,14 +1,16 @@
+import inspect
 import io
 import signal
 from datetime import datetime
 from typing import Literal
+import warnings
 
 import discord
 from discord import Member, User
 from discord.ext import commands, menus
 
 from .. import constants
-from ..types import Bot, Context, Macro, BuiltinMacro
+from ..types import Bot, Context, TextMacro, BuiltinMacro
 from ..utils import ButtonPages
 
 import re
@@ -28,13 +30,14 @@ async def start_timeout(fn, *args, **kwargs):
 
     signal.signal(signal.SIGALRM, handler)
     signal.alarm(int(constants.TIMEOUT_DURATION))
-    return fn(*args, **kwargs)
+    return await fn(*args, **kwargs)
 
 
 class MacroQuerySource(menus.ListPageSource):
     def __init__(
-            self, data: list[str]):
+            self, bot, data: list[str]):
         self.count = len(data)
+        self.bot = bot
         super().__init__(data, per_page=15)
 
     async def format_page(self, menu: menus.Menu, entries: list[str]) -> discord.Embed:
@@ -47,6 +50,10 @@ class MacroQuerySource(menus.ListPageSource):
         while len(entries) > 0:
             field = ""
             for entry in entries[:5]:
+                if entry not in self.bot.macros:
+                    entry = f":gear: {entry}"
+                elif self.bot.macros[entry].forest is None:
+                    entry = f":warning: {entry}"
                 field += f"{entry[:50]}\n"
             embed.add_field(
                 name="",
@@ -56,41 +63,13 @@ class MacroQuerySource(menus.ListPageSource):
         return embed
 
 
-class BuiltinMacroQuerySource(menus.ListPageSource):
-    def __init__(
-            self, data: list[tuple[str, BuiltinMacro]]):
-        self.count = len(data)
-        super().__init__(data, per_page=5)
-
-    async def format_page(self, menu: menus.Menu, entries: list[tuple[str, BuiltinMacro]]) -> discord.Embed:
-        embed = discord.Embed(
-            title="Built-in Macros",
-        ).set_footer(
-            text=f"Page {menu.current_page + 1} of {self.get_max_pages()}   ({self.count} entries)",
-        )
-        desc = []
-        for (name, macro) in entries:
-            desc.append(f"**{name}**\n> {macro.description}")
-        embed.description = "\n".join(desc)
-        return embed
-
-
 class MacroCommandCog(commands.Cog, name='Macros'):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @commands.group(aliases=["m", "macros"], pass_context=True, invoke_without_command=True)
     async def macro(self, ctx: Context):
-        """Front-end for letting users (that means you!) create, edit, and remove variant macros.
-    Macros are simply a way of aliasing one or more variants to one name.
-    For example, if a macro called `face` with the value `csel-1` exists,
-    rendering `baba:m!face` would actually render `baba:csel-1`.
-    Arguments can be specified in macros with $<number>. As an example,
-    `transpose` aliased to `rot$1:scale$2` would mean that
-    rendering `baba:m!transpose/45/2` would give you `baba:rot45:scale2`.
-    Important to note, double negatives are valid inputs to variants, so
-    something like `baba:scale--2` would give the same as `baba:scale2`.
-    $# will be replaced with the amount of arguments given to the macro."""
+        """Front-end for letting users (that means you!) create, edit, and remove macros."""
         await ctx.invoke(ctx.bot.get_command("cmds"), "macro")
 
     @macro.command(aliases=["r"])
@@ -98,10 +77,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     async def refresh(self, ctx: Context):
         """Refreshes the macro database."""
         self.bot.macros = {}
-        async with self.bot.db.conn.cursor() as cur:
-            await cur.execute("SELECT * from macros")
-            for (name, value, description, author) in await cur.fetchall():
-                self.bot.macros[name] = Macro(value, description, author)
+        await self.bot.load_macros()
         return await ctx.reply("Refreshed database.")
 
     @macro.command()
@@ -116,61 +92,126 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             """, dest.id, source.id)
         return await ctx.reply(f"Done. Moved all macros from account {source} to account {dest}.")
 
-    @macro.command(aliases=["mk", "make"])
-    async def create(self, ctx: Context, name: str, value: str, *, description: str = None):
-        """Adds a macro to the database."""
-        assert len(name) <= 50, "Macro name cannot be larger than 50 characters!"
-        assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
-        async with self.bot.db.conn.cursor() as cursor:
-            await cursor.execute("SELECT value FROM macros WHERE name == ?", name)
-            dname = await cursor.fetchone()
-            if dname is not None:
-                return await ctx.error(
-                    f"Macro of name `{name}` already exists in the database!")
-            assert re.search(r"(?<!(?<!\\)\\)/", name) is None, \
-                "A macro's name can't have an unescaped slash in it, as it'd clash with parsing arguments."
-            # Call the user out on not adding a description, hopefully making them want to add a good one
-            assert description is not None, \
-                "A description is _required_. Please describe what your macro does understandably!"
-            command = "INSERT INTO macros VALUES (?, ?, ?, ?);"
-            args = (name, value, description, ctx.author.id)
-            self.bot.macros[name] = Macro(value, description, ctx.author.id)
-            await cursor.execute(command, args)
-            return await ctx.reply(f"Successfully added `{name}` to the database, aliased to `{value}`!")
+    def parse_macro_inputs(self, inputs: str) -> tuple[list[str], bool]:
+        varargs = False
+        input_list = []
+        if not inputs:
+            return ([], False)
+        for input in inputs.split(","):
+            input = input.replace("`", "").replace("\n", "").strip()
+            assert re.fullmatch(r"\*?[A-Za-z_][0-9A-Za-z_]*", input) is not None, f"Argument `{input}` has an invalid name!\nNames must be alphanumeric, including underscores, and cannot start with a digit."
+            assert not varargs, f"Variable inputs must be the last input in the list! Try removing `{input}` and after."
+            if input.startswith("*"):
+                varargs = True
+                input = input[1:]
+            input_list.append(input)
+        return (input_list, varargs)
 
-    @macro.command(aliases=["e"])
-    async def edit(self, ctx: Context, name: str, attribute: Literal["value", "description", "name"], *, new: str):
-        """Edits a macro. You must own said macro to edit it."""
-        assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
-        if attribute == "name":
-            assert new not in self.bot.macros, f"Macro `{new}` is already in the database!"
+    def validate_name(self, name: str, check_exists: bool = True):
+        assert len(name) <= 50, "Macro name cannot be longer than 50 characters!"
+        assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
+        if check_exists:
+            assert name not in self.bot.macros, f"Macro `{name}` already exists in the database!"
+            assert (name not in self.bot.macro_handler.builtins),\
+                f"Macro name `{name}` is reserved for a builtin!"
+    
+    def clean_input(self, input: str):
+        input = input.strip()
+        input = re.sub("^```[A-Za-z0-9_]*", "", input, 1)
+        input = input.removesuffix("```")
+        input = input.strip()
+        return input
+
+    @macro.command(aliases=["mk", "make"])
+    async def create(self, ctx: Context, name: str, description: str, inputs: str = "", *, source: str):
+        """
+        Adds a macro to the database.
+        
+        The `inputs` parameter contains a comma-separated list of the variables to set
+        the macro's arguments to when calling it. Preceding an argument name with `*` makes it
+        collect any arguments past it into a list. 
+
+        Input variable names must be alphanumeric (including underscores).
+
+        Note that each string argument can be surrounded by "double quotes" to allow spaces,
+        and triple backticks are removed from the start and end of source code,
+        meaning this is a valid usage of this command:
+
+        =macro create sample "Lorem ipsum dolor sit amet." "arg1, arg2, *args" \`\`\` ?{arg1} ?{arg2} [unpack/?{args}] \`\`\`
+        """
+        self.validate_name(name)
+        inputs, varargs = self.parse_macro_inputs(inputs)
+        source = self.clean_input(source)
+        forest = self.bot.macro_handler.parse_forest(source)
+
+        async with self.bot.db.conn.cursor() as cursor:
+            self.bot.macros[name] = TextMacro(name, description, source, inputs, varargs, ctx.author.id, forest)
+            await cursor.execute(
+                "INSERT INTO macros VALUES (?, ?, ?, ?, ?, ?);",
+                (name, source, description, ctx.author.id, "\t".join(inputs), varargs)
+            )
+            return await ctx.reply(f"Successfully added `{name}` to the database!")
+
+    async def check_macro_ownership(self, ctx: Context, name: str, action: str):
         async with self.bot.db.conn.cursor() as cursor:
             if not await ctx.bot.is_owner(ctx.author):
-                await cursor.execute("SELECT name FROM macros WHERE name == ? AND creator == ?", name, ctx.author.id)
-                check = await cursor.fetchone()
-                assert check is not None, "You can't edit a macro you don't own, silly."
-            # NOTE: I know I shouldn't use fstrings with execute, but it won't allow me to specify a row name with ?.
-            await cursor.execute(f"UPDATE macros SET {attribute} = ? WHERE name == ?", new, name)
-        if attribute == "name":
-            mac = self.bot.macros[name]
-            del self.bot.macros[name]
-            self.bot.macros[new] = mac
-        else:
-            setattr(self.bot.macros[name], attribute, new)
-        return await ctx.reply(f"Edited `{name}`'s {attribute} to be `{new}`.")
+                await cursor.execute("SELECT creator FROM macros WHERE name == ?", name)
+                row = await cursor.fetchone()
+                assert row is not None, f"Macro `{name}` doesn't exist in the database!\n-# _Note: Builtin macros are not stored in the database._"
+                id = row[0]
+                try:
+                    await self.bot.fetch_user(id)
+                except discord.NotFound:
+                    raise AssertionError(
+                        f"The user who created this macro (`{id}`) has been deleted.\n"
+                        "If you own this macro, reach out to the bot owner to have them migrate it to your account."
+                    )
+                assert id == ctx.author.id, f"You can't {action} a macro you don't own."
+
+    @macro.command(aliases=["e"])
+    async def edit(self, ctx: Context, name: str, attribute: Literal["source", "description", "name", "inputs"], *, new: str):
+        """Edits a macro. You must own said macro to edit it."""
+        await self.check_macro_ownership(ctx, name, "edit")
+        if attribute == "source":
+            new = self.clean_input(new)
+            forest = self.bot.macro_handler.parse_forest(new)
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(f"UPDATE macros SET value = ? WHERE name == ?", new, name)
+                self.bot.macros[name].source = new
+                self.bot.macros[name].forest = forest
+            return await ctx.reply(f"Successfully edited `{name}`'s source.")
+        elif attribute == "inputs":
+            inputs, varargs = self.parse_macro_inputs(new)
+            print(inputs, varargs)
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(f"UPDATE macros SET inputs = ?, varargs = ? WHERE name == ?", "\t".join(inputs), varargs, name)
+                self.bot.macros[name].inputs = inputs
+                self.bot.macros[name].varargs = varargs
+            return await ctx.reply(f"Successfully edited `{name}`'s inputs.")
+        elif attribute == "description":
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(f"UPDATE macros SET description = ? WHERE name == ?", new, name)
+                self.bot.macros[name].source = new
+                self.bot.macros[name].forest = forest
+        elif attribute == "name":
+            self.validate_name(new)
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(f"UPDATE macros SET name = ? WHERE name == ?", new, name)
+                macro = self.bot.macros[name]
+                del self.bot.macros[name]
+                self.bot.macros[new] = macro
+            
+        return await ctx.reply(f"Successfully `{name}`'s {attribute} to be `{new}`.")
 
     @macro.command(aliases=["rm", "remove", "del"])
     async def delete(self, ctx: Context, name: str):
         """Deletes a macro. You must own said macro to delete it."""
-        assert name in self.bot.macros, f"Macro `{name}` already isn't in the database!"
+        await self.check_macro_ownership(ctx, name, "delete")
+        self.validate_name(name, check_exists = False)
         async with self.bot.db.conn.cursor() as cursor:
-            if not await ctx.bot.is_owner(ctx.author):
-                await cursor.execute("SELECT name FROM macros WHERE name == ? AND creator == ?", name, ctx.author.id)
-                check = await cursor.fetchone()
-                assert check is not None, "You can't delete a macro you don't own, silly."
             await cursor.execute(f"DELETE FROM macros WHERE name == ?", name)
         del self.bot.macros[name]
-        return await ctx.reply(f"Deleted `{name}`.")
+        return await ctx.reply(f"Deleted macro `{name}`.")
 
     @macro.command(aliases=["?", "list", "query"])
     async def macro_search(self, ctx: Context, *, pattern: str = '.*'):
@@ -178,69 +219,78 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         author = None
         if match := re.search(r"--?a(?:uthor)?=(\S+)", pattern):
             author = match.group(1)
+            # HACK: this sucks
             try:
-                author = await commands.UserConverter().convert(ctx, author)
+                author = (await commands.UserConverter().convert(ctx, author)).id
             except commands.errors.UserNotFound:
-                author = await commands.MemberConverter().convert(ctx, author)
+                try:
+                    author = (await commands.MemberConverter().convert(ctx, author)).id
+                except:
+                    try:
+                        author = int(author)
+                    except:
+                        return await ctx.error(f"Could not convert `{author.replace('`', '')[:32]}` to a user or user ID!")
+            pattern = pattern[:match.start()] + pattern[match.end():]
+        
+        only_broken = False
+        if match := re.search(r"--broken|-!", pattern):
+            only_broken = True
+            pattern = pattern[:match.start()] + pattern[match.end():]
+        
+        only_builtins = False
+        names = []
+        if match := re.search(r"--builtin|-b", pattern):
+            only_builtins = True
             pattern = pattern[:match.start()] + pattern[match.end():]
 
         pattern = pattern.strip()
-        print(pattern)
-        async with self.bot.db.conn.cursor() as cursor:
-            await cursor.execute(
-                """
-                SELECT name FROM macros 
-                WHERE name REGEXP :name
-                AND (
-                    :author IS NULL OR creator == :author
+        if not only_builtins:
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    SELECT name FROM macros 
+                    WHERE name REGEXP :name
+                    AND (
+                        :author IS NULL OR creator == :author
+                    )
+                    """,
+                    {
+                        "name": pattern,
+                        "author": author
+                    }
                 )
-                """,
-                {
-                    "name": pattern,
-                    "author": None if author is None else author.id
-                }
-            )
-            names = [name for (name,) in await cursor.fetchall()]
-        return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
+                names = [name for (name,) in await cursor.fetchall()]
+            if only_broken:
+                names = [name for name in names if self.bot.macros[name].forest is None]
+        names.extend(name for name in self.bot.macro_handler.builtins if re.fullmatch(pattern, name) is not None)
+        return await ButtonPages(MacroQuerySource(self.bot, sorted(names))).start(ctx)
+
 
     @macro.command(aliases=["x", "run"])
     async def execute(self, ctx: Context, *, macro: str):
-        """Executes some given macroscript and outputs its return value."""
+        """Executes some given macro tree and outputs its return value."""
         try:
-            macros = ctx.bot.macros | {}
-            debug_info = False
-            if match := re.match(r"^\s*--?d(?:ebug|bg)?", macro):
-                debug_info = True
-                macro = macro[match.end():]
-            while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
-                macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
-                macro = macro[match.end():]
+            async def exec():
+                nonlocal macro
+                macro = self.clean_input(macro)
+                parsed = ctx.bot.macro_handler.parse_forest(macro.strip())
+                return await ctx.bot.macro_handler.evaluate_forest(parsed, vars = {"_CONTEXT": "x"})
 
-            def parse():
-                nonlocal debug_info
-                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug_info)
-
-            macro, debug = await start_timeout(parse)
+            output = await start_timeout(exec)
+            output = "" if output is None else str(output)
+            output = output.strip()
 
             message, files = "", []
 
-            if macro is not None:
-                if len(macro) > 1900:
-                    out = io.BytesIO()
-                    out.write(bytes(macro, 'utf-8'))
-                    out.seek(0)
-                    files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
-                    message = 'Output:'
-                else:
-                    message = f'Output: ```\n{macro.replace("```", "``ˋ")}\n```'
-            else:
-                message = "Error occurred while parsing macro. See debug info for details."
-            if debug is not None:
-                debug_file = "\n".join(debug)
+            if len(output) > 1900:
                 out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8'))
+                out.write(bytes(output, 'utf-8'))
                 out.seek(0)
-                files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
+                files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
+                message = 'Output:'
+            else:
+                sanitized_output = output.strip().replace("```", "'''")
+                message = f'Output: ```\n{sanitized_output}\n```'
             return await ctx.reply(message, files=files)
         finally:
             signal.alarm(0)
@@ -248,44 +298,73 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     @macro.command(aliases=["i", "get"])
     async def info(self, ctx: Context, name: str):
         """Gets info about a specific macro."""
-        assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
-        macro = self.bot.macros[name]
+        macro = None
+        source = None
+        author = ctx.bot.user.id
+        if name in self.bot.macro_handler.builtins:
+            macro = self.bot.macro_handler.builtins[name]
+            source_function = macro.function
+            if hasattr(source_function, "_source"):
+                source_function = source_function._source
+            try:
+                source = re.sub(r'""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
+                source = f"```py\n{source}\n```"
+            except OSError as err:
+                source = f"```\n<failed to get source code of builtin: {err}>\n```"
+        else:
+            assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
+            macro: TextMacro = self.bot.macros[name]
+            author = macro.author
+            sanitized_source = macro.source.strip().replace('```', "'''")
+            source = f"```bf\n{sanitized_source}\n```"
         emb = discord.Embed(
-            title=name
+            title=macro.name
         )
         emb.add_field(
             name="",
             value=macro.description
         )
+        if isinstance(macro, TextMacro):
+            if len(macro.inputs): 
+                inputs = ", ".join(macro.inputs[:-1]) + ", " f"*{macro.inputs[-1]}" if macro.variable_args else macro.inputs[-1]
+                emb.add_field(
+                    name="Inputs",
+                    value=inputs,
+                    inline=False
+                )
+            if macro.forest is None:
+                emb.add_field(
+                    name="__⚠️ This macro is broken. ⚠️__",
+                    value=f"**Error:**\n```\n{macro.failure}\n```",
+                    inline = False
+                )
         emb.add_field(
-            name="Value",
-            value=f"```\n{macro.value.replace('`', 'ˋ')}```",
+            name="Source",
+            value=source,
             inline=False
         )
-        user = await ctx.bot.fetch_user(macro.author)
-        emb.set_footer(text=f"{user.name}#{user.discriminator}",
-                       icon_url=user.avatar.url if user.avatar is not None else
-                       f"https://cdn.discordapp.com/embed/avatars/{int(user.discriminator) % 5}.png")
+        try:
+            user = await ctx.bot.fetch_user(author)
+            emb.set_footer(
+                text=user.name,
+                icon_url=user.avatar.url if user.avatar is not None else
+                    f"https://cdn.discordapp.com/embed/avatars/{hash(user.name) % 5}.png"
+                )
+        except discord.NotFound:
+            emb.set_footer(text=f"The author of this macro has been deleted.")
         try:
             await ctx.reply(embed=emb)
         except discord.errors.HTTPException:
             emb.set_field_at(
                 1,
-                name="Value",
-                value=f"_Value too long to embed. It has been attached as a text file._",
+                name="Source",
+                value=f"_Source too long to embed. It has been attached as a text file._",
                 inline=False
             )
             buf = io.BytesIO()
-            buf.write(macro.value.encode("utf-8", "ignore"))
+            buf.write(source.encode("utf-8", "ignore"))
             buf.seek(0)
-            await ctx.reply(embed=emb, file=discord.File(buf, filename=f"{name}-value.txt"))
-
-    @macro.command(aliases=["b"])
-    async def builtins(self, ctx: Context):
-        """Lists off the builtin macros of the bot."""
-        return await ButtonPages(BuiltinMacroQuerySource(
-            list(ctx.bot.macro_handler.builtins.items())
-        )).start(ctx)
+            await ctx.reply(embed=emb, file=discord.File(buf, filename=f"{name}-source.txt"))
 
 
 async def setup(bot: Bot):

@@ -1,42 +1,27 @@
-from dataclasses import dataclass
+import asyncio
 from enum import Enum, auto
+import io
 import math
+import random
 import re
-from random import random, seed
-from cmath import log
 from functools import reduce
-from typing import Callable, Self
-import json
-import time
-import base64
-import zlib
+from typing import Callable, Self, Any
 import string
+import inspect
 
 from .. import errors, constants
-from ..types import Bot, BuiltinMacro
+from ..types import *
 
-@dataclass
-class MacroInput:
-    index: int
-
-class MacroTree:
-    arguments: list[str | MacroInput | Self]
-    def __init__(self): self.arguments = []
-
-class UnpackInputs: pass
 
 class ParserState(Enum):
     # this is def one of the ways to do it
     ROOT_VALUE = auto() # 
     ROOT_STRING = auto() #
     ROOT_TREE = auto()
-    ROOT_INPUT = auto() #
-    TREE_INPUT = auto() 
     TREE_STRING = auto() #
     TREE_TREE = auto()
     TREE_VALUE = auto() #
     TREE_BOUNDARY = auto()
-    INPUT = auto() #
     STRING_ESC = auto() #
 
 class MacroCog:
@@ -44,610 +29,715 @@ class MacroCog:
     def __init__(self, bot: Bot):
         self.debug = []
         self.bot = bot
-        self.variables = {}
         self.builtins: dict[str, BuiltinMacro] = {}
-        self.found = 0
+        self.expansions = 0
 
-        def builtin(name: str):
+        def builtin(name: str, *, greedy: bool = True, aliases: list[str] = None):
+            aliases = [] if aliases is None else aliases
             def wrapper(func: Callable):
-                self.builtins[name] = BuiltinMacro(func.__doc__, func)
+                allows_many = False
+                count = 0
+                first = True
+                for param in inspect.signature(func).parameters.values():
+                    if first:
+                        first = False 
+                        continue
+                    if param.kind == inspect.Parameter.VAR_POSITIONAL:
+                        allows_many = True
+                        break
+                    assert param.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD, "cannot have non-positional arguments in builtins"
+                    count += 1
+                
+                assert func.__doc__ is not None, "missing docstring for builtin"
+                doc = func.__doc__
+                if len(aliases):
+                    doc = "".join([doc, "\n\nAliases: `", "`, `".join(aliases), "`"])
+
+                macro = BuiltinMacro(name, doc, func, count, allows_many, greedy)
+                self.builtins[name] = macro
+                for alias in aliases:
+                    self.builtins[alias] = macro
                 return func
 
             return wrapper
 
-        @builtin("to_float")
-        def to_float(v):
-            """Casts a value to a float."""
-            if "j" in v:
-                return complex(v)
-            return float(v)
+        # Core
 
-        @builtin("to_boolean")
-        def to_boolean(v: str):
-            """Casts a value to a boolean."""
-            if v in ("true", "1", "True", "1.0", "1.0+0.0j"):
-                return True
-            elif v in ("false", "0", "False", "0.0", "0.0+0.0j"):
-                return False
-            else:
-                raise AssertionError(f"could not convert string to boolean: '{v}'")
+        def validate_var_name(name: str):
+            assert not isinstance(name, MacroTree), "variable name must be deterministic"
+            name = str(name)
+            assert len(name) < 32, "varialbe name cannot be longer than 32 characters"
+            assert_name = name.replace('\n', '␊').replace('`', "'")[:32]
+            assert re.fullmatch(r"^[A-Za-z_][A-Za-z0-9_]*$", name) is not None, f"invalid variable name: `{assert_name}`"
 
-        @builtin("add")
-        def add(*args: str):
-            assert len(args) >= 2, "add macro must receive 2 or more arguments"
-            return str(reduce(lambda x, y: x + to_float(y), args, 0))
+        @builtin("type")
+        async def ty(vars: VariableRegistry, val: Any):
+            """Returns the type of a value as a string."""
+            return type(val).__name__
 
-        @builtin("is_number")
-        def is_number(value: str):
-            """Checks if a value is a number."""
+        @builtin("unpack", aliases = ['*', '...'])
+        async def unpack(vars: VariableRegistry, val: Any):
+            """Unpacks a list into multiple arguments."""
+            if val is None: return Unpack(tuple())
+            assert type(val) in (list, tuple, str), f"cannot unpack value of type {type(val).__name__}"
+            return Unpack(val)
+
+        @builtin("int", aliases = ["^I"])
+        async def int_(vars: VariableRegistry, *args: Any):
+            """Converts its arguments to integers."""
+            if len(args) == 1:
+                return int(args[0])
+            return [int(arg) for arg in args]
+
+        @builtin("float", aliases = ["^F"])
+        async def float_(vars: VariableRegistry, *args: Any):
+            """Converts its arguments to floats."""
+            if len(args) == 1:
+                return float(args[0])
+            return [float(arg) for arg in args]
+
+        def _bool(val: Any) -> bool:
+            if type(val) is bool:
+                return val
+            if type(val) in (int, float):
+                return val > 0
+            if type(val) is str:
+                return val not in ("", "False", "false")
+            return bool(val)
+
+        @builtin("bool", aliases = ["^B"])
+        async def bool_(vars: VariableRegistry, *args: Any):
+            """Converts its arguments to booleans."""
+            if len(args) == 1:
+                return _bool(args[0])
+            return [_bool(arg) for arg in args]
+
+        @builtin("str", aliases = ["^S"])
+        async def str_(vars: VariableRegistry, *args: Any):
+            """Converts its arguments to strings."""
+            if len(args) == 1:
+                return str(args[0])
+            return [str(arg) for arg in args]
+
+        @builtin("list", aliases = ["^L"])
+        async def list_(vars: VariableRegistry, *args: Any):
+            """Creates a list from its arguments."""
+            return [*args]
+
+        @builtin("dict", aliases = ["^D"])
+        async def dict_(vars: VariableRegistry, *args: Any):
+            """Creates a dictionary from its arguments. Amount of arguments must be divisible by 2."""
+            assert len(args) % 2 == 0, "dictionary arguments arity must be divisible by 2"
+            return {key: value for key, value in zip(args[::2], args[1::2])}
+        
+        @builtin("true", aliases = ["True"])
+        async def true_(vars: VariableRegistry):
+            """Returns the boolean `True`."""
+            return True
+
+        @builtin("false", aliases = ["False"])
+        async def false_(vars: VariableRegistry):
+            """Returns the boolean `False`."""
+            return False
+
+        @builtin("none", aliases = ["None", ""], greedy = False)
+        async def none_(vars: VariableRegistry):
+            """Returns an empty value, `None`. Does not evaluate its inputs."""
+            return
+
+        @builtin("ignore", aliases = ["_"])
+        async def ignore(vars: VariableRegistry, *_args):
+            """Returns an empty value while evaluating its inputs."""
+            return
+
+        @builtin("concat", aliases = ["c"])
+        async def concat(vars: VariableRegistry, *args: Any):
+            """Concatenates its input values, ignoring None."""
+            return "".join(str(arg) for arg in args if arg is not None)
+        
+        @builtin("if", greedy = False)
+        async def if_(vars: VariableRegistry, *args: Any):
+            """
+            Chooses a tree to execute depending on a predicate, choosing the last value if the number of arguments is odd.
+            In layman's terms, this is an if/elif/else chain.
+            """
+            for (predicate, path) in zip(args[::2], args[1::2]):
+                predicate = _bool(await self.evaluate_tree(predicate, vars.branch()))
+                if predicate:
+                    return await self.evaluate_tree(path, vars.branch())
+            if len(args) % 2 != 0:
+                return await self.evaluate_tree(args[-1], vars.branch())
+        
+        # TODO: Tried to do [break] and [continue], but they clashed with error handling because I was using exceptions.
+        #       Maybe there's a better way?
+
+        @builtin("while", greedy = False)
+        async def while_(vars: VariableRegistry, predicate: MacroTree, body: MacroTree):
+            """
+            Executes a tree repeatedly depending on a predicate.
+            In layman's terms, this is a while loop.
+            """
+            while _bool(await self.evaluate_tree(predicate, vars.branch())):
+                await asyncio.sleep(0)
+                await self.evaluate_tree(body, vars.branch())
+        
+        @builtin("for", greedy = False)
+        async def for_(vars: VariableRegistry, name: str, value, body: MacroTree):
+            """
+            Executes a tree with an input iterating over a given value.
+            In layman's terms, this is a for loop.
+            """
+            validate_var_name(name)
+            scope = vars.branch()
+            scope.variables[name] = None
+            value = await self.evaluate_tree(value, vars.branch())
+            for v in value:
+                await asyncio.sleep(0)
+                scope.variables[name] = v
+                await self.evaluate_tree(body, scope)
+
+        @builtin("try", greedy = False)
+        async def try_(vars: VariableRegistry, happy_path: MacroTree, sad_path: MacroTree):
+            """
+            Attempts to run its first argument - if it errors, runs the second argument.
+            """
             try:
-                to_float(value)
-                return "true"
-            except (TypeError, ValueError):
-                return "false"
+                return await self.evaluate_tree(happy_path, vars.branch())
+            except Exception:
+                return await self.evaluate_tree(sad_path, vars.branch())
 
-        @builtin("pow")
-        def pow_(a: str, b: str):
-            """Raises a value to another value."""
-            a, b = to_float(a), to_float(b)
-            return str(a ** b)
+        @builtin("load", aliases = ["L", "?"], greedy = False)
+        async def load(vars: VariableRegistry, name: Any):
+            """
+            Gets the value of a stored variable, or `None` if it doesn't exist.
+            The variable name must be deterministic (no trees or inputs) and simple (no lists or dictionaries).
+            """
+            assert not isinstance(name, MacroTree), "variable name must be deterministic"
+            return vars[name]
+        
+        @builtin("store", aliases = ["S", "="], greedy = False)
+        async def store(vars: VariableRegistry, name: Any, val: Any):
+            """
+            Stores a value in a named variable. Deletes the variable if passed `None`.
+            Storing will search for any variables in higher scopes to set before the current scope. If this is undesirable, look at `[init]`.
+            The variable name must be deterministic (no trees or inputs), simple (no lists or dictionaries), and less than 32 characters.
+            Additionally, the variable name cannot be empty, cannot start with an integer, and must be alphanumeric (including underscores.)
+            """
+            validate_var_name(name)
+            vars[name] = await self.evaluate_tree(val, vars.branch())
+        
+        @builtin("init", aliases = ["I", ":="])
+        async def init(vars: VariableRegistry, name: Any, val: Any):
+            """
+            Stores a value in a named variable, within the current variable scope. If it already exists, replaces it.
+            """
+            validate_var_name(name)
+            val = await self.evaluate_tree(val, vars.branch())
+            if val is not None:
+                vars.variables[name] = val
+            elif name in vars.variables:
+                del vars.variables[name]
+        
+        @builtin("lambda", aliases = ["λ", "=>"], greedy = False)
+        async def lambda_(vars: VariableRegistry, tree: MacroTree, *inputs: list[str]):
+            """
+            Creates an anonymous macro, with a list of given inputs.
+            Each input must follow the same rules as named variables.
+            Optionally, an input can be preceded with a * to make it collect the rest of the arguments passed into the macro.
+            """
+            assert isinstance(tree, MacroTree), f"lambda argument must be a tree (got type `{type(tree).__name__}`)"
+            inputs = [*inputs]
+            varargs = False
+            for i, input in enumerate(inputs):
+                assert isinstance(input, str), "inputs must be literal strings"
+                if input.startswith("*"):
+                    inputs[i] = input = input[1:]
+                    varargs = True
+                validate_var_name(input)
+            macro = TextMacro(f"<lambda at index {tree.start}>", None, tree.source, inputs, varargs, None, (tree, ))
+            macro.captured_scope = vars.shallow_copy()
+            return macro
 
-        @builtin("log")
-        def log_(x: str, base: str | None = None):
-            """Takes the natural log of a value, or with an optional second argument, a specified base."""
-            x = to_float(x)
-            if base is None:
-                return str(log(x))
-            else:
-                base = to_float(base)
-                return str(log(x, base))
+        @builtin("define", aliases = ["func", "fn", "def"], greedy = False)
+        async def define(vars: VariableRegistry, name: str, tree: MacroTree, *inputs: list[str]):
+            """
+            Creates a named, local macro, with a list of given inputs.
+            Each input must follow the same rules as named variables.
+            Optionally, an input can be preceded with a * to make it collect the rest of the arguments passed into the macro.
+            """
+            validate_var_name(name)
+            v = await lambda_(vars, tree, *inputs)
+            v.name = name
+            vars[name] = v
+        
+        @builtin("error", aliases = ["throw"])
+        async def error(vars: VariableRegistry, message: Any):
+            """Raises an error with a specified message."""
+            err = errors.MacroRuntimeError(None, MacroTree(0), str(message))
+            err._builtin = True
+            raise err
 
-        @builtin("real")
-        def real(value: str):
-            """Gets the real component of a complex value."""
-            value = to_float(value) + 0j
-            return str(value.real)
+        @builtin("first", aliases = ["."], greedy = False)
+        async def first(vars: VariableRegistry, *args: Any):
+            """Returns the first non-`None` value, short-circuiting."""
+            vars = vars.branch()
+            for arg in args:
+                val = await self.evaluate_tree(arg, vars)
+                if val is not None:
+                    return val
 
-        @builtin("imag")
-        def imag(value: str):
-            """Gets the imaginary component of a complex value."""
-            value = to_float(value) + 0j
-            return str(value.imag)
+        @builtin("get", aliases = ["??"], greedy = False)
+        async def get(vars: VariableRegistry, name: Any, default: Any):
+            """Gets a variable by name, or computes a default value."""
+            name = str(await self.evaluate_tree(name, vars))
+            val = vars[name]
+            if val is None:
+                return await self.evaluate_tree(default, vars.branch())
+            return val
 
-        @builtin("rand")
-        def rand(seed_: str | None = None):
-            """Gets a random value, optionally with a seed."""
-            if seed_ is not None:
-                seed_ = to_float(seed_)
-                assert isinstance(seed_, float), "Seed cannot be complex"
-                seed(seed_)
-            return str(random())
+        # Comparison
 
-        @builtin("subtract")
-        def subtract(a: str, b: str):
-            """Subtracts a value from another."""
-            a, b = to_float(a), to_float(b)
-            return str(a - b)
+        @builtin("equal", aliases = ["eq", "==", "==="])
+        async def equal(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether two values are equal."""
+            return a == b
+        
+        @builtin("not_equal", aliases = ["ne", "!="])
+        async def not_equal(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether two values aren't equal."""
+            return a != b
+        
+        @builtin("less", aliases = ["lt", "<"])
+        async def less(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether one value is less than another."""
+            return a < b
+        
+        @builtin("greater", aliases = ["gt", ">"])
+        async def greater(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether one value is greater than another."""
+            return a > b
+        
+        @builtin("less_or_eq", aliases = ["leq", "<="])
+        async def less_or_equal(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether one value is less than or equal to another."""
+            return a <= b
+        
+        @builtin("greater_or_eq", aliases = ["geq", ">="])
+        async def greater_or_equal(vars: VariableRegistry, a: Any, b: Any):
+            """Returns whether one value is greater than another."""
+            return a >= b
+
+        # Math
+
+        def _number(val: Any):
+            if type(val) in (int, float):
+                return val
+            stringified = str(val)
+            return float(stringified)
+
+        @builtin("number", aliases = ["^N", "num"])
+        async def number(vars: VariableRegistry, *args: Any):
+            """Converts its arguments to numbers - `str`s to `float`s, leaving `int`s as is."""
+            if len(args) == 1:
+                return _number(args[0])
+            return [_number(arg) for arg in args]
+        
+        @builtin("add", aliases = ["+"])
+        async def add(vars: VariableRegistry, *args: Any):
+            """Returns the sum of multiple numbers."""
+            return sum(_number(arg) for arg in args)
+
+        @builtin("subtract", aliases = ["sub", "-"])
+        async def subtract(vars: VariableRegistry, first: Any, *args: Any):
+            """Returns the difference of multiple numbers."""
+            return await number(first) - await add(vars, *args)
+        
+        @builtin("multiply", aliases = ["mul", "x"])
+        async def multiply(vars: VariableRegistry, *args: Any):
+            """Returns the product of multiple numbers."""
+            return reduce(lambda a, b: a * b, (_number(arg) for arg in args), 1)
+        
+        @builtin("divide", aliases = ["div", "\\/"])
+        async def divide(vars: VariableRegistry, first: Any, *args: Any):
+            """Returns the product of multiple numbers."""
+            return await number(first) / await multiply(vars, *args)
+
+        @builtin("pow", aliases = ["^", "**"])
+        async def pow(vars: VariableRegistry, base: Any, exp: Any):
+            """Returns a number raised to the power of another."""
+            base, exp = _number(base), _number(exp)
+            if base < 0 and exp % 1 != 0:
+                return math.nan
+            v = base ** exp
+            if v is complex: v = v.real
+            return v
+
+        @builtin("sin")
+        async def sin(vars: VariableRegistry, val: Any):
+            """Returns the sine of a value."""
+            return math.sin(_number(val))
+    
+        @builtin("cos")
+        async def cos(vars: VariableRegistry, val: Any):
+            """Returns the cosine of a value."""
+            return math.cos(_number(val))
+        
+        @builtin("tan")
+        async def tan(vars: VariableRegistry, val: Any):
+            """Returns the tangent of a value."""
+            return math.tan(_number(val))
+
+        @builtin("asin")
+        async def asin(vars: VariableRegistry, val: Any):
+            """Returns the inverse sine of a value."""
+            try:
+                return math.asin(_number(val))
+            except ValueError:
+                return math.nan
+    
+        @builtin("acos")
+        async def acos(vars: VariableRegistry, val: Any):
+            """Returns the inverse cosine of a value."""
+            try:
+                return math.acos(_number(val))
+            except ValueError:
+                return math.nan
+        
+        @builtin("atan")
+        async def atan(vars: VariableRegistry, val: Any):
+            """Returns the inverse tangent of a value."""
+            try:
+                return math.atan(_number(val))
+            except ValueError:
+                return math.nan
+
+        @builtin("e")
+        async def e(vars: VariableRegistry):
+            """Returns Euler's number, a constant so that if f(x) = e^x, then f'(x) = e^x."""
+            return math.e
+
+        @builtin("pi", aliases=["π"])
+        async def pi(vars: VariableRegistry):
+            """Returns Archimedes' constant, the ratio of a circle's circumference to its diameter."""
+            return math.pi
+
+        @builtin("inf", aliases=["infinity"])
+        async def inf(vars: VariableRegistry):
+            """Returns Infinity, as defined in IEEE754."""
+            return math.inf
+
+        @builtin("nan", aliases=["NaN"])
+        async def nan(vars: VariableRegistry):
+            """Returns NaN, as defined in IEEE754."""
+            return math.nan
+        
+        @builtin("rand", aliases = ["random"])
+        async def rand(vars: VariableRegistry, seed: Any = None):
+            """Returns a random number on the range [0, 1)."""
+            if seed is not None:
+                random.seed(seed if seed is int else hash(seed))
+            return random.random()
 
         @builtin("hash")
-        def hash_(value: str):
-            """Gets the hash of a value."""
-            return str(hash(value))
-
-        @builtin("replace")
-        def replace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string."""
-            print(value, pattern, replacement)
-            return re.sub(pattern, replacement, value)
+        async def hash_(vars: VariableRegistry, seed: Any):
+            """
+            Returns a unique integer associated with a given value.
+            The hash of any specific value is not guaranteed to stay the same between bot updates!
+            Treat this value as if it was a blackbox.
+            """
+            return hash(seed)
         
-        @builtin("ureplace")
-        def ureplace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string. This version unescapes the pattern sent in."""
-            print(value, pattern, replacement)
-            return re.sub(unescape(pattern), replacement, value)
-
-        @builtin("multiply")
-        def multiply(*args: str):
-            assert len(args) >= 2, "multiply macro must receive 2 or more arguments"
-            return str(reduce(lambda x, y: x * to_float(y), args, 1))
-
-        @builtin("divide")
-        def divide(a: str, b: str):
-            """Divides a value by another value."""
-            a, b = to_float(a), to_float(b)
-            try:
-                return str(a / b)
-            except ZeroDivisionError:
-                if type(a) is complex:
-                    return "nan"
-                elif a > 0:
-                    return "inf"
-                elif a < 0:
-                    return "-inf"
-                else:
-                    return "nan"
-
-        @builtin("mod")
-        def mod(a: str, b: str):
-            """Takes the modulus of a value."""
-            a, b = to_float(a), to_float(b)
-            try:
-                return str(a % b)
-            except ZeroDivisionError:
-                if a > 0:
-                    return "inf"
-                elif a < 0:
-                    return "-inf"
-                else:
-                    return "nan"
-
-        @builtin("int")
-        def int_(value: str, base: str = "10"):
-            """Converts a value to an integer, optionally with a base."""
-            try:
-                return str(int(value, base=int(to_float(base))))
-            except (ValueError, TypeError):
-                return str(int(to_float(value)))
-
-        @builtin("hex")
-        def hex_(value: str):
-            """Converts a value to hexadecimal."""
-            return str(hex(int(to_float(value))))
-
-        @builtin("oct")
-        def oct_(value: str):
-            """Converts a value to octal."""
-            return str(oct(int(to_float(value))))
-
-        @builtin("bin")
-        def bin_(value: str):
-            """Converts a value to binary."""
-            return str(bin(int(to_float(value))))
-
-        @builtin("chr")
-        def chr_(value: str):
-            """Gets a character from a unicode codepoint."""
-            self.found += 1
-            return str(chr(int(to_float(value))))
-
-        @builtin("ord")
-        def ord_(value: str):
-            """Gets the unicode codepoint of a character."""
-            return str(ord(value))
-
-        @builtin("len")
-        def len_(value: str):
-            """Gets the length of a string."""
-            return str(len(value))
-
-        @builtin("split")
-        def split(value: str, delim: str, index: str):
-            """Splits a value by a delimiter, then returns an index into the list of splits."""
-            index = int(to_float(index))
-            return value.split(delim)[index]
-
-        @builtin("if")
-        def if_(*args: str):
-            """Decides between arguments to take the form of with preceding conditions, """
-            """with an ending argument that is taken if none else are."""
-
-            assert len(args) >= 3, "must have at least three arguments"
-            assert len(args) % 2 == 1, "must have at an odd number of arguments"
-            conditions = args[::2]
-            replacements = args[1::2]
-            print(conditions, replacements)
-            for (condition, replacement) in zip(conditions, replacements):
-                if to_boolean(condition):
-                    return replacement
-            return conditions[-1]
-
-        @builtin("equal")
-        def equal(a: str, b: str):
-            """Checks if two strings are equal."""
-            return str(a == b).lower()
-
-        @builtin("less")
-        def less(a: str, b: str):
-            """Checks if a value is less than another."""
-            a, b = to_float(a), to_float(b)
-            return str(a < b).lower()
-
-        @builtin("not")
-        def not_(value: str):
-            """Logically negates a boolean."""
-            return str(not to_boolean(value)).lower()
-
-        @builtin("and")
-        def and_(*args: str):
-            assert len(args) >= 2, "and macro must receive 2 or more arguments"
-            return str(reduce(lambda x, y: x and to_boolean(y), args, True)).lower()
-
-        @builtin("or")
-        def or_(*args: str):
-            assert len(args) >= 2, "or macro must receive 2 or more arguments"
-            return str(reduce(lambda x, y: x or to_boolean(y), args, False)).lower()
-        
-        @builtin("error")
-        def error(_message: str):
-            """Raises an error with a specified message."""
-            raise errors.CustomMacroError(f"custom error: {_message}")
-
-        @builtin("assert")
-        def assert_(value: str, message: str):
-            """If the first argument doesn't evaluate to true, errors with a specified message."""
-            if not to_boolean(value):
-                raise errors.CustomMacroError(f"assertion failed: {message}")
-            return ""
+        # Strings
 
         @builtin("slice")
-        def slice_(string: str, start: str | None = None, end: str | None = None, step: str | None = None):
-            """Slices a string."""
-            start = int(to_float(start)) if start is not None and len(start) != 0 else None
-            end = int(to_float(end)) if end is not None and len(end) != 0 else None
-            step = int(to_float(step)) if step is not None and len(step) != 0 else None
-            slicer = slice(start, end, step)
-            return string[slicer]
+        async def slice_(vars: VariableRegistry, slicable: Any, start: int, end: int, step: int):
+            """Slices a list or string given a start, end, and step."""
+            start = int(_number(start)) if start or start == 0 else None
+            end = int(_number(end)) if end or end == 0 else None
+            step = int(_number(step)) if step or step == 0 else None
+            sl = slice(start, end, step)
+            return slicable[sl]
         
-        @builtin("find")
-        def find(string: str, substring: str, start: str | None = None, end: str | None = None):
-            """Returns the index of the second argument in the first, optionally between the third and fourth."""
-            if start is not None:
-                start = int(start)
-            if end is not None:
-                end = int(end)
-            return str(string.index(substring, start, end))
+        @builtin("replace")
+        async def replace(vars: VariableRegistry, needle: str, haystack: str, new_value: str, max_occurrences: int = -1):
+            """Replaces all occurrences (or a specified amount) of a substring in a given string with a value."""
+            return haystack.replace(needle, new_value, int(_number(max_occurrences)))
         
-        @builtin("count")
-        def count(string: str, substring: str, start: str | None = None, end: str | None = None):
-            """Returns the number of occurences of the second argument in the first, """
-            """optionally between the third and fourth arguments."""
-            if start is not None:
-                start = int(start)
-            if end is not None:
-                end = int(end)
-            return string.count(substring, start, end)
+        @builtin("regplace", aliases=["ureplace"])
+        async def regex_replace(vars: VariableRegistry, needle: str, haystack: str, new_value: str, max_occurrences: int = 0):
+            """Performs a regex replacement on a given string, returning the final string."""
+            return re.sub(needle, new_value, haystack, int(_number(max_occurrences)))
         
-        @builtin("join")
-        def join(joiner: str, *strings: str):
-            """Joins all arguments with the first argument."""
-            return joiner.join(strings)
+        @builtin("match")
+        async def regex_match(vars: VariableRegistry, needle: str, haystack: str):
+            """Performs a regex match on a given string, returning a list of all matches in the string, or `None` if it didn't match."""
+            match = re.search(needle, haystack)
+            if match is None: return None
+            return list(match.groups())
+        
+        @builtin("split")
+        async def split(vars: VariableRegistry, needle: str, haystack: str, max_occurrences: int = -1):
+            """Splits a string a given amount of times into a list of strings."""
+            return haystack.split(needle, int(_number(max_occurrences)))
 
-        @builtin("store")
-        def store(name: str, value: str):
-            """Stores a value in a variable."""
-            assert len(self.variables) < 16, "cannot have more than 16 variables at once"
-            assert len(value) <= 256, "values must be at most 256 characters long"
-            self.variables[name] = value
-            return ""
+        @builtin("chr")
+        async def chr_(vars: VariableRegistry, codepoints: int):
+            """Returns a string made of a list of unicode codepoints."""
+            return "".join(chr(int(_number(codepoint))) for codepoint in codepoints)
+        
+        @builtin("ord")
+        async def ord_(vars: VariableRegistry, string: str):
+            """Returns the individual codepoints in a string."""
+            return [ord(char) for char in string]
+        
+        # Lists and dictionaries
 
-        @builtin("get")
-        def get(name: str, value: str):
-            """Gets the value of a variable, or a default."""
+        @builtin("at")
+        async def at(vars: VariableRegistry, val: Any, index: Any):
+            """Gets a value by index from a string, list, or dictionary, returning None if it's not in it."""
+            if not isinstance(val, dict):
+                index = int(_number(index))
             try:
-                return self.variables[name]
-            except KeyError:
-                self.variables[name] = value
-                return self.variables[name]
-
-        @builtin("load")
-        def load(name):
-            """Gets the value of a variable, erroring if it doesn't exist."""
-            return self.variables[name]
-
-        @builtin("drop")
-        def drop(name):
-            """Deletes a variable."""
-            del self.variables[name]
-            return ""
-
-        @builtin("is_stored")
-        def is_stored(name):
-            """Checks if a variable is stored."""
-            return str(name in self.variables).lower()
+                return val[index]
+            except (IndexError, KeyError):
+                return None
         
-        @builtin("variables")
-        def varlist():
-            """Returns all variables as a JSON object."""
-            return json.dumps(self.variables, separators=(",", ":")).replace("[", "\\[").replace("]", "\\]")
+        @builtin("set")
+        async def set(vars: VariableRegistry, target: Any, index: Any, val: Any):
+            """Sets a value by index in a list or dictionary. Will error for out-of-bounds accesses on lists."""
+            if val is None:
+                if index in target:
+                    del index[target]
+            else:
+                target[index] = val
 
-        @builtin("repeat")
-        def repeat(amount: str, string: str, joiner: str = ""):
-            """Repeats the second argument N times, where N is the first argument, optionally joined by the third."""
-            # Allow floats, rounding up, for historical reasons
-            amount = max(math.ceil(float(amount)), 0)
-            # Precalculate the length
-            length = amount * len(string) + max(amount - 1, 0) * len(joiner)
-            # Reject if too long
-            assert length < 4096, "repeated string is too long (max is 4096 characters)"
-            return joiner.join([string] * amount)
-
-        @builtin("concat")
-        def concat(*args):
-            """Concatenates all arguments into one string."""
-            return "".join(args)
-
-        @builtin("unescape")
-        def unescape(string: str):
-            """Unescapes a string, replacing \\\\/ with /, \\\\[ with [, and \\\\] with ]."""
-            self.found += 1
-            return string.replace("\\/", "/").replace("\\[", "[").replace("\\]", "]")
-
-        @builtin("json.get")
-        def jsonget(data: str, key: str):
-            """Gets a value from a JSON object."""
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            data = json.loads(data)
-            assert isinstance(data, (dict, list)), "json must be an array or an object"
-            if isinstance(data, list):
-                key = int(key)
-            return json.dumps(data[key]).replace("[", "\\[").replace("]", "\\]")
-
-        @builtin("json.set")
-        def jsonset(data: str, key: str, value: str):
-            """Sets a value in a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            value = value.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, (dict, list)), "json must be an array or an object"
-            value = json.loads(value)
-            if isinstance(data, list):
-                key = int(key)
-            data[key] = value
-            return json.dumps(data).replace("[", "\\[").replace("]", "\\]")
-
-        @builtin("json.remove")
-        def jsonremove(data: str, key: str):
-            """Removes a value from a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, (dict, list)), "json must be an array or an object"
-            if isinstance(data, list):
-                key = int(key)
-            del data[key]
-            return json.dumps(data).replace("[", "\\[").replace("]", "\\]")
-
-        @builtin("json.len")
-        def jsonlen(data: str):
-            """Gets the length of a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, (dict, list)), "json must be an array or an object"
-            return len(data)
-
-        @builtin("json.append")
-        def jsonappend(data: str, value: str):
-            """Appends a value to a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            value = value.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, list), "json must be an array"
-            value = json.loads(value)
-            data.append(value)
-            return json.dumps(data).replace("[", "\\[").replace("]", "\\]")
-
-        @builtin("json.insert")
-        def jsoninsert(data: str, index: str, value: str):
-            """Inserts a value into a JSON array at an index."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            value = value.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, list), "json must be an array"
-            value = json.loads(value)
-            index = int(index)
-            data.insert(index, value)
-            return json.dumps(data).replace("[", "\\[").replace("]", "\\]")
+        @builtin("push")
+        async def push(vars: VariableRegistry, target: Any, val: Any):
+            """Adds a value to the end of a list."""
+            target.append(val)
         
-        @builtin("json.keys")
-        def jsonkeys(data: str):
-            """Gets the keys of a JSON object as a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            data = data.replace("\\[", "[").replace("\\]", "]")
-            data = json.loads(data)
-            assert isinstance(data, dict), "json must be an object"
-            return json.dumps(list(data.keys())).replace("[", "\\[").replace("]", "\\]")
+        @builtin("pop")
+        async def pop(vars: VariableRegistry, target: Any):
+            """Removes a value from the end of a list and returns it. Will error for empty lists."""
+            return target.pop()
         
-        @builtin("unixtime")
-        def unixtime():
-            """Returns the current Unix timestamp, or the number of seconds since midnight on January 1st, 1970 in UTC."""
-            return str(time.time())
+        @builtin("length", aliases = ["len"])
+        async def length(vars: VariableRegistry, target: Any):
+            """Gets the length of a string, list, or dictionary."""
+            return len(target)
         
-        @builtin("try")
-        def try_(code: str):
-            """Runs some escaped MacroScript code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)"""
-            self.found += 1
-            try:
-                result, _ = self.parse_macros(unescape(code), False, init = False)
-            except errors.FailedBuiltinMacro as e:
-                return f"false/{e.message}"
-            except AssertionError as e:
-                return f"false/{e}"
-            return f"true/{result}"
-        
-        @builtin("lower")
-        def lower(text: str):
-            return text.lower()
-        
-        @builtin("upper")
-        def upper(text: str):
-            return text.upper()
-        
-        @builtin("title")
-        def title(text: str):
-            return text.title()
-
-        @builtin("base64.encode")
-        def base64encode(*args: str):
-            assert len(args) >= 1, "base64.encode macro must receive 1 or more arguments"
-            string = reduce(lambda x, y: str(x) + "/" + str(y), args)
-            text_bytes = string.encode('utf-8')
-            base64_bytes = base64.b64encode(text_bytes)
-            return base64_bytes.decode('utf-8')
-        
-        @builtin("base64.decode")
-        def base64decode(*args: str):
-            assert len(args) >= 1, "base64.decode macro must receive 1 or more arguments"
-            string = reduce(lambda x, y: str(x) + "/" + str(y), args)
-            base64_bytes = string.encode('utf-8')
-            text_bytes = base64.b64decode(base64_bytes)
-            return text_bytes.decode('utf-8')
-
-        @builtin("zlib.compress")
-        def zlibcompress(*args: str):
-            assert len(args) >= 1, "zlib.compress macro must receive 1 or more arguments"
-            data = reduce(lambda x, y: str(x) + "/" + str(y), args)
-            text_bytes = data.encode('utf-8')
-            compressed_bytes = zlib.compress(text_bytes)
-            base64_compressed = base64.b64encode(compressed_bytes)
-            return base64_compressed.decode('utf-8')
-        
-        @builtin("zlib.decompress")
-        def zlibdecompress(*args: str):
-            assert len(args) >= 1, "zlib.decompress macro must receive 1 or more arguments"
-            data = reduce(lambda x, y: str(x) + "/" + str(y), args)
-            base64_compressed = data.encode('utf-8')
-            compressed_bytes = base64.b64decode(base64_compressed)
-            text_bytes = zlib.decompress(compressed_bytes)
-            return text_bytes.decode('utf-8')
-
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
-    # fuck it
-    # there are zero good parsing options on pypa
-    # this might be a bit slow, 
-    # but everything is in this god-forsaken language
-
-    """
-    <root> ::= <root_string>? (<macro_tree> <root_string>?)*
-    <root_string> ::= (!("[" | "]") ANY)+
-    <macro_tree> ::= "[" (<value> ("/" <value>)*)? "]"
-    <value> ::= <input> | <string> | <macro_tree>
-    <input> ::= "$" ("!" | "#" | "0" | <nonzero_int>) 
-    <nonzero_int> ::= [1-9] [0-9]*
-    <string> ::= (!("[" | "/" | "]") ANY)*
-    """
-
-    def parse(source: str, inputs: list, mode: str) -> list[str | MacroTree]:
+    def parse_forest(self, source: str) -> list[MacroTree | Any]:
         root = []
         tree_stack = []
-        tree_head = None
         state_stack = [ParserState.ROOT_VALUE]
         idx = 0
         register = None
-        while idx < len(source):
-            assert len(state_stack) < constants.MACRO_DEPTH_LIMIT, "Reached macro parsing depth limit"
-            char = source[idx]
+        for _ in range(constants.PARSER_LIMIT):
+            if len(state_stack) > constants.MACRO_DEPTH_LIMIT:
+                raise errors.MacroSyntaxError(idx, source, "reached depth limit")
+            char = source[idx] if idx < len(source) else None
             state = state_stack[-1]
             if state == ParserState.ROOT_VALUE:
+                if char is None:
+                    break
                 # either a root_string, an input, or a macro_tree
                 if char == "[":
                     # macro_tree
                     state_stack[-1] = ParserState.ROOT_TREE
                     state_stack.append(ParserState.TREE_VALUE)
-                    tree_head = MacroTree()
+                    tree_head = MacroTree(idx)
                     tree_stack.append(tree_head)
                     idx += 1
                     continue
-                if char == "$":
-                    # input
-                    state_stack[-1] = ParserState.ROOT_INPUT
-                    state_stack.append(ParserState.INPUT)
-                    idx += 1
-                    continue
+                if (
+                    (char == "$") and
+                    (idx + 1 < len(source)) and
+                    (
+                        (source[idx + 1] in string.digits) or
+                        (source[idx + 1] in ('#', '!'))
+                    )
+                ):
+                    raise errors.MacroSyntaxError(idx, source, "inputs have been replaced with `[load/name]` (or shortened, `[?/name]`)")
                 # if we've gotten here, it's a root_string
                 state_stack[-1] = ParserState.ROOT_STRING
                 register = [idx, idx]
                 continue
             elif state == ParserState.ROOT_STRING:
-                register[1] = idx - 1 # Move the end of the string
-                if char in "[]$":
+                register[1] = idx # Move the end of the string
+                if char is None or char == "[" or (
+                        (char == "$") and
+                        (idx + 1 < len(source)) and
+                        (
+                            (source[idx + 1] in string.digits) or
+                            (source[idx + 1] in ('#', '!'))
+                        )
+                    ):
                     # We've reached the end of the string
                     start, end = register
-                    root.append(source[start : end])
+                    root.append(re.sub(r"\\([\[\/\]])", r"\1", source[start : end]))
                     state_stack[-1] = ParserState.ROOT_VALUE
+                    continue
                 elif char == "\\":
                     state_stack.append(ParserState.STRING_ESC)
+                elif char == "]":
+                    raise errors.MacroSyntaxError(idx, source, "unbalanced ]")
             elif state == ParserState.STRING_ESC:
-                register[1] = idx - 1
+                if char is None:
+                    raise errors.MacroSyntaxError(idx, source, "incomplete escape sequence")
+                register[1] = idx
                 state_stack.pop()
-            elif state == ParserState.INPUT:
-                if char == "#":
-                    register = len(inputs)
-                elif char == "!":
-                    register = mode
-                elif char == "0":
-                    register = UnpackInputs
-                elif char in string.digits:
-                    start = idx
-                    while idx < len(source):
-                        char = source[idx]
-                        if not char in string.digits: break
-                        idx += 1
-                    index = int(source[start : idx])
-                    if index < 0 or index >= len(inputs):
-                        register = None
-                    else:
-                        register = inputs[index]
-                    state_stack.pop()
-                    continue
-                else:
-                    raise errors.MacroSyntaxError(idx, source, "malformed input specifier (must be #, !, or a number)")
-                state_stack.pop()
-            elif state == ParserState.ROOT_INPUT:
-                if register == UnpackInputs:
-                    root.append(inputs[0])
-                    for val in inputs[1:]:
-                        root.append("/")
-                        root.append(val)
-                else:
-                    root.append(register)
-                state_stack[-1] = ParserState.ROOT_VALUE
-                continue
             elif state == ParserState.TREE_VALUE:
                 # either a string, input, or tree
                 if char == "[":
                     # tree
                     state_stack[-1] = ParserState.TREE_TREE
                     state_stack.append(ParserState.TREE_VALUE)
-                    tree_head = MacroTree()
+                    tree_head = MacroTree(idx)
                     tree_stack.append(tree_head)
+                    
                     idx += 1
                     continue
-                if char == "$":
-                    # input
-                    state_stack[-1] = ParserState.TREE_INPUT
-                    state_stack.append(ParserState.INPUT)
-                    idx += 1
-                    continue
+                if (
+                    (char == "$") and
+                    (idx + 1 < len(source)) and
+                    (
+                        (source[idx + 1] in string.digits) or
+                        (source[idx + 1] in ('#', '!')) 
+                    )
+                ):
+                    raise errors.MacroSyntaxError(idx, source, "inputs have been replaced with `[load/name]` (or shortened, `[?/name]`)")
                 # string
                 state_stack[-1] = ParserState.TREE_STRING
                 register = [idx, idx]
                 continue
             elif state == ParserState.TREE_STRING:
-                register[1] = idx - 1 # Move the end of the string
-                if char in "]/":
+                register[1] = idx # Move the end of the string
+                if char is None or char in "]/":
                     # We've reached the end of the string
                     start, end = register
-                    tree_stack[-1].arguments.append(source[start : end])
+                    tree_stack[-1].arguments.append(re.sub(r"\\([\[\/\]])", r"\1", source[start : end]).strip())
                     state_stack[-1] = ParserState.TREE_BOUNDARY
                     continue
                 elif char in "[$":
-                    raise errors.MacroSyntaxError(idx, source, "implicit concatenation is no longer supported (try the [c] macro)")
+                    start, end = register
+                    if source[start : end].isspace():
+                        state_stack[-1] = ParserState.TREE_VALUE
+                        register = None
+                        continue
+                    raise errors.MacroSyntaxError(idx, source, "implicit concatenation is no longer supported (try [concat] or [first])")
                 elif char == "\\":
                     state_stack.append(ParserState.STRING_ESC)
-            elif state == ParserState.TREE_
-
-
+            elif state == ParserState.TREE_BOUNDARY:
+                if char == "/":
+                    state_stack[-1] = ParserState.TREE_VALUE
+                elif char == "]":
+                    register = tree_stack.pop()
+                    state_stack.pop()
+                elif char is None:
+                    raise errors.MacroSyntaxError(tree_stack[-1].start, source, "unbalanced [")
+                elif not char.isspace():
+                    raise errors.MacroSyntaxError(idx, source, "implicit concatenation is no longer supported (try [concat] or [first])")
+            elif state == ParserState.ROOT_TREE:
+                register.end = idx
+                register.source = source[register.start : register.end]
+                root.append(register)
+                state_stack[-1] = ParserState.ROOT_VALUE
+                continue
+            elif state == ParserState.TREE_TREE:
+                register.end = idx
+                register.source = source[register.start : register.end]
+                tree_stack[-1].arguments.append(register)
+                state_stack[-1] = ParserState.TREE_BOUNDARY
+                continue
+            else:
+                raise Exception(f"unhandled parser state {state}")
             idx += 1
-# ?
+        else:
+            stack = str([s.name for s in state_stack])
+            if len(stack) > 200:
+                stack = stack[:97] + "..." + stack[-100:]
+            raise AssertionError(
+                "Parser got stuck in an infinite loop! This is a severe bug, contact the bot owners ASAP with the source and the following data.\n"
+                "Diagnostic data:\n"
+                f"- state_stack: `" + stack + "`\n"
+                f"- index: `{idx}`\n"
+                f"- register: `{str(register)[:200]}`"
+            )
+        return root
+
+    def check_expansions(self, name, tree):
+        if self.expansions > constants.MACRO_LIMIT:
+            raise errors.MacroRuntimeError(name, tree, f"reached execution limit of {constants.MACRO_LIMIT} macros\n(builtins contribute 0.1 to this counter)")
+            
+    def global_registry(self):
+        return VariableRegistry(
+            self.builtins, parent = VariableRegistry(
+                self.bot.macros, mutable = False
+            ), mutable = False
+        )
+
+    # THIS FUNCTION CANNOT MUTATE `tree`
+    # `tree` MAY BE FROM THE DATABASE
+    # DO NOT MUTATE `tree` OR EVERYTHING WILL EXPLODE
+    async def evaluate_tree(self, tree: Any, vars: VariableRegistry = None) -> Any:
+        if vars is None:
+            vars = self.global_registry().branch()
+        if not isinstance(tree, MacroTree):
+            return tree
+        name = tree.arguments[0]
+        macro = None
+        if isinstance(name, AbstractMacro):
+            macro = name
+        else:
+            if isinstance(name, MacroTree):
+                try:
+                    name = await self.evaluate_tree(name, vars.branch())
+                    if not isinstance(name, AbstractMacro):
+                        name = str(name)
+                except Exception as err:
+                    raise errors.MacroRuntimeError(name, tree, f"failed to evaluate macro name", cause = err)
+            if isinstance(name, AbstractMacro):
+                macro = name
+            else:
+                macro = vars[str(name)]
+                if macro is None:
+                    raise errors.MacroRuntimeError(name, tree, f"macro does not exist")
+                if not isinstance(macro, AbstractMacro):
+                    raise errors.MacroRuntimeError(name, tree, f"cannot call value of type {type(macro).__name__}")
+        
+        self.expansions += macro.expansion_count()
+        self.check_expansions(name, tree)
+        
+        try:
+            return await macro.eval(self, vars, tree.arguments[1:])
+        except Exception as err:
+            raise errors.MacroRuntimeError(name, tree, f"failed to evaluate macro", cause = err)
+
+            
+    async def evaluate_forest(
+        self, forest: list[MacroTree | Any], *, vars: VariableRegistry = None
+    ) -> str:
+        if vars is None:
+            vars = self.global_registry().branch()
+        if isinstance(vars, dict):
+            vars = VariableRegistry(vars, parent = self.global_registry())
+        assert forest is not None, "macro has no parsed forest set and is probably broken on beta"
+        try:
+            if len(forest) == 0:
+                return None
+            elif len(forest) == 1:
+                return await self.evaluate_tree(forest[0], vars)
+        except TypeError: # no len
+            return await self.evaluate_tree(forest, vars)
+        res = io.StringIO()
+        for tree in forest:
+            if isinstance(tree, MacroTree):
+                tree = await self.evaluate_tree(tree, vars)
+            if tree is not None:
+                res.write(str(tree))
+        return res.getvalue()
 
 
 async def setup(bot: Bot):

@@ -305,8 +305,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         try:
             await ctx.typing()
             ctx.silent = ctx.message is not None and ctx.message.flags.silent
-            tiles = emoji.demojize(objects.strip(), language='alias').replace(":hearts:",
-                                                                              "♥")  # keep the heart, for the people
+            tiles = emoji.demojize(objects.strip(), language='alias').replace(":hearts:", "♥")  # keep the heart, for the people
             tiles = re.sub(r'<a?(:.+?:)\d+?>', r'\1', tiles)
             tiles = re.sub(r"\\(?=[:<])", "", tiles)
             tiles = re.sub(r"(?<!\\)`", "", tiles)
@@ -361,14 +360,12 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 tiles = tiles[:a - offset] + text + tiles[b - offset:]
                 offset += (b - a) - len(text)
 
-            user_macros = ctx.bot.macros | render_ctx.macros
-            last_tiles = None
-            passes = 0
-            while last_tiles != tiles and passes < 50:
-                last_tiles = tiles
-                tiles, _ = ctx.bot.macro_handler.parse_macros(tiles, False, user_macros, "r" if rule else "t")
-                tiles = tiles.strip()
-                passes += 1
+            user_macros = {} # TODO: Reimplement --mc
+
+            objects = objects.strip("`").strip()
+            parsed = ctx.bot.macro_handler.parse_forest(objects)
+            tiles = await ctx.bot.macro_handler.evaluate_forest(parsed, vars = {"_CONTEXT": "r" if rule else "t"})
+            tiles = "" if tiles is None else str(tiles)
 
             # Check for empty input
             if not tiles:
@@ -389,7 +386,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 comma_grid = split_commas(comma_grid, "$")
             except errors.SplittingException as e:
                 cause = e.args[0]
-                return await ctx.error(f"I couldn't split the following input into separate objects: \"{cause}\".")
+                return await ctx.error(f"Couldn't split the following input into separate objects: \"{cause}\".")
 
             tilecount = 0
             maxstack = 1

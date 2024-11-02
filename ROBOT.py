@@ -18,7 +18,7 @@ from discord.ext import commands
 import auth
 import config
 import webhooks
-from src.types import Macro
+from src.types import TextMacro
 from src.db import Database
 
 from numpy import set_printoptions as numpy_set_printoptions
@@ -111,13 +111,34 @@ class Bot(commands.Bot):
         await self.db.close()
         await super().close()
 
-    async def on_ready(self) -> None:
-        await self.db.connect(self.db_path)
+    async def load_macros(self):
         print("Loading macros...")
         async with self.db.conn.cursor() as cur:
             await cur.execute("SELECT * from macros")
-            for (name, value, description, author) in await cur.fetchall():
-                self.macros[name] = Macro(value, description, author)
+            rows = await cur.fetchall()
+            length = len(rows)
+            print(f"0 / {length}", end = "")
+            for i, (name, source, description, author, input, varargs) in enumerate(rows):
+                inputs = input.split("\t")
+                inputs = [input for input in inputs if input]
+                macro = TextMacro(name, description, source, inputs, varargs, author, None)
+                try:
+                    macro.forest = self.macro_handler.parse_forest(source)
+                except AssertionError as err:
+                    warnings.warn(traceback.format_exc())
+                    await asyncio.sleep(10)
+                    continue
+                except Exception as err:
+                    macro.failure = err
+                self.macros[name] = macro
+                print(f"\r{i + 1} / {length}", end = "")
+                sys.stdout.flush()
+            print("\nMacros loaded.")
+
+    async def on_ready(self) -> None:
+        await self.db.connect(self.db_path)
+        await self.load_macros()
+                
         print(f"Logged in as {self.user}!")
         if bot.baba_loaded:
             await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="commands..."))

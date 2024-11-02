@@ -177,9 +177,11 @@ class Database:
                 '''
                 CREATE TABLE IF NOT EXISTS macros (
                     name TEXT UNIQUE PRIMARY KEY,
-                    value TEXT,
-                    description TEXT,
-                    creator INT
+                    value TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    creator INT NOT NULL,
+                    inputs STRING NOT NULL,
+                    varargs BOOL NOT NULL DEFAULT FALSE
                 );
                 '''
             )

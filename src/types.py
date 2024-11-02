@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import abc
 import datetime
-from enum import IntEnum
+from enum import IntEnum, Enum, auto
 import inspect
 import traceback
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Coroutine, Optional, Literal, BinaryIO, Callable
+from typing import TYPE_CHECKING, Any, Coroutine, Optional, Literal, BinaryIO, Callable, Self
+import io
 
 from attr import define
 
@@ -20,6 +22,7 @@ from PIL import Image
 if TYPE_CHECKING:
     from .cogs.render import Renderer
     from .cogs.variants import VariantHandlers
+    from .cogs.macros import MacroCog
 
 
 class Context(commands.Context):
@@ -251,12 +254,189 @@ class Slice:
     def __init__(self, *args):
         self.slice = slice(*args)
 
-@dataclass
-class Macro:
-    value: str
-    description: str
-    author: int
+# Macro stuff
 
+@dataclass
+class Unpack:
+    inner: list
+
+    def __repr__(self):
+        return f"Unpack({self.inner})"
+
+
+class VariableRegistry:
+    variables: dict[str, Any] 
+    parent: Self | None
+    mutable: bool
+
+    def __init__(self, vars: dict = None, *, parent: Self | None = None, mutable: bool = True):
+        self.variables = {} if vars is None else vars
+        self.parent = parent
+        self.mutable = mutable
+    
+    def __getitem__(self, name: str):
+        if name in self.variables:
+            return self.variables[name]
+        if self.parent is not None:
+            return self.parent[name]
+        return None
+
+    def __setitem__(self, name: str, value: str):
+        assert self.mutable, "cannot set value in immutable variable scope (if you're seeing this, it's probably a bug)"
+        # We can skip the traversal if it's in here
+        if name not in self.variables:
+            # Check any parent scopes to see if they have the value
+            curr = self.parent
+            while curr is not None:
+                if curr.mutable and name in curr.variables:
+                    curr[name] = value
+                    return
+                curr = curr.parent
+        # Make a new value
+        if value is None:
+            if name in self.variables:
+                del self.variables[name]
+        else:
+            self.variables[name] = value
+
+    def branch(self) -> Self:
+        return VariableRegistry(parent = self)
+    
+    def shallow_copy(self) -> Self:
+        return VariableRegistry(vars = self.variables, parent = self.parent, mutable = self.mutable)
+
+class AbstractMacro(abc.ABC):
+    name: str | None
+    """The macro's name, if any."""
+
+    description: str
+    """A description of what the macro does."""
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+    def __repr__(self):
+        return f"<macro: {self.name}>"
+
+    async def eval(self, _ctx, _vars, _args):
+        raise NotImplementedError("cannot evaluate abstract base class")
+
+    def expansion_count(self):
+        return 1
+
+class TextMacro(AbstractMacro):
+    source: str
+    inputs: list[str]
+    variable_args: bool
+    author: int
+    forest: list[MacroTree | Any]
+    captured_scope: VariableRegistry | None = None
+
+    def __init__(self, name, description, source, inputs, variable_args, author, forest):
+        super().__init__(name, description)
+        self.source = source
+        self.inputs = inputs
+        self.variable_args = variable_args
+        self.author = author
+        self.forest = forest
+
+    async def eval(self, ctx: MacroCog, vars: VariableRegistry, args: list[Any]):
+        if self.variable_args:
+            if len(args) >= len(self.inputs):
+                variable = args[len(self.inputs) - 1:]
+                args[len(self.inputs) - 1] = variable
+        if self.captured_scope is not None:
+            self.captured_scope.parent = vars
+            vars = self.captured_scope
+        scope = vars.branch()
+        for name, val in zip(self.inputs, args):
+            if isinstance(val, MacroTree):
+                val = await ctx.evaluate_tree(val, vars)
+            scope.variables[name] = val
+        return await ctx.evaluate_forest(self.forest, vars = scope)
+
+class BuiltinMacro(AbstractMacro):
+    """A built-in macro."""
+
+    function: Callable
+    """The function to call to run the macro."""
+
+    arg_count: int
+    """The amount of arguments the macro takes."""
+
+    allows_many: bool
+    """Whether the macro allows a variable number of arguments."""
+
+    greedy: bool
+    """Whether the macro evaluates its arguments before execution."""
+
+    def __init__(self, name, description, function, arg_count, allows_many, greedy):
+        self.name = name
+        self.description = description
+        self.function = function
+        self.arg_count = arg_count
+        self.allows_many = allows_many
+        self.greedy = greedy
+
+    async def eval(self, ctx: MacroCog, vars: VariableRegistry, args: list[Any]):
+        # HACK: There's probably a better way to do this
+        if len(args) > self.arg_count and not self.allows_many:
+            args = args[:self.arg_count]
+        if self.greedy:
+            args = [await ctx.evaluate_tree(val, vars.branch()) for val in args]
+        elif len(args) < self.arg_count:
+            args = [*args, *((None, ) * (self.arg_count - len(args)))]
+        new_args = []
+        for arg in args:
+            if isinstance(arg, Unpack):
+                new_args.extend(arg.inner)
+            else:
+                new_args.append(arg)
+        return await (self.function)(vars, *new_args)
+
+    def expansion_count(self):
+        return 0.05
+
+class MacroTree:
+    arguments: list[Self | Any]
+    start: int
+    end: int
+    source: str
+    
+    def __init__(self, start: int):
+        self.arguments = []
+        self.start = start
+        self.end = start
+    
+    def __str__(self):
+        if not len(self.arguments): return "[]"
+        buf = io.StringIO()
+        buf.write("[")
+        buf.write(str(self.arguments[0]))
+        for arg in self.arguments[1:]:
+            buf.write("/")
+            buf.write(str(arg))
+        buf.write("]")
+        return buf.getvalue()
+
+    def __repr__(self):
+        return str(self)
+
+
+class MacroBreak(BaseException):
+    value: Any
+
+    def __init__(self, value: Any):
+        self.value = value
+
+    def __str__(self):
+        return "break while outside loop"
+
+
+class MacroContinue(BaseException):
+    def __str__(self):
+        return "continue while outside loop"
 
 @dataclass
 class SignText:
@@ -310,19 +490,6 @@ class RenderContext:
     sprite_cache: dict = field(default_factory=lambda: {})
     tile_cache: dict = field(default_factory=lambda: {})
     letters: bool = False
-
-
-
-
-@define
-class BuiltinMacro:
-    """A built-in macro."""
-
-    description: str
-    """A description of what the macro does."""
-
-    function: Callable
-    """The function to call to run the macro."""
 
 
 class TilingMode(IntEnum):

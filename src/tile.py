@@ -24,7 +24,8 @@ def parse_variants(bot, possible_variants: RegexDict[Variant], raw_variants: lis
     while i < len(raw_variants):
         raw_variant = raw_variants[i]
         if raw_variant.startswith("m!"):
-            parsed, _ = bot.macro_handler.parse_macros(f"[{raw_variant[2:]}]", False, macros)
+            forest = bot.macro_handler.parse_forest(f"[{raw_variant[2:]}]")
+            parsed = bot.macro_handler.evaluate_forest(forest, vars = {"_CONTEXT": "2"})
             macro = str(parsed)
             del raw_variants[i]
             raw_variants[i:i] = macro.split(":")  # Extend at index i

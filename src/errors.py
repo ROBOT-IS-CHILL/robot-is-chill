@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Self
 
 
 class BabaError(Exception):
@@ -25,6 +26,42 @@ class MacroSyntaxError(MiscError):
     """A macro tree failed to parse.
     
     args: index, source, reason"""
+    def __init__(self, index: int, source: str, reason: str) -> None:
+        self.index = index
+        self.source = source
+        self.reason = reason
+
+    def __str__(self):
+        source_slice_start = max(self.source[:self.index].rfind("\n"), self.index - 10, 0)
+        newline_index = self.source[self.index:].find("\n")
+        if newline_index != -1:
+            newline_index += self.index
+        source_slice_end = min((1 << 30) if newline_index < 0 else newline_index, self.index + 10, len(self.source))
+        source_slice = self.source[source_slice_start : source_slice_end]
+        return "\n".join((
+            f"Syntax error at index {self.index}",
+            self.reason,
+            source_slice,
+            " " * (self.index - source_slice_start) + "^"
+        ))
+
+class MacroRuntimeError(MiscError):
+    """A macro tree failed to parse.
+    
+    args: name, tree, reason, [cause]"""
+    def __init__(self, name: str, tree, reason: str, cause: Self | None = None) -> None:
+        self.name = name
+        self.tree = tree
+        self.reason = reason
+        self.cause = cause
+
+    def __str__(self):
+        if hasattr(self, "_builtin"):
+            return f"`<builtin error>`: {self.reason}"
+        str_tree = str(self.tree)
+        if len(str_tree) > 30:
+            str_tree = str_tree[:15] + "..." + str_tree[-15:]
+        return f"`{self.name}` at `{self.tree}`: {self.reason}"
 
 class BadTileProperty(BabaError):
     """Tried to make a tile a property but it's tooo big.
