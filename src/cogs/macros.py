@@ -449,6 +449,11 @@ class MacroCog:
         
         # Strings
 
+        @builtin("join")
+        async def join_(vars: VariableRegistry, delimiter: str, l: Any):
+            """Joins its input by a given delimiter."""
+            return str(delimiter).join(l)
+
         @builtin("slice")
         async def slice_(vars: VariableRegistry, slicable: Any, start: int, end: int, step: int):
             """Slices a list or string given a start, end, and step."""

@@ -341,18 +341,35 @@ class TextMacro(AbstractMacro):
         self.author = author
         self.forest = forest
 
+    async def simplify_value(self, ctx: MacroCog, vars: VariableRegistry, val: Any, l: list):
+        if isinstance(val, MacroTree):
+            val = await ctx.evaluate_tree(val, vars)
+        if isinstance(val, list):
+            new_val = []
+            for v in val:
+                await self.simplify_value(ctx, vars, v, new_val)
+            l.append(new_val)
+        elif isinstance(val, Unpack):
+            args = []
+            await self.simplify_value(ctx, vars, val.inner, args)
+            l.extend(args[0])
+        else:
+            l.append(val)
+
     async def eval(self, ctx: MacroCog, vars: VariableRegistry, args: list[Any]):
         if self.variable_args:
             if len(args) >= len(self.inputs):
                 variable = args[len(self.inputs) - 1:]
+                
                 args[len(self.inputs) - 1] = variable
         if self.captured_scope is not None:
             self.captured_scope.parent = vars
             vars = self.captured_scope
+        unpacked_args = []
+        for arg in args:
+            await self.simplify_value(ctx, vars, arg, unpacked_args)
         scope = vars.branch()
-        for name, val in zip(self.inputs, args):
-            if isinstance(val, MacroTree):
-                val = await ctx.evaluate_tree(val, vars)
+        for name, val in zip(self.inputs, unpacked_args):
             scope.variables[name] = val
         return await ctx.evaluate_forest(self.forest, vars = scope)
 
