@@ -581,7 +581,8 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant()
     async def posterize(sprite, bands: int):
         """Posterizes the sprite."""
-        return np.dstack([np.digitize(sprite[..., i], np.linspace(0, 255, bands)) * (255 / bands) for i in range(4)])
+        sprite = np.dstack([np.digitize(sprite[..., i], np.linspace(0, 255, bands)) * (255 / bands) for i in range(4)])
+        return sprite.astype(np.uint8)
 
     @add_variant("m")
     async def meta(sprite, level: Optional[int] = 1, kernel: Optional[Literal["full", "edge"]] = "full", size: Optional[int] = 1):
@@ -953,7 +954,7 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
         sprite[:, :, 3] += np.roll(np.roll(sprite[:, :, 3], -x, 1), -y, 0)
         sprite[:, :, 3] += np.roll(np.roll(sprite[:, :, 3], x, 1), y, 0)
         sprite[sprite > 255] = 255
-        return sprite
+        return sprite.astype(np.uint8)
 
     @add_variant("alpha", "op")
     async def opacity(sprite, amount: float):
@@ -1061,7 +1062,7 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
         """Saturates or desaturates a sprite."""
         gray_sprite = sprite.copy()
         gray_sprite[..., :3] = (sprite[..., 0] * 0.299 + sprite[..., 1] * 0.587 + sprite[..., 2] * 0.114)[..., np.newaxis]
-        return composite(gray_sprite, sprite, saturation)
+        return composite(gray_sprite, sprite, saturation).astype(np.uint8)
 
     @add_variant()
     async def blank(sprite):
