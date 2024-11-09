@@ -17,48 +17,44 @@
 
 
 
-dahdah = {sprite = "dahdah", color = [2, 1], tiling = 2}
+dahdah = {sprite = "dahdah", color = [2, 1], tiling = "character"}
 
-glyph_kelt = {sprite = "glyph_kelt", color = [2, 2], tiling = -1}
+glyph_kelt = {sprite = "glyph_kelt", color = [2, 2], tiling = "none"}
 
-glyph_jilt = {sprite = "glyph_jilt", color = [6, 2], tiling = -1}
+glyph_jilt = {sprite = "glyph_jilt", color = [6, 2], tiling = "none"}
 
-"text_秘" = {sprite = "secret", color = [2, 2], tiling = -1}
+"text_秘" = {sprite = "secret", color = [2, 2], tiling = "none"}
 
-tonk = {sprite = "tonk", color = [0, 1], tiling = 2}
+tonk = {sprite = "tonk", color = [0, 1], tiling = "character"}
 
-text_tonk = {sprite = "text_tonk", color = [0, 1], tiling = -1}
+text_tonk = {sprite = "text_tonk", color = [0, 1], tiling = "none"}
 
-text_dahdah = {sprite = "text_dahdah", color = [2, 1], tiling = -1}
+text_dahdah = {sprite = "text_dahdah", color = [2, 1], tiling = "none"}
 
-catto = {sprite = "catto", color = [0, 3], tiling = 0}
+catto = {sprite = "catto", color = [0, 3], tiling = "directional"}
 
-text_catto = {sprite = "text_catto", color = [0, 2], tiling = -1}
+text_catto = {sprite = "text_catto", color = [0, 2], tiling = "none"}
 
-pulpul = {sprite = "pulpul", color = [0, 3], tiling = 2}
+pulpul = {sprite = "pulpul", color = [0, 3], tiling = "character"}
 
-text_pulpul = {sprite = "text_pulpul", color = [1, 2], tiling = -1}
+text_pulpul = {sprite = "text_pulpul", color = [1, 2], tiling = "none"}
 
-pulpul = {sprite = "pulpul", color = [0, 3], tiling = 2}
+glyph_pulpul = {sprite = "glyph_pulpul", color = [1, 2], tiling = "none"}
 
-text_pulpul = {sprite = "text_pulpul", color = [1, 2], tiling = -1}
+glyph_tonk = {sprite = "glyph_tonk", color = [0, 1], tiling = "none"}
 
-glyph_pulpul = {sprite = "glyph_pulpul", color = [1, 2], tiling = -1}
+glyph_levlev = {sprite = "glyph_levlev", color = [4, 1], tiling = "none"}
 
-glyph_tonk = {sprite = "glyph_tonk", color = [0, 1], tiling = -1}
+glyph_gogo = {sprite = "glyph_gogo", color = [5, 2], tiling = "none"}
 
-glyph_levlev = {sprite = "glyph_levlev", color = [4, 1], tiling = -1}
+glyph_cucu = {sprite = "glyph_cucu", color = [0, 2], tiling = "none"}
 
-glyph_gogo = {sprite = "glyph_gogo", color = [5, 2], tiling = -1}
+juju = {sprite = "juju", color = [2, 2], tiling = "directional"}
 
-glyph_cucu = {sprite = "glyph_cucu", color = [0, 2], tiling = -1}
+text_juju = {sprite = "text_juju", color = [2, 2], tiling = "none"}
 
-juju = {sprite = "juju", color = [2, 2], tiling = 0}
+jux = {sprite = "jux", color = [0, 3], tiling = "none"}
 
-text_juju = {sprite = "text_juju", color = [2, 2], tiling = -1}
+text_jux = {sprite = "text_jux", color = [0, 3], tiling = "none"}
 
-jux = {sprite = "jux", color = [0, 3], tiling = 0}
-
-text_jux = {sprite = "text_jux", color = [0, 3], tiling = -1}
-
-bolt3 = {sprite = "bolt3", color = [0, 1], tiling = 0}
+bolt3 = {sprite = "bolt3", color = [0, 1], tiling = "directional"}
