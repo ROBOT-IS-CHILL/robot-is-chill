@@ -24,3 +24,22 @@ pulpul = {sprite = "pulpul", color = [0, 3], tiling = "character"}
 
 text_pulpul = {sprite = "text_pulpul", color = [1, 2], tiling = "none"}
 
+glyph_pulpul = {sprite = "glyph_pulpul", color = [1, 2], tiling = "none"}
+
+glyph_tonk = {sprite = "glyph_tonk", color = [0, 1], tiling = "none"}
+
+glyph_levlev = {sprite = "glyph_levlev", color = [4, 1], tiling = "none"}
+
+glyph_gogo = {sprite = "glyph_gogo", color = [5, 2], tiling = "none"}
+
+glyph_cucu = {sprite = "glyph_cucu", color = [0, 2], tiling = "none"}
+
+juju = {sprite = "juju", color = [2, 2], tiling = "directional"}
+
+text_juju = {sprite = "text_juju", color = [2, 2], tiling = "none"}
+
+jux = {sprite = "jux", color = [0, 3], tiling = "none"}
+
+text_jux = {sprite = "text_jux", color = [0, 3], tiling = "none"}
+
+bolt3 = {sprite = "bolt3", color = [0, 1], tiling = "directional"}
