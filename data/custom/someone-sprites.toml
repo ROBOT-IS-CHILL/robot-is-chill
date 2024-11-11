@@ -2,6 +2,8 @@
 
 
 
+1typefull = {sprite = "1typefull", color = [0, 3], tiling = "diagonal_tiling"}
+
 catsnake = {sprite = "catsnake", color = [0, 3], tiling = "tiling"}
 
 dtfort = {sprite = "fort", color = [1, 1], tiling = "diagonal_tiling"}
