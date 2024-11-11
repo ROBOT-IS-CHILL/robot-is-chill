@@ -16,11 +16,15 @@ text_rw_n6 = {sprite = "text_n85", color = [2, 4], tiling = "none"}
 
 text_rw_n7 = {sprite = "text_n86", color = [0, 2], tiling = "none"}
 
+text_bab_n1 = {sprite = "text_bab_n1", color = [0, 3], tiling = "none"}
+
 event_n0 = {sprite = "event_n0", color = [4, 1], tiling = "none"}
 
 event_n1 = {sprite = "event_n1", color = [0, 3], tiling = "none"}
 
 event_n2 = {sprite = "event_n2", color = [3, 4], tiling = "none"}
+
+event_n2.718281828459045 = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
 
 event_n3 = {sprite = "event_n3", color = [3, 3], tiling = "none"}
 
@@ -49,6 +53,12 @@ event_n14 = {sprite = "event_n14", color = [2, 4], tiling = "none"}
 event_n15 = {sprite = "event_n15", color = [0, 3], tiling = "none"}
 
 event_n16 = {sprite = "event_n16", color = [4, 1], tiling = "none"}
+
+event_n17 = {sprite = "event_n17", color = [3, 1], tiling = "none"}
+
+event_n18 = {sprite = "event_n18", color = [1, 2], tiling = "none"}
+
+event_n19 = {sprite = "event_n19", color = [5, 2], tiling = "none"}
 
 glyph_n-1 = {sprite = "glyph_n-1", color = [5, 0], tiling = "none"}
 
@@ -189,6 +199,20 @@ glyph_n67 = {sprite = "glyph_n67", color = [6, 1], tiling = "none"}
 glyph_n68 = {sprite = "glyph_n68", color = [1, 2], tiling = "none"}
 
 glyph_n69 = {sprite = "glyph_n69", color = [6, 2], tiling = "none"}
+
+glyph_n70 = {sprite = "glyph_n70", color = [2, 4], tiling = "none"}
+
+glyph_n71 = {sprite = "glyph_n71", color = [2, 3], tiling = "none"}
+
+glyph_n72 = {sprite = "glyph_n72", color = [6, 0], tiling = "none"}
+
+glyph_n73 = {sprite = "glyph_n73", color = [4, 2], tiling = "none"}
+
+glyph_n74 = {sprite = "glyph_n74", color = [0, 2], tiling = "none"}
+
+glyph_n75 = {sprite = "glyph_n75", color = [-4, -5], tiling = "none"}
+
+glyph_n76 = {sprite = "glyph_n76", color = [0, 3], tiling = "none"}
 
 text_n0 = {sprite = "text_n0", color = [0, 3], tiling = "none"}
 
@@ -374,6 +398,70 @@ text_n85 = {sprite = "text_n85", color = [2, 4], tiling = "none"}
 
 text_n86 = {sprite = "text_n86", color = [0, 2], tiling = "none"}
 
+text_n87 = {sprite = "text_n87", color = [2, 4], tiling = "tiling"}
+
+text_n88 = {sprite = "text_n88", color = [6, 2], tiling = "none"}
+
+text_n89 = {sprite = "text_n89", color = [1, 3], tiling = "none"}
+
+text_n90 = {sprite = "text_n90", color = [1, 4], tiling = "none"}
+
+text_n91 = {sprite = "text_n91", color = [5, 4], tiling = "none"}
+
+text_n92 = {sprite = "text_n92", color = [3, 4], tiling = "none"}
+
+text_n93 = {sprite = "text_n93", color = [4, 1], tiling = "none"}
+
+text_n94 = {sprite = "text_n94", color = [2, 4], tiling = "none"}
+
+text_n95 = {sprite = "text_n95", color = [0, 3], tiling = "none"}
+
+text_n96 = {sprite = "text_n96", color = [4, 1], tiling = "none"}
+
+text_n97 = {sprite = "text_n97", color = [0, 2], tiling = "none"}
+
+text_n98 = {sprite = "text_n98", color = [5, 2], tiling = "none"}
+
+text_n99 = {sprite = "text_n99", color = [2, 2], tiling = "none"}
+
+text_n100 = {sprite = "text_n100", color = [4, 0], tiling = "none"}
+
+text_n101 = {sprite = "text_n101", color = [4, 3], tiling = "none"}
+
+text_n102 = {sprite = "text_n102", color = [6, 4], tiling = "none"}
+
+text_n103 = {sprite = "text_n103", color = [6, 2], tiling = "none"}
+
+text_n104 = {sprite = "text_n104", color = [5, 3], tiling = "none"}
+
+text_n105 = {sprite = "text_n105", color = [3, 3], tiling = "none"}
+
+text_n106 = {sprite = "text_n106", color = [1, 1], tiling = "none"}
+
+text_n107 = {sprite = "text_n107", color = [4, 2], tiling = "none"}
+
+text_n108 = {sprite = "text_n108", color = [0, 3], tiling = "none"}
+
+text_n109 = {sprite = "text_n109", color = [3, 4], tiling = "none"}
+
+text_n110 = {sprite = "text_n110", color = [2, 2], tiling = "none"}
+
+text_n111 = {sprite = "text_n111", color = [0, 3], tiling = "directional"}
+
+text_n111_arrow = {sprite = "text_n111_arrow", color = [0, 3], tiling = "none"}
+
+text_n112 = {sprite = "text_n112", color = [5, 1], tiling = "none"}
+
+text_n113 = {sprite = "text_n113", color = [0, 0], tiling = "directional"}
+
+text_n113_arrow = {sprite = "text_n113_arrow", color = [0, 0], tiling = "directional"}
+
+text_n114 = {sprite = "text_n114", color = [4, 4], tiling = "none"}
+
+text_n115 = {sprite = "text_n115", color = [3, 4], tiling = "none"}
+
+text_n116 = {sprite = "text_n115", color = [2, 3], tiling = "none"}
+
 obj_n0 = {sprite = "obj_n0", color = [0, 2], tiling = "none"}
 
 obj_n1 = {sprite = "obj_n1", color = [0, 0], tiling = "none"}
@@ -390,13 +478,13 @@ obj_n6 = {sprite = "obj_n6", color = [4, 1], tiling = "directional"}
 
 obj_n7 = {sprite = "obj_n7", color = [3, 2], tiling = "tiling"}
 
-obj_n8 = {sprite = "obj_n8", color = [5, 3], tiling = "none"}
+obj_n8 = {sprite = "obj_n8", color = [5, 3], tiling = "directional"}
 
 obj_n9 = {sprite = "obj_n9", color = [1, 1], tiling = "none"}
 
 obj_n10 = {sprite = "obj_n10", color = [0, 1], tiling = "none"}
 
-obj_n11 = {sprite = "obj_n11", color = [2, 1], tiling = "none"}
+obj_n11 = {sprite = "obj_n11", color = [2, 1], tiling = "animated"}
 
 obj_n12 = {sprite = "obj_n12", color = [6, 0], tiling = "animated"}
 
@@ -411,6 +499,22 @@ obj_n16 = {sprite = "obj_n16", color = [5, 0], tiling = "none"}
 obj_n17 = {sprite = "obj_n17", color = [1, 1], tiling = "animated"}
 
 obj_n18 = {sprite = "obj_n18", color = [5, 3], tiling = "none"}
+
+obj_n19 = {sprite = "obj_n19", color = [4, 1], tiling = "none"}
+
+obj_n20 = {sprite = "obj_n20", color = [3, 0], tiling = "none"}
+
+obj_n21 = {sprite = "obj_n21", color = [1, 2], tiling = "none", extra_frames = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}
+
+obj_n22 = {sprite = "obj_n22", color = [2, 2], tiling = "none"}
+
+obj_n23 = {sprite = "obj_n23", color = [0, 1], tiling = "none"}
+
+obj_n24 = {sprite = "obj_n24", color = [6, 1], tiling = "none"}
+
+obj_n25 = {sprite = "obj_n25", color = [2, 1], tiling = "none"}
+
+obj_n26 = {sprite = "obj_n26", color = [3, 2], tiling = "none"}
 
 orb_n1 = {sprite = "orb_n1", color = [4, 1], tiling = "none"}
 
@@ -441,6 +545,30 @@ orb_n13 = {sprite = "orb_n13", color = [4, 1], tiling = "none"}
 orb_n14 = {sprite = "orb_n14", color = [4, 1], tiling = "none"}
 
 orb_n15 = {sprite = "orb_n15", color = [4, 1], tiling = "none"}
+
+orb_n16 = {sprite = "orb_n16", color = [4, 1], tiling = "none"}
+  
+orb_n17 = {sprite = "orb_n17", color = [4, 1], tiling = "none"}
+  
+orb_n18 = {sprite = "orb_n18", color = [4, 1], tiling = "none"}
+  
+orb_n19 = {sprite = "orb_n19", color = [4, 1], tiling = "none"}
+  
+orb_n20 = {sprite = "orb_n20", color = [4, 1], tiling = "none"}
+  
+orb_n21 = {sprite = "orb_n21", color = [4, 1], tiling = "none"}
+  
+orb_n22 = {sprite = "orb_n22", color = [4, 1], tiling = "none"}
+  
+orb_n23 = {sprite = "orb_n23", color = [4, 1], tiling = "none"}
+  
+orb_n24 = {sprite = "orb_n24", color = [4, 1], tiling = "none"}
+  
+orb_n25 = {sprite = "orb_n25", color = [4, 1], tiling = "none"}
+  
+orb_n26 = {sprite = "orb_n26", color = [4, 1], tiling = "none"}
+  
+orb_n27 = {sprite = "orb_n27", color = [4, 1], tiling = "none"}
 
 node_n-2 = {sprite = "node_n-2", color = [2, 2], tiling = "directional"}
 
@@ -474,15 +602,29 @@ node_n14 = {sprite = "node_n14", color = [4, 1], tiling = "directional"}
 
 node_n15 = {sprite = "node_n15", color = [0, 0], tiling = "directional"}
 
+node_n16 = {sprite = "node_n16", color = [2, 2], tiling = "directional"}
+
+node_n17 = {sprite = "node_n17", color = [3, 4], tiling = "directional"}
+
 "node_n18+5j" = {sprite = "node_n18+5j", color = [5, 3], tiling = "directional"}
 
 logic_n0 = {sprite = "logic_n0", color = [3, 4], tiling = "none"}
 
 logic_n1 = {sprite = "logic_n1", color = [4, 1], tiling = "none"}
 
+logic_n2 = {sprite = "logic_n2", color = [3, 3], tiling = "none"}
+
+logic_n3 = {sprite = "logic_n3", color = [3, 1], tiling = "none"}
+
+logic_n4 = {sprite = "logic_n4", color = [5, 4], tiling = "none"}
+
+logic_n5 = {sprite = "logic_n5", color = [3, 1], tiling = "none"}
+
+logic_n5 = {sprite = "logic_n6", color = [3, 3], tiling = "none"}
+
 construct_nawesome = {sprite = "construct_nawesome", color = [3, 4], tiling = "none"}
 
-construct_ngrassy = {sprite = "construct_ngrassy", color = [1, 2], tiling = "none"}
+construct_ngrassy = {sprite = "construct_ngrassy", color = [1, 2], tiling = "none", extra_frames = [67]}
 
 construct_nfun = {sprite = "construct_nfun", color = [5, 2], tiling = "none"}
 
@@ -517,4 +659,56 @@ construct_nholder = {sprite = "construct_nholder", color = [6, 0], tiling = "non
 construct_nbaba = {sprite = "construct_nbaba", color = [0, 2], tiling = "none"}
 
 construct_nswitcheroo = {sprite = "construct_nswitcheroo", color = [3, 2], tiling = "none"}
+
+construct_nonstruct = {sprite = "construct_nonstruct", color = [4, 1], tiling = "none"}
+
+construct_nsides = {sprite = "construct_nsides", color = [4, 0], tiling = "none"}
+
+construct_nsnowpine = {sprite = "construct_nsnowpine", color = [0, 3], tiling = "none"}
+
+construct_nsocool = {sprite = "construct_nsocool", color = [0, 1], tiling = "none"}
+
+lyric_n1 = {sprite = "lyric_n1", color = [0, 3], tiling = "none"}
+
+lyric_n2 = {sprite = "lyric_n2", color = [0, 2], tiling = "none"}
+
+lyric_n3 = {sprite = "lyric_n3", color = [0, 3], tiling = "none"}
+
+lyric_n4 = {sprite = "lyric_n4", color = [0, 1], tiling = "none"}
+
+lyric_n5 = {sprite = "lyric_n5", color = [0, 2], tiling = "none"}
+
+lyric_n6 = {sprite = "lyric_n6", color = [0, 0], tiling = "none"}
+
+lyric_n7 = {sprite = "lyric_n7", color = [0, 2], tiling = "none"}
+
+lyric_n8 = {sprite = "lyric_n8", color = [0, 1], tiling = "none"}
+
+lyric_n9 = {sprite = "lyric_n9", color = [0, 3], tiling = "none"}
+
+lyric_n10 = {sprite = "lyric_n10", color = [0, 2], tiling = "none"}
+
+lyric_n11 = {sprite = "lyric_n11", color = [0, 3], tiling = "none"}
+
+lyric_n12 = {sprite = "lyric_n12", color = [0, 1], tiling = "none"}
+
+lyric_n13 = {sprite = "lyric_n13", color = [0, 3], tiling = "none"}
+
+lyric_n14 = {sprite = "lyric_n14", color = [0, 3], tiling = "none"}
+
+lyric_nsemi = {sprite = "lyric_nsemi", color = [0, 1], tiling = "none"}
+
+lyric_nforbidden = {sprite = "lyric_nforbidden", color = [0, 3], tiling = "none"}
+
+lyric_nball = {sprite = "lyric_nball", color = [0, 2], tiling = "none"}
+
+lyric_nnothing = {sprite = "lyric_nnothing", color = [0, 1], tiling = "none"}
+
+lyric_notenote = {sprite = "lyric_notenote", color = [0, 3], tiling = "directional"}
+
+lyric_nnothing = {sprite = "lyric_nnothing", color = [0, 1], tiling = "none"}
+
+"lyric_n𝅙" = {sprite = "lyric_n𝅙", color = [0, 0], tiling = "none"}
+
+"lyric_n𝅙" = {sprite = "lyric_n𝅙", color = [0, 0], tiling = "none"}
 

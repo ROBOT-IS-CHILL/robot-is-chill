@@ -160,3 +160,9 @@ node_logic = {sprite = "node_logic", color = [3, 1], tiling = "directional"}
 
 text_metalogic = {sprite = "text_metalogic", color = [3, 1], tiling = "none"}
 
+spire = {sprite = "spire", color = [1, 1], tiling = "directional"}
+
+text_spire = {sprite = "text_spire", color = [3, 1], tiling = "none"}
+
+
+
