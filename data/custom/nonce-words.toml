@@ -24,7 +24,7 @@ event_n1 = {sprite = "event_n1", color = [0, 3], tiling = "none"}
 
 event_n2 = {sprite = "event_n2", color = [3, 4], tiling = "none"}
 
-"event_n2.718281828459045" = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
+"event_n2.7182818284590452" = {sprite = "event_n2.7182818284590452", color = [0, 3], tiling = "none"}
 
 event_n3 = {sprite = "event_n3", color = [3, 3], tiling = "none"}
 
