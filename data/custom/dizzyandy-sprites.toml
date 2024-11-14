@@ -458,7 +458,7 @@ text_sway = {sprite = "text_sway", color = [1, 1], tiling = "none"}
 
 text_sustain = {sprite = "text_sustain", color = [2, 4], tiling = "none"}
 
-text_sustain = {sprite = "text_true", color = [0, 3], tiling = "none"}
+text_true = {sprite = "text_true", color = [5, 4], tiling = "none"}
 
-text_sustain = {sprite = "text_false", color = [0, 3], tiling = "none"}
+text_false = {sprite = "text_false", color = [2, 2], tiling = "none"}
 
