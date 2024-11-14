@@ -318,7 +318,7 @@ class Renderer:
         return comp_ovh, time.perf_counter() - start_time, background_images[0].shape[1::-1]
 
     def blend(self, mode, src, dst, keep_alpha: bool = True) -> np.ndarray:
-        keep_alpha &= mode not in ("mask", "cut")
+        keep_alpha &= mode not in ("mask", "cut", "xora")
         if keep_alpha:
             out_a = (src[..., 3] + dst[..., 3] * (1 - src[..., 3] / 255)).astype(np.uint8)
             a, b = src[..., :3].astype(float) / 255, dst[..., :3].astype(
@@ -359,6 +359,12 @@ class Renderer:
                 b[..., 3] = 1 - b[..., 3]
             c[..., 3] *= b[..., 3]
             c[c[..., 3] == 0] = 0
+        elif mode == "xor":
+            c = (src[..., :3] ^ dst[..., :3]).astype(float) / 255
+        elif mode == "xora":
+            c = np.zeros_like(b)
+            c[..., :3] = b[..., :3] * b[..., 3, np.newaxis] + a[..., :3] * (1 - b[..., 3, np.newaxis])
+            c[..., 3] = np.abs(a[..., 3] - b[..., 3])
         else:
             raise AssertionError(f"Blending mode `{mode}` isn't implemented yet.")
         if keep_alpha:

@@ -236,6 +236,7 @@ SEARCH_RESULT_UNITS_PER_PAGE = 20  # roughtly half the number of lines
 OTHER_LEVELS_CUTOFF = 20
 
 VANILLA_WORLDS = ("baba", "vanilla", "new_adv", "museum")
+VANILLA_PATHS = ("baba", "new_adv", "museum")
 
 COMBINE_MAX_FILESIZE = 5242880  # in bytes
 
@@ -264,7 +265,9 @@ BLENDING_MODES = (
     "mask",
     "dodge",
     "burn",
-    "cut"
+    "cut",
+    "xor",
+    "xora"
 )
 
 FILTER_MAX_SIZE = 524288
