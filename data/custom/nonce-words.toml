@@ -620,7 +620,7 @@ logic_n4 = {sprite = "logic_n4", color = [5, 4], tiling = "none"}
 
 logic_n5 = {sprite = "logic_n5", color = [3, 1], tiling = "none"}
 
-logic_n5 = {sprite = "logic_n6", color = [3, 3], tiling = "none"}
+logic_n6 = {sprite = "logic_n6", color = [3, 3], tiling = "none"}
 
 construct_nawesome = {sprite = "construct_nawesome", color = [3, 4], tiling = "none"}
 
