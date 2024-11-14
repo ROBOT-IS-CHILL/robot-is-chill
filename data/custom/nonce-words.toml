@@ -706,5 +706,4 @@ lyric_nnothing = {sprite = "lyric_nnothing", color = [0, 1], tiling = "none"}
 
 lyric_notenote = {sprite = "lyric_notenote", color = [0, 3], tiling = "directional"}
 
-lyric_n𝅙 = {sprite = "lyric_n𝅙", color = [0, 0], tiling = "none"}
-
+lyric_n = {sprite = "lyric_n", color = [0, 0], tiling = "none"}
