@@ -18,4 +18,4 @@ usp = {sprite = "usp", color = [4, 1], tiling = "character"}
 
 text_usp = {sprite = "text_usp", color = [4, 1], tiling = "none"}
 
-xexe = {sprite = "xexe", color = [3, 2], tiling = 2}
+xexe = {sprite = "xexe", color = [3, 2], tiling = "character"}
