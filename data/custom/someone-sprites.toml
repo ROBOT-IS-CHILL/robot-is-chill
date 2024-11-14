@@ -14,7 +14,7 @@ dtwall = {sprite = "wall", color = [1, 1], tiling = "diagonal_tiling"}
 
 fi = {sprite = "fi", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3]}
 
-fichar = {sprite = "fichar", color = [0, 3], tiling = 2}
+fichar = {sprite = "fichar", color = [0, 3], tiling = "character"}
 
 fidtiled = {sprite = "fidtiled", color = [0, 3], tiling = "diagonal_tiling", extra_frames = [-1]}
 
