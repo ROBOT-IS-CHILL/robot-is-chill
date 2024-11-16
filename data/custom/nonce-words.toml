@@ -484,7 +484,7 @@ text_n119 = {sprite = "text_n119", color = [0, 1], tiling = "none"}
 
 text_n120 = {sprite = "text_n120", color = [6, 2], tiling = "none"}
 
-text_n1210 = {sprite = "text_n121", color = [6, 2], tiling = "none"}
+text_n121 = {sprite = "text_n121", color = [3, 3], tiling = "none"}
 
 obj_n0 = {sprite = "obj_n0", color = [0, 2], tiling = "none"}
 
