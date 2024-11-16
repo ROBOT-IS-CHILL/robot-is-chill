@@ -460,7 +460,7 @@ text_n114 = {sprite = "text_n114", color = [4, 4], tiling = "none"}
 
 text_n115 = {sprite = "text_n115", color = [3, 4], tiling = "none"}
 
-text_n116 = {sprite = "text_n115", color = [2, 3], tiling = "none"}
+text_n116 = {sprite = "text_n116", color = [2, 3], tiling = "none"}
 
 obj_n0 = {sprite = "obj_n0", color = [0, 2], tiling = "none"}
 
