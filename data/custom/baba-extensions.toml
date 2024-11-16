@@ -190,4 +190,10 @@ text_images = {sprite = "text_images", color = [3, 2], tiling = "none"}
 
 text_in = {sprite = "text_in", color = [2, 2], tiling = "none"}
 
-fofo_old = {sprite = "fofo_old", color = [5, 2], tiling = "none"}
+fofo_old = {sprite = "fofo_old", color = [5, 2], tiling = "character"}
+
+text_back_old = {sprite = "text_back_old", color = [2, 2], tiling = "none"}
+
+leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
+
+ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
