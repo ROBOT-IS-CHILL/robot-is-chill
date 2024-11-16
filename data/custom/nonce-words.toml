@@ -448,7 +448,7 @@ text_n105 = {sprite = "text_n105", color = [3, 3], tiling = "none"}
 
 text_n106 = {sprite = "text_n106", color = [1, 1], tiling = "none"}
 
-text_n107 = {sprite = "text_n107", color = [4, 2], tiling = "none"}
+text_n107 = {sprite = "text_n107", color = [4, 2], tiling = "tiling"}
 
 text_n108 = {sprite = "text_n108", color = [0, 3], tiling = "none"}
 
