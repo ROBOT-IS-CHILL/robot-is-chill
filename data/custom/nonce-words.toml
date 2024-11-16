@@ -24,7 +24,7 @@ event_n1 = {sprite = "event_n1", color = [0, 3], tiling = "none"}
 
 event_n2 = {sprite = "event_n2", color = [3, 4], tiling = "none"}
 
-"event_n2.7182818284590452" = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
+"event_n2.718281828459045" = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
 
 event_n3 = {sprite = "event_n3", color = [3, 3], tiling = "none"}
 
@@ -706,4 +706,4 @@ lyric_nnothing = {sprite = "lyric_nnothing", color = [0, 1], tiling = "none"}
 
 lyric_notenote = {sprite = "lyric_notenote", color = [0, 3], tiling = "directional"}
 
-lyric_n = {sprite = "lyric_n", color = [0, 0], tiling = "none"}
+"lyric_n𝅙" = {sprite = "lyric_n𝅙", color = [0, 0], tiling = "none"}
