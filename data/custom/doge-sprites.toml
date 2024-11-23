@@ -54,3 +54,6 @@ text_furfur = {sprite = "text_furfur", color = [6, 2], tiling = "none"}
 
 text_fur = {sprite = "text_fur", color = [6, 2], tiling = "none"}
 
+crow = {sprite = "crow", color = [0, 3], tiling = "character"}
+
+text_crow = {sprite = "text_crow", color = [0, 1], tiling = "none"}
