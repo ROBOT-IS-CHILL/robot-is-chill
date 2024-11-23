@@ -57,3 +57,13 @@ text_fur = {sprite = "text_fur", color = [6, 2], tiling = "none"}
 crow = {sprite = "crow", color = [0, 3], tiling = "character"}
 
 text_crow = {sprite = "text_crow", color = [0, 1], tiling = "none"}
+
+epic = {sprite = "epic", color = [0, 3], tiling = "none"}
+
+epic2 = {sprite = "epic2", color = [2, 4], tiling = "none"}
+
+text_epic = {sprite = "text_epic", color = [2, 4], tiling = "none"}
+
+sauce = {sprite = "sauce", color = [2, 2], tiling = "none"}
+
+text_sauce = {sprite = "text_sauce", color = [2, 2], tiling = "none"}
