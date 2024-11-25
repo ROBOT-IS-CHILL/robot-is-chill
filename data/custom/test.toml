@@ -1,0 +1,8 @@
+# This file is to be used for testing sprites. These are not guaranteed to work properly.
+# Please don't add anything that clearly will not work.
+# Also, please don't remove anything,
+# just comment it out and add a comment with what it resulted in.
+
+
+
+test_01 = {sprite = "jij", color = [6, 2], tiling = "none", source = "bab", palette = "bab"}
