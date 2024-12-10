@@ -756,6 +756,8 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         """Removes rows or columns of pixels to create a scan line effect."""
         assert on >= 0 and off >= 0 and on + off > 0, f"Scan mask of `{on}` on and `{off}` off is invalid!"
         axis = ("y", "x").index(axis)
+        on = min(on, sprite.shape[axis])
+        off = min(off, sprite.shape[axis])
         mask = np.roll(np.array([1] * on + [0] * off, dtype=np.uint8), offset)
         mask = np.tile(mask, (
             sprite.shape[1 - axis],
