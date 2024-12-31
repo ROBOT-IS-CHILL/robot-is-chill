@@ -244,10 +244,6 @@ rat = {sprite = "rat", color = [0, 3], tiling = "none"}
 
 text_rat = {sprite = "text_rat", color = [0, 3], tiling = "none"}
 
-yuyu = {sprite = "yuyu", color = [3, 4], tiling = "directional"}
-
-text_yuyu = {sprite = "text_yuyu", color = [3, 4], tiling = "none"}
-
 text_battlecat = {sprite = "text_battlecat", color = [0, 3], tiling = "none"}
 
 youyou = {sprite = "youyou", color = [4, 1], tiling = "character"}

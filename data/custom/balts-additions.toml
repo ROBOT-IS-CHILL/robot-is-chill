@@ -2,7 +2,7 @@
 
 
 
-text_flafla = {sprite = "text_flafla", color = [2, 4], tiling = "none"}
+text_flafla = {sprite = "text_flafla", color = [2, 4], tiling = "none", source = "nova-sprites"}
 
 cucu = {sprite = "cucu", tiling = "character", color = [0, 3]}
 

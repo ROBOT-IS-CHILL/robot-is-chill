@@ -24,7 +24,7 @@ event_n1 = {sprite = "event_n1", color = [0, 3], tiling = "none"}
 
 event_n2 = {sprite = "event_n2", color = [3, 4], tiling = "none"}
 
-"event_n2.7182818284590452" = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
+"event_n2.718281828459045" = {sprite = "event_n2.718281828459045", color = [0, 3], tiling = "none"}
 
 event_n3 = {sprite = "event_n3", color = [3, 3], tiling = "none"}
 
@@ -59,6 +59,10 @@ event_n17 = {sprite = "event_n17", color = [3, 1], tiling = "none"}
 event_n18 = {sprite = "event_n18", color = [1, 2], tiling = "none"}
 
 event_n19 = {sprite = "event_n19", color = [5, 2], tiling = "none"}
+
+event_n20 = {sprite = "event_n20", color = [5, 1], tiling = "none"}
+
+event_n21 = {sprite = "event_n21", color = [1, 3], tiling = "none"}
 
 glyph_n-1 = {sprite = "glyph_n-1", color = [5, 0], tiling = "none"}
 
@@ -213,6 +217,12 @@ glyph_n74 = {sprite = "glyph_n74", color = [0, 2], tiling = "none"}
 glyph_n75 = {sprite = "glyph_n75", color = [-4, -5], tiling = "none"}
 
 glyph_n76 = {sprite = "glyph_n76", color = [0, 3], tiling = "none"}
+
+glyph_n77 = {sprite = "glyph_n77", color = [5, 3], tiling = "none"}
+
+glyph_n78 = {sprite = "glyph_n78", color = [6, 1], tiling = "none"}
+
+glyph_n79 = {sprite = "glyph_n79", color = [-3, 2], tiling = "none"}
 
 text_n0 = {sprite = "text_n0", color = [0, 3], tiling = "none"}
 
@@ -438,7 +448,7 @@ text_n105 = {sprite = "text_n105", color = [3, 3], tiling = "none"}
 
 text_n106 = {sprite = "text_n106", color = [1, 1], tiling = "none"}
 
-text_n107 = {sprite = "text_n107", color = [4, 2], tiling = "none"}
+text_n107 = {sprite = "text_n107", color = [4, 2], tiling = "tiling"}
 
 text_n108 = {sprite = "text_n108", color = [0, 3], tiling = "none"}
 
@@ -460,7 +470,21 @@ text_n114 = {sprite = "text_n114", color = [4, 4], tiling = "none"}
 
 text_n115 = {sprite = "text_n115", color = [3, 4], tiling = "none"}
 
-text_n116 = {sprite = "text_n115", color = [2, 3], tiling = "none"}
+text_n116 = {sprite = "text_n116", color = [2, 3], tiling = "none"}
+
+text_n117 = {sprite = "text_n117", color = [0, 3], tiling = "none"}
+
+text_n117_arrow = {sprite = "text_n117_arrow", color = [0, 3], tiling = "none"}
+
+text_n117_arrow_old = {sprite = "text_n117_arrow_old", color = [0, 3], tiling = "none"}
+
+text_n118 = {sprite = "text_n118", color = [6, 2], tiling = "none"}
+
+text_n119 = {sprite = "text_n119", color = [0, 1], tiling = "none"}
+
+text_n120 = {sprite = "text_n120", color = [6, 2], tiling = "none"}
+
+text_n121 = {sprite = "text_n121", color = [6, 2], tiling = "none"}
 
 obj_n0 = {sprite = "obj_n0", color = [0, 2], tiling = "none"}
 
@@ -570,6 +594,14 @@ orb_n26 = {sprite = "orb_n26", color = [4, 1], tiling = "none"}
   
 orb_n27 = {sprite = "orb_n27", color = [4, 1], tiling = "none"}
 
+orb_n28 = {sprite = "orb_n28", color = [4, 1], tiling = "none"}
+
+orb_n29 = {sprite = "orb_n29", color = [4, 1], tiling = "none"}
+
+orb_n30 = {sprite = "orb_n30", color = [4, 1], tiling = "none"}
+
+orb_n31 = {sprite = "orb_orb", color = [5, 2], tiling = "none", source = "the-only-baba-is-yuot-mod-that"}
+
 node_n-2 = {sprite = "node_n-2", color = [2, 2], tiling = "directional"}
 
 node_n1 = {sprite = "node_n1", color = [2, 1], tiling = "directional"}
@@ -622,6 +654,12 @@ logic_n5 = {sprite = "logic_n5", color = [3, 1], tiling = "none"}
 
 logic_n6 = {sprite = "logic_n6", color = [3, 3], tiling = "none"}
 
+logic_n7 = {sprite = "logic_n7", color = [2, 2], tiling = "none"}
+
+logic_n8 = {sprite = "logic_n8", color = [5, 4], tiling = "none"}
+
+logic_n9 = {sprite = "logic_n9", color = [0, 3], tiling = "none"}
+
 construct_nawesome = {sprite = "construct_nawesome", color = [3, 4], tiling = "none"}
 
 construct_ngrassy = {sprite = "construct_ngrassy", color = [1, 2], tiling = "none", extra_frames = [67]}
@@ -668,6 +706,8 @@ construct_nsnowpine = {sprite = "construct_nsnowpine", color = [0, 3], tiling = 
 
 construct_nsocool = {sprite = "construct_nsocool", color = [0, 1], tiling = "none"}
 
+construct_nproject = {sprite = "construct_nproject", color = [0, 3], tiling = "none"}
+
 lyric_n1 = {sprite = "lyric_n1", color = [0, 3], tiling = "none"}
 
 lyric_n2 = {sprite = "lyric_n2", color = [0, 2], tiling = "none"}
@@ -706,4 +746,8 @@ lyric_nnothing = {sprite = "lyric_nnothing", color = [0, 1], tiling = "none"}
 
 lyric_notenote = {sprite = "lyric_notenote", color = [0, 3], tiling = "directional"}
 
-lyric_n = {sprite = "lyric_n", color = [0, 0], tiling = "none"}
+"lyric_n𝅙" = {sprite = "lyric_n𝅙", color = [0, 0], tiling = "none"}
+
+lyric_nstaffbend = {sprite = "lyric_nstaffbend", color = [0, 3], tiling = "none"}
+
+lyric_nwahiashfo = {sprite = "lyric_nwahiashfo", color = [0, 3], tiling = "none"}

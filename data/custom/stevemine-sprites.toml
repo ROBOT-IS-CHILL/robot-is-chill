@@ -1,0 +1,7 @@
+# See CONTRIBUTING.md for how to properly edit this file. (Or don't. lol)
+
+
+
+shield = {sprite = "shield", tiling = "directional", color = [0, 2]}
+
+text_shield = {sprite = "text_shield", tiling = "none", color = [0, 2]}
