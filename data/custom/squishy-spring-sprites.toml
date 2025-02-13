@@ -36,9 +36,9 @@ shifty = {sprite = "shifty", color = [3, 4], tiling = "directional", author = "T
 
 text_shifty = {sprite = "text_shifty", color = [3, 4], tiling = "none", author = "That1Squishy"}
 
-tape = {sprite = "tape", color = [3, 4], tiling = "tiling", author = "That1Squishy"}
+tape = {sprite = "tape", color = [6, 2], tiling = "tiling", author = "That1Squishy"}
 
-text_tape = {sprite = "text_tape", color = [3, 4], tiling = "none", author = "Springer29"}
+text_tape = {sprite = "text_tape", color = [6, 2], tiling = "none", author = "Springer29"}
 
 buddy = {sprite = "buddy", color = [0, 3], tiling = "directional", author = "Springer29"}
 
