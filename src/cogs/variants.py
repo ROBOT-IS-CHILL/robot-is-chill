@@ -393,7 +393,7 @@ If [0;36minactive[0m is set and the color isn't hexadecimal, the color will sw
         """Applies a gradient to a tile.
 Interpolates color through CIELUV color space by default. This can be toggled with [0;36mraw[0m.
 If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrapolated, as opposed to clamping from 0% to 100%.
-[0;36Dither[0ming does nothing with [0;36steps[0m set to 0."""
+[0;36mDither[0ming does nothing with [0;36msteps[0m set to 0."""
         tile.custom_color = True
         src = Color.parse(tile, renderer.palette_cache)
         dst = Color.parse(tile, renderer.palette_cache, color=color)
