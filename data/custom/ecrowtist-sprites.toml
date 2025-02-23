@@ -1,0 +1,3 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+dino = {sprite = "dino", color = [5, 3], tiling = "directional", author = "ecrowtist", tags = ["animal"]}
