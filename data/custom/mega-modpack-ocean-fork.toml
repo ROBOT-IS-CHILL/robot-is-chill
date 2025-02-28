@@ -1,3 +1,7 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
 glyph_event_ = {sprite = "glyph_eventpre", color = [5, 2], active_color = [5, 3], tiling = "none"}
 
 glyph_glyph_ = {sprite = "glyph_glyphpre", color = [6, 1], active_color = [3, 3], tiling = "none"}
