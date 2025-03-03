@@ -5,3 +5,7 @@
 shield = {sprite = "shield", tiling = "directional", color = [0, 2]}
 
 text_shield = {sprite = "text_shield", tiling = "none", color = [0, 2]}
+
+keyboard = {sprite = "keyboard", tiling = "none", color = [0, 2]}
+
+text_keyboard = {sprite = "text_keyboard", tiling = "none", color = [0, 2]}
