@@ -68,3 +68,4 @@ debugc = {sprite = "debugc", color = [0, 3], tiling = "character"}
 
 debug = {sprite = "debug", color = [0, 3], tiling = "none"}
 
+text_icely = {sprite = "text_icely", color = [1, 4], tiling = "none"}

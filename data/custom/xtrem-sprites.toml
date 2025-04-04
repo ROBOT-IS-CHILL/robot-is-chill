@@ -1,8 +1,0 @@
-# See CONTRIBUTING.md for how to properly edit this file.
-
-
-
-spire = {sprite = "spire", color = [1, 1], tiling = "directional"}
-
-text_spire = {sprite = "text_spire", color = [3, 1], tiling = "none"}
-

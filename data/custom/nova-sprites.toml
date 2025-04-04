@@ -6,7 +6,7 @@ cookie = {sprite = "cookie", tiling = "none", color = [6, 1]}
 
 text_cookie = {sprite = "text_cookie", tiling = "none", color = [6, 0], active = [6, 1]}
 
-flafla = {sprite = "flafla", tiling = "character", color = [2, 4]}
+flafla = {sprite = "sflafla", tiling = "character", color = [2, 4]}
 
 text_flafla = {sprite = "text_flafla", tiling = "none", color = [6, 1], active = [2, 4]}
 

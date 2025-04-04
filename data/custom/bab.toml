@@ -489,7 +489,7 @@ bab_ui_g = {sprite = "ui_g", color = [0, 3], tiling = "none"}
 
 bab_ui_h = {sprite = "ui_h", color = [0, 3], tiling = "none"}
 
-"bab_ui_;" = {sprite = "ui_3b", color = [0, 3], tiling = "none"}
+"bab_ui_;" = {sprite = "ui_3b", color = [0, 3], tiling = "none"}
 
 "bab_ui_'" = {sprite = "ui_27", color = [0, 3], tiling = "none"}
 
@@ -1417,7 +1417,7 @@ bab_letter_8 = {sprite = "letter_8", color = [0, 3], tiling = "none"}
 
 bab_letter_9 = {sprite = "letter_9", color = [0, 3], tiling = "none"}
 
-"bab_letter_;" = {sprite = "letter_3b", color = [0, 3], tiling = "none"}
+"bab_letter_;" = {sprite = "letter_3b", color = [0, 3], tiling = "none"}
 
 "bab_letter_/" = {sprite = "letter_2f", color = [0, 3], tiling = "none"}
 

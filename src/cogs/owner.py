@@ -498,9 +498,8 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             return exists
 
         await ctx.reply("Scraping tile metadata...")
-        vanilla_worlds = ["baba", "new_adv", "museum"]
         async with ctx.typing():
-            for world in vanilla_worlds:
+            for world in constants.VANILLA_PATHS:
                 print(f"Scraping from {world}...")
                 ld_files = (Path("data/levels") / world).glob("*.ld")
                 sprites = {}
@@ -535,8 +534,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                                         and name != sprite_name
                                 }
                                 data["object"] = object_id
-                                if len(data):
-                                    tiles[sprite_name] = data
+                                if int(data.get("root", 1)):
+                                    data["source"] = "vanilla"
+                                tiles[sprite_name] = data
                         except KeyError:
                             continue
                     for name, data in tiles.items():
@@ -595,7 +595,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 doc.add(tomlkit.nl())
                 doc.add(tomlkit.nl())
                 for name, data in world_data.items():
-                    print(name, data)
+                    print("\t", name, "\t", data)
                     table = tomlkit.inline_table()
                     table.update(data)
                     doc.add(tomlkit.nl())
@@ -1228,7 +1228,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 shutil.copytree(src, dst, *args)
 
         message = await ctx.reply(f"Adding sprites...")
-        replace(path / "Worlds" / "baba" / "Sprites", bot_path / "sprites" / "vanilla")
+        replace(path / "Sprites", bot_path / "sprites" / "vanilla")
         shutil.copytree(path / "Sprites", bot_path / "sprites" / "vanilla", dirs_exist_ok=True)
         shutil.copytree(path / "Palettes", bot_path / "palettes", dirs_exist_ok=True)
         shutil.copy2(path / "merged.ttf", bot_path / "fonts" / "default.ttf")

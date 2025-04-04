@@ -6,7 +6,7 @@ plus = {sprite = "plus", color = [0, 3], tiling = "none"}
 
 goose = {sprite = "goose", color = [0, 3], tiling = "animated_directional"}
 
-level = {sprite = "level", color = [0, 3], tiling = "none", tags = ["baba_special"], extra_frames = [1]}
+level = {sprite = "level", color = [0, 3], tiling = "none", tags = ["baba_special"], extra_frames = [1, 2]}
 
 sale = {sprite = "sale", color = [4, 2], tiling = "none"}
 
@@ -130,7 +130,7 @@ text_deturn_old = {sprite = "text_deturn_old", color = [1, 4], tiling = "none"}
 
 pawn_old = {sprite = "pawn_old", color = [2, 2], tiling = "none"}
 
-text_restart = {sprite = "text_restart", color = [1, 4], tiling = "none"}
+text_restart2 = {sprite = "text_restart", color = [1, 4], tiling = "none"}
 
 sprout2 = {sprite = "sprout2", color = [0, 3], tiling = "none"}
 
@@ -171,3 +171,29 @@ icon_space = {sprite = "icon_space", color = [0, 3], tiling = "none", source = "
 error = {sprite = "error", color = [0, 3], tiling = "none", source = "vanilla"}
 
 mpipe = {sprite = "mpipe", color = [5, 4], tiling = "tiling"}
+
+thing = {sprite = "thing", color = [0, 2], tiling = "none"}
+
+blossom2 = {sprite = "blossom2", color = [0, 3], tiling = "none"}
+
+flora = {sprite = "flora", color = [5, 1], tiling = "none"}
+
+text_can = {sprite = "text_can", color = [2, 4], tiling = "none"}
+
+text_now = {sprite = "text_now", color = [5, 3], tiling = "none"}
+
+text_have2 = {sprite = "text_have", color = [1, 3], tiling = "none"}
+
+text_custom = {sprite = "text_custom", color = [6, 2], tiling = "none"}
+
+text_images = {sprite = "text_images", color = [3, 2], tiling = "none"}
+
+text_in = {sprite = "text_in", color = [2, 2], tiling = "none"}
+
+fofo_old = {sprite = "fofo_old", color = [5, 2], tiling = "character"}
+
+text_back_old = {sprite = "text_back_old", color = [2, 2], tiling = "none"}
+
+leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
+
+ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}

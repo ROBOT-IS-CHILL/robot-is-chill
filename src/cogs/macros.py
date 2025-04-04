@@ -494,7 +494,6 @@ class MacroCog:
         async def ord_(vars: VariableRegistry, string: str):
             """Returns the individual codepoints in a string."""
             return [ord(char) for char in string]
-        
         # Lists and dictionaries
 
         @builtin("at")

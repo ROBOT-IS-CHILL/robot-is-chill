@@ -30,6 +30,8 @@ iwuk = {sprite = "iwuk", color = [2, 2], tiling = "character"}
 
 text_iwuk = {sprite = "text_iwuk", color = [2, 2], tiling = "none"}
 
+will_anyone_notice_this_n2 = {sprite = "will_anyone_notice_this_n2", color = [0, 1], tiling = "none"}
+
 dost = {sprite = "dost", color = [6, 2], tiling = "none"}
 
 dist = {sprite = "dist", color = [6, 2], tiling = "none"}
