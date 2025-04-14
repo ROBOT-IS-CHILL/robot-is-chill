@@ -6,9 +6,9 @@ bubu = {sprite = "bubu", tiling = "character", color = [4, 4]}
 
 text_bubu = {sprite = "text_bubu", color = [4, 4], tiling = "none"}
 
-balt = {sprite = "balt_old", tiling = "character", color = [0, 1], tags = ["animal", "machine"]}
+balt_old = {sprite = "balt", tiling = "character", color = [0, 1], tags = ["animal", "machine"]}
 
-text_balt = {sprite = "text_balt_old", color = [0, 1], tiling = "none"}
+text_balt_old = {sprite = "text_balt", color = [0, 1], tiling = "none"}
 
 warn = {sprite = "warn", color = [0, 3], tiling = "none"}
 
