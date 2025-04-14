@@ -199,3 +199,5 @@ leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
 ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
 
 text_happy = {sprite = "text_happy", color = [2, 4], tiling = "none"}
+
+text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
