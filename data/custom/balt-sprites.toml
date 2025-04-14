@@ -2,6 +2,10 @@
 
 
 
+balt = {sprite = "balt", tiling = "character", color = [0, 1], tags = ["animal", "machine"]}
+
+text_balt = {sprite = "text_balt", color = [0, 1], tiling = "none"}
+
 balalt = {sprite = "balalt", tiling = "tiling", color = [0, 1]}
 
 text_balalt = {sprite = "text_balalt", tiling = "none", color = [0, 1]}
