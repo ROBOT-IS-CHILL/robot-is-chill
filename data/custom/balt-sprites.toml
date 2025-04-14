@@ -69,3 +69,9 @@ debugc = {sprite = "debugc", color = [0, 3], tiling = "character"}
 debug = {sprite = "debug", color = [0, 3], tiling = "none"}
 
 text_icely = {sprite = "text_icely", color = [1, 4], tiling = "none"}
+
+text_do = {sprite = "text_do", color = [0, 3], tiling = "none"}
+
+text_fuck = {sprite = "text_fuck", color = [4, 1], tiling = "none"}
+
+text_ninja = {sprite = "text_ninja", color = [0, 0], tiling = "none"}
