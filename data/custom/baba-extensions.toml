@@ -197,3 +197,5 @@ text_back_old = {sprite = "text_back_old", color = [2, 2], tiling = "none"}
 leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
 
 ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
+
+text_happy = {sprite = "text_happy", color = [2, 4], tiling = "none"}
