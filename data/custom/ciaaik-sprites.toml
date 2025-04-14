@@ -6,6 +6,10 @@ abab = {sprite = "abab", color = [0, 3], tiling = "character"}
 
 text_abab = {sprite = "text_abab", color = [4, 1], tiling = "none"}
 
+abab_old = {sprite = "abab_old", color = [0, 3], tiling = "character"}
+
+text_abab_old = {sprite = "text_abab_old", color = [4, 1], tiling = "none"}
+
 kyberhyper-skullmutantnightmaremonster-batpowerspikemon = {sprite = "kyberhyper", color = [2, 1], tiling = "none"}
 
 text_kyberhyper-skullmutantnightmaremonster-batpowerspikemon = {sprite = "text_kyberhyper", color = [2, 1], tiling = "none"}
