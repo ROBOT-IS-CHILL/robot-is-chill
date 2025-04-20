@@ -580,7 +580,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         await intr.response.send_modal(box)
         await box.wait()
 
-    @commands.command(aliases=["render" , "r"])
+    @commands.command(aliases=["t"])
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     async def tile(self, ctx: Context, *, objects: str = ""):
         """Renders the tiles provided.
@@ -613,7 +613,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             objects=objects,
             rule=False)
 
-    @commands.command(aliases=["text", "t"])
+    @commands.command(aliases=["r"])
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     async def rule(self, ctx: Context, *, objects: str = ""):
         """Renders the text tiles provided.
