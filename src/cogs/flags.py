@@ -12,7 +12,7 @@ from PIL import Image
 from .. import constants
 from ..errors import InvalidFlagError
 from ..tile import Tile
-from ..types import Color, Macro, RenderContext
+from ..types import Color, TextMacro, RenderContext
 
 if TYPE_CHECKING:
     from ...ROBOT import Bot
@@ -311,4 +311,4 @@ Note that PNG formats won't animate inside of Discord, you'll have to open them 
                     )
     async def macro(match, ctx):
         """Define macros for variants."""
-        ctx.macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
+        ctx.macros[match.group(1)] = TextMacro(source=match.group(2), description="<internal>", author=-1)

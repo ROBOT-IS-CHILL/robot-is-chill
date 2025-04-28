@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import os
 import re
 import signal
@@ -196,11 +197,31 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error(f'The render took too long, so it was cancelled.')
             elif isinstance(error, errors.InvalidFlagError):
                 return await ctx.error(f'A flag failed to parse:\n> `{error}`')
-            elif isinstance(error, errors.FailedBuiltinMacro):
-                if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {error.message}')
-                else:
-                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw}`:\n> {error.message}')
+            elif isinstance(error, errors.MacroSyntaxError):
+                return await ctx.error(f"A macro tree failed to parse!\n```{error}```")
+            elif isinstance(error, errors.MacroRuntimeError):
+                tb = [[error, 1]]
+                while error.cause is not None:
+                    error = error.cause
+                    if not isinstance(error, errors.MacroRuntimeError):
+                        tb.append([error, 1])
+                        break
+                    if error.name == tb[-1][0].name and error.reason == tb[-1][0].reason:
+                        tb[-1][1] += 1
+                    else:
+                        if hasattr(error, "_builtin"):
+                            tb[-1][0].reason = error.reason
+                        else:
+                            tb.append([error, 1])
+                buf = io.StringIO()
+                buf.write("Macro execution failed!\n")
+                for err in tb:
+                    buf.write(f"- {err[0]}")
+                    if err[1] > 1:
+                        buf.write(f" (x{err[1]})")
+                    buf.write("\n")
+                return await ctx.error(buf.getvalue())
+                
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):
@@ -244,7 +265,7 @@ class CommandErrorHandler(commands.Cog):
                 file=sys.stderr)
         except Exception as err:
             try:
-                title = f'**Unhandled exception in fallback handler!!!**'
+                title = f':warning: Error fallback crash!'
                 if len(title) > 32:
                     title = title[:32]
                 if os.name == "nt":
