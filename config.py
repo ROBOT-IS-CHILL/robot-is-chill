@@ -8,7 +8,7 @@ embed_color = discord.Color(12877055)
 logging_color = 0xffffff
 auth_file = "config/auth.json"
 log_file = "log.txt"
-db_path = "robot.db.main"
+db_path = "robot.db"
 cogs = [
 	"src.cogs.owner",
 	"src.cogs.global",
