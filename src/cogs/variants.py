@@ -1205,7 +1205,7 @@ If a value is negative, it removes pixels above the threshold instead."""
     @add_variant("filter", "fi!")
     async def filterimage(sprite, name: str, *, tile, wobble, renderer):
         """Applies a filter image to a sprite. For information about filter images, look at the filterimage command."""
-        absolute, _, _, afilter = await renderer.bot.db.get_filter(name)
+        absolute, _, _, filter = await renderer.bot.db.get_filter(name)
         filt = np.array(filter.convert("RGBA"))
         check_size(*filt.shape[:2])
         filt = np.float32(filt)
