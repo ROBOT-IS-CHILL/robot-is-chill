@@ -165,12 +165,13 @@ class Database:
             )
             await cur.execute(
                 '''
-				CREATE TABLE IF NOT EXISTS filterimages (
-					name TEXT UNIQUE PRIMARY KEY,
-					absolute BOOL,
-					url TEXT,
-					creator INT
-				);
+				CREATE TABLE IF NOT EXISTS filters (
+                    name STRING NOT NULL,
+                    absolute BOOLEAN NOT NULL,
+                    author INT NOT NULL,
+                    upload_time INT,
+                    data BLOB NOT NULL
+                );
 				'''
             )
             await cur.execute(
@@ -241,44 +242,20 @@ class Database:
             (3, 3)
         )
 
-    async def get_filter(self, url: str):
+    async def get_filter(self, name: str):
         """Get a filter from the database."""
-        if url not in self.filter_cache:
+        if name not in self.filter_cache:
             async with (self.conn.cursor() as cur):
-                await cur.execute("SELECT url, absolute FROM filterimages WHERE name == ?;", url)
-                result = await cur.fetchone()
-                if result is None:
-                    assert "catbox.moe/" in url, f"Filter `{url}` wasn't found in the database!"
-                    extracted = tldextract.extract(url)
-                    print(extracted)
-                    assert extracted.domain == "catbox" \
-                           and extracted.suffix == "moe", \
-                           "Please only use catbox.moe for filters."
-                    result = f"https://{url}"
-                    absolute = None
-                else:
-                    result, absolute = result
-                try:
-                    filter_headers = requests.head(result, timeout=3).headers
-                except requests.exceptions.ConnectionError:
-                    raise AssertionError(f"Filter `{url}` isn't a valid URL (or didn't respond in time)!")
-                assert int(
-                    filter_headers.get("content-length", 0)) < constants.FILTER_MAX_SIZE, f"Filter `{url}` is too big!"
-                buffer = requests.get(result, stream=True).raw.read()
-                try:
-                    with Image.open(BytesIO(buffer)) as im:
-                        frames = []
-                        frame_count = getattr(im, "n_frames", 1)
-                        assert frame_count <= 3, "Too many frames in the filter (max is 3)!"
-                        for i in range(0, frame_count):
-                            im.seek(i)
-                            frames.append(im.copy().convert("RGBA"))
-                        final = frames, absolute
-                        self.filter_cache[url] = final
-                        return final
-                except IOError:
-                    raise AssertionError(f"Filter `{url}` couldn't be parsed as an image!")
-        return self.filter_cache[url]
+                await cur.execute("SELECT absolute, author, upload_time, data FROM filters WHERE name == ?;", name)
+                res = await cur.fetchone()
+                if res is None: return None
+                absolute, author, upload_time, data = res
+                im = Image.open(BytesIO(data))
+                im.load()          
+                final = absolute, author, None if upload_time is None else upload_time / 1000, im
+                self.filter_cache[name] = final
+                return final
+        return self.filter_cache[name]
 
 
 @dataclass

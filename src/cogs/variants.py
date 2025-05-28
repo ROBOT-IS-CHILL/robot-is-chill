@@ -15,17 +15,6 @@ from ..utils import recolor, composite
 from .. import constants, errors
 from ..types import Variant, RegexDict, VaryingArgs, Color, Slice
 
-CARD_KERNEL = np.array(((0, 1, 0), (1, 0, 1), (0, 1, 0)))
-OBLQ_KERNEL = np.array(((1, 0, 1), (0, 0, 0), (1, 0, 1)))
-META_KERNELS = {
-    "full": np.array([[1, 1, 1],
-                      [1, -8, 1],
-                      [1, 1, 1]]),
-    "edge": np.array([[0, 1, 0],
-                      [1, -4, 1],
-                      [0, 1, 0]])
-}
-
 
 def class_init(self, *args, **kwargs):
     self.args = args
@@ -156,6 +145,7 @@ async def setup(bot):
                 tree.append(p.annotation)
         return tree
 
+    # not a day goes by i don't regret writing this code. what the fuck even  is this.
     def create_variant(func: Callable, aliases: Iterable[str], no_function_name=False, hashed=True, hidden=False) -> \
     type[Variant]:
         assert func.__doc__ is not None, f"Variant `{func.__name__}` is missing a docstring!"
@@ -585,7 +575,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         return sprite.astype(np.uint8)
 
     @add_variant("m")
-    async def meta(sprite, level: Optional[int] = 1, kernel: Optional[Literal["full", "edge"]] = "full", size: Optional[int] = 1):
+    async def meta(sprite, level: Optional[int] = 1, kernel: Optional[Literal["full", "edge", "unit"]] = "full", size: Optional[int] = 1):
         """Applies a meta filter to an image."""
         if level is None: level = 1
         if size is None: size = 1
@@ -609,6 +599,10 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
             ker[0,ksize-1] = 0
             ker[ksize-1,ksize-1] = 0
             ker[ksize-1,0] = 0
+        elif kernel == 'unit':
+            ker[size, size] = - ksize**2 + 5
+            ker[0,0] = 0
+            ker[0,ksize-1] = 0
         for _ in range(abs(level)):
             base = cv2.filter2D(src=base, ddepth=-1, kernel=ker)
         base = np.dstack((base, base, base, base))
@@ -798,8 +792,8 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         cols = np.any(sprite[:, :, 3], axis=0)
         if not len(row_check := np.where(rows)[0]) or not len(col_check := np.where(cols)[0]):
             return sprite
-        left, right = row_check[[0, -1]]
-        top, bottom = col_check[[0, -1]]
+        left, right = col_check[[0, -1]]
+        top, bottom = row_check[[0, -1]]
         sprite_center = sprite.shape[0] // 2 - 1, sprite.shape[1] // 2 - 1
         center = int((top + bottom) // 2), int((left + right) // 2)
         displacement = np.array((sprite_center[0] - center[0], sprite_center[1] - center[1]))
@@ -1209,17 +1203,11 @@ If a value is negative, it removes pixels above the threshold instead."""
         return np.uint8(mapped)
 
     @add_variant("filter", "fi!")
-    async def filterimage(sprite, filter_url: str, absolute: Optional[bool] = None, *, tile, wobble, renderer):
+    async def filterimage(sprite, name: str, *, tile, wobble, renderer):
         """Applies a filter image to a sprite. For information about filter images, look at the filterimage command."""
-        frames, abs_db = await renderer.bot.db.get_filter(filter_url)
-        try:
-            filter = frames[wobble]
-        except IndexError:
-            filter = frames[0]
+        absolute, _, _, afilter = await renderer.bot.db.get_filter(name)
         filt = np.array(filter.convert("RGBA"))
         check_size(*filt.shape[:2])
-        absolute = absolute if absolute is not None else \
-            abs_db if abs_db is not None else False
         filt = np.float32(filt)
         filt[..., :2] -= 0x80
         if not absolute:
