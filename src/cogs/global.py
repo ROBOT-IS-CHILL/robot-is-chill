@@ -458,12 +458,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                         ]
                 # Get the dimensions of the grid
                 grid_shape = layer_grid.shape
-                # Don't proceed if the request is too large.
-                # (It shouldn't be that long to begin with because of Discord's 2000-character limit)
-                if tilecount > constants.MAX_TILES and not (
-                        ctx.author.id in [self.bot.owner_id, 280756504674566144]):
-                    return await ctx.error(
-                        f"Too many tiles ({tilecount}). You may only render up to {constants.MAX_TILES} tiles at once, including empty tiles.")
                 # Handles variants based on `:` affixes
                 render_ctx.out = BytesIO()
                 render_ctx.extra_out = BytesIO() if render_ctx.raw_output else None
