@@ -314,7 +314,8 @@ class Renderer:
                          image_format=ctx.image_format,
                          loop=ctx.loop,
                          boomerang=ctx.boomerang,
-                         background=ctx.background is not None)
+                         background=ctx.background is not None,
+                         ctx=ctx)
         return comp_ovh, time.perf_counter() - start_time, background_images[0].shape[1::-1]
 
     def blend(self, mode, src, dst, keep_alpha: bool = True) -> np.ndarray:
@@ -720,7 +721,8 @@ class Renderer:
             image_format: str = 'gif',
             loop: bool = True,
             boomerang: bool = False,
-            background: bool = False
+            background: bool = False,
+            ctx: RenderContext | None = None
     ) -> None:
         """Saves the images as a gif to the given file or buffer.
 
@@ -736,19 +738,40 @@ class Renderer:
                 save_images = [Image.fromarray(im) for im in images]
             else:
                 save_images = []
-                for i, im in enumerate(images):
-                    # TODO: THIS IS EXTREMELY SLOW. BETTER WAY IS NEEDED.
-                    colors, counts = np.unique(im.reshape(-1, 4), axis=0, return_counts=True)
-                    sort_indices = np.argsort(counts)
-                    colors = colors[sort_indices[::-1]] # Sort in descending order
+                if ctx is not None and ctx.limited_palette:
+                    total_colors, total_counts = [], []
+                    for frames in ctx.tile_cache.values():
+                        for frame in frames:
+                            colors, counts = np.unique(frame.reshape(-1, 4), axis=0, return_counts=True)
+                            total_colors.extend(colors)
+                            total_counts.extend(counts)
+                    total_colors, total_counts = np.array(total_colors), np.array(total_counts)
+                    colors, inverse_indices = np.unique(total_colors, axis=0, return_inverse=True)
+                    final_counts = np.bincount(inverse_indices, weights=total_counts)
+                    sort_indices = np.argsort(final_counts)
+                    colors = colors[sort_indices[::-1]]
                     palette_colors = [0, 0, 0]
                     formatted_colors = colors[colors[:, 3] != 0][..., :3]
                     formatted_colors = formatted_colors[:255].flatten()
                     palette_colors.extend(formatted_colors)
                     dummy = Image.new('P', (16, 16))
                     dummy.putpalette(palette_colors)
-                    save_images.append(Image.fromarray(im).convert('RGB').quantize(
-                        palette=dummy, dither=0))
+                    for i, im in enumerate(images):
+                        save_images.append(Image.fromarray(im).convert('RGB').quantize(
+                            palette=dummy, dither=0))
+                else:
+                    for i, im in enumerate(images):
+                        colors, counts = np.unique(im.reshape(-1, 4), axis=0, return_counts=True)
+                        sort_indices = np.argsort(counts)
+                        colors = colors[sort_indices[::-1]] # Sort in descending order
+                        palette_colors = [0, 0, 0]
+                        formatted_colors = colors[colors[:, 3] != 0][..., :3]
+                        formatted_colors = formatted_colors[:255].flatten()
+                        palette_colors.extend(formatted_colors)
+                        dummy = Image.new('P', (16, 16))
+                        dummy.putpalette(palette_colors)
+                        save_images.append(Image.fromarray(im).convert('RGB').quantize(
+                            palette=dummy, dither=0))
             kwargs = {
                 'format': "GIF",
                 'interlace': True,

@@ -498,11 +498,14 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             filename = datetime.utcnow().strftime(
                 f"render_%Y-%m-%d_%H.%M.%S.{render_ctx.image_format}")
             image = discord.File(render_ctx.out, filename=filename, spoiler=spoiler)
-            if hasattr(ctx, "fake"):
+            if hasattr(ctx, "fake") or hasattr(ctx, "is_from_file"):
                 prefix = ""
             else:
                 prefix = ctx.message.content.split(' ', 1)[0] + " "
-            description = f"{'||' if spoiler else ''}```\n{prefix}{old_tiles}\n```{'||' if spoiler else ''}"
+            if hasattr(ctx, "is_from_file"):
+                description = ""
+            else:
+                description = f"{'||' if spoiler else ''}```\n{prefix}{old_tiles}\n```{'||' if spoiler else ''}"
             if render_ctx.do_embed:
                 embed = discord.Embed(color=self.bot.embed_color)
 
@@ -625,6 +628,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         """
         try:
             objects = str(from_bytes((await ctx.message.attachments[0].read())).best())
+            ctx.is_from_file = True
             await self.start_timeout(
                 ctx,
                 objects=objects,

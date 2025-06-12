@@ -213,6 +213,15 @@ Use % to set a percentage of the default render speed."""
         """Clips tiles extending off the border of the render. Overrides --expand."""
         ctx.cropped = True
 
+    @flags.register(match=r"--limited_palette|-lp",
+                syntax="--limited_palette|-lp",
+                )
+    async def limited_palette(match, ctx):
+        """Only uses colors used within tiles in the render.
+        Vastly speeds up GIF encoding at the cost of breaking effects like blending modes and transparency.
+        Does nothing with -b enabled."""
+        ctx.limited_palette = True
+
     @flags.register(match=r"(?:--crop)=(\d+)/(\d+)/(\d+)/(\d+)",
                     syntax="--crop=<left: int>/<top: int>/<right: int>/<bottom: int>",
                     )

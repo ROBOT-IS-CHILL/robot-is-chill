@@ -310,6 +310,7 @@ class RenderContext:
     sprite_cache: dict = field(default_factory=lambda: {})
     tile_cache: dict = field(default_factory=lambda: {})
     letters: bool = False
+    limited_palette: bool = False
 
 
 
