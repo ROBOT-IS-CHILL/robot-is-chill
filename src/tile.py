@@ -102,7 +102,7 @@ class TileSkeleton:
 def is_adjacent(pos, tile, grid, tile_borders=False) -> bool:
     """Tile is next to a joining tile."""
     w, x, y, z = pos
-    joining_tiles = (tile.name, "level", "border")
+    joining_tiles = (tile.name, "level", "edge")
     if x < 0 or y < 0 or \
             y >= grid.shape[2] or x >= grid.shape[3]:
         return tile_borders

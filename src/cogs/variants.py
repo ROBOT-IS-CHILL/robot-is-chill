@@ -1085,11 +1085,6 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
         sprite[:, :, :3] = cv2.cvtColor(arr_hls.astype(np.uint8), cv2.COLOR_HLS2RGB)  # my question still stands
         return sprite
 
-    @add_variant("3oo", "skul", hidden=True)
-    async def threeoo(sprite, scale: float):
-        """Content-aware scales the sprite downwards."""
-        assert 0, "Due to both extremely little use and extreme difficulty to program, 3oo isn't in the bot anymore. Sorry!"
-
     @add_variant()
     async def crop(sprite, x_y: list[int, int], u_v: list[int, int], change_bbox: Optional[bool] = False):
         """Crops the sprite to the specified bounding box.
@@ -1205,7 +1200,9 @@ If a value is negative, it removes pixels above the threshold instead."""
     @add_variant("filter", "fi!")
     async def filterimage(sprite, name: str, *, tile, wobble, renderer):
         """Applies a filter image to a sprite. For information about filter images, look at the filterimage command."""
-        absolute, _, _, filter = await renderer.bot.db.get_filter(name)
+        res = await renderer.bot.db.get_filter(name)
+        assert res is not None, f"Filter `{name.replace('`', '').replace('\n', '')[:32]}` does not exist!"
+        absolute, _, _, filter = res
         filt = np.array(filter.convert("RGBA"))
         check_size(*filt.shape[:2])
         filt = np.float32(filt)
