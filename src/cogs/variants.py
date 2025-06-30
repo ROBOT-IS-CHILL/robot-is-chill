@@ -21,6 +21,9 @@ def class_init(self, *args, **kwargs):
     self.kwargs = kwargs
 
 
+def sanitize(string):
+    return string.replace('`', '').replace('\n', '')[:32]
+
 def parse_signature(v: list[str], t: list[type | types.GenericAlias]) -> list[Any]:
     out = []
     t = list(t).copy()
@@ -612,7 +615,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         else:
             base[mask ^ (level < 0), ...] = 0
         return base
-    
+
     @add_variant(no_function_name=True)
     async def omni(sprite, type: Optional[Literal["pivot", "branching"]] = "branching", *, tile, wobble, renderer):
         """Gives the tile an overlay, like the omni text."""
@@ -830,7 +833,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         sprite[:, :, 3][mask] = sprite_flooded[1:-1, 1:-1][mask].astype(np.uint8)
         sprite[(sprite[:, :] == [0, 0, 0, 255]).all(2)] = color
         return sprite
-    
+
     @add_variant("pf")
     async def pointfill(sprite, color: Color, x: int, y: int, *, tile, wobble, renderer):
         """Floodfills a sprite starting at a given point."""
@@ -863,7 +866,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         else:
             sprite[(sprite[:, :, 0] == color[0]) & (sprite[:, :, 1] == color[1]) & (sprite[:, :, 2] == color[2])] = 0
         return sprite
-    
+
     @add_variant("rp")
     async def replace(sprite, color1: Color, color2: Color, invert: Optional[bool] = False, *, tile, wobble, renderer):
         """Replaces a certain color with a different color. If [36minvert[0m is on, then it replaces all but that color."""
@@ -1201,7 +1204,7 @@ If a value is negative, it removes pixels above the threshold instead."""
     async def filterimage(sprite, name: str, *, tile, wobble, renderer):
         """Applies a filter image to a sprite. For information about filter images, look at the filterimage command."""
         res = await renderer.bot.db.get_filter(name)
-        assert res is not None, f"Filter `{name.replace('`', '').replace('\n', '')[:32]}` does not exist!"
+        assert res is not None, f"Filter `{sanitize(name)}` does not exist!"
         absolute, _, _, filter = res
         filt = np.array(filter.convert("RGBA"))
         check_size(*filt.shape[:2])
