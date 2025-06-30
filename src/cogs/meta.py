@@ -187,7 +187,7 @@ Tiles: {tile_amount}""",
             value="""_@baltdev_ - Current lead
 _@centdemeern1_ - Co-lead
 _@rocketrace_ - Original lead
-_@dreamvoyager, @justwhy_ - Text generator sprites
+_@roccowolf, @justwhy_ - Text generator sprites
 _@theopold, @dizzyandy, and many others_ - Major and minor contributions to the bot
 """,
             inline=True
