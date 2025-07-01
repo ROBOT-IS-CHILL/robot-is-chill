@@ -1,0 +1,6 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+playdate = {sprite = "playdate", color = [0, 3], tiling = "none"}
+
