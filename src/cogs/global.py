@@ -584,7 +584,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             objects=objects,
             rule=False)
 
-    @commands.command(aliases=["text", "r"])
+    @commands.command(aliases=["r"])
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     async def rule(self, ctx: Context, *, objects: str = ""):
         """Renders the text tiles provided.
