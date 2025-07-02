@@ -190,8 +190,6 @@ dufu = {sprite = "dufut", color = [0, 3], tiling = "character"}
 
 wall2 = {sprite = "wall2", color = [4, 4], tiling = "diagonal_tiling"}
 
-text_toad = {sprite = "text_toad", color = [2, 2], tiling = "none"}
-
 text_pride = {sprite = "text_pride", color = [4, 1], tiling = "none"}
 
 text_ampersand = {sprite = "text_ampersand", color = [0, 3], tiling = "none"}
