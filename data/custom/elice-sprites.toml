@@ -1,0 +1,8 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+elicey = {sprite = "elicey", color = [0, 3], tiling = "animated_directional"}
+
+text_elicey = {sprite = "text_elicey", color = [4, 2], tiling = "none"}
+
