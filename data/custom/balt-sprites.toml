@@ -81,3 +81,7 @@ text_fuck = {sprite = "text_fuck", color = [4, 1], tiling = "none"}
 text_ninja = {sprite = "text_ninja", color = [0, 0], tiling = "none"}
 
 text_poob = {sprite = "text_poob", color = [5, 4], tiling = "none"}
+
+#debugfrommisc = {sprite = "debugbutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 3], tiling = "none"}
+
+#knifefrommisc = {sprite = "knifebutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 2], tiling = "none"}

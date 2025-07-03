@@ -2,6 +2,8 @@
 
 
 
+slommy = {sprite = "slommy", color = [2, 2], tiling = "none"}
+
 elicey = {sprite = "elicey", color = [0, 3], tiling = "animated_directional"}
 
 text_elicey = {sprite = "text_elicey", color = [4, 2], tiling = "none"}

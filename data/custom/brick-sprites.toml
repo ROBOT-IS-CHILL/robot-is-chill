@@ -26,3 +26,12 @@ josh = {sprite = "josh", color = [0, 1], tiling = "none"}
 
 image = {sprite = "painting", color = [0, 3], tiling = "none"}
 
+blocker = {sprite = "blocker", color = [0, 3], tiling = "tiling"}
+
+link = {sprite = "link", color = [0, 3], tiling = "tiling"}
+
+text_meta = {sprite = "meta", color = [1, 4], tiling = "none"}
+
+f0f0 = {sprite = "f0f0", color = [5, 2], tiling = "character"}
+
+chadchad = {sprite = "jidjid", color = [0, 3], tiling = "character"}

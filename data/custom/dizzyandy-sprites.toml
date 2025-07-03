@@ -463,3 +463,7 @@ text_true = {sprite = "text_true", color = [5, 4], tiling = "none"}
 text_false = {sprite = "text_false", color = [2, 2], tiling = "none"}
 
 logic_luigi = {sprite = "logic_luigi", color = [5, 2], tiling = "none"}
+
+text_ae = {sprite = "text_ae", color = [0, 3], tiling = "none"}
+
+text_oe = {sprite = "text_oe", color = [0, 3], tiling = "none"}
