@@ -34,13 +34,13 @@ text_gme = {sprite = "text_gme", color = [4, 2], tiling = "none"}
 
 downwards = {sprite = "downwards", color = [1, 0], tiling = "none"}
 
-text_is! = {sprite = "text_is!", color = [0, 3], tiling = "none"}
-text_and! = {sprite = "text_and!", color = [0, 3], tiling = "none"}
+"text_is!" = {sprite = "text_is!", color = [0, 3], tiling = "none"}
+"text_and!" = {sprite = "text_and!", color = [0, 3], tiling = "none"}
 
-text_you! = {sprite = "text_yoy", color = [4, 1], tiling = "none"}
-text_win! = {sprite = "text_wiw", color = [2, 4], tiling = "none"}
-text_push! = {sprite = "text_puhs", color = [6, 1], tiling = "none"}
-text_stop! = {sprite = "text_stoo", color = [5, 1], tiling = "none"}
-text_open! = {sprite = "text_opeen", color = [2, 4], tiling = "none"}
-text_shut! = {sprite = "text_shutu", color = [4, 1], tiling = "none"}
-text_sink! = {sprite = "text_sinkn", color = [1, 3], tiling = "none"}
+"text_you!" = {sprite = "text_yoy", color = [4, 1], tiling = "none"}
+"text_win!" = {sprite = "text_wiw", color = [2, 4], tiling = "none"}
+"text_push!" = {sprite = "text_puhs", color = [6, 1], tiling = "none"}
+"text_stop!" = {sprite = "text_stoo", color = [5, 1], tiling = "none"}
+"text_open!" = {sprite = "text_opeen", color = [2, 4], tiling = "none"}
+"text_shut!" = {sprite = "text_shutu", color = [4, 1], tiling = "none"}
+"text_sink!" = {sprite = "text_sinkn", color = [1, 3], tiling = "none"}
