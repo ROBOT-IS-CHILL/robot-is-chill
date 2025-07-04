@@ -201,3 +201,21 @@ ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
 text_happy = {sprite = "text_happy", color = [2, 4], tiling = "none"}
 
 text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
+
+tuto = {sprite = "tuto", tiling = "none", color = [0, 3]}
+
+text_tuto = {sprite = "text_tuto", tiling = "none", color = [0, 3]}
+
+hbaba = {sprite = "hbaba", tiling = "character", color = [0, 3]}
+
+what_old = {sprite = "what_old", tiling = "none", color = [0, 3]}
+
+jony = {sprite = "jony", color = [0, 3], tiling = "none"}
+
+text_hd = {sprite = "text_hd", color = [5, 4], tiling = "none"}
+
+nook = {sprite = "nook", color = [0, 3], tiling = "none"}
+
+text_debt = {sprite = "text_debt", color = [5, 3], tiling = "none"}
+
+bird_old = {sprite = "bird_old", color = [2, 3], tiling = "animated_directional"}

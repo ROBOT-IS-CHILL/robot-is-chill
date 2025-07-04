@@ -5,4 +5,5 @@
 
 
 
-test_01 = {sprite = "jij", color = [6, 2], tiling = "none", source = "bab", palette = "bab"}
+#test_01 = {sprite = "jij", color = [6, 2], tiling = "none", source = "bab", palette = "bab"}
+#2025.07.02. behaves identical to bab_jij, palette is ignored.
