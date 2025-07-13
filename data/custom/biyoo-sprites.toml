@@ -76,7 +76,6 @@ lego = {sprite = "lego", color = [0, 3], tiling = "none"}
 # These two aren't supposed to be white, but "whatever color you want" isn't possible here.
 text_lego = {sprite = "lego", color = [0, 3], tiling = "none"}
 
-rockguitar = {sprite = "rockguitar", color = [0, 3], tiling = "none"}
-# ^ Color unspecified as of yet. To be fixed once possible.
+rockguitar = {sprite = "rockguitar", color = [3, 1], tiling = "none"}
 
 fbaba = {sprite = "fbaba", color = [0, 3], tiling = "character"}
