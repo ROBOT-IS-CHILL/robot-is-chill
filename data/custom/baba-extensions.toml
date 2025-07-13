@@ -219,3 +219,7 @@ nook = {sprite = "nook", color = [0, 3], tiling = "none"}
 text_debt = {sprite = "text_debt", color = [5, 3], tiling = "none"}
 
 bird_old = {sprite = "bird_old", color = [2, 3], tiling = "animated_directional"}
+
+text_defeat_old = {sprite = "text_defeat_old", color = [2, 1], tiling = "none"}
+
+text_end_old = {sprite = "text_end_old", color = [0, 3], tiling = "none"}
