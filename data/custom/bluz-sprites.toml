@@ -2,5 +2,5 @@
 
 
 
-playdate = {sprite = "playdate", color = [0, 3], tiling = "none"}
+playdate = {sprite = "playdate", color = [2, 4], tiling = "none"}
 
