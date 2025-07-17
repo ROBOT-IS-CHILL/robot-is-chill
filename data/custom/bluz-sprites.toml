@@ -2,5 +2,7 @@
 
 
 
+playdate_old = {sprite = "playdate_old", color = [2, 4], tiling = "none"}
+
 playdate = {sprite = "playdate", color = [2, 4], tiling = "none"}
 
