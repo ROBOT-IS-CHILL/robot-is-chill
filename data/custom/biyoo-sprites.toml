@@ -64,9 +64,9 @@ compass = {sprite = "compass", color = [0, 3], tiling = "none"}
 
 text_compass = {sprite = "text_compass", color = [0, 2], tiling = "none"}
 
-sawlarge = {sprite = "sawlarge", color = [0, 3], tiling = "custom", extra_frames = [0, 16]}
-# Color not specified for these two yet either?
-sawthin = {sprite = "sawthin", color = [0, 3], tiling = "custom", extra_frames = [0, 16]}
+sawlarge = {sprite = "sawlarge", color = [0, 1], tiling = "custom", extra_frames = [0, 16]}
+
+sawthin = {sprite = "sawthin", color = [0, 1], tiling = "custom", extra_frames = [0, 16]}
 
 keyboard = {sprite = "board", color = [0, 2], tiling = "none"}
 
