@@ -4,7 +4,7 @@
 
 build_auto = {sprite = "build_auto", color = [0, 3], tiling = "none"}
 
-build_placeholder = {sprite = "build_auto", color = [0, 3], tiling = "none"}
+build_placeholder = {sprite = "build_placeholder", color = [0, 3], tiling = "none"}
 
 text_unit = {sprite = "text_unit", color = [0, 3], tiling = "none"}
 
