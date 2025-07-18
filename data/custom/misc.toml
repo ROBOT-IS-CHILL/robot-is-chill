@@ -2,13 +2,106 @@
 
 
 
+# l9m2
+
+
 bubu = {sprite = "bubu", tiling = "character", color = [4, 4]}
 
 text_bubu = {sprite = "text_bubu", color = [4, 4], tiling = "none"}
 
+
+# hillexed
+
+
+wug = {sprite = "wug", tiling = "character", color = [2, 4]}
+
+text_wug = {sprite = "text_wug", color = [2, 4], tiling = "none"}
+
+
+# lightbulbmeow
+
+
+bulb = {sprite = "bulb", tiling = "none", color = [2, 4]}
+
+text_bulb = {sprite = "text_bulb", tiling = "none", color = [2, 4]}
+
+badbad_old = {sprite = "badbad", tiling = "character", color = [0, 3]}
+
+snomba = {sprite = "snomba", color = [0, 3], tiling = "directional"}
+
+
+# jayrite
+
+
+cactus2 = {sprite = "cactus", tiling = "none", color = [5, 2]}
+
+text_cactus = {sprite = "text_cactus", tiling = "none", color = [5, 2]}
+
+
+# silverhawke
+
+
+hawke = {sprite = "hawke", tiling = "directional", color = [0, 3]}
+
+text_hawke = {sprite = "text_hawke", tiling = "none", color = [1, 4]}
+
+
+# charlotte
+
+
+cherry = {sprite = "cherry", tiling = "none", color = [2, 2]}
+
+text_cherry = {sprite = "text_cherry", tiling = "none", color = [2, 2]}
+
+
+# daffafm2002
+
+
+hexagon = {sprite = "hexagon", tiling = "none", color = [3, 0]}
+
+pentagon = {sprite = "pentagon", color = [4, 2], tiling = "none"}
+
+
+# plantform
+
+
+text_unoplusfour = {sprite = "text_unocard", tiling = "none", color = [0, 1]}
+
+unoplusfour = {sprite = "unocard", tiling = "directional", color = [0, 1]}
+
+text_unoreverse = {sprite = "text_unocardrev", tiling = "none", color = [2, 2]}
+
+unoreverse = {sprite = "unocardrev", tiling = "directional", color = [2, 2]}
+
+unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional"}
+
+text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none"}
+
+tbridge = {sprite = "tbridge", color = [2, 3], tiling = "tiling"}
+
+
+# atabeerk_
+
+
+discord = {sprite = "discord", color = [3, 3], tiling = "none"}
+
+
+# coolkatter
+
+
+paige = {sprite = "page", color = [0, 3], tiling = "directional"}
+
+
+# 
+
+
 balt_old = {sprite = "balt", tiling = "character", color = [0, 1], tags = ["animal", "machine"]}
 
 text_balt_old = {sprite = "text_balt", color = [0, 1], tiling = "none"}
+
+
+# unsorted
+
 
 warn = {sprite = "warn", color = [0, 3], tiling = "none"}
 
@@ -26,49 +119,15 @@ minus = {sprite = "minus", color = [0, 3], tiling = "none"}
 
 equals = {sprite = "equals", color = [0, 3], tiling = "none"}
 
-wug = {sprite = "wug", tiling = "character", color = [2, 4]}
-
-text_wug = {sprite = "text_wug", color = [2, 4], tiling = "none"}
-
-bulb = {sprite = "bulb", tiling = "none", color = [2, 4]}
-
-text_bulb = {sprite = "text_bulb", tiling = "none", color = [2, 4]}
-
 border = {sprite = "border", tiling = "none", color = [1, 0]}
 
 text_border = {sprite = "text_border", tiling = "none", color = [1, 0]}
 
-cactus2 = {sprite = "cactus", tiling = "none", color = [5, 2]}
-
-text_cactus = {sprite = "text_cactus", tiling = "none", color = [5, 2]}
-
-hawke = {sprite = "hawke", tiling = "directional", color = [0, 3]}
-
-text_hawke = {sprite = "text_hawke", tiling = "none", color = [1, 4]}
-
 text_badbad_old = {sprite = "text_badbad", tiling = "none", color = [1, 4]}
-
-badbad_old = {sprite = "badbad", tiling = "character", color = [0, 3]}
-
-cherry = {sprite = "cherry", tiling = "none", color = [2, 2]}
-
-text_cherry = {sprite = "text_cherry", tiling = "none", color = [2, 2]}
 
 mobile = {sprite = "mobile", tiling = "none", color = [0, 1]}
 #These two are to be removed?
 text_mobile = {sprite = "text_mobile", tiling = "none", color = [0, 2]}
-
-hexagon = {sprite = "hexagon", tiling = "none", color = [3, 0]}
-
-text_unoplusfour = {sprite = "text_unocard", tiling = "none", color = [0, 1]}
-
-unoplusfour = {sprite = "unocard", tiling = "directional", color = [0, 1]}
-
-text_unoreverse = {sprite = "text_unocardrev", tiling = "none", color = [2, 2]}
-
-unoreverse = {sprite = "unocardrev", tiling = "directional", color = [2, 2]}
-
-discord = {sprite = "discord", color = [3, 3], tiling = "none"}
 
 baljeet = {sprite = "baljeet", color = [6, 1], tiling = "none"}
 
@@ -92,12 +151,6 @@ wonder = {sprite = "wonder", color = [0, 3], tiling = "none"}
 
 broken = {sprite = "broken", color = [0, 3], tiling = "none"}
 
-paige = {sprite = "page", color = [0, 3], tiling = "directional"}
-
-tbridge = {sprite = "tbridge", color = [2, 3], tiling = "tiling"}
-
-snomba = {sprite = "snomba", color = [0, 3], tiling = "directional"}
-
 text_snomba = {sprite = "text_snomba", color = [0, 3], tiling = "none"}
 
 cowke = {sprite = "cowke", color = [0, 3], tiling = "animated_directional"}
@@ -118,15 +171,9 @@ bribri = {sprite = "bribri", color = [6, 0], tiling = "character"}
 
 heptagon = {sprite = "heptagon", color = [5, 2], tiling = "none"}
 
-pentagon = {sprite = "pentagon", color = [4, 2], tiling = "none"}
-
 rotom = {sprite = "rotom", color = [0, 3], tiling = "directional"}
 
 mhat = {sprite = "mhat", color = [0, 3], tiling = "directional"}
-
-unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional"}
-
-text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none"}
 
 abomination = {sprite = "project", color = [0, 3], tiling = "none"}
 
