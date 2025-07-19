@@ -10,7 +10,7 @@ level = {sprite = "level", color = [0, 3], tiling = "none", tags = ["baba_specia
 
 sale = {sprite = "sale", color = [4, 2], tiling = "none"}
 
-text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none", type = 0}
+text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none", type = 0} # type??
 
 spore = {sprite = "spore", color = [0, 3], tiling = "none"}
 
@@ -202,13 +202,13 @@ text_happy = {sprite = "text_happy", color = [2, 4], tiling = "none"}
 
 text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
 
-tuto = {sprite = "tuto", tiling = "none", color = [0, 3]}
+tuto = {sprite = "tuto", color = [0, 3], tiling = "none"}
 
-text_tuto = {sprite = "text_tuto", tiling = "none", color = [0, 3]}
+text_tuto = {sprite = "text_tuto", color = [0, 3], tiling = "none"}
 
-hbaba = {sprite = "hbaba", tiling = "character", color = [0, 3]}
+hbaba = {sprite = "hbaba", color = [0, 3], tiling = "character"}
 
-what_old = {sprite = "what_old", tiling = "none", color = [0, 3]}
+what_old = {sprite = "what_old", color = [0, 3], tiling = "none"}
 
 jony = {sprite = "jony", color = [0, 3], tiling = "none"}
 
