@@ -88,10 +88,61 @@ balt_old = {sprite = "balt", color = [0, 1], tiling = "character", tags = ["anim
 text_balt_old = {sprite = "text_balt", color = [0, 1], tiling = "none"}
 
 
+# diginist
+
+
+warn = {sprite = "warn", color = [0, 3], tiling = "none", author = "diginist"}
+
+
+# balt
+
+
+# (made with the bot)
+text_bababa = {sprite = "text_bababa", color = [0, 3], tiling = "none", author = "baltdev"}
+
+
+# someusername6
+
+
+# https://discord.com/channels/556333985882439680/557333186367979540/759243126278717481
+cowke = {sprite = "cowke", color = [0, 3], tiling = "animated_directional", author = "someusername6"}
+
+
+# theopold
+
+
+text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none", author = "theopold"}
+
+
+# trollbreeder
+
+
+bribri = {sprite = "bribri", color = [6, 0], tiling = "character", author = "trollbreeder"}
+
+
+# nousernamefound
+
+
+# + a small edit by Balt
+heptagon = {sprite = "heptagon", color = [5, 2], tiling = "none", author = "nousernamefound"}
+
+
+# sed
+
+
+rotom = {sprite = "rotom", color = [0, 3], tiling = "directional", author = "sed / 4906"}
+
+
+# huebird.
+
+
+wifi = {sprite = "wifi", color = [3, 3], tiling = "animated_directional"}
+
+text_wifi = {sprite = "text_wifi", color = [3, 3], tiling = "none"}
+
+
 # unsorted
 
-
-warn = {sprite = "warn", color = [0, 3], tiling = "none"}
 
 point = {sprite = "point", color = [0, 3], tiling = "none"}
 
@@ -119,11 +170,11 @@ text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
 
 baljeet = {sprite = "baljeet", color = [6, 1], tiling = "none"}
 
+# Likely another recreation by Balt, judging by the time period. I can't confirm that though.
 hardhat = {sprite = "hardhat", color = [3, 4], tiling = "none"}
 
+# "I have a reeeeally vague memory of me having the file open in aseprite so it might have been me but don't use this as the only evidence" - Charlotte
 tileedge = {sprite = "tileedge", color = [0, 3], tiling = "tiling"}
-
-text_bababa = {sprite = "text_bababa", color = [0, 3], tiling = "none"}
 
 end = {sprite = "end", color = [1, 4], tiling = "none"}
 
@@ -141,33 +192,27 @@ broken = {sprite = "broken", color = [0, 3], tiling = "none"}
 
 text_snomba = {sprite = "text_snomba", color = [0, 3], tiling = "none"}
 
-cowke = {sprite = "cowke", color = [0, 3], tiling = "animated_directional"}
-
+# Added at https://discord.com/channels/842220825226379265/853048844937068585/925935581991677992
 ingot = {sprite = "ingot", color = [6, 2], tiling = "none"}
 
-text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none"}
-
+# An older version of this was made by Elice.
+# https://discord.com/channels/842220825226379265/929160529447120957/929182071933530112
 beginner = {sprite = "beginner", color = [0, 3], tiling = "none"}
 
+# User id: 456226577798135808
 text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none"}
 
+# Possibly vanilla?
 movedust = {sprite = "movedust", color = [0, 3], tiling = "directional"}
 
+# https://discord.com/channels/842220825226379265/881063536221102161/931546269854355506
 derfis = {sprite = "derfis", color = [0, 3], tiling = "directional"}
 
-bribri = {sprite = "bribri", color = [6, 0], tiling = "character"}
-
-heptagon = {sprite = "heptagon", color = [5, 2], tiling = "none"}
-
-rotom = {sprite = "rotom", color = [0, 3], tiling = "directional"}
-
+# Technically hempuli's.
 mhat = {sprite = "mhat", color = [0, 3], tiling = "directional"}
 
+# Added at https://discord.com/channels/842220825226379265/853048844937068585/955891739485429760
 abomination = {sprite = "project", color = [0, 3], tiling = "none"}
-
-wifi = {sprite = "wifi", color = [3, 3], tiling = "animated_directional"}
-
-text_wifi = {sprite = "text_wifi", color = [3, 3], tiling = "none"}
 
 whee = {sprite = "whee", color = [0, 1], tiling = "none"}
 
