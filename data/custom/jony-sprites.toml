@@ -2,17 +2,17 @@
 
 
 
-jonybishop = {sprite = "bishop", tiling = "none", color = [0, 3]}
+jonybishop = {sprite = "bishop", color = [0, 3], tiling = "none"}
 
-jonyking = {sprite = "king", tiling = "none", color = [0, 3]}
+jonyking = {sprite = "king", color = [0, 3], tiling = "none"}
 
-jonyknight = {sprite = "knight", tiling = "none", color = [0, 3]}
+jonyknight = {sprite = "knight", color = [0, 3], tiling = "none"}
 
-jonypawn = {sprite = "pawn", tiling = "none", color = [0, 3]}
+jonypawn = {sprite = "pawn", color = [0, 3], tiling = "none"}
 
-jonyqueen = {sprite = "queen", tiling = "none", color = [0, 3]}
+jonyqueen = {sprite = "queen", color = [0, 3], tiling = "none"}
 
-jonyrook = {sprite = "rook", tiling = "none", color = [0, 3]}
+jonyrook = {sprite = "rook", color = [0, 3], tiling = "none"}
 
 iss = {sprite = "iss", color = [1, 2], tiling = "character"}
 
