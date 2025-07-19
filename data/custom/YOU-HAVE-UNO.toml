@@ -4,7 +4,7 @@
 
 text_unoplusfour = {sprite = "text_unocard", color = [0, 1], tiling = "none", author = "plantform"}
 
-unoplusfour = {sprite = "unocard", color = [0, 0], tiling = "directional", author = "plantform"}
+unoplusfour = {sprite = "unocard", color = [0, 1], tiling = "directional", author = "plantform"}
 
 text_unoreverse = {sprite = "text_unocardrev", color = [2, 2], tiling = "none", author = "plantform"}
 
@@ -16,7 +16,7 @@ text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none", author
 
 unowild = {sprite = "unowild", color = [0, 1], tiling = "directional", author = "plantform"}
 
-text_unowild = {sprite = "text_unowild", color = [0, 0], tiling = "none", author = "plantform"}
+text_unowild = {sprite = "text_unowild", color = [0, 1], tiling = "none", author = "plantform"}
 
 unodeck = {sprite = "unodeck", color = [2, 2], tiling = "none", author = "plantform"}
 
