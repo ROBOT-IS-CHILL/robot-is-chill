@@ -5,91 +5,93 @@
 # l9m2
 
 
-bubu = {sprite = "bubu", color = [4, 4], tiling = "character"}
+bubu = {sprite = "bubu", color = [4, 4], tiling = "character", author = "l9m2"}
 
-text_bubu = {sprite = "text_bubu", color = [4, 4], tiling = "none"}
+text_bubu = {sprite = "text_bubu", color = [4, 4], tiling = "none", author = "l9m2"}
 
 
 # hillexed
 
 
-wug = {sprite = "wug", color = [2, 4], tiling = "character"}
+wug = {sprite = "wug", color = [2, 4], tiling = "character", author = "hillexed"}
 
-text_wug = {sprite = "text_wug", color = [2, 4], tiling = "none"}
+text_wug = {sprite = "text_wug", color = [2, 4], tiling = "none", author = "hillexed"}
 
 
 # lightbulbmeow
 
 
-bulb = {sprite = "bulb", color = [2, 4], tiling = "none"}
+bulb = {sprite = "bulb", color = [2, 4], tiling = "none", author = "lightbulbmeow"}
 
-text_bulb = {sprite = "text_bulb", color = [2, 4], tiling = "none"}
+text_bulb = {sprite = "text_bulb", color = [2, 4], tiling = "none", author = "lightbulbmeow"}
 
-badbad_old = {sprite = "badbad", color = [0, 3], tiling = "character"}
+badbad_old = {sprite = "badbad", color = [0, 3], tiling = "character", author = "lightbulbmeow"}
 
-snomba = {sprite = "snomba", color = [0, 3], tiling = "directional"}
+snomba = {sprite = "snomba", color = [0, 3], tiling = "directional", author = "lightbulbmeow"}
 
 
 # jayrite
 
 
-cactus2 = {sprite = "cactus", color = [5, 2], tiling = "none"}
+cactus2 = {sprite = "cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
-text_cactus = {sprite = "text_cactus", color = [5, 2], tiling = "none"}
+text_cactus = {sprite = "text_cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
 
 # silverhawke
 
 
-hawke = {sprite = "hawke", color = [0, 3], tiling = "directional"}
+hawke = {sprite = "hawke", color = [0, 3], tiling = "directional", author = "silverhawke"}
 
-text_hawke = {sprite = "text_hawke", color = [1, 4], tiling = "none"}
+text_hawke = {sprite = "text_hawke", color = [1, 4], tiling = "none", author = "silverhawke"}
 
 
 # charlotte
 
 
-cherry = {sprite = "cherry", color = [2, 2], tiling = "none"}
+cherry = {sprite = "cherry", color = [2, 2], tiling = "none", author = "charlotte"}
 
-text_cherry = {sprite = "text_cherry", color = [2, 2], tiling = "none"}
+text_cherry = {sprite = "text_cherry", color = [2, 2], tiling = "none", author = "charlotte"}
 
 
 # daffafm2002
 
 
-hexagon = {sprite = "hexagon", color = [3, 0], tiling = "none"}
+hexagon = {sprite = "hexagon", color = [3, 0], tiling = "none", author = "daffafm2002"}
 
-pentagon = {sprite = "pentagon", color = [4, 2], tiling = "none"}
+pentagon = {sprite = "pentagon", color = [4, 2], tiling = "none", author = "daffafm2002"}
 
 
 # plantform
 
 
-text_unoplusfour = {sprite = "text_unocard", color = [0, 1], tiling = "none"}
+# NOTE: All of these, other than tbridge, have duplicates in YOU-HAVE-UNO.toml.
 
-unoplusfour = {sprite = "unocard", color = [0, 1], tiling = "directional"
+text_unoplusfour = {sprite = "text_unocard", color = [0, 1], tiling = "none", author = "plantform"}
 
-text_unoreverse = {sprite = "text_unocardrev", color = [2, 2], tiling = "none"}
+unoplusfour = {sprite = "unocard", color = [0, 1], tiling = "directional", author = "plantform"}
 
-unoreverse = {sprite = "unocardrev", color = [2, 2], tiling = "directional"}
+text_unoreverse = {sprite = "text_unocardrev", color = [2, 2], tiling = "none", author = "plantform"}
 
-unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional"}
+unoreverse = {sprite = "unocardrev", color = [2, 2], tiling = "directional", author = "plantform"}
 
-text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none"}
+unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional", author = "plantform"}
 
-tbridge = {sprite = "tbridge", color = [2, 3], tiling = "tiling"}
+text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none", author = "plantform"}
+
+tbridge = {sprite = "tbridge", color = [2, 3], tiling = "tiling", author = "plantform"}
 
 
 # atabeerk_
 
 
-discord = {sprite = "discord", color = [3, 3], tiling = "none"}
+discord = {sprite = "discord", color = [3, 3], tiling = "none", author = "atabeerk_"}
 
 
 # coolkatter
 
 
-paige = {sprite = "page", color = [0, 3], tiling = "directional"}
+paige = {sprite = "page", color = [0, 3], tiling = "directional", author = "coolkatter"}
 
 
 # 
