@@ -458,7 +458,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
 
     # --- TEXT MANIPULATION ---
 
-    @add_variant("noun", "prop")
+    @add_variant("noun", "prop", "quality")
     async def property(sprite,
                        plate: Optional[Literal["blank", "left", "up", "right", "down", "turn", "deturn", "soft"]] = None, *,
                        tile, wobble, renderer):
