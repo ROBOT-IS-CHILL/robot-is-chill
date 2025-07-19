@@ -2,31 +2,31 @@
 
 
 
-text_unoplusfour = {sprite = "text_unocard", tiling = "none", color = [0, 1]}
+text_unoplusfour = {sprite = "text_unocard", color = [0, 1], tiling = "none", author = "plantform"}
 
-unoplusfour = {sprite = "unocard", tiling = "directional", color = [0, 0]}
+unoplusfour = {sprite = "unocard", color = [0, 0], tiling = "directional", author = "plantform"}
 
-text_unoreverse = {sprite = "text_unocardrev", tiling = "none", color = [2, 2]}
+text_unoreverse = {sprite = "text_unocardrev", color = [2, 2], tiling = "none", author = "plantform"}
 
-unoreverse = {sprite = "unocardrev", tiling = "directional", color = [2, 2]}
+unoreverse = {sprite = "unocardrev", color = [2, 2], tiling = "directional", author = "plantform"}
 
-unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional"}
+unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional", author = "plantform"}
 
-text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none"}
+text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none", author = "plantform"}
 
-unowild = {sprite = "unowild", color = [0, 1], tiling = "directional"}
+unowild = {sprite = "unowild", color = [0, 1], tiling = "directional", author = "plantform"}
 
-text_unowild = {sprite = "text_unowild", color = [0, 0], tiling = "none"}
+text_unowild = {sprite = "text_unowild", color = [0, 0], tiling = "none", author = "plantform"}
 
-unodeck = {sprite = "unodeck", color = [2, 2], tiling = "none"}
+unodeck = {sprite = "unodeck", color = [2, 2], tiling = "none", author = "plantform"}
 
-text_unodeck = {sprite = "text_unodeck", color = [2, 2], tiling = "none"}
+text_unodeck = {sprite = "text_unodeck", color = [2, 2], tiling = "none", author = "plantform"}
 
-unoplustwo = {sprite = "unoplustwo", color = [5, 3], tiling = "directional"}
+unoplustwo = {sprite = "unoplustwo", color = [5, 3], tiling = "directional", author = "plantform"}
 
-text_unoplustwo = {sprite = "text_unoplustwo", color = [5, 3], tiling = "none"}
+text_unoplustwo = {sprite = "text_unoplustwo", color = [5, 3], tiling = "none", author = "plantform"}
 
-unoblank = {sprite = "unoblank", color = [0, 3], tiling = "directional"}
+unoblank = {sprite = "unoblank", color = [0, 3], tiling = "directional", author = "plantform"}
 
-text_unoblank = {sprite = "text_unoblank", color = [0, 3], tiling = "none"}
+text_unoblank = {sprite = "text_unoblank", color = [0, 3], tiling = "none", author = "plantform"}
 

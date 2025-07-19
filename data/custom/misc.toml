@@ -65,20 +65,6 @@ pentagon = {sprite = "pentagon", color = [4, 2], tiling = "none", author = "daff
 # plantform
 
 
-# NOTE: All of these, other than tbridge, have duplicates in YOU-HAVE-UNO.toml.
-
-text_unoplusfour = {sprite = "text_unocard", color = [0, 1], tiling = "none", author = "plantform"}
-
-unoplusfour = {sprite = "unocard", color = [0, 1], tiling = "directional", author = "plantform"}
-
-text_unoreverse = {sprite = "text_unocardrev", color = [2, 2], tiling = "none", author = "plantform"}
-
-unoreverse = {sprite = "unocardrev", color = [2, 2], tiling = "directional", author = "plantform"}
-
-unoskip = {sprite = "unoskip", color = [3, 3], tiling = "directional", author = "plantform"}
-
-text_unoskip = {sprite = "text_unoskip", color = [3, 3], tiling = "none", author = "plantform"}
-
 tbridge = {sprite = "tbridge", color = [2, 3], tiling = "tiling", author = "plantform"}
 
 
