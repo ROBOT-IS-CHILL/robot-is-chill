@@ -136,9 +136,53 @@ rotom = {sprite = "rotom", color = [0, 3], tiling = "directional", author = "sed
 # huebird.
 
 
-wifi = {sprite = "wifi", color = [3, 3], tiling = "animated_directional"}
+wifi = {sprite = "wifi", color = [3, 3], tiling = "animated_directional", author = "huebird."}
 
-text_wifi = {sprite = "text_wifi", color = [3, 3], tiling = "none"}
+text_wifi = {sprite = "text_wifi", color = [3, 3], tiling = "none", author = "huebird."}
+
+
+# durianfruit
+
+
+# made with the bot
+dufu = {sprite = "dufut", color = [0, 3], tiling = "character", author = "durianfruit"}
+
+
+# samu.raychik
+
+
+monkey = {sprite = "monkey", color = [2, 3], tiling = "directional", author = "samu.raychik"}
+
+text_monkey = {sprite = "text_monkey", color = [2, 3], tiling = "none", author = "samu.raychik"}
+
+
+# clicktuck_suskriberz
+
+
+placeholder = {sprite = "placeholder", color = [0, 3], tiling = "none", author = "clicktuck_suskriberz"}
+
+
+# dizzyandy
+
+
+text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none", author = "dizzyandy"}
+
+
+# biyoo
+
+
+# Note to self: add the sprites for this when moving
+cactus3 = {sprite = "cactus3", color = [5, 3], tiling = "none", author = "babaisyoo"}
+
+text_cactus3 = {sprite = "text_cactus3", color = [5, 3], tiling = "none", author = "babaisyoo"}
+
+
+# unze2unze4
+
+
+this = {sprite = "this", color = [0, 3], tiling = "none", author = "unze2unze4"}
+
+that = {sprite = "that", color = [0, 3], tiling = "none", author = "unze2unze4"}
 
 
 # unsorted
@@ -164,8 +208,9 @@ text_border = {sprite = "text_border", color = [1, 0], tiling = "none"}
 
 text_badbad_old = {sprite = "text_badbad", color = [1, 4], tiling = "none"}
 
-mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
 #These two are to be removed?
+mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
+
 text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
 
 baljeet = {sprite = "baljeet", color = [6, 1], tiling = "none"}
@@ -199,9 +244,6 @@ ingot = {sprite = "ingot", color = [6, 2], tiling = "none"}
 # https://discord.com/channels/842220825226379265/929160529447120957/929182071933530112
 beginner = {sprite = "beginner", color = [0, 3], tiling = "none"}
 
-# User id: 456226577798135808
-text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none"}
-
 # Possibly vanilla?
 movedust = {sprite = "movedust", color = [0, 3], tiling = "directional"}
 
@@ -214,12 +256,16 @@ mhat = {sprite = "mhat", color = [0, 3], tiling = "directional"}
 # Added at https://discord.com/channels/842220825226379265/853048844937068585/955891739485429760
 abomination = {sprite = "project", color = [0, 3], tiling = "none"}
 
+# All I could find is this tile is related to the user whee23.
 whee = {sprite = "whee", color = [0, 1], tiling = "none"}
 
+# Added at https://discord.com/channels/556333985882439680/556906122183704596/976292816420487168
 ship = {sprite = "ship", color = [0, 2], tiling = "directional"}
 
 text_ship = {sprite = "text_ship", color = [0, 2], tiling = "none"}
 
+# Added at https://discord.com/channels/842220825226379265/940383148200591392/982463454818492426
+# Unlikely, but maybe related?: https://discord.com/channels/556333985882439680/991737512458473553/991818638271184976
 patrick2 = {sprite = "para", color = [4, 1], tiling = "directional"}
 
 text_patrick2 = {sprite = "text_para", color = [4, 1], tiling = "none"}
@@ -228,10 +274,11 @@ dots2 = {sprite = "dots", color = [3, 4], tiling = "none"}
 
 text_dots2 = {sprite = "text_dots", color = [3, 4], tiling = "none"}
 
-dufu = {sprite = "dufut", color = [0, 3], tiling = "character"}
-
 wall2 = {sprite = "wall2", color = [4, 4], tiling = "diagonal_tiling"}
 
+# These were added at https://discord.com/channels/556333985882439680/556906122183704596/992214531143106580
+# As far as I can tell, these are either made by Hempuli, or recreated by Balt.
+#
 text_pride = {sprite = "text_pride", color = [4, 1], tiling = "none"}
 
 text_ampersand = {sprite = "text_ampersand", color = [0, 3], tiling = "none"}
@@ -259,6 +306,7 @@ text_oct = {sprite = "text_oct", color = [4, 2], tiling = "none"}
 text_nov = {sprite = "text_nov", color = [0, 1], tiling = "none"}
 
 text_dec = {sprite = "text_dec", color = [6, 1], tiling = "none"}
+#
 
 diamond = {sprite = "diamond", color = [2, 2], tiling = "none"}
 
@@ -276,10 +324,7 @@ text_heart = {sprite = "text_heart", color = [2, 1], tiling = "none"}
 
 club = {sprite = "club", color = [0, 0], tiling = "none"}
 
-monkey = {sprite = "monkey", color = [2, 3], tiling = "directional"}
-
-text_monkey = {sprite = "text_monkey", color = [2, 3], tiling = "none"}
-
+# Added at https://discord.com/channels/842220825226379265/853048844937068585/996618548111749221
 rat = {sprite = "rat", color = [0, 3], tiling = "none"}
 
 text_rat = {sprite = "text_rat", color = [0, 3], tiling = "none"}
@@ -290,21 +335,13 @@ youyou = {sprite = "youyou", color = [4, 1], tiling = "character"}
 
 text_youyou = {sprite = "text_youyou", color = [4, 1], tiling = "none"}
 
+# Are these 2 vanilla? No idea.
 "text_#" = {sprite = "text_#", color = [0, 3], tiling = "none"}
 
 "text_þ" = {sprite = "text_þ", color = [0, 3], tiling = "none"}
 
-placeholder = {sprite = "placeholder", color = [0, 3], tiling = "none"}
-
+# As far as I can tell, collab between Balt and Andy.
 concon = {sprite = "concon", color = [0, 1], tiling = "directional"}
-
-cactus3 = {sprite = "cactus", color = [5, 3], tiling = "none"}
-
-text_cactus3 = {sprite = "text_cactus", color = [5, 3], tiling = "none"}
-
-this = {sprite = "this", color = [0, 3], tiling = "none"}
-
-that = {sprite = "that", color = [0, 3], tiling = "none"}
 
 zuzu = {sprite = "zuzu", color = [2, 3], tiling = "character"}
 
