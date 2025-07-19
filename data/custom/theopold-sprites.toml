@@ -8,6 +8,8 @@ text_iz = {sprite = "text_iz", color = [5, 2], tiling = "none"}
 
 billiam = {sprite = "billiam", color = [3, 0], tiling = "directional"}
 
+text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none"}
+
 mage = {sprite = "mage", color = [2, 4], tiling = "character"}
 
 darius = {sprite = "darius", color = [3, 3], tiling = "directional"}

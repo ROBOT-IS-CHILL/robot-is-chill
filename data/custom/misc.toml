@@ -94,24 +94,11 @@ text_balt_old = {sprite = "text_balt", color = [0, 1], tiling = "none"}
 warn = {sprite = "warn", color = [0, 3], tiling = "none", author = "diginist"}
 
 
-# balt
-
-
-# (made with the bot)
-text_bababa = {sprite = "text_bababa", color = [0, 3], tiling = "none", author = "baltdev"}
-
-
 # someusername6
 
 
 # https://discord.com/channels/556333985882439680/557333186367979540/759243126278717481
 cowke = {sprite = "cowke", color = [0, 3], tiling = "animated_directional", author = "someusername6"}
-
-
-# theopold
-
-
-text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none", author = "theopold"}
 
 
 # trollbreeder
@@ -125,12 +112,6 @@ bribri = {sprite = "bribri", color = [6, 0], tiling = "character", author = "tro
 
 # + a small edit by Balt
 heptagon = {sprite = "heptagon", color = [5, 2], tiling = "none", author = "nousernamefound"}
-
-
-# sed
-
-
-rotom = {sprite = "rotom", color = [0, 3], tiling = "directional", author = "sed / 4906"}
 
 
 # huebird.
@@ -160,21 +141,6 @@ text_monkey = {sprite = "text_monkey", color = [2, 3], tiling = "none", author =
 
 
 placeholder = {sprite = "placeholder", color = [0, 3], tiling = "none", author = "clicktuck_suskriberz"}
-
-
-# dizzyandy
-
-
-text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none", author = "dizzyandy"}
-
-
-# biyoo
-
-
-# Note to self: add the sprites for this when moving
-cactus3 = {sprite = "cactus3", color = [5, 3], tiling = "none", author = "babaisyoo"}
-
-text_cactus3 = {sprite = "text_cactus3", color = [5, 3], tiling = "none", author = "babaisyoo"}
 
 
 # unze2unze4

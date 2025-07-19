@@ -467,3 +467,5 @@ logic_luigi = {sprite = "logic_luigi", color = [5, 2], tiling = "none"}
 text_ae = {sprite = "text_ae", color = [0, 3], tiling = "none"}
 
 text_oe = {sprite = "text_oe", color = [0, 3], tiling = "none"}
+
+text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none", author = "dizzyandy"}

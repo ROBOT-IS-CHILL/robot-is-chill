@@ -79,3 +79,7 @@ text_lego = {sprite = "lego", color = [0, 3], tiling = "none"}
 rockguitar = {sprite = "rockguitar", color = [3, 1], tiling = "none"}
 
 fbaba = {sprite = "fbaba", color = [0, 3], tiling = "character"}
+
+cactus3 = {sprite = "cactus3", color = [5, 3], tiling = "none"}
+
+text_cactus3 = {sprite = "text_cactus3", color = [5, 3], tiling = "none"}

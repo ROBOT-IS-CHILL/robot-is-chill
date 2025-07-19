@@ -2,6 +2,8 @@
 
 
 
+rotom = {sprite = "rotom", color = [0, 3], tiling = "directional"}
+
 rotom2 = {sprite = "rotom2", color = [0, 3], tiling = "character"}
 
 sed = {sprite = "sed", color = [0, 3], tiling = "character"}
