@@ -6,7 +6,7 @@ balt = {sprite = "balt", color = [0, 1], tiling = "character", tags = ["animal",
 
 text_balt = {sprite = "text_balt", color = [0, 1], tiling = "none"}
 
-balalt = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
+balalt_old = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
 
 text_balalt = {sprite = "text_balalt", color = [0, 1], tiling = "none"}
 
