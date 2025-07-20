@@ -151,6 +151,29 @@ this = {sprite = "this", color = [0, 3], tiling = "none", author = "unze2unze4"}
 that = {sprite = "that", color = [0, 3], tiling = "none", author = "unze2unze4"}
 
 
+# specialapi
+
+
+i2 = {sprite = "i2", color = [1, 4], tiling = "character", author = "specialapi"}
+
+
+# tuwih
+
+
+note = {sprite = "note", color = [0, 3], tiling = "none", author = "theuserwhoishere"}
+
+note2 = {sprite = "note2", color = [0, 3], tiling = "none", author = "theuserwhoishere"}
+
+
+# andy
+
+
+walla = {sprite = "walla", color = [1, 1], tiling = "none"}
+
+# made with the bot
+text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none", author = "dizzyandy / verdantvernan"}
+
+
 # unsorted
 
 
@@ -309,21 +332,14 @@ text_youyou = {sprite = "text_youyou", color = [4, 1], tiling = "none"}
 # As far as I can tell, collab between Balt and Andy.
 concon = {sprite = "concon", color = [0, 1], tiling = "directional"}
 
+# User found, but not the name. https://discord.com/channels/556333985882439680/560913551586492475/1102840411615150080
+# User ID: 697394296525029376
 zuzu = {sprite = "zuzu", color = [2, 3], tiling = "character"}
 
+# https://www.youtube.com/watch?v=MsyoBuHVhSY
 quiqui = {sprite = "qiqi", color = [3, 2], tiling = "character"}
 
-i2 = {sprite = "i2", color = [1, 4], tiling = "character"}
-
 oyou = {sprite = "oyou", color = [4, 1], tiling = "character"}
-
-note = {sprite = "note", color = [0, 3], tiling = "none"}
-
-note2 = {sprite = "note2", color = [0, 3], tiling = "none"}
-
-text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none"}
-
-walla = {sprite = "walla", color = [1, 1], tiling = "none"}
 
 boxba = {sprite = "boxba", color = [6, 2], tiling = "directional"}
 
