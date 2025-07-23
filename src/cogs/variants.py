@@ -24,8 +24,8 @@ def class_init(self, *args, **kwargs):
 def sanitize(string):
     return string.replace('`', '').replace('\n', '')[:32]
 
-CARD_KERNEL = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]]) / 4
-OBLQ_KERNEL = np.array([[1, 0, 1], [0, -4, 0], [1, 0, 1]]) / 4
+CARD_KERNEL = np.array(((0, 1, 0), (1, 0, 1), (0, 1, 0)))
+OBLQ_KERNEL = np.array(((1, 0, 1), (0, 0, 0), (1, 0, 1)))
 
 def parse_signature(v: list[str], t: list[type | types.GenericAlias]) -> list[Any]:
     out = []
