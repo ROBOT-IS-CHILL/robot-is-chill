@@ -160,6 +160,12 @@ i2 = {sprite = "i2", color = [1, 4], tiling = "character", author = "specialapi"
 # tuwih
 
 
+# "Are the note sprites currently in tuwih's mods
+#  If so then move them to where the other property particles are
+#  (win, tele, etc.)"
+# "Win is in misc, tele is in Theo's."
+# "So keep the note sprites in misc"
+
 note = {sprite = "note", color = [0, 3], tiling = "none", author = "theuserwhoishere"}
 
 note2 = {sprite = "note2", color = [0, 3], tiling = "none", author = "theuserwhoishere"}
@@ -172,6 +178,34 @@ walla = {sprite = "walla", color = [1, 1], tiling = "none"}
 
 # made with the bot
 text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none", author = "dizzyandy / verdantvernan"}
+
+
+# something4803
+
+
+atat = {sprite = "atat", color = [1, 4], tiling = "character", author = "something4803"}
+
+
+# emilyemmi
+
+
+mario = {sprite = "mario", color = [2, 2], tiling = "character", author = "emilyemmi"}
+
+text_mario = {sprite = "text_mario", color = [2, 2], tiling = "none"}
+
+
+# btd456creeper
+
+
+glitch = {sprite = "glitch", color = [0, 3], tiling = "tiling", author = "btd456creeper"}
+
+
+# _sosig
+
+
+nest = {sprite = "nest", color = [2, 3], tiling = "none", author = "_sosig"}
+
+text_nest = {sprite = "text_nest", color = [2, 3], tiling = "none", author = "_sosig"}
 
 
 # unsorted
@@ -343,8 +377,6 @@ oyou = {sprite = "oyou", color = [4, 1], tiling = "character"}
 
 boxba = {sprite = "boxba", color = [6, 2], tiling = "directional"}
 
-atat = {sprite = "atat", color = [1, 4], tiling = "character"}
-
 u = {sprite = "u", color = [3, 1], tiling = "none"}
 
 d = {sprite = "d", color = [3, 1], tiling = "none"}
@@ -367,14 +399,17 @@ tf2tele = {sprite = "tf2tele", color = [2, 2], tiling = "none"}
 
 text_tf2tele = {sprite = "text_tf2tele", color = [2, 2], tiling = "none"}
 
+# Added at https://discord.com/channels/556333985882439680/556906122183704596/995881536467517520
 crosshair = {sprite = "crosshair", color = [2, 2], tiling = "none"}
 
+# Added at https://discord.com/channels/556333985882439680/556906122183704596/995882134432665701
 bwot = {sprite = "bwot", color = [6, 1], tiling = "directional"}
 
 text_maroon = {sprite = "text_maroon", color = [2, 1], tiling = "none"}
 
 text_gold = {sprite = "text_gold", color = [6, 2], tiling = "none"}
 
+# Added at https://discord.com/channels/556333985882439680/556906122183704596/994812529291305071
 lili2 = {sprite = "lilinew", color = [4, 2], tiling = "directional"}
 
 text_lili = {sprite = "text_lilinew", color = [4, 2], tiling = "none"}
@@ -383,19 +418,9 @@ goob2 = {sprite = "goob", color = [1, 3], tiling = "directional"}
 
 group = {sprite = "group", color = [3, 3], tiling = "none"}
 
-mario = {sprite = "mario", color = [2, 2], tiling = "character"}
-
 izzy = {sprite = "izzy", color = [3, 2], tiling = "character"}
 
-glitch = {sprite = "glitch", color = [0, 3], tiling = "tiling"}
-
 text_parsing = {sprite = "text_parsing", color = [1, 4], tiling = "none"}
-
-text_mario = {sprite = "text_mario", color = [2, 2], tiling = "none"}
-
-nest = {sprite = "nest", color = [2, 3], tiling = "none"}
-
-text_nest = {sprite = "text_nest", color = [2, 3], tiling = "none"}
 
 wyg = {sprite = "babywug", color = [2, 4], tiling = "character"}
 
