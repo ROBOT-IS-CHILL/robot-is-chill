@@ -210,8 +210,8 @@ class Tile:
                 if metadata.tiling == TilingMode.TILING:
                     value.surrounding &= 0b11110000
                 value.frame = constants.TILING_VARIANTS[value.surrounding]
-        assert metadata is None or value.frame in metadata.extra_frames or value.frame in metadata.tiling.expected(), \
-            f"The tile `{name}` has an unsupported frame index of `{value.frame}`! Check its tiling type and extra frames in `=search {name}`."
+        if not (metadata is None or value.frame in metadata.extra_frames or value.frame in metadata.tiling.expected()):
+            value.frame = 0
         value.variants["sprite"].append(
             possible_variants["0/3"](value.color, _default_color=True)
         )
