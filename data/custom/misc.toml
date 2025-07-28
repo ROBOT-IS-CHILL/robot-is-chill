@@ -179,6 +179,8 @@ walla = {sprite = "walla", color = [1, 1], tiling = "none"}
 # made with the bot
 text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none", author = "dizzyandy / verdantvernan"}
 
+kulu = {sprite = "kulu", color = [0, 3], tiling = "character"}
+
 
 # something4803
 
@@ -206,6 +208,26 @@ glitch = {sprite = "glitch", color = [0, 3], tiling = "tiling", author = "btd456
 nest = {sprite = "nest", color = [2, 3], tiling = "none", author = "_sosig"}
 
 text_nest = {sprite = "text_nest", color = [2, 3], tiling = "none", author = "_sosig"}
+
+
+# jumbod64 
+
+
+trash = {sprite = "trash", color = [5, 1], tiling = "none", author = "jumbod64"}
+
+tray = {sprite = "tray", color = [0, 1], tiling = "none", author = "jumbod64"}
+
+needle = {sprite = "needle", color = [0, 2], tiling = "directional", author = "jumbod64"}
+
+boom2 = {sprite = "boom", color = [2, 2], tiling = "none", author = "jumbod64"}
+
+
+# Theo
+
+
+toti = {sprite = "toti", color = [5, 2], tiling = "character", author = "theopold"}
+
+text_toti = {sprite = "text_toti", color = [5, 2], tiling = "none", author = "theopold"}
 
 
 # unsorted
@@ -432,27 +454,14 @@ support = {sprite = "support", color = [0, 1], tiling = "none"}
 
 tree3 = {sprite = "tree3", color = [4, 2], tiling = "none"}
 
-kulu = {sprite = "kulu", color = [0, 3], tiling = "character"}
-
-trash = {sprite = "trash", color = [5, 1], tiling = "none"}
-
-tray = {sprite = "tray", color = [0, 1], tiling = "none"}
-
 trident = {sprite = "trident", color = [1, 4], tiling = "directional"}
 
-needle = {sprite = "needle", color = [0, 2], tiling = "directional"}
-
+# There is a kebab sprite made by Andy, but I think it's not this one?
 kebab = {sprite = "kebab", color = [4, 1], tiling = "none"}
-
-boom2 = {sprite = "boom", color = [2, 2], tiling = "none"}
 
 sword_old = {sprite = "forwardsword", color = [0, 3], tiling = "directional"}
 
 text_willnothavebeenfollowing = {sprite = "text_willnothavebeenfollowing", color = [0, 3], tiling = "none"}
-
-toti = {sprite = "toti", color = [5, 2], tiling = "character"}
-
-text_toti = {sprite = "text_toti", color = [5, 2], tiling = "none"}
 
 decay = {sprite = "decay", color = [0, 1], tiling = "tiling"}
 
