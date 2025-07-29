@@ -181,6 +181,8 @@ text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none", author = "
 
 kulu = {sprite = "kulu", color = [0, 3], tiling = "character"}
 
+yogurt = {sprite = "yogurt", color = [1, 3], tiling = "none"}
+
 
 # something4803
 
@@ -228,6 +230,18 @@ boom2 = {sprite = "boom", color = [2, 2], tiling = "none", author = "jumbod64"}
 toti = {sprite = "toti", color = [5, 2], tiling = "character", author = "theopold"}
 
 text_toti = {sprite = "text_toti", color = [5, 2], tiling = "none", author = "theopold"}
+
+
+# antisocialjp
+
+
+spikier = {sprite = "spikier", color = [0, 3], tiling = "none", author = "antisocialjp"}
+
+
+# nonamester
+
+
+text_aloneprop = {sprite = "text_alone", color = [2, 2], tiling = "none"}
 
 
 # unsorted
@@ -463,6 +477,7 @@ sword_old = {sprite = "forwardsword", color = [0, 3], tiling = "directional"}
 
 text_willnothavebeenfollowing = {sprite = "text_willnothavebeenfollowing", color = [0, 3], tiling = "none"}
 
+# Related?: https://discord.com/channels/556333985882439680/557334679511105536/1251301021871902792
 decay = {sprite = "decay", color = [0, 1], tiling = "tiling"}
 
 puff = {sprite = "puff", color = [0, 3], tiling = "none"}
@@ -473,15 +488,11 @@ pig = {sprite = "pig", color = [4, 2], tiling = "directional"}
 
 text_pig = {sprite = "text_pig", color = [4, 2], tiling = "none"}
 
-spikier = {sprite = "spikier", color = [0, 3], tiling = "none"}
-
-yogurt = {sprite = "yogurt", color = [1, 3], tiling = "none"}
-
+# Note to self: ask tuwih about this before I send the commit.
 text_yrducio = {sprite = "text_yrducio", color = [3, 1], tiling = "none"}
 
+# "refers to a cyan colored keke"
 text_link4 = {sprite = "text_link", color = [1, 4], tiling = "none"}
-
-text_aloneprop = {sprite = "text_alone", color = [2, 2], tiling = "none"}
 
 goomy = {sprite = "goomy", color = [4, 4], tiling = "character"}
 
