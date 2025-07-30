@@ -244,6 +244,12 @@ spikier = {sprite = "spikier", color = [0, 3], tiling = "none", author = "antiso
 text_aloneprop = {sprite = "text_alone", color = [2, 2], tiling = "none"}
 
 
+# anactualcat
+
+
+decay = {sprite = "decay", color = [0, 1], tiling = "tiling", author = "anactualcat}
+
+
 # unsorted
 
 
@@ -476,9 +482,6 @@ kebab = {sprite = "kebab", color = [4, 1], tiling = "none"}
 sword_old = {sprite = "forwardsword", color = [0, 3], tiling = "directional"}
 
 text_willnothavebeenfollowing = {sprite = "text_willnothavebeenfollowing", color = [0, 3], tiling = "none"}
-
-# Related?: https://discord.com/channels/556333985882439680/557334679511105536/1251301021871902792
-decay = {sprite = "decay", color = [0, 1], tiling = "tiling"}
 
 puff = {sprite = "puff", color = [0, 3], tiling = "none"}
 
