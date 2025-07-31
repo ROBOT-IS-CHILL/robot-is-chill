@@ -247,7 +247,7 @@ text_aloneprop = {sprite = "text_alone", color = [2, 2], tiling = "none"}
 # anactualcat
 
 
-decay = {sprite = "decay", color = [0, 1], tiling = "tiling", author = "anactualcat}
+decay = {sprite = "decay", color = [0, 1], tiling = "tiling", author = "anactualcat"}
 
 
 # unsorted
