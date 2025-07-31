@@ -2,9 +2,9 @@
 
 
 
-ika = {sprite = "ika", tiling = "character", color = [5, 3]}
+ika = {sprite = "ika", color = [5, 3], tiling = "character"}
 
-text_ika = {sprite = "text_ika", tiling = "none", color = [5, 1], active = [5, 3]}
+text_ika = {sprite = "text_ika", color = [5, 3], tiling = "none"}
 
 tiled = {sprite = "tiled", color = [0, 0], tiling = "diagonal_tiling"}
 

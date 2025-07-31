@@ -6,7 +6,7 @@ text_paradox = {sprite = "text_paradox", color = [0, 3], tiling = "none"}
 
 text_if = {sprite = "text_if", color = [0, 3], tiling = "none"}
 
-text_here = {sprite = "text_here", tiling = "directional", color = [3, 3]}
+text_here = {sprite = "text_here", color = [3, 3], tiling = "directional"}
 
-text_there = {sprite = "text_there", tiling = "directional", color = [1, 4]}
+text_there = {sprite = "text_there", color = [1, 4], tiling = "directional"}
 
