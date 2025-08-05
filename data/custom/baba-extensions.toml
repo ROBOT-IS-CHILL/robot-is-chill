@@ -223,3 +223,6 @@ bird_old = {sprite = "bird_old", color = [2, 3], tiling = "animated_directional"
 text_defeat_old = {sprite = "text_defeat_old", color = [2, 1], tiling = "none"}
 
 text_end_old = {sprite = "text_end_old", color = [0, 3], tiling = "none"}
+
+# recreation
+text_bean = {sprite = "text_bean", color = [2, 1], tiling = "none"}
