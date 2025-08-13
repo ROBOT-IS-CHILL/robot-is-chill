@@ -289,8 +289,8 @@ class MacroCog:
         @builtin("store")
         def store(name: str, value: str):
             """Stores a value in a variable."""
-            assert len(self.variables) < 16, "cannot have more than 16 variables at once"
-            assert len(value) <= 256, "values must be at most 256 characters long"
+            assert len(self.variables) < 256, "cannot have more than 256 variables at once"
+            assert len(value) <= 65536, "values must be at most 65536 characters long"
             self.variables[name] = value
             return ""
 
