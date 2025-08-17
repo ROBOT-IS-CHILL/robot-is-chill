@@ -26,7 +26,7 @@ class MacroCog:
             def wrapper(func: Callable):
                 assert func.__doc__ is not None, f"missing docstring for builtin {name}"
 
-                self.builtins[name] = BuiltinMacro(func.__doc__, func)
+                self.builtins[name] = BuiltinMacro(func.__doc__.strip(), func)
                 return func
 
             return wrapper
@@ -133,6 +133,36 @@ class MacroCog:
                 pattern, replacement = args[i], args[i+1]
                 value = re.sub(unescape(pattern), replacement, value)
             return value
+
+        @builtin("sequence")
+        def sequence(pattern, start, end, string, separator: str = ""):
+            r"""
+            Repeats `string` `end-start` times, replacing `pattern` in each
+            with a number ranging from `start` to `end`, optionally separated by `separator`.
+
+            Examples:
+            > `[sequence/@/1/5/(@)/,]` -> `(1),(2),(3),(4),(5)`
+            > `[sequence/@/1/3/@]` -> `123`
+            """
+            s = []
+            for i in range(int(start), int(end) + 1):
+                s.append(string.replace(pattern, str(i)))
+            return separator.join(s)
+
+        @builtin("for")
+        def _for(lst, delimiter, idx_pat, item_pat, string, separator: str = ""):
+            r"""
+            Repeats `string` for each element in the list created by splitting `list` by `delimiter`,
+            replacing `idx_pat` and `item_pat` in each with the item index and item,
+            optionally separated by `separator`.
+
+            Example:
+            > `[for/a,b,c/,/#/@/#:@/,]` -> `0:a,1:b,2:c`
+            """
+            s = []
+            for (i, val) in enumerate(lst.split(delimiter)):
+                s.append(string.replace(idx_pat, str(i)).replace(item_pat, val))
+            return separator.join(s)
 
         @builtin("multiply")
         def multiply(*args: str):
@@ -342,10 +372,6 @@ class MacroCog:
             """Repeats the second argument N times, where N is the first argument, optionally joined by the third."""
             # Allow floats, rounding up, for historical reasons
             amount = max(math.ceil(float(amount)), 0)
-            # Precalculate the length
-            length = amount * len(string) + max(amount - 1, 0) * len(joiner)
-            # Reject if too long
-            assert length <= 4096, "repeated string is too long (max is 4096 characters)"
             return joiner.join([string] * amount)
 
         @builtin("concat")

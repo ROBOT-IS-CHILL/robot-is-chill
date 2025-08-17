@@ -57,25 +57,6 @@ class MacroQuerySource(menus.ListPageSource):
         return embed
 
 
-class BuiltinMacroQuerySource(menus.ListPageSource):
-    def __init__(
-            self, data: list[tuple[str, BuiltinMacro]]):
-        self.count = len(data)
-        super().__init__(data, per_page=5)
-
-    async def format_page(self, menu: menus.Menu, entries: list[tuple[str, BuiltinMacro]]) -> discord.Embed:
-        embed = discord.Embed(
-            title="Built-in Macros",
-        ).set_footer(
-            text=f"Page {menu.current_page + 1} of {self.get_max_pages()}   ({self.count} entries)",
-        )
-        desc = []
-        for (name, macro) in entries:
-            desc.append(f"**{name}**\n> {macro.description}")
-        embed.description = "\n".join(desc)
-        return embed
-
-
 class MacroCommandCog(commands.Cog, name='Macros'):
     def __init__(self, bot: Bot):
         self.bot = bot
@@ -174,9 +155,10 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         return await ctx.reply(f"Deleted `{name}`.")
 
     @macro.command(aliases=["?", "list", "query"])
-    async def macro_search(self, ctx: Context, *, pattern: str = '.*'):
+    async def search(self, ctx: Context, *, pattern: str = ''):
         """Searches the database for macros by name."""
         author = None
+        builtin_only = False
         if match := re.search(r"--?a(?:uthor)?=(\S+)", pattern):
             author = match.group(1)
             try:
@@ -184,24 +166,34 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             except commands.errors.UserNotFound:
                 author = await commands.MemberConverter().convert(ctx, author)
             pattern = pattern[:match.start()] + pattern[match.end():]
+        if match := re.search(r"--?b(?:uiltin)?", pattern):
+            builtin_only = True
+            pattern = pattern[:match.start()] + pattern[match.end():]
 
         pattern = pattern.strip()
-        print(pattern)
-        async with self.bot.db.conn.cursor() as cursor:
-            await cursor.execute(
-                """
-                SELECT name FROM macros 
-                WHERE name REGEXP :name
-                AND (
-                    :author IS NULL OR creator == :author
+        if pattern == "":
+            pattern = ".*"
+        if builtin_only:
+            names = []
+        else:
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(
+                    """
+                    SELECT name FROM macros
+                    WHERE name REGEXP :name
+                    AND (
+                        :author IS NULL OR creator == :author
+                    )
+                    """,
+                    {
+                        "name": pattern,
+                        "author": None if author is None else author.id
+                    }
                 )
-                """,
-                {
-                    "name": pattern,
-                    "author": None if author is None else author.id
-                }
-            )
-            names = [name for (name,) in await cursor.fetchall()]
+                names = [name for (name,) in await cursor.fetchall()]
+        for name in ctx.bot.macro_handler.builtins:
+            if re.fullmatch(pattern, name) is not None:
+                names.append(f"**{name}**")
         return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
 
     @macro.command(aliases=["x", "run"])
@@ -246,6 +238,11 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         finally:
             signal.alarm(0)
 
+    @macro.command(aliases=["b"], hidden = True)
+    async def builtin(self, ctx: Context):
+        """DEPRECATED"""
+        raise AssertionError("This command has been deprecated. Use `macro search --builtin` (or `m ? -b` for short).")
+
     @macro.command(aliases=["i", "get"])
     async def info(self, ctx: Context, name: str):
         """Gets info about a specific macro."""
@@ -253,11 +250,11 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             macro = self.bot.macro_handler.builtins[name]
             source_function = macro.function
             author = ctx.bot.user.id
-            name = f"{name} _[built-in]_"
+            name = f"{name} (builtin)"
             if hasattr(source_function, "_source"):
                 source_function = source_function._source
             try:
-                source = re.sub(r'""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
+                source = re.sub(r'r?""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
                 source = f"```py\n{source}\n```"
             except OSError as err:
                 source = f"```\n<failed to get source code of builtin: {err}>\n```"
@@ -296,13 +293,6 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             buf.write(macro.value.encode("utf-8", "ignore"))
             buf.seek(0)
             await ctx.reply(embed=emb, file=discord.File(buf, filename=f"{name}-value.txt"))
-
-    @macro.command(aliases=["b"])
-    async def builtins(self, ctx: Context):
-        """Lists off the builtin macros of the bot."""
-        return await ButtonPages(BuiltinMacroQuerySource(
-            list(ctx.bot.macro_handler.builtins.items())
-        )).start(ctx)
 
 
 async def setup(bot: Bot):
