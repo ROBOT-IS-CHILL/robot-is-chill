@@ -24,6 +24,8 @@ class MacroCog:
 
         def builtin(name: str):
             def wrapper(func: Callable):
+                assert func.__doc__ is not None, f"missing docstring for builtin {name}"
+
                 self.builtins[name] = BuiltinMacro(func.__doc__, func)
                 return func
 
@@ -48,7 +50,7 @@ class MacroCog:
 
         @builtin("add")
         def add(*args: str):
-            assert len(args) >= 2, "add macro must receive 2 or more arguments"
+            """Sums all inputs."""
             return str(reduce(lambda x, y: x + to_float(y), args, 0))
 
         @builtin("is_number")
@@ -111,18 +113,16 @@ class MacroCog:
         @builtin("replace")
         def replace(value: str, pattern: str, replacement: str):
             """Uses regex to replace a pattern in a string with another string."""
-            print(value, pattern, replacement)
             return re.sub(pattern, replacement, value)
         
         @builtin("ureplace")
         def ureplace(value: str, pattern: str, replacement: str):
             """Uses regex to replace a pattern in a string with another string. This version unescapes the pattern sent in."""
-            print(value, pattern, replacement)
             return re.sub(unescape(pattern), replacement, value)
 
         @builtin("multiply")
         def multiply(*args: str):
-            assert len(args) >= 2, "multiply macro must receive 2 or more arguments"
+            """Multiplies all inputs."""
             return str(reduce(lambda x, y: x * to_float(y), args, 1))
 
         @builtin("divide")
@@ -209,7 +209,6 @@ class MacroCog:
             assert len(args) % 2 == 1, "must have at an odd number of arguments"
             conditions = args[::2]
             replacements = args[1::2]
-            print(conditions, replacements)
             for (condition, replacement) in zip(conditions, replacements):
                 if to_boolean(condition):
                     return replacement
@@ -233,12 +232,12 @@ class MacroCog:
 
         @builtin("and")
         def and_(*args: str):
-            assert len(args) >= 2, "and macro must receive 2 or more arguments"
+            """Takes the boolean and of all inputs."""
             return str(reduce(lambda x, y: x and to_boolean(y), args, True)).lower()
 
         @builtin("or")
         def or_(*args: str):
-            assert len(args) >= 2, "or macro must receive 2 or more arguments"
+            """Takes the boolean or of all inputs."""
             return str(reduce(lambda x, y: x or to_boolean(y), args, False)).lower()
         
         @builtin("error")
@@ -448,18 +447,22 @@ class MacroCog:
         
         @builtin("lower")
         def lower(text: str):
+            """Converts a string into lowercase."""
             return text.lower()
         
         @builtin("upper")
         def upper(text: str):
+            """Converts a string into uppercase."""
             return text.upper()
         
         @builtin("title")
         def title(text: str):
+            """Converts a string into title case."""
             return text.title()
 
         @builtin("base64.encode")
         def base64encode(*args: str):
+            """Encodes a string as base64."""
             assert len(args) >= 1, "base64.encode macro must receive 1 or more arguments"
             string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = string.encode('utf-8')
@@ -468,6 +471,7 @@ class MacroCog:
         
         @builtin("base64.decode")
         def base64decode(*args: str):
+            """Decodes a base64 string."""
             assert len(args) >= 1, "base64.decode macro must receive 1 or more arguments"
             string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_bytes = string.encode('utf-8')
@@ -476,6 +480,7 @@ class MacroCog:
 
         @builtin("zlib.compress")
         def zlibcompress(*args: str):
+            """Compresses a string using zlib."""
             assert len(args) >= 1, "zlib.compress macro must receive 1 or more arguments"
             data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = data.encode('utf-8')
@@ -485,12 +490,33 @@ class MacroCog:
         
         @builtin("zlib.decompress")
         def zlibdecompress(*args: str):
+            """Decompressses a string using zlib."""
             assert len(args) >= 1, "zlib.decompress macro must receive 1 or more arguments"
             data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_compressed = data.encode('utf-8')
             compressed_bytes = base64.b64decode(base64_compressed)
             text_bytes = zlib.decompress(compressed_bytes)
             return text_bytes.decode('utf-8')
+
+        @builtin("macro")
+        def macro(*args: str):
+            """
+            Returns whether the given strings are the names of macros.
+            For each macro, returns "false" if not, returns "text" if it's a text macro,
+            and returns "builtin" if it's a builtin macro.
+            """
+            s = []
+            for name in args:
+                if name in self.builtins:
+                    s.append("builtin")
+                elif name in self.bot.macros:
+                    s.append("text")
+                else:
+                    s.append("false")
+            return "/".join(s)
+
+
+
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 

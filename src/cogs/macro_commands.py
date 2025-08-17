@@ -3,6 +3,7 @@ import signal
 from datetime import datetime
 from typing import Literal
 
+import inspect
 import discord
 from discord import Member, User
 from discord.ext import commands, menus
@@ -248,8 +249,24 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     @macro.command(aliases=["i", "get"])
     async def info(self, ctx: Context, name: str):
         """Gets info about a specific macro."""
-        assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
-        macro = self.bot.macros[name]
+        if name in self.bot.macro_handler.builtins:
+            macro = self.bot.macro_handler.builtins[name]
+            source_function = macro.function
+            author = ctx.bot.user.id
+            name = f"{name} _[built-in]_"
+            if hasattr(source_function, "_source"):
+                source_function = source_function._source
+            try:
+                source = re.sub(r'""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
+                source = f"```py\n{source}\n```"
+            except OSError as err:
+                source = f"```\n<failed to get source code of builtin: {err}>\n```"
+        else:
+            assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
+            macro: TextMacro = self.bot.macros[name]
+            author = macro.author
+            sanitized_source = macro.value.strip().replace('```', "'''")
+            source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
             title=name
         )
@@ -258,12 +275,12 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             value=macro.description
         )
         emb.add_field(
-            name="Value",
-            value=f"```\n{macro.value.replace('`', 'ˋ')}```",
+            name="Source" if isinstance(macro, BuiltinMacro) else "Value",
+            value=source,
             inline=False
         )
-        user = await ctx.bot.fetch_user(macro.author)
-        emb.set_footer(text=f"{user.name}#{user.discriminator}",
+        user = await ctx.bot.fetch_user(author)
+        emb.set_footer(text=f"{user.name}",
                        icon_url=user.avatar.url if user.avatar is not None else
                        f"https://cdn.discordapp.com/embed/avatars/{int(user.discriminator) % 5}.png")
         try:
