@@ -515,9 +515,6 @@ class MacroCog:
                     s.append("false")
             return "/".join(s)
 
-
-
-
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
     def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:

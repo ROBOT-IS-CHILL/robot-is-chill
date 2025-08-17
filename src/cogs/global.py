@@ -701,8 +701,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC;
 					''',
@@ -739,8 +739,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						) AND (
 							:f_world IS NULL OR world == :f_world
 						) ORDER BY CASE world
-							WHEN 'vanilla'
-							THEN NULL
+							WHEN 'baba'
+							THEN 0
 							ELSE world
 						END ASC;
 						''',
@@ -760,8 +760,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC, number DESC;
 					''',
@@ -783,11 +783,11 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 					) AND (
 						:f_world IS NULL OR world == :f_world
 					)
-					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
-						ELSE world
-					END ASC, number DESC;
+                    ORDER BY CASE world
+                        WHEN 'baba'
+                        THEN 0
+                        ELSE world
+                    END ASC, number DESC;
 					''',
                     dict(
                         name=query,
@@ -808,8 +808,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC;
 					''',
@@ -891,7 +891,15 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         if custom_level is None:
             levels = await self.search_levels(fine_query)
             try:
-                _, level = levels.popitem(last=False)
+                first = None
+                for ((pack, name), l) in levels.items():
+                    if first is None:
+                        first = l
+                    if pack in constants.VANILLA_WORLDS:
+                        level = l
+                        break
+                else:
+                    level = first
             except KeyError:
                 return await ctx.error("A level could not be found with that query.")
         else:

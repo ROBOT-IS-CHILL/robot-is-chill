@@ -972,6 +972,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         if query[:3] == '-f ':
             query = query[3:]  # hardcode but whatever
             filemode = True
+        query = query.replace('```', '')
         async with self.bot.db.conn.cursor() as cur:
             result = await cur.execute(query)
             try:
