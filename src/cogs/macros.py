@@ -126,7 +126,7 @@ class MacroCog:
         def ureplace(value: str, *args: str):
             r"""Uses regex to replace patterns in a string with other strings.
             This version unescapes supplied patterns.
-            Example: `[replace/baba keke    me/\\s+/_]` -> `baba_keke_me`
+            Example: `[ureplace/baba keke    me/\\s+/_]` -> `baba_keke_me`
             """
             assert len(args) % 2 == 0, "replace must have an odd number of arguments"
             for i in range(0, len(args), 2):
