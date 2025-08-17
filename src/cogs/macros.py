@@ -504,7 +504,24 @@ class MacroCog:
 
         # Find each outmost pair of brackets
 
-        while match := re.search(r"(?<!(?<!\\)\\)\[((?:\\[\[\]])?(?:[^\[\]]|(?:[^\\]\\[\[\]]))*?(?<!(?<!\\)\\))]", objects, re.RegexFlag.M): # there's probably a much better way to do this regex but i haven't found it
+        while True:
+            # Find the next match
+            start = None
+            end = 1
+            was_escaped = False
+            for i, c in enumerate(objects):
+                end = i + 1
+                if was_escaped:
+                    was_escaped = False
+                elif c == '\\':
+                    was_escaped = True
+                elif c == '[':
+                    start = i
+                elif c == ']' and start is not None:
+                    break
+            else:
+                break
+            terminal = objects[start + 1 : end - 1]
             self.found += 1
             if debug_info:
                 if self.found > constants.MACRO_LIMIT:
@@ -512,14 +529,13 @@ class MacroCog:
                     return None, self.debug
             else:
                 assert self.found <= constants.MACRO_LIMIT, f"Too many macros in one render! The limit is {constants.MACRO_LIMIT}, while you reached {self.found}."
-            terminal = match.group(1)
             if debug_info:
                 self.debug.append(f"[Step {self.found}] {objects}")
             try:
                 objects = (
-                        objects[:match.start()] +
+                        objects[:start] +
                         self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[match.end():]
+                        objects[end:]
                 )
             except errors.FailedBuiltinMacro as err:
                 if debug_info:
@@ -531,7 +547,22 @@ class MacroCog:
         return objects, self.debug if len(self.debug) else None
 
     def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug_info = False) -> str:
-        raw_macro, *macro_args = re.split(r"(?<!(?<!\\)\\)/", raw_variant)
+        l = []
+        was_escaped = False
+        start = 0
+        for i, c in enumerate(raw_variant):
+            if was_escaped:
+                was_escaped = False
+            elif c == '\\':
+                was_escaped = True
+            elif c == '/':
+                l.append(raw_variant[start : i])
+                start = i + 1
+        l.append(raw_variant[start:])
+        if debug_info:
+            self.debug.append(f"[Raw Macro] {raw_variant}")
+            self.debug.append(f"[Arguments] {l}")
+        raw_macro, *macro_args = l
         if raw_macro in self.builtins:
             try:
                 macro = self.builtins[raw_macro].function(*macro_args)
@@ -569,7 +600,7 @@ class MacroCog:
                         self.debug.append(f"[Step {step}:{arg_amount}] {macro}")
                     macro = macro[:match.start()] + infix + macro[match.end():]
         else:
-            raise AssertionError(f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!")
+            raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
         return str(macro).replace("\0", "$")
 
 
