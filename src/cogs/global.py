@@ -649,8 +649,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         * `map`: Which map screen the level is from.
         * `world`: Which levelpack / world the level is from.
         """
-        levels: OrderedDict[tuple[str, str],
-        LevelData] = collections.OrderedDict()
+        levels: OrderedDict[tuple[str, str], LevelData] = collections.OrderedDict()
         f_map = flags.get("map")
         f_world = flags.get("world")
         async with self.bot.db.conn.cursor() as cur:
@@ -890,17 +889,16 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                     f"The Baba Is Bookmark site returned a bad response. Try again later.")
         if custom_level is None:
             levels = await self.search_levels(fine_query)
-            try:
-                first = None
-                for ((pack, name), l) in levels.items():
-                    if first is None:
-                        first = l
-                    if pack in constants.VANILLA_WORLDS:
-                        level = l
-                        break
-                else:
-                    level = first
-            except KeyError:
+            first = None
+            for ((pack, name), l) in levels.items():
+                if first is None:
+                    first = l
+                if pack in constants.VANILLA_WORLDS:
+                    level = l
+                    break
+            else:
+                level = first
+            if level is None:
                 return await ctx.error("A level could not be found with that query.")
         else:
             level = custom_level
