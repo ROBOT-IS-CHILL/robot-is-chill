@@ -561,7 +561,9 @@ class MacroCog:
         l.append(raw_variant[start:])
         if debug_info:
             self.debug.append(f"[Raw Macro] {raw_variant}")
-            self.debug.append(f"[Arguments] {l}")
+            self.debug.append(f"[Arguments]")
+            for arg in l:
+                self.debug.append(f"\t\"{arg}\"")
         raw_macro, *macro_args = l
         if raw_macro in self.builtins:
             try:
