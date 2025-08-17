@@ -252,8 +252,6 @@ class Renderer:
                 }
                 im = Image.new("RGBA", step.shape[1::-1])
                 draw = ImageDraw(im)
-                if ctx.image_format == "gif" and ctx.background is None:
-                    draw.fontmode = "1"
                 for sign_text in ctx.sign_texts:
                     if wobble_range[i] in range(sign_text.time_start, sign_text.time_end):
                         text = sign_text.text
