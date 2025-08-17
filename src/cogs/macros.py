@@ -111,14 +111,28 @@ class MacroCog:
             return str(hash(value))
 
         @builtin("replace")
-        def replace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string."""
-            return re.sub(pattern, replacement, value)
+        def replace(value: str, *args: str):
+            """
+            Uses regex to replace patterns in a string with other strings.
+            Example: `[replace/baba/a/e/b/k]` -> `keke`
+            """
+            assert len(args) % 2 == 0, "replace must have an odd number of arguments"
+            for i in range(0, len(args), 2):
+                pattern, replacement = args[i], args[i+1]
+                value = re.sub(pattern, replacement, value)
+            return value
         
         @builtin("ureplace")
-        def ureplace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string. This version unescapes the pattern sent in."""
-            return re.sub(unescape(pattern), replacement, value)
+        def ureplace(value: str, *args: str):
+            r"""Uses regex to replace patterns in a string with other strings.
+            This version unescapes supplied patterns.
+            Example: `[replace/baba keke    me/\\s+/_]` -> `baba_keke_me`
+            """
+            assert len(args) % 2 == 0, "replace must have an odd number of arguments"
+            for i in range(0, len(args), 2):
+                pattern, replacement = args[i], args[i+1]
+                value = re.sub(unescape(pattern), replacement, value)
+            return value
 
         @builtin("multiply")
         def multiply(*args: str):

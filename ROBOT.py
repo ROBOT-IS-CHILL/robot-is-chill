@@ -140,6 +140,9 @@ class Bot(commands.Bot):
 
 discord.utils.setup_logging()
 
+if Path("beta").exists():
+    config.prefixes = ['-']
+
 # Establishes the bot
 bot = Bot(
     # Prefixes
