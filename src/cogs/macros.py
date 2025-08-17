@@ -41,12 +41,9 @@ class MacroCog:
         @builtin("to_boolean")
         def to_boolean(v: str):
             """Casts a value to a boolean."""
-            if v in ("true", "1", "True", "1.0", "1.0+0.0j"):
-                return True
-            elif v in ("false", "0", "False", "0.0", "0.0+0.0j"):
+            if v in ("false", "0", "False", "0.0", "0.0+0.0j", ""):
                 return False
-            else:
-                raise AssertionError(f"could not convert string to boolean: '{v}'")
+            return True
 
         @builtin("add")
         def add(*args: str):
