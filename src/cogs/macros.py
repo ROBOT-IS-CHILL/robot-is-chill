@@ -26,7 +26,9 @@ class MacroCog:
             def wrapper(func: Callable):
                 assert func.__doc__ is not None, f"missing docstring for builtin {name}"
 
-                self.builtins[name] = BuiltinMacro(func.__doc__.strip(), func)
+                doc = func.__doc__.strip()
+                doc = doc.replace('\n\n', '\0').replace('\n', ' ').replace('\0', '\n')
+                self.builtins[name] = BuiltinMacro(doc, func)
                 return func
 
             return wrapper
@@ -111,6 +113,7 @@ class MacroCog:
         def replace(value: str, *args: str):
             """
             Uses regex to replace patterns in a string with other strings.
+
             Example: `[replace/baba/a/e/b/k]` -> `keke`
             """
             assert len(args) % 2 == 0, "replace must have an odd number of arguments"
@@ -123,6 +126,7 @@ class MacroCog:
         def ureplace(value: str, *args: str):
             r"""Uses regex to replace patterns in a string with other strings.
             This version unescapes supplied patterns.
+
             Example: `[ureplace/baba keke    me/\\s+/_]` -> `baba_keke_me`
             """
             assert len(args) % 2 == 0, "replace must have an odd number of arguments"
@@ -138,6 +142,7 @@ class MacroCog:
             with a number ranging from `start` to `end`, optionally separated by `separator`.
 
             Examples:
+            
             > `[sequence/@/1/5/(@)/,]` -> `(1),(2),(3),(4),(5)`
             > `[sequence/@/1/3/@]` -> `123`
             """
@@ -154,6 +159,7 @@ class MacroCog:
             optionally separated by `separator`.
 
             Example:
+
             > `[for/a,b,c/,/#/@/#:@/,]` -> `0:a,1:b,2:c`
             """
             s = []
@@ -243,8 +249,10 @@ class MacroCog:
 
         @builtin("if")
         def if_(*args: str):
-            """Decides between arguments to take the form of with preceding conditions, """
-            """with an ending argument that is taken if none else are."""
+            """
+            Decides between arguments to take the form of with preceding conditions,
+            with an ending argument that is taken if none else are.
+            """
 
             assert len(args) >= 3, "must have at least three arguments"
             assert len(args) % 2 == 1, "must have at an odd number of arguments"
@@ -313,8 +321,10 @@ class MacroCog:
         
         @builtin("count")
         def count(string: str, substring: str, start: str | None = None, end: str | None = None):
-            """Returns the number of occurences of the second argument in the first, """
-            """optionally between the third and fourth arguments."""
+            """
+            Returns the number of occurences of the second argument in the first,
+            optionally between the third and fourth arguments.
+            """
             if start is not None:
                 start = int(start)
             if end is not None:
