@@ -342,9 +342,9 @@ class MacroCog:
 
         @builtin("unescape")
         def unescape(string: str):
-            """Unescapes a string, replacing \\\\/ with /, \\\\[ with [, and \\\\] with ]."""
+            r"""Unescapes a string, replacing `\\` with `\`, `\/` with `/`, `\[` with `[`, and `\]` with `]`."""
             self.found += 1
-            return string.replace("\\/", "/").replace("\\[", "[").replace("\\]", "]")
+            return string.replace(r"\/", "/").replace(r"\[", "[").replace(r"\]", "]").replace(r"\\", "\\")
 
         @builtin("json.get")
         def jsonget(data: str, key: str):
