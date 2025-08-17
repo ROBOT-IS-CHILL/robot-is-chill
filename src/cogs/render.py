@@ -252,6 +252,8 @@ class Renderer:
                 }
                 im = Image.new("RGBA", step.shape[1::-1])
                 draw = ImageDraw(im)
+                if ctx.image_format == "gif" and ctx.background is None:
+                    draw.fontmode = "1"
                 for sign_text in ctx.sign_texts:
                     if wobble_range[i] in range(sign_text.time_start, sign_text.time_end):
                         text = sign_text.text
@@ -268,8 +270,6 @@ class Renderer:
                                             fill=sign_text.color, features=("liga", "dlig", "clig"),
                                             stroke_fill=sign_text.stroke[0], stroke_width=sign_text.stroke[1])
                 sign_arr = np.array(im)
-                if ctx.image_format == "gif" and ctx.background is None:
-                    sign_arr[..., 3][sign_arr[..., 3] > 0] = 255
                 step = self.blend("normal", step, sign_arr, True)
             if ctx.image_format == "gif":
                 step_a = step[..., 3]
