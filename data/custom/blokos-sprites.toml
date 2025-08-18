@@ -16,7 +16,7 @@ hira_e = {sprite = "hira_e", color = [0, 3], tiling = "none"}
 
 hira_o = {sprite = "hira_o", color = [0, 3], tiling = "none"}
 
-hira_u = {sprite = "hira_u", color = [0, 3], tiling = "none"}
+# hira_u = {sprite = "hira_u", color = [0, 3], tiling = "none"}
 
 hira_ka = {sprite = "hira_ka", color = [0, 3], tiling = "none"}
 
@@ -60,15 +60,15 @@ hira_go = {sprite = "hira_go", color = [0, 3], tiling = "none"}
 
 hira_gu = {sprite = "hira_gu", color = [0, 3], tiling = "none"}
 
-hira_za = {sprite = "hira_za", color = [0, 3], tiling = "none"}
+# hira_za = {sprite = "hira_za", color = [0, 3], tiling = "none"}
 
 hira_ji = {sprite = "hira_ji", color = [0, 3], tiling = "none"}
 
-hira_ze = {sprite = "hira_ze", color = [0, 3], tiling = "none"}
+# hira_ze = {sprite = "hira_ze", color = [0, 3], tiling = "none"}
 
-hira_zo = {sprite = "hira_zo", color = [0, 3], tiling = "none"}
+# hira_zo = {sprite = "hira_zo", color = [0, 3], tiling = "none"}
 
-hira_zu = {sprite = "hira_zu", color = [0, 3], tiling = "none"}
+# hira_zu = {sprite = "hira_zu", color = [0, 3], tiling = "none"}
 
 hira_da = {sprite = "hira_da", color = [0, 3], tiling = "none"}
 

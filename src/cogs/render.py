@@ -706,7 +706,7 @@ class Renderer:
         for variant in tile.variants["sprite"]:
             sprite = await variant.apply(sprite, tile=tile, wobble=wobble, renderer=self)  # NOUN/PROP ARE ANNOYING
             if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
-                raise errors.TooLargeTile(sprite.shape[1::-1])
+                raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
         return sprite
 
     def save_frames(

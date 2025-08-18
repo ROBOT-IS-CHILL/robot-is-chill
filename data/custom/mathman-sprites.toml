@@ -36,5 +36,5 @@ node_refers = {sprite = "node_refers", color = [0, 3], tiling = "directional"}
 
 numx = {sprite = "numx", color = [4, 3], tiling = "none"}
 
-text_numx = {sprite = "text_numx", color = [4, 3], tiling = "none"}
+# text_numx = {sprite = "text_numx", color = [4, 3], tiling = "none"}
 

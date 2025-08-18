@@ -489,7 +489,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 )
             except errors.TooLargeTile as e:
                 return await ctx.error(
-                    f"A tile of size `{e.args[0]}` is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
+                    f"A tile of size `{e.args[0]}` (`{e.args[1]}`) is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
             except errors.VariantError as e:
                 return await self.handle_variant_errors(ctx, e)
             except errors.TextGenerationError as e:

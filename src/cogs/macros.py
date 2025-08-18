@@ -8,10 +8,11 @@ import json
 import time
 import base64
 import zlib
+import textwrap
+import asyncio
 
 from .. import constants, errors
-from ..types import Bot, BuiltinMacro
-
+from ..types import Bot, BuiltinMacro, TilingMode
 
 class MacroCog:
 
@@ -27,6 +28,7 @@ class MacroCog:
                 assert func.__doc__ is not None, f"missing docstring for builtin {name}"
 
                 doc = func.__doc__.strip()
+                doc = textwrap.dedent(doc)
                 doc = doc.replace('\n\n', '\0').replace('\n', ' ').replace('\0', '\n')
                 self.builtins[name] = BuiltinMacro(doc, func)
                 return func
@@ -561,6 +563,54 @@ class MacroCog:
                 else:
                     s.append("false")
             return "/".join(s)
+
+        @builtin("tiles")
+        def tiles(*queries: str):
+            """
+            Performs a search on the tile database, and returns the names of all tiles that match, separated by spaces.
+
+            The arguments are expected to be an arbitrarily long list of search queries.
+
+            Valid search queries are:
+
+            - `name:<pattern>` Matches the tile name using a regex pattern
+            - `tiling:<tiling mode>` Matches the tiling mode
+            - `source:<string>` Matches the source the tile came from
+
+            Note that database operations are slow, and using this too many times may time out your execution.
+            It's recommended to store the output of this to a variable.
+            """
+            query = "1"
+            params = {}
+            for param in queries:
+                name, pattern = param.split(":", 1)
+                print(name, pattern)
+                params[name] = pattern
+            args = []
+            for (name, pattern) in params.items():
+                if name == "name":
+                    query = query + " AND name REGEXP ?"
+                    args.append(f"^{pattern}$")
+                elif name == "tiling":
+                    mode = TilingMode.parse(pattern)
+                    assert mode is not None, f"invalid tiling mode {pattern}"
+                    query = query + f" AND tiling == {+mode}"
+                elif name == "source":
+                    query = query + " AND source == ?"
+                    args.append(pattern)
+                else:
+                    raise AssertionError(f"invalid query {name}")
+
+            cur = self.bot.db.conn._conn.cursor()
+            result = cur.execute("SELECT DISTINCT name FROM tiles WHERE " + query, args)
+            data_rows = result.fetchall()
+            return " ".join(
+                str(row).replace("\\", "\\\\")
+                    .replace("[", "\\[").replace("/", "\\/")
+                    .replace("]", "\\]").replace(" ", "\\ ")
+                    .replace("$", "\\$")
+                for (row, ) in data_rows
+            )
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
