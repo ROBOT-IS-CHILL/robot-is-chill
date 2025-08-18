@@ -310,7 +310,7 @@ text_sasa = {sprite = "text_sasa", color = [0, 1], tiling = "none"}
 
 ee = {sprite = "ee", color = [6, 2], tiling = "directional"}
 
-text_ee = {sprite = "text_ee", color = [6, 2], tiling = "none"}
+text_n122 = {sprite = "text_ee", color = [6, 2], tiling = "none"}
 
 doda = {sprite = "doda", color = [0, 2], tiling = "directional"}
 

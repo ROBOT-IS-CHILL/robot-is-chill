@@ -85,3 +85,5 @@ text_poob = {sprite = "text_poob", color = [5, 4], tiling = "none"}
 #debugfrommisc = {sprite = "debugbutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 3], tiling = "none"}
 
 #knifefrommisc = {sprite = "knifebutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 2], tiling = "none"}
+
+text_ee = {sprite = "text_ee", color = [6, 2], tiling = "none"}
