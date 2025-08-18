@@ -2,7 +2,7 @@
 
 
 
-keith = {sprite = "keith", color = [0, 3], tiling = "directional", author = "Springer29"}
+ # keith = {sprite = "keith", color = [0, 3], tiling = "directional", author = "Springer29"}
 
 text_keith = {sprite = "text_keith", color = [1, 4], tiling = "none", author = "That1Squishy"}
 
@@ -10,11 +10,11 @@ beepy = {sprite = "beepy", color = [0, 3], tiling = "directional", author = "Spr
 
 text_beepy = {sprite = "text_beepy", color = [5, 2], tiling = "none", author = "Springer29"}
 
-glue = {sprite = "glue", color = [0, 3], tiling = "none", author = "Springer29"}
+# glue = {sprite = "glue", color = [0, 3], tiling = "none", author = "Springer29"}
 
 text_glue = {sprite = "text_glue", color = [0, 3], tiling = "none", author = "Springer29"}
 
-helichoper = {sprite = "helichoper", color = [2, 2], tiling = "directional", author = "That1Squishy"}
+# helichoper = {sprite = "helichoper", color = [2, 2], tiling = "directional", author = "That1Squishy"}
 
 text_helichoper = {sprite = "text_helichoper", color = [2,2], tiling = "none", author = "That1Squishy"}
 
@@ -22,13 +22,13 @@ stisti = {sprite = "stisti", color = [1, 3], tiling = "directional", author = "T
 
 text_stisti = {sprite = "text_stisti", color = [1, 3], tiling = "none", author = "That1Squishy"}
 
-hstisti = {sprite = "hstisti", color = [0, 3], tiling = "directional", author = "Springer29"}
+# hstisti = {sprite = "hstisti", color = [0, 3], tiling = "directional", author = "Springer29"}
 
 log = {sprite = "log", color = [6, 1], tiling = "none", author = "Springer29"}
 
 text_log = {sprite = "text_log", color = [6, 1], tiling = "none", author = "Springer29"}
 
-onon = {sprite = "onon", color = [3, 0], tiling = "directional", author = "That1Squishy"}
+# onon = {sprite = "onon", color = [3, 0], tiling = "directional", author = "That1Squishy"}
 
 text_onon = {sprite = "text_onon", color = [3, 0], tiling = "none", author = "That1Squishy"}
 

@@ -18,7 +18,7 @@ text_enter = {color = [0, 3], tiling = "none", sprite = "text_enter"}
 
 seastar = {color = [2, 3], tiling = "none", sprite = "seastar", source = "vanilla"}
 
-stumble = {color = [6, 1], tiling = "none", sprite = "stumble", source = "vanilla"}
+# stumble = {color = [6, 1], tiling = "none", sprite = "stumble", source = "vanilla"}
 
 text_p2 = {color = [4, 1], tiling = "none", sprite = "text_p2", source = "vanilla"}
 

@@ -270,8 +270,6 @@ class Renderer:
                                             fill=sign_text.color, features=("liga", "dlig", "clig"),
                                             stroke_fill=sign_text.stroke[0], stroke_width=sign_text.stroke[1])
                 sign_arr = np.array(im)
-                if ctx.image_format == "gif" and ctx.background is None:
-                    sign_arr[..., 3][sign_arr[..., 3] > 0] = 255
                 step = self.blend("normal", step, sign_arr, True)
             if ctx.image_format == "gif":
                 step_a = step[..., 3]
@@ -708,7 +706,7 @@ class Renderer:
         for variant in tile.variants["sprite"]:
             sprite = await variant.apply(sprite, tile=tile, wobble=wobble, renderer=self)  # NOUN/PROP ARE ANNOYING
             if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
-                raise errors.TooLargeTile(sprite.shape[1::-1])
+                raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
         return sprite
 
     def save_frames(
