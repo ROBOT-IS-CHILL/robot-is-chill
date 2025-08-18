@@ -16,8 +16,6 @@ doorbeta = {sprite = "doorbeta", tiling = "none", color = [2, 2]}
 
 hedgebeta = {sprite = "edgebeta", tiling = "none", color = [5, 2]}
 
-dustbeta = {sprite = "dustbeta", tiling = "none", color = [2, 4]}
-
 errorbeta = {sprite = "errorbeta", tiling = "none", color = [1, 4]}
 
 flagbeta = {sprite = "flagbeta", tiling = "none", color = [2, 4]}
@@ -66,11 +64,11 @@ text_flagbeta = {sprite = "text_flagbeta", tiling = "none", color = [2, 4]}
 
 text_grassbeta = {sprite = "text_grassbeta", tiling = "none", color = [5, 2]}
 
-text_morebeta = {sprite = "text_morebeta", tiling = "none", color = [4, 1]}
+# text_morebeta = {sprite = "text_morebeta", tiling = "none", color = [4, 1]}
 
 text_handbeta = {sprite = "text_handbeta", tiling = "none", color = [0, 3]}
 
-text_lovebeta = {sprite = "text_lovebeta", tiling = "none", color = [4, 1]}
+# text_lovebeta = {sprite = "text_lovebeta", tiling = "none", color = [4, 1]}
 
 text_hidebeta = {sprite = "text_hidebeta", tiling = "none", color = [3, 2]}
 

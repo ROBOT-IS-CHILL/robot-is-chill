@@ -8,10 +8,11 @@ import json
 import time
 import base64
 import zlib
+import textwrap
+import asyncio
 
 from .. import constants, errors
-from ..types import Bot, BuiltinMacro
-
+from ..types import Bot, BuiltinMacro, TilingMode
 
 class MacroCog:
 
@@ -24,7 +25,12 @@ class MacroCog:
 
         def builtin(name: str):
             def wrapper(func: Callable):
-                self.builtins[name] = BuiltinMacro(func.__doc__, func)
+                assert func.__doc__ is not None, f"missing docstring for builtin {name}"
+
+                doc = func.__doc__.strip()
+                doc = textwrap.dedent(doc)
+                doc = doc.replace('\n\n', '\0').replace('\n', ' ').replace('\0', '\n')
+                self.builtins[name] = BuiltinMacro(doc, func)
                 return func
 
             return wrapper
@@ -39,16 +45,13 @@ class MacroCog:
         @builtin("to_boolean")
         def to_boolean(v: str):
             """Casts a value to a boolean."""
-            if v in ("true", "1", "True", "1.0", "1.0+0.0j"):
-                return True
-            elif v in ("false", "0", "False", "0.0", "0.0+0.0j"):
+            if v in ("false", "0", "False", "0.0", "0.0+0.0j", ""):
                 return False
-            else:
-                raise AssertionError(f"could not convert string to boolean: '{v}'")
+            return True
 
         @builtin("add")
         def add(*args: str):
-            assert len(args) >= 2, "add macro must receive 2 or more arguments"
+            """Sums all inputs."""
             return str(reduce(lambda x, y: x + to_float(y), args, 0))
 
         @builtin("is_number")
@@ -109,20 +112,66 @@ class MacroCog:
             return str(hash(value))
 
         @builtin("replace")
-        def replace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string."""
-            print(value, pattern, replacement)
-            return re.sub(pattern, replacement, value)
+        def replace(value: str, *args: str):
+            """
+            Uses regex to replace patterns in a string with other strings.
+
+            Example: `[replace/baba/a/e/b/k]` -> `keke`
+            """
+            assert len(args) % 2 == 0, "replace must have an odd number of arguments"
+            for i in range(0, len(args), 2):
+                pattern, replacement = args[i], args[i+1]
+                value = re.sub(pattern, replacement, value)
+            return value
         
         @builtin("ureplace")
-        def ureplace(value: str, pattern: str, replacement: str):
-            """Uses regex to replace a pattern in a string with another string. This version unescapes the pattern sent in."""
-            print(value, pattern, replacement)
-            return re.sub(unescape(pattern), replacement, value)
+        def ureplace(value: str, *args: str):
+            r"""Uses regex to replace patterns in a string with other strings.
+            This version unescapes supplied patterns.
+
+            Example: `[ureplace/baba keke    me/\\s+/_]` -> `baba_keke_me`
+            """
+            assert len(args) % 2 == 0, "replace must have an odd number of arguments"
+            for i in range(0, len(args), 2):
+                pattern, replacement = args[i], args[i+1]
+                value = re.sub(unescape(pattern), replacement, value)
+            return value
+
+        @builtin("sequence")
+        def sequence(pattern, start, end, string, separator: str = ""):
+            r"""
+            Repeats `string` `end-start` times, replacing `pattern` in each
+            with a number ranging from `start` to `end`, optionally separated by `separator`.
+
+            Examples:
+            
+            > `[sequence/@/1/5/(@)/,]` -> `(1),(2),(3),(4),(5)`
+            > `[sequence/@/1/3/@]` -> `123`
+            """
+            s = []
+            for i in range(int(start), int(end) + 1):
+                s.append(string.replace(pattern, str(i)))
+            return separator.join(s)
+
+        @builtin("for")
+        def _for(lst, delimiter, idx_pat, item_pat, string, separator: str = ""):
+            r"""
+            Repeats `string` for each element in the list created by splitting `list` by `delimiter`,
+            replacing `idx_pat` and `item_pat` in each with the item index and item,
+            optionally separated by `separator`.
+
+            Example:
+
+            > `[for/a,b,c/,/#/@/#:@/,]` -> `0:a,1:b,2:c`
+            """
+            s = []
+            for (i, val) in enumerate(lst.split(delimiter)):
+                s.append(string.replace(idx_pat, str(i)).replace(item_pat, val))
+            return separator.join(s)
 
         @builtin("multiply")
         def multiply(*args: str):
-            assert len(args) >= 2, "multiply macro must receive 2 or more arguments"
+            """Multiplies all inputs."""
             return str(reduce(lambda x, y: x * to_float(y), args, 1))
 
         @builtin("divide")
@@ -202,14 +251,15 @@ class MacroCog:
 
         @builtin("if")
         def if_(*args: str):
-            """Decides between arguments to take the form of with preceding conditions, """
-            """with an ending argument that is taken if none else are."""
+            """
+            Decides between arguments to take the form of with preceding conditions,
+            with an ending argument that is taken if none else are.
+            """
 
             assert len(args) >= 3, "must have at least three arguments"
             assert len(args) % 2 == 1, "must have at an odd number of arguments"
             conditions = args[::2]
             replacements = args[1::2]
-            print(conditions, replacements)
             for (condition, replacement) in zip(conditions, replacements):
                 if to_boolean(condition):
                     return replacement
@@ -233,12 +283,12 @@ class MacroCog:
 
         @builtin("and")
         def and_(*args: str):
-            assert len(args) >= 2, "and macro must receive 2 or more arguments"
+            """Takes the boolean and of all inputs."""
             return str(reduce(lambda x, y: x and to_boolean(y), args, True)).lower()
 
         @builtin("or")
         def or_(*args: str):
-            assert len(args) >= 2, "or macro must receive 2 or more arguments"
+            """Takes the boolean or of all inputs."""
             return str(reduce(lambda x, y: x or to_boolean(y), args, False)).lower()
         
         @builtin("error")
@@ -273,8 +323,10 @@ class MacroCog:
         
         @builtin("count")
         def count(string: str, substring: str, start: str | None = None, end: str | None = None):
-            """Returns the number of occurences of the second argument in the first, """
-            """optionally between the third and fourth arguments."""
+            """
+            Returns the number of occurences of the second argument in the first,
+            optionally between the third and fourth arguments.
+            """
             if start is not None:
                 start = int(start)
             if end is not None:
@@ -289,8 +341,8 @@ class MacroCog:
         @builtin("store")
         def store(name: str, value: str):
             """Stores a value in a variable."""
-            assert len(self.variables) < 16, "cannot have more than 16 variables at once"
-            assert len(value) <= 256, "values must be at most 256 characters long"
+            assert len(self.variables) < 256, "cannot have more than 256 variables at once"
+            assert len(value) <= 65536, "values must be at most 65536 characters long"
             self.variables[name] = value
             return ""
 
@@ -329,10 +381,6 @@ class MacroCog:
             """Repeats the second argument N times, where N is the first argument, optionally joined by the third."""
             # Allow floats, rounding up, for historical reasons
             amount = max(math.ceil(float(amount)), 0)
-            # Precalculate the length
-            length = amount * len(string) + max(amount - 1, 0) * len(joiner)
-            # Reject if too long
-            assert length <= 4096, "repeated string is too long (max is 4096 characters)"
             return joiner.join([string] * amount)
 
         @builtin("concat")
@@ -342,9 +390,9 @@ class MacroCog:
 
         @builtin("unescape")
         def unescape(string: str):
-            """Unescapes a string, replacing \\\\/ with /, \\\\[ with [, and \\\\] with ]."""
+            r"""Unescapes a string, replacing `\\` with `\`, `\/` with `/`, `\[` with `[`, and `\]` with `]`."""
             self.found += 1
-            return string.replace("\\/", "/").replace("\\[", "[").replace("\\]", "]")
+            return string.replace(r"\/", "/").replace(r"\[", "[").replace(r"\]", "]").replace(r"\\", "\\")
 
         @builtin("json.get")
         def jsonget(data: str, key: str):
@@ -448,18 +496,22 @@ class MacroCog:
         
         @builtin("lower")
         def lower(text: str):
+            """Converts a string into lowercase."""
             return text.lower()
         
         @builtin("upper")
         def upper(text: str):
+            """Converts a string into uppercase."""
             return text.upper()
         
         @builtin("title")
         def title(text: str):
+            """Converts a string into title case."""
             return text.title()
 
         @builtin("base64.encode")
         def base64encode(*args: str):
+            """Encodes a string as base64."""
             assert len(args) >= 1, "base64.encode macro must receive 1 or more arguments"
             string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = string.encode('utf-8')
@@ -468,6 +520,7 @@ class MacroCog:
         
         @builtin("base64.decode")
         def base64decode(*args: str):
+            """Decodes a base64 string."""
             assert len(args) >= 1, "base64.decode macro must receive 1 or more arguments"
             string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_bytes = string.encode('utf-8')
@@ -476,6 +529,7 @@ class MacroCog:
 
         @builtin("zlib.compress")
         def zlibcompress(*args: str):
+            """Compresses a string using zlib."""
             assert len(args) >= 1, "zlib.compress macro must receive 1 or more arguments"
             data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = data.encode('utf-8')
@@ -485,12 +539,78 @@ class MacroCog:
         
         @builtin("zlib.decompress")
         def zlibdecompress(*args: str):
+            """Decompressses a string using zlib."""
             assert len(args) >= 1, "zlib.decompress macro must receive 1 or more arguments"
             data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_compressed = data.encode('utf-8')
             compressed_bytes = base64.b64decode(base64_compressed)
             text_bytes = zlib.decompress(compressed_bytes)
             return text_bytes.decode('utf-8')
+
+        @builtin("macro")
+        def macro(*args: str):
+            """
+            Returns whether the given strings are the names of macros.
+            For each macro, returns "false" if not, returns "text" if it's a text macro,
+            and returns "builtin" if it's a builtin macro.
+            """
+            s = []
+            for name in args:
+                if name in self.builtins:
+                    s.append("builtin")
+                elif name in self.bot.macros:
+                    s.append("text")
+                else:
+                    s.append("false")
+            return "/".join(s)
+
+        @builtin("tiles")
+        def tiles(*queries: str):
+            """
+            Performs a search on the tile database, and returns the names of all tiles that match, separated by spaces.
+
+            The arguments are expected to be an arbitrarily long list of search queries.
+
+            Valid search queries are:
+
+            - `name:<pattern>` Matches the tile name using a regex pattern
+            - `tiling:<tiling mode>` Matches the tiling mode
+            - `source:<string>` Matches the source the tile came from
+
+            Note that database operations are slow, and using this too many times may time out your execution.
+            It's recommended to store the output of this to a variable.
+            """
+            query = "1"
+            params = {}
+            for param in queries:
+                name, pattern = param.split(":", 1)
+                print(name, pattern)
+                params[name] = pattern
+            args = []
+            for (name, pattern) in params.items():
+                if name == "name":
+                    query = query + " AND name REGEXP ?"
+                    args.append(f"^{pattern}$")
+                elif name == "tiling":
+                    mode = TilingMode.parse(pattern)
+                    assert mode is not None, f"invalid tiling mode {pattern}"
+                    query = query + f" AND tiling == {+mode}"
+                elif name == "source":
+                    query = query + " AND source == ?"
+                    args.append(pattern)
+                else:
+                    raise AssertionError(f"invalid query {name}")
+
+            cur = self.bot.db.conn._conn.cursor()
+            result = cur.execute("SELECT DISTINCT name FROM tiles WHERE " + query, args)
+            data_rows = result.fetchall()
+            return " ".join(
+                str(row).replace("\\", "\\\\")
+                    .replace("[", "\\[").replace("/", "\\/")
+                    .replace("]", "\\]").replace(" ", "\\ ")
+                    .replace("$", "\\$")
+                for (row, ) in data_rows
+            )
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
@@ -504,7 +624,24 @@ class MacroCog:
 
         # Find each outmost pair of brackets
 
-        while match := re.search(r"(?<!(?<!\\)\\)\[((?:\\[\[\]])?(?:[^\[\]]|(?:[^\\]\\[\[\]]))*?(?<!(?<!\\)\\))]", objects, re.RegexFlag.M): # there's probably a much better way to do this regex but i haven't found it
+        while True:
+            # Find the next match
+            start = None
+            end = 1
+            was_escaped = False
+            for i, c in enumerate(objects):
+                end = i + 1
+                if was_escaped:
+                    was_escaped = False
+                elif c == '\\':
+                    was_escaped = True
+                elif c == '[':
+                    start = i
+                elif c == ']' and start is not None:
+                    break
+            else:
+                break
+            terminal = objects[start + 1 : end - 1]
             self.found += 1
             if debug_info:
                 if self.found > constants.MACRO_LIMIT:
@@ -512,14 +649,13 @@ class MacroCog:
                     return None, self.debug
             else:
                 assert self.found <= constants.MACRO_LIMIT, f"Too many macros in one render! The limit is {constants.MACRO_LIMIT}, while you reached {self.found}."
-            terminal = match.group(1)
             if debug_info:
                 self.debug.append(f"[Step {self.found}] {objects}")
             try:
                 objects = (
-                        objects[:match.start()] +
+                        objects[:start] +
                         self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[match.end():]
+                        objects[end:]
                 )
             except errors.FailedBuiltinMacro as err:
                 if debug_info:
@@ -531,7 +667,24 @@ class MacroCog:
         return objects, self.debug if len(self.debug) else None
 
     def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug_info = False) -> str:
-        raw_macro, *macro_args = re.split(r"(?<!(?<!\\)\\)/", raw_variant)
+        l = []
+        was_escaped = False
+        start = 0
+        for i, c in enumerate(raw_variant):
+            if was_escaped:
+                was_escaped = False
+            elif c == '\\':
+                was_escaped = True
+            elif c == '/':
+                l.append(raw_variant[start : i])
+                start = i + 1
+        l.append(raw_variant[start:])
+        if debug_info:
+            self.debug.append(f"[Raw Macro] {raw_variant}")
+            self.debug.append(f"[Arguments]")
+            for arg in l:
+                self.debug.append(f"\t\"{arg}\"")
+        raw_macro, *macro_args = l
         if raw_macro in self.builtins:
             try:
                 macro = self.builtins[raw_macro].function(*macro_args)
@@ -569,7 +722,7 @@ class MacroCog:
                         self.debug.append(f"[Step {step}:{arg_amount}] {macro}")
                     macro = macro[:match.start()] + infix + macro[match.end():]
         else:
-            raise AssertionError(f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!")
+            raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
         return str(macro).replace("\0", "$")
 
 

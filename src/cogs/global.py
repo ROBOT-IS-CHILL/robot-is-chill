@@ -489,7 +489,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 )
             except errors.TooLargeTile as e:
                 return await ctx.error(
-                    f"A tile of size `{e.args[0]}` is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
+                    f"A tile of size `{e.args[0]}` (`{e.args[1]}`) is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
             except errors.VariantError as e:
                 return await self.handle_variant_errors(ctx, e)
             except errors.TextGenerationError as e:
@@ -649,8 +649,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         * `map`: Which map screen the level is from.
         * `world`: Which levelpack / world the level is from.
         """
-        levels: OrderedDict[tuple[str, str],
-        LevelData] = collections.OrderedDict()
+        levels: OrderedDict[tuple[str, str], LevelData] = collections.OrderedDict()
         f_map = flags.get("map")
         f_world = flags.get("world")
         async with self.bot.db.conn.cursor() as cur:
@@ -701,8 +700,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC;
 					''',
@@ -739,8 +738,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						) AND (
 							:f_world IS NULL OR world == :f_world
 						) ORDER BY CASE world
-							WHEN 'vanilla'
-							THEN NULL
+							WHEN 'baba'
+							THEN 0
 							ELSE world
 						END ASC;
 						''',
@@ -760,8 +759,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC, number DESC;
 					''',
@@ -783,11 +782,11 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 					) AND (
 						:f_world IS NULL OR world == :f_world
 					)
-					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
-						ELSE world
-					END ASC, number DESC;
+                    ORDER BY CASE world
+                        WHEN 'baba'
+                        THEN 0
+                        ELSE world
+                    END ASC, number DESC;
 					''',
                     dict(
                         name=query,
@@ -808,8 +807,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 						:f_world IS NULL OR world == :f_world
 					)
 					ORDER BY CASE world
-						WHEN 'vanilla'
-						THEN NULL
+						WHEN 'baba'
+						THEN 0
 						ELSE world
 					END ASC;
 					''',
@@ -890,9 +889,16 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                     f"The Baba Is Bookmark site returned a bad response. Try again later.")
         if custom_level is None:
             levels = await self.search_levels(fine_query)
-            try:
-                _, level = levels.popitem(last=False)
-            except KeyError:
+            first = None
+            for ((pack, name), l) in levels.items():
+                if first is None:
+                    first = l
+                if pack in constants.VANILLA_WORLDS:
+                    level = l
+                    break
+            else:
+                level = first
+            if level is None:
                 return await ctx.error("A level could not be found with that query.")
         else:
             level = custom_level

@@ -287,8 +287,8 @@ CHARACTER_SHAPES = "long", "tall", "curved", "round", "segmented"
 CHARACTER_VARIANTS = "smooth", "fluffy", "fuzzy", "polygonal", "skinny", "belt-like"
 
 
-MACRO_LIMIT = 5000
-MACRO_ARG_LIMIT = 100
+MACRO_LIMIT = 100000
+MACRO_ARG_LIMIT = 1000
 
 LETTER_IGNORE = [
     "text_you2",

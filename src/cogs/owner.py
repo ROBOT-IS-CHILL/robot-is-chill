@@ -972,6 +972,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         if query[:3] == '-f ':
             query = query[3:]  # hardcode but whatever
             filemode = True
+        query = query.replace('```', '')
         async with self.bot.db.conn.cursor() as cur:
             result = await cur.execute(query)
             try:
@@ -1241,6 +1242,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             if (bot_world_path := pathlib.Path(bot_path) / "levels" / world_name).exists():
                 shutil.rmtree(bot_world_path)
             shutil.copytree(world, bot_world_path, dirs_exist_ok=True)
+            shutil.copytree(world / "Sprites", bot_path / "sprites" / world_name, dirs_exist_ok=True)
             replace(world / "Images", pathlib.Path(bot_path) / "images" / world_name)
         await message.edit(content="Done.")
 

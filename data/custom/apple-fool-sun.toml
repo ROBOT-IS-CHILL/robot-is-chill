@@ -1,0 +1,46 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+apple = {sprite = "apple", color = [2, 2], tiling = "none"}
+fool = {sprite = "fool", color = [2, 3], tiling = "none"}
+sun2 = {sprite = "sun", color = [2, 4], tiling = "none"}
+
+text_apple = {sprite = "text_apple", color = [2, 2], tiling = "none"}
+text_fool = {sprite = "text_fool", color = [2, 3], tiling = "none"}
+text_sun2 = {sprite = "text_sun", color = [2, 4], tiling = "none"}
+
+text_fool2 = {sprite = "text_fool2", color = [2, 3], tiling = "none"}
+
+babab = {sprite = "babab", color = [0, 3], tiling = "character"}
+flaggf = {sprite = "flaggf", color = [2, 4], tiling = "none"}
+walwl = {sprite = "walwl", color = [1, 1], tiling = "tiling"}
+rookc = {sprite = "rookc", color = [6, 2], tiling = "none"}
+keky = {sprite = "keky", color = [2, 4], tiling = "none"}
+dorord = {sprite = "dorord", color = [2, 2], tiling = "none"}
+wawar = {sprite = "wawar", color = [1, 3], tiling = "tiling"}
+squarm = {sprite = "squarm", color = [4, 1], tiling = "none"}
+gme = {sprite = "gme", color = [4, 2], tiling = "none"}
+
+text_babab = {sprite = "text_babab", color = [4, 1], tiling = "none"}
+text_flaggf = {sprite = "text_flaggf", color = [2, 4], tiling = "none"}
+text_walwl = {sprite = "text_walwl", color = [1, 1], tiling = "none"}
+text_rookc = {sprite = "text_rookc", color = [6, 2], tiling = "none"}
+text_keky = {sprite = "text_keky", color = [2, 4], tiling = "none"}
+text_dorord = {sprite = "text_dorord", color = [2, 2], tiling = "none"}
+text_wawar = {sprite = "text_wawar", color = [1, 3], tiling = "none"}
+text_squarm = {sprite = "text_squarm", color = [4, 1], tiling = "none"}
+text_gme = {sprite = "text_gme", color = [4, 2], tiling = "none"}
+
+downwards = {sprite = "downwards", color = [1, 0], tiling = "none"}
+
+"text_is!" = {sprite = "text_is!", color = [0, 3], tiling = "none"}
+"text_and!" = {sprite = "text_and!", color = [0, 3], tiling = "none"}
+
+"text_you!" = {sprite = "text_yoy", color = [4, 1], tiling = "none"}
+"text_win!" = {sprite = "text_wiw", color = [2, 4], tiling = "none"}
+"text_push!" = {sprite = "text_puhs", color = [6, 1], tiling = "none"}
+"text_stop!" = {sprite = "text_stoo", color = [5, 1], tiling = "none"}
+"text_open!" = {sprite = "text_opeen", color = [2, 4], tiling = "none"}
+"text_shut!" = {sprite = "text_shutu", color = [4, 1], tiling = "none"}
+"text_sink!" = {sprite = "text_sinkn", color = [1, 3], tiling = "none"}

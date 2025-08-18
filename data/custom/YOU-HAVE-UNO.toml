@@ -20,7 +20,7 @@ text_unowild = {sprite = "text_unowild", color = [0, 1], tiling = "none", author
 
 unodeck = {sprite = "unodeck", color = [2, 2], tiling = "none", author = "plantform"}
 
-text_unodeck = {sprite = "text_unodeck", color = [2, 2], tiling = "none", author = "plantform"}
+# text_unodeck = {sprite = "text_unodeck", color = [2, 2], tiling = "none", author = "plantform"}
 
 unoplustwo = {sprite = "unoplustwo", color = [5, 3], tiling = "directional", author = "plantform"}
 
