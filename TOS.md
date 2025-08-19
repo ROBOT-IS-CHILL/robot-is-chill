@@ -50,7 +50,7 @@ If these **Terms** is to change at any point in the future, the **Maintainers** 
 **You** may not upload **User Content** that:
 
 - discriminates or can be considered hate speech against a religion, sexuality, gender, ideology, or any other protected group,
-- infringes on the copyright of another intellectual property, in cases where the **Generated Content** does not fall under US Fair Use laws,
+- infringes on the copyright of another intellectual property, in cases where the **User Content** does not fall under US Fair Use laws,
 - is or can be used to access illegal material (e.g. CSAM),
 - **You** do not have legal permission to publicize and upload
 
