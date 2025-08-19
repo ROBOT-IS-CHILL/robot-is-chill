@@ -23,8 +23,6 @@ The **Terms**, or the **TOS**, is defined as this document, and all rules agreed
 
 The **Project** is defined as the Discord automated response bot `@ROBOT IS CHILL#1212`, or its beta branch, `@ROBOT IS CHILL AND BETA#6668`, and the underlying code for them.
 
-A **Fork** is defined as any project derived from the **Project** that is not the **Project** itself.
-
 The **Maintainers** are defined as the group of people maintaining the **Project**.
 
 Your **Data** is defined as any information of yours that is shared to the **Project**.
@@ -64,7 +62,7 @@ If these **Terms** are to change at any point in the future, the **Maintainers**
 
 ## 6. Generated Content
 
-**You** may not use the **Project**, or any **Fork**, to create **Generated Content** that:
+**You** may not use the **Project** to create **Generated Content** that:
 
 - discriminates or can be considered hate speech against a religion, sexuality, gender, ideology, or any other protected group,
 - infringes on the copyright of another intellectual property, in cases where the **Generated Content** does not fall under US Fair Use laws,
