@@ -25,6 +25,8 @@ Your **Data** is defined as any information of yours that is shared to the **Pro
 
 **User Content** is defined as any content uploaded to the **Project**.
 
+The **Maintainers** are defined as the group of people maintaining the **Project**.
+
 ## 2. Severability
 
 If any section of this **Privacy Policy** is considered unenforcable by local law, then the rest of the **Privacy Policy** is still enforced.
