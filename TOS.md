@@ -43,7 +43,7 @@ If any section of these **Terms** is considered unenforcable by local law, then 
 
 These **Terms** may change at any time.
 
-If these **Terms** is to change at any point in the future, the **Maintainers** will notify **You** of the changes if possible.
+If these **Terms** are to change at any point in the future, the **Maintainers** will notify **You** of the changes if possible.
 
 ## 4. User Content
 
