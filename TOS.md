@@ -59,7 +59,7 @@ If these **Terms** is to change at any point in the future, the **Maintainers** 
 **Contributors** may not:
 
 - upload content that they do not have legal access to publicize under US Fair Use laws,
-- is or can be used to access illegal material (e.g. CSAM),
+- upload content that is or can be used to access illegal material (e.g. CSAM),
 - discriminate against a religion, sexuality, gender, ideology, or any other protected group
 
 ## 6. Generated Content
