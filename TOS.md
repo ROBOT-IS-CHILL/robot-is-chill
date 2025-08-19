@@ -67,7 +67,7 @@ If these **Terms** are to change at any point in the future, the **Maintainers**
 - discriminates or can be considered hate speech against a religion, sexuality, gender, ideology, or any other protected group,
 - infringes on the copyright of another intellectual property, in cases where the **Generated Content** does not fall under US Fair Use laws,
 - is or can be used to access illegal material (e.g. CSAM),
-- is with the intent to overload and disable the **Project** or any **Fork** via a Denial of Service attack
+- is with the intent to overload and disable the **Project** via a Denial of Service attack
 
 ## 7. Limitation of Liability
 
