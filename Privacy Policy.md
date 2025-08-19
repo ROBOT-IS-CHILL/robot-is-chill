@@ -7,7 +7,7 @@
 2. [Severability](#severability)
 3. [Malleability](#malleability)
 4. [Data Storage](#data-storage)
-4. [Data Removal](#data-removal)
+5. [Data Removal](#data-removal)
 
 ---
 
