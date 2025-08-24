@@ -198,9 +198,9 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error(f'A flag failed to parse:\n> `{error}`')
             elif isinstance(error, errors.FailedBuiltinMacro):
                 if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {error.message}')
+                    return await ctx.error(f'A macro created a custom error:\n> {error.message[:1024]}')
                 else:
-                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw}`:\n> {error.message}')
+                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):

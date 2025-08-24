@@ -15,12 +15,22 @@ from faststring import MString
 from .. import constants, errors
 from ..types import Bot, BuiltinMacro, TilingMode
 
+class VariableRegistry:
+    def __init__(self):
+        self.inner = {}
+
+    def __getitem__(self, name):
+        return self.inner[name]
+
+    def __setitem__(self, name, value):
+        assert value <= constants.MAX_MACRO_VAR_SIZE, f"tried to set variable {name} to value larger than {constants.MAX_MACRO_SIZE}"
+
 class MacroCog:
 
     def __init__(self, bot: Bot):
         self.debug = []
         self.bot = bot
-        self.variables = {}
+        self.variables = VariableRegistry()
         self.builtins: dict[str, BuiltinMacro] = {}
         self.found = 0
 
@@ -622,6 +632,10 @@ class MacroCog:
             end = start if end is None else end
             start = int(to_float(start))
             end = int(to_float(end))
+            assert end >= start, "slice end must not be less than start"
+            assert len(self.variables[variable]) - (end - start) + len(payload) \
+                <= constants.MAX_MACRO_VAR_SIZE, \
+                f"splice would push variable over size limit of {constants.MAX_MACRO_VAR_SIZE}"
             self.variables[variable][start:end] = bytearray(payload, "utf-8")
             return ""
 
