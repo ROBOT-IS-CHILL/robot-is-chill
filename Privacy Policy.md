@@ -44,6 +44,7 @@ The **Project** may store:
 - any **Generated Content**
 - any **User Content**
 - your Discord User Identifier, profile picture, and username
+- the date and time of the last command ran on a per-server basis
 
 ## 5. Data Removal
 
