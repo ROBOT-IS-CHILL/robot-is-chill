@@ -655,7 +655,11 @@ class MacroCog:
 
                 `sl` is of the form `<start>[:<stop>[:<step>]]`.
             """
-            return "/".join(args[slice(*(None if i == "" else int(to_float(i)) for i in sl.split(":")))])
+            return "/".join(args[slice(*(
+                None if i == "" else (
+                    j := int(to_float(i)),
+                    j-1 if j > 0 else j
+                )[1] for i in sl.split(":")))])
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
