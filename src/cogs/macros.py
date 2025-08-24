@@ -622,6 +622,8 @@ class MacroCog:
         if macros is None:
             macros = self.bot.macros
 
+        objects_f = MString(objects)
+
         # Find each outmost pair of brackets
 
         while True:
@@ -646,16 +648,13 @@ class MacroCog:
             if debug_info:
                 self.debug.append(f"[Step {self.found}] {objects}")
             try:
-                objects = (
-                        objects[:start] +
-                        self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[end:]
-                )
+                objects_f[start:end] = self.parse_term_macro(terminal, macros, self.found, cmd, debug_info)
             except errors.FailedBuiltinMacro as err:
                 if debug_info:
                     self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
                     return None, self.debug
                 raise err
+        objects = str(objects_f)
         if debug_info:
             self.debug.append(f"[Out] {objects}")
         return objects, self.debug if len(self.debug) else None
