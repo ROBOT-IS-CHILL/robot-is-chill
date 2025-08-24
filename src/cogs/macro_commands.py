@@ -117,6 +117,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
             value = (await ctx.message.attachments[0].read()).decode("utf-8", errors = "ignore")
         if name in self.bot.macros:
+            macro = self.bot.macros[name]
             assert macro.author == ctx.author.id, "You can't replace a macro you don't own, silly."
             async with self.bot.db.conn.cursor() as cursor:
                 await cursor.execute(f"DELETE FROM macros WHERE name == ?", name)
