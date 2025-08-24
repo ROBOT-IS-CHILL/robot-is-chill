@@ -107,7 +107,9 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         """
         assert len(name) <= 100, "Macro name cannot be larger than 100 characters!"
         assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
+        from_file = False
         if value == "<file>":
+            from_file = True
             assert ctx.message.attachments, "No attachments found!"
             if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
                 raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
@@ -122,9 +124,11 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 "A macro's name can't have an unescaped slash in it, as it'd clash with parsing arguments."
             command = "INSERT INTO macros VALUES (?, ?, ?, ?);"
             args = (name, value, description, ctx.author.id)
-            self.bot.macros[name] = Macro(value, description, ctx.author.id)
             await cursor.execute(command, args)
-            return await ctx.reply(f"Successfully added `{name}` to the database, aliased to `{value}`!")
+        self.bot.macros[name] = Macro(value, description, ctx.author.id)
+        if from_file:
+            value = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        return await ctx.reply(f"Successfully added `{name}` to the database, aliased to `{value}`!")
 
     @macro.command(aliases=["e"])
     async def edit(self, ctx: Context, name: str, attribute: Literal["value", "description", "name"], *, new: str):
@@ -136,7 +140,9 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
         if attribute == "name":
             assert new not in self.bot.macros, f"Macro `{new}` is already in the database!"
+        from_file = False
         if attribute == "value" and new == "<file>":
+            from_file = True
             assert ctx.message.attachments, "No attachments found!"
             if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
                 raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
@@ -154,6 +160,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             self.bot.macros[new] = mac
         else:
             setattr(self.bot.macros[name], attribute, new)
+        if from_file:
+            new = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
         return await ctx.reply(f"Edited `{name}`'s {attribute} to be `{new}`.")
 
     @macro.command(aliases=["rm", "remove", "del"])
