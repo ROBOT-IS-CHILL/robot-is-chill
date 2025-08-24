@@ -23,7 +23,6 @@ from src.db import Database
 
 from numpy import set_printoptions as numpy_set_printoptions
 
-
 class Context(commands.Context):
     silent: bool = False
     ephemeral: bool = False
@@ -168,6 +167,11 @@ bot = Bot(
     prefixes=config.prefixes,
     db_path=config.db_path
 )
+
+
+@bot.after_invoke
+async def after_invoke(ctx: Context):
+    await ctx.message.add_reaction("⚙️")
 
 
 @bot.event
