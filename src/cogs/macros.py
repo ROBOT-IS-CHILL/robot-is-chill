@@ -626,9 +626,9 @@ class MacroCog:
             return ""
 
         @builtin("byteset")
-        def byteset(variable, payload, index):
+        def byteset(variable, index, payload):
             """
-                Splices a string `payload` into a variable's value between `start` and `end`.
+                Replaces the byte in the variable's value at index `index` with `payload`.
 
                 Note that unlike most other macros, `byteset` uses byte indices,
                 which does allow indexing into the middle of a character.
