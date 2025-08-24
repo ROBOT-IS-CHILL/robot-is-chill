@@ -169,8 +169,8 @@ bot = Bot(
 )
 
 
-@bot.after_invoke
-async def after_invoke(ctx: Context):
+@bot.before_invoke
+async def before_invoke(ctx: Context):
     await ctx.message.add_reaction("⚙️")
 
 
