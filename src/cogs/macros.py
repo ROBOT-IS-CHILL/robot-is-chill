@@ -344,7 +344,7 @@ class MacroCog:
             """Stores a value in a variable."""
             assert len(self.variables) < 256, "cannot have more than 256 variables at once"
             assert len(value) <= 65536, "values must be at most 65536 characters long"
-            self.variables[name] = MString(value)
+            self.variables[name] = bytearray(value, "utf-8")
             return ""
 
         @builtin("get")
@@ -353,13 +353,13 @@ class MacroCog:
             try:
                 return load(name)
             except KeyError:
-                self.variables[name] = value
+                store(name, value)
                 return value
 
         @builtin("load")
         def load(name):
             """Gets the value of a variable, erroring if it doesn't exist."""
-            return self.variables[name].encode("utf-8", errors="replace").decode("utf-8")
+            return self.variables[name].decode("utf-8", errors = "replace")
 
         @builtin("drop")
         def drop(name):
@@ -624,9 +624,10 @@ class MacroCog:
             end = start if end is None else end
             start = int(to_float(start))
             end = int(to_float(end))
-            assert self.variables[variable][start:end].isascii(), \
-                "splice may not be used with non-ASCII strings"
-            self.variables[variable][start:end] = payload  # thanks, faststring!
+            if end - start == 1 and len(payload) == 1:
+                self.variables[variable][start] = ord(payload)
+            else:
+                self.variables[variable][start:end] = bytearray(payload, "utf-8")
             return ""
 
         @builtin("byteindex")
