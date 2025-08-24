@@ -176,7 +176,7 @@ async def before_invoke(ctx: Context):
 
 @bot.after_invoke
 async def after_invoke(ctx: Context):
-    await ctx.message.remove_reaction("⚙️")
+    await ctx.message.remove_reaction("⚙️", bot.user)
 
 
 @bot.event
