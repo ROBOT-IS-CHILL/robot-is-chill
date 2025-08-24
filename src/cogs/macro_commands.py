@@ -198,7 +198,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 )
                 names = [name for (name,) in await cursor.fetchall()]
         for name in ctx.bot.macro_handler.builtins:
-            if re.fullmatch(pattern, name) is not None:
+            if re.search(pattern, name) is not None:
                 names.append(f"**{name}**")
         return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
 
