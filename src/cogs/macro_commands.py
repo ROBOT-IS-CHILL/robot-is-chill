@@ -105,7 +105,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
         If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
         """
-        assert len(name) <= 50, "Macro name cannot be larger than 50 characters!"
+        assert len(name) <= 100, "Macro name cannot be larger than 100 characters!"
         assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
         if value == "<file>":
             assert ctx.message.attachments, "No attachments found!"
