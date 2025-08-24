@@ -943,6 +943,11 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                     hacks
                 )
 
+    @commands.command(hidden = True)
+    async def meow(self, ctx: Context):
+        """:3"""
+        await ctx.author.reply(":3")
+
     @commands.command()
     @commands.is_owner()
     async def hidden(self, ctx: Context):
