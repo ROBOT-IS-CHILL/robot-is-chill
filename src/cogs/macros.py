@@ -632,12 +632,12 @@ class MacroCog:
         @builtin("byteindex")
         def byteindex(variable, index):
             """
-                Gets a character at a given index in the string.
+                Gets a character at an index in the given variable.
 
                 Note that unlike most other macros, `index` uses byte indices,
                 which does allow indexing into the middle of a character!
             """
-            return self.variables[variable][index]  # faststring cba
+            return self.variables[variable][int(to_float(index))]  # faststring cba
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
