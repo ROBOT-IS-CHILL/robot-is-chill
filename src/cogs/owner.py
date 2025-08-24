@@ -25,6 +25,7 @@ import os
 import numpy as np
 import subprocess
 import asyncio
+import sqlite3
 
 import discord
 from discord.ext import commands
@@ -974,7 +975,10 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             filemode = True
         query = query.replace('```', '')
         async with self.bot.db.conn.cursor() as cur:
-            result = await cur.execute(query)
+            try:
+                result = await cur.execute(query)
+            except sqlite3.OperationalError as err:
+                return await ctx.error(f"SQL error: {err}")
             try:
                 data_rows = await result.fetchall()
                 data_column_headers = np.array(
