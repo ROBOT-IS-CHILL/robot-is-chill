@@ -633,20 +633,21 @@ class MacroCog:
                 Note that unlike most other macros, `byteset` uses byte indices,
                 which does allow indexing into the middle of a character.
             """
-            assert ord(payload) < 256, "payload character must be within [0, 255]"
+            payload = int(payload, base = 16)
+            assert payload < 256, "payload character must be within [0, 255]"
             index = int(to_float(index))
-            self.variables[variable][index] = ord(payload)
+            self.variables[variable][index] = payload
             return ""
 
-        @builtin("byteindex")
-        def byteindex(variable, index):
+        @builtin("byteget")
+        def byteget(variable, index):
             """
                 Gets a character at an index in the given variable.
 
                 Note that unlike most other macros, `byteindex` uses byte indices,
                 which does allow indexing into the middle of a character!
             """
-            return chr(self.variables[variable][int(to_float(index))])
+            return f"{self.variables[variable][int(to_float(index))]:02x}"
 
         @builtin("argslice")
         def argslice(sl, *args):
