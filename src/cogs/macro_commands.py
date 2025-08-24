@@ -99,10 +99,19 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         return await ctx.reply(f"Done. Moved all macros from account {source} to account {dest}.")
 
     @macro.command(aliases=["mk", "make"])
-    async def create(self, ctx: Context, name: str, value: str, *, description: str = None):
-        """Adds a macro to the database."""
+    async def create(self, ctx: Context, name: str, value: str, *, description: str):
+        """
+        Adds a macro to the database.
+
+        If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
+        """
         assert len(name) <= 50, "Macro name cannot be larger than 50 characters!"
         assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
+        if value == "<file>":
+            assert ctx.message.attachments, "No attachments found!"
+            if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
+                raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
+            value = (await ctx.message.attachments[0].read(65536)).decode("utf-8", errors = "ignore")
         async with self.bot.db.conn.cursor() as cursor:
             await cursor.execute("SELECT value FROM macros WHERE name == ?", name)
             dname = await cursor.fetchone()
@@ -111,9 +120,6 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                     f"Macro of name `{name}` already exists in the database!")
             assert re.search(r"(?<!(?<!\\)\\)/", name) is None, \
                 "A macro's name can't have an unescaped slash in it, as it'd clash with parsing arguments."
-            # Call the user out on not adding a description, hopefully making them want to add a good one
-            assert description is not None, \
-                "A description is _required_. Please describe what your macro does understandably!"
             command = "INSERT INTO macros VALUES (?, ?, ?, ?);"
             args = (name, value, description, ctx.author.id)
             self.bot.macros[name] = Macro(value, description, ctx.author.id)
@@ -122,10 +128,19 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
     @macro.command(aliases=["e"])
     async def edit(self, ctx: Context, name: str, attribute: Literal["value", "description", "name"], *, new: str):
-        """Edits a macro. You must own said macro to edit it."""
+        """
+        Edits a macro. You must own said macro to edit it.
+
+        If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
+        """
         assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
         if attribute == "name":
             assert new not in self.bot.macros, f"Macro `{new}` is already in the database!"
+        if attribute == "value" and new == "<file>":
+            assert ctx.message.attachments, "No attachments found!"
+            if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
+                raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
+            new = (await ctx.message.attachments[0].read(65536)).decode("utf-8", errors = "ignore")
         async with self.bot.db.conn.cursor() as cursor:
             if not await ctx.bot.is_owner(ctx.author):
                 await cursor.execute("SELECT name FROM macros WHERE name == ? AND creator == ?", name, ctx.author.id)
