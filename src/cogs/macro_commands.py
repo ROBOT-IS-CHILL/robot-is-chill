@@ -156,7 +156,13 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
     @macro.command(aliases=["?", "list", "query"])
     async def search(self, ctx: Context, *, pattern: str = ''):
-        """Searches the database for macros by name."""
+        """
+            Searches the database for macros by name.
+
+            To search by author, prefix with `--author=<user>`, or `-a=<user>`.
+
+            To search for only builtins, prefix with `--builtin`, or `-b`.
+        """
         author = None
         builtin_only = False
         if match := re.search(r"--?a(?:uthor)?=(\S+)", pattern):
