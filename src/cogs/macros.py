@@ -615,7 +615,15 @@ class MacroCog:
 
         @builtin("splice")
         def splice(variable, payload, start, end = None):
-            """Splices a string `payload` into a variable's value between `start` and `end`."""
+            """
+                Splices a string `payload` into a variable's value between `start` and `end`.
+
+                Note that unlike all other variants, `splice` uses byte indices,
+                which does allow indexing into the middle of a character.
+                The string will be corrupted if this happens!
+
+                It's best to only use this macro when the variable is confirmedly ASCII only.
+            """
             end = start if end is None else end
             start = int(to_float(start))
             end = int(to_float(end))
@@ -632,8 +640,6 @@ class MacroCog:
         if macros is None:
             macros = self.bot.macros
 
-        objects_f = MString(objects)
-
         # Find each outmost pair of brackets
 
         while True:
@@ -641,7 +647,7 @@ class MacroCog:
             start = None
             end = 1
             was_escaped = False
-            for i, c in enumerate(objects_f):
+            for i, c in enumerate(objects):
                 end = i + 1
                 if was_escaped:
                     was_escaped = False
@@ -653,18 +659,21 @@ class MacroCog:
                     break
             else:
                 break
-            terminal = objects_f[start + 1 : end - 1]
+            terminal = objects[start + 1 : end - 1]
             self.found += 1
             if debug_info:
-                self.debug.append(f"[Step {self.found}] {objects_f}")
+                self.debug.append(f"[Step {self.found}] {objects}")
             try:
-                objects_f[start:end] = self.parse_term_macro(terminal, macros, self.found, cmd, debug_info)
+                objects = (
+                    objects[:start] +
+                    self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
+                    objects[end:]
+                )
             except errors.FailedBuiltinMacro as err:
                 if debug_info:
                     self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
                     return None, self.debug
                 raise err
-        objects = str(objects_f)
         if debug_info:
             self.debug.append(f"[Out] {objects}")
         return objects, self.debug if len(self.debug) else None
