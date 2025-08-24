@@ -637,6 +637,7 @@ class MacroCog:
                 Note that unlike most other macros, `index` uses byte indices,
                 which does allow indexing into the middle of a character!
             """
+            return self.variables[variable][index]  # faststring cba
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
