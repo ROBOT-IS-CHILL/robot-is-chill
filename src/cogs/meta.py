@@ -176,7 +176,7 @@ This help page should be able to guide you to everything you need to know.
         minutes, seconds = divmod(remainder, 60)
         embed.add_field(
             name="Statistics",
-            value=f"""Guilds: {len(self.bot.guilds)}/100
+            value=f"""Guilds: {len(self.bot.guilds)}
 Channels: {sum(len(g.channels) for g in self.bot.guilds)}
 Uptime: {days}:{hours:02}:{minutes:02}:{seconds:02}
 Tiles: {tile_amount}""",
