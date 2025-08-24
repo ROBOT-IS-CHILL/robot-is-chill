@@ -617,6 +617,8 @@ class MacroCog:
         def splice(variable, payload, start, end = None):
             """Splices a string `payload` into a variable's value between `start` and `end`."""
             end = start if end is None else start
+            start = int(to_float(start))
+            end = int(to_float(end))
             self.variables[variable][start:end] = payload  # thanks, faststring!
             return ""
 
