@@ -10,6 +10,7 @@ import base64
 import zlib
 import textwrap
 import asyncio
+from faststring import MString
 
 from .. import constants, errors
 from ..types import Bot, BuiltinMacro, TilingMode
@@ -149,7 +150,7 @@ class MacroCog:
             > `[sequence/@/1/3/@]` -> `123`
             """
             s = []
-            for i in range(int(start), int(end) + 1):
+            for i in range(int(to_float(start)), int(to_float(end)) + 1):
                 s.append(string.replace(pattern, str(i)))
             return separator.join(s)
 
@@ -343,7 +344,7 @@ class MacroCog:
             """Stores a value in a variable."""
             assert len(self.variables) < 256, "cannot have more than 256 variables at once"
             assert len(value) <= 65536, "values must be at most 65536 characters long"
-            self.variables[name] = value
+            self.variables[name] = MString(value)
             return ""
 
         @builtin("get")
@@ -612,6 +613,13 @@ class MacroCog:
                 for (row, ) in data_rows
             )
 
+        @builtin("splice")
+        def splice(variable, payload, start, end = None):
+            """Splices a string `payload` into a variable's value between `start` and `end`."""
+            end = start if end is None else start
+            self.variables[variable][start:end] = payload  # thanks, faststring!
+            return ""
+
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
     def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
@@ -622,6 +630,8 @@ class MacroCog:
         if macros is None:
             macros = self.bot.macros
 
+        objects_f = MString(objects)
+
         # Find each outmost pair of brackets
 
         while True:
@@ -629,7 +639,7 @@ class MacroCog:
             start = None
             end = 1
             was_escaped = False
-            for i, c in enumerate(objects):
+            for i, c in enumerate(objects_f):
                 end = i + 1
                 if was_escaped:
                     was_escaped = False
@@ -641,21 +651,18 @@ class MacroCog:
                     break
             else:
                 break
-            terminal = objects[start + 1 : end - 1]
+            terminal = objects_f[start + 1 : end - 1]
             self.found += 1
             if debug_info:
-                self.debug.append(f"[Step {self.found}] {objects}")
+                self.debug.append(f"[Step {self.found}] {objects_f}")
             try:
-                objects = (
-                        objects[:start] +
-                        self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[end:]
-                )
+                objects_f[start:end] = self.parse_term_macro(terminal, macros, self.found, cmd, debug_info)
             except errors.FailedBuiltinMacro as err:
                 if debug_info:
                     self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
                     return None, self.debug
                 raise err
+        objects = str(objects_f)
         if debug_info:
             self.debug.append(f"[Out] {objects}")
         return objects, self.debug if len(self.debug) else None
