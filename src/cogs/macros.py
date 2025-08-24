@@ -642,13 +642,13 @@ class MacroCog:
         @builtin("byteset")
         def byteset(variable, index, payload):
             """
-                Replaces the byte in the variable's value at index `index` with `payload`.
+                Replaces the byte in the variable's value at the index `index` with the hexadecimal number in `payload`.
 
                 Note that unlike most other macros, `byteset` uses byte indices,
                 which does allow indexing into the middle of a character.
             """
             payload = int(payload, base = 16)
-            assert payload < 256, "payload character must be within [0, 255]"
+            assert payload < 256, "payload character must be within [00, FF]"
             index = int(to_float(index))
             self.variables[variable][index] = payload
             return ""
@@ -656,7 +656,7 @@ class MacroCog:
         @builtin("byteget")
         def byteget(variable, index):
             """
-                Gets a character at an index in the given variable.
+                Gets the hexadecimal value of the character at the index `index` in the given variable.
 
                 Note that unlike most other macros, `byteindex` uses byte indices,
                 which does allow indexing into the middle of a character!
