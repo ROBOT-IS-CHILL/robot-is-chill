@@ -351,15 +351,15 @@ class MacroCog:
         def get(name: str, value: str):
             """Gets the value of a variable, or a default."""
             try:
-                return self.variables[name]
+                return load(name)
             except KeyError:
                 self.variables[name] = value
-                return self.variables[name]
+                return value
 
         @builtin("load")
         def load(name):
             """Gets the value of a variable, erroring if it doesn't exist."""
-            return self.variables[name]
+            return self.variables[name].encode("utf-8", errors="replace").decode("utf-8")
 
         @builtin("drop")
         def drop(name):
@@ -613,22 +613,30 @@ class MacroCog:
                 for (row, ) in data_rows
             )
 
-        @builtin("splice")
-        def splice(variable, payload, start, end = None):
+        @builtin("bytesplice")
+        def bytesplice(variable, payload, start, end = None):
             """
                 Splices a string `payload` into a variable's value between `start` and `end`.
 
-                Note that unlike all other variants, `splice` uses byte indices,
+                Note that unlike most other macros, `splice` uses byte indices,
                 which does allow indexing into the middle of a character.
-                The string will be corrupted if this happens!
-
-                It's best to only use this macro when the variable is confirmedly ASCII only.
             """
             end = start if end is None else end
             start = int(to_float(start))
             end = int(to_float(end))
+            assert self.variables[variable][start:end].isascii(), \
+                "splice may not be used with non-ASCII strings"
             self.variables[variable][start:end] = payload  # thanks, faststring!
             return ""
+
+        @builtin("byteindex")
+        def byteindex(variable, index):
+            """
+                Gets a character at a given index in the string.
+
+                Note that unlike most other macros, `index` uses byte indices,
+                which does allow indexing into the middle of a character!
+            """
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
