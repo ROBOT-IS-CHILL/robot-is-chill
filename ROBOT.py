@@ -173,6 +173,10 @@ bot = Bot(
 async def before_invoke(ctx: Context):
     await ctx.message.add_reaction("⚙️")
 
+@bot.after_invoke
+async def after_invoke(ctx: Context):
+    await ctx.message.remove_reaction("⚙️")
+
 
 @bot.event
 async def on_command(ctx):
