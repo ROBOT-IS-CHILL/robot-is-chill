@@ -644,12 +644,6 @@ class MacroCog:
             terminal = objects[start + 1 : end - 1]
             self.found += 1
             if debug_info:
-                if self.found > constants.MACRO_LIMIT:
-                    self.debug.append(f"[Error] Reached step limit of {constants.MACRO_LIMIT}.")
-                    return None, self.debug
-            else:
-                assert self.found <= constants.MACRO_LIMIT, f"Too many macros in one render! The limit is {constants.MACRO_LIMIT}, while you reached {self.found}."
-            if debug_info:
                 self.debug.append(f"[Step {self.found}] {objects}")
             try:
                 objects = (
@@ -698,14 +692,12 @@ class MacroCog:
             macro_args = ["/".join(macro_args), *macro_args]
             arg_amount = 0
             iters = None
-            while iters != 0 and arg_amount <= constants.MACRO_ARG_LIMIT:
+            while iters != 0:
                 iters = 0
                 matches = [*re.finditer(r"\$(-?\d+|#|!)", macro)]
                 for match in reversed(matches):
                     iters += 1
                     arg_amount += 1
-                    if arg_amount > constants.MACRO_ARG_LIMIT:
-                        break
                     argument = match.group(1)
                     if argument == "#":
                         self.debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
