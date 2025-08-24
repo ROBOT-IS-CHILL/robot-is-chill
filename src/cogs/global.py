@@ -120,7 +120,7 @@ class RenderBox(ui.Modal, title='Render Body'):
         wrapper.message.content = self.scene.value
         wrapper.bot = self.bot
         wrapper.fake = True
-        await self.global_cog.render_tiles(
+        await self.global_cog.start_timeout(
             wrapper,
             objects=self.scene.value,
             rule=self.text
