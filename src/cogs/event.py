@@ -53,6 +53,7 @@ If you feel this was unjustified, please DM the bot owner.''')
             content = ctx.message.content[:100]
             content = "".join(c if (32 <= ord(c) < 127) | (ord(c) == 10) else f"\\x{ord(c):02X}" for c in content)
             print(f"{datetime.datetime.now()}\n{ctx.author.name}\n{content}", flush=True)
+        await ctx.message.add_reaction("⚙️")
         return True
 
 async def setup(bot: Bot):
