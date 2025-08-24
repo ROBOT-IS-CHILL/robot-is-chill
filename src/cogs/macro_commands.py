@@ -111,7 +111,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             assert ctx.message.attachments, "No attachments found!"
             if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
                 raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
-            value = (await ctx.message.attachments[0].read(65536)).decode("utf-8", errors = "ignore")
+            value = (await ctx.message.attachments[0].read()).decode("utf-8", errors = "ignore")
         async with self.bot.db.conn.cursor() as cursor:
             await cursor.execute("SELECT value FROM macros WHERE name == ?", name)
             dname = await cursor.fetchone()
@@ -140,7 +140,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             assert ctx.message.attachments, "No attachments found!"
             if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
                 raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
-            new = (await ctx.message.attachments[0].read(65536)).decode("utf-8", errors = "ignore")
+            new = (await ctx.message.attachments[0].read()).decode("utf-8", errors = "ignore")
         async with self.bot.db.conn.cursor() as cursor:
             if not await ctx.bot.is_owner(ctx.author):
                 await cursor.execute("SELECT name FROM macros WHERE name == ? AND creator == ?", name, ctx.author.id)
