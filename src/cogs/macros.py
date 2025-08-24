@@ -342,8 +342,6 @@ class MacroCog:
         @builtin("store")
         def store(name: str, value: str):
             """Stores a value in a variable."""
-            assert len(self.variables) < 256, "cannot have more than 256 variables at once"
-            assert len(value) <= 65536, "values must be at most 65536 characters long"
             self.variables[name] = bytearray(value, "utf-8")
             return ""
 
@@ -618,16 +616,26 @@ class MacroCog:
             """
                 Splices a string `payload` into a variable's value between `start` and `end`.
 
-                Note that unlike most other macros, `splice` uses byte indices,
+                Note that unlike most other macros, `bytesplice` uses byte indices,
                 which does allow indexing into the middle of a character.
             """
             end = start if end is None else end
             start = int(to_float(start))
             end = int(to_float(end))
-            if end - start == 1 and len(payload) == 1:
-                self.variables[variable][start] = ord(payload)
-            else:
-                self.variables[variable][start:end] = bytearray(payload, "utf-8")
+            self.variables[variable][start:end] = bytearray(payload, "utf-8")
+            return ""
+
+        @builtin("byteset")
+        def byteset(variable, payload, index):
+            """
+                Splices a string `payload` into a variable's value between `start` and `end`.
+
+                Note that unlike most other macros, `byteset` uses byte indices,
+                which does allow indexing into the middle of a character.
+            """
+            assert ord(payload) < 256, "payload character must be within [0, 255]"
+            index = int(to_float(index))
+            self.variables[variable][index] = ord(payload)
             return ""
 
         @builtin("byteindex")
@@ -635,10 +643,10 @@ class MacroCog:
             """
                 Gets a character at an index in the given variable.
 
-                Note that unlike most other macros, `index` uses byte indices,
+                Note that unlike most other macros, `byteindex` uses byte indices,
                 which does allow indexing into the middle of a character!
             """
-            return self.variables[variable][int(to_float(index))]  # faststring cba
+            return chr(self.variables[variable][int(to_float(index))])
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
