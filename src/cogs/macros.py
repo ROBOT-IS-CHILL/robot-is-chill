@@ -648,6 +648,15 @@ class MacroCog:
             """
             return chr(self.variables[variable][int(to_float(index))])
 
+        @builtin("argslice")
+        def argslice(sl, *args):
+            """
+                Gets a slice of the given arguments.
+
+                `sl` is of the form `<start>[:<stop>[:<step>]]`.
+            """
+            return args[slice(*(int(to_float(i)) for i in sl.split(":")))]
+
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
     def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
