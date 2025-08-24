@@ -135,8 +135,8 @@ class CharacterGenerator:
 
         assert len(solutions), \
             "There's no combination of attributes that's valid for the specified arguments." \
-            + "" if customid is None else f"(Custom ID: {customid})"
-        
+            + ("" if customid is None else f" (Custom ID: {customid})")
+
         shape, variant, legs, eye_count = r.choice(solutions)
         shape = shapes[shape]
         variant = variants[variant]
