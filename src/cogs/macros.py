@@ -50,7 +50,10 @@ class MacroCog:
             """Casts a value to a float."""
             if "j" in v:
                 return complex(v)
-            return float(v)
+            try:
+                return float(v)
+            except ValueError:
+                return int(v)
 
         @builtin("to_boolean")
         def to_boolean(v: str):
