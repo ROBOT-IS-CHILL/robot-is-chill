@@ -15,6 +15,7 @@ import cython
 
 from .. import constants, errors
 from ..types import Bot, BuiltinMacro, TilingMode
+from ..stringview import StringView
 
 from typing import Tuple
 
@@ -610,7 +611,6 @@ class MacroCog:
             params = {}
             for param in queries:
                 name, pattern = param.split(":", 1)
-                print(name, pattern)
                 params[name] = pattern
             args = []
             for (name, pattern) in params.items():
@@ -706,10 +706,10 @@ class MacroCog:
 
         while True:
             # Find the next match
-            start, end = find_macros(objects)
+            start, end = find_macros(objects, 0, len(objects))
             if start == -1:
                 break
-            terminal = objects[start + 1 : end - 1]
+            terminal = StringView(objects, start + 1, end - 1)
             self.found += 1
             if debug:
                 debug.append(f"[Step {self.found}] {objects}")
@@ -718,7 +718,7 @@ class MacroCog:
                 while tail_call:
                     terminal, tail_call = self.parse_term_macro(terminal, macros, self.found, cmd, debug)
                 objects = (
-                    objects[:start] + terminal + objects[end:]
+                    objects[:start] + str(terminal) + objects[end:]
                 )
             except errors.FailedBuiltinMacro as err:
                 if debug:
@@ -732,27 +732,28 @@ class MacroCog:
     def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug = None) -> str:
         REPLACEMENT_CHAR = chr(0xFBABA)
 
-        l = []
+        args = []
         was_escaped = False
         start = 0
-        for i, c in enumerate(raw_variant):
+        for i, c in enumerate(raw_variant.contents()):
             if was_escaped:
                 was_escaped = False
             elif c == '\\':
                 was_escaped = True
             elif c == '/':
-                l.append(raw_variant[start : i])
+                args.append(raw_variant[start : i])
                 start = i + 1
-        l.append(raw_variant[start:])
+        args.append(raw_variant[start:])
         if debug:
             debug.append(f"[Raw Macro] {raw_variant}")
             debug.append(f"[Arguments]")
-            for arg in l:
+            for arg in args:
                 debug.append(f"\t\"{arg}\"")
-        raw_macro, *macro_args = l
+        raw_macro, *macro_args = args
+        raw_macro = str(raw_macro)
         if raw_macro in self.builtins:
             try:
-                macro = self.builtins[raw_macro].function(*macro_args)
+                macro = self.builtins[raw_macro].function(*(str(arg) for arg in macro_args))
                 self.found -= 1
             except Exception as err:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
@@ -760,12 +761,14 @@ class MacroCog:
             macro = macros[raw_macro].value
             macro = macro.replace("$#", str(len(macro_args)))
             macro = macro.replace("$!", cmd)
-            macro_args = ["/".join(macro_args).replace("$", REPLACEMENT_CHAR), *macro_args]
+            macro_args = [None, *macro_args]
             arg_amount = 0
             iters = None
             while iters != 0:
                 iters = 0
                 matches = [*re.finditer(r"\$(-?\d+|#|!)", macro)]
+                mac_list = []
+                last_start = len(macro)
                 for match in reversed(matches):
                     iters += 1
                     arg_amount += 1
@@ -777,25 +780,31 @@ class MacroCog:
                         infix = cmd
                     else:
                         argument = int(argument)
+                        if argument == 0 and macro_args[0] is None:
+                            macro_args[0] = "/".join(str(arg) for arg in macro_args[1:]).replace("$", REPLACEMENT_CHAR)
                         try:
                             infix = macro_args[argument]
                         except IndexError:
                             infix = REPLACEMENT_CHAR + str(argument)
                     if debug:
                         debug.append(f"[Step {step}:{arg_amount}] {macro}")
-                    macro = macro[:match.start()] + infix + macro[match.end():]
+                    mac_list.append(StringView(macro, match.end(), last_start))
+                    mac_list.append(infix)
+                    last_start = match.start()
+                mac_list.append(StringView(macro, 0, last_start))
+                macro = "".join(str(s) for s in reversed(mac_list))
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
-        res = str(macro).replace(REPLACEMENT_CHAR, "$")
+        res = macro.replace(REPLACEMENT_CHAR, "$")
         if res.startswith("[") and res.endswith("]"):
             # Optimization: This could just be another macro, in which case we can immediately expand it - TCO
-            start, end = find_macros(res)
+            start, end = find_macros(res, 0, len(res))
             if start == 0 and end == len(res):
                 # Tail call!
                 if debug:
                     debug.append(f"[Step {self.found}] Tail calling {res}")
                 self.found += 1
-                return res[1:-1], True
+                return StringView(res, 1, -1), True
 
         return res, False
 
