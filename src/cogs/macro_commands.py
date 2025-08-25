@@ -243,7 +243,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
                 macro = macro[match.end():]
             macro = macro.strip()
-            if match := re.match(r"^```\w*\n(.*)```$", macro):
+            if match := re.fullmatch(r"^```\w*(.*)```$", macro, re.DOTALL):
                 macro = match.group(1).strip()
 
             def parse():
