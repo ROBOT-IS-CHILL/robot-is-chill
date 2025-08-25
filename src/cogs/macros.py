@@ -11,9 +11,15 @@ import zlib
 import textwrap
 import asyncio
 from faststring import MString
+import cython
 
 from .. import constants, errors
 from ..types import Bot, BuiltinMacro, TilingMode
+
+from typing import Tuple
+
+
+from ..cythonic import find_macros
 
 class VariableRegistry:
     def __init__(self):
@@ -700,30 +706,19 @@ class MacroCog:
 
         while True:
             # Find the next match
-            start = None
-            end = 1
-            was_escaped = False
-            for i, c in enumerate(objects):
-                end = i + 1
-                if was_escaped:
-                    was_escaped = False
-                elif c == '\\':
-                    was_escaped = True
-                elif c == '[':
-                    start = i
-                elif c == ']' and start is not None:
-                    break
-            else:
+            start, end = find_macros(objects)
+            if start == -1:
                 break
             terminal = objects[start + 1 : end - 1]
             self.found += 1
             if debug:
                 debug.append(f"[Step {self.found}] {objects}")
             try:
+                tail_call = True
+                while tail_call:
+                    terminal, tail_call = self.parse_term_macro(terminal, macros, self.found, cmd, debug)
                 objects = (
-                    objects[:start] +
-                    self.parse_term_macro(terminal, macros, self.found, cmd, debug) +
-                    objects[end:]
+                    objects[:start] + terminal + objects[end:]
                 )
             except errors.FailedBuiltinMacro as err:
                 if debug:
@@ -791,7 +786,18 @@ class MacroCog:
                     macro = macro[:match.start()] + infix + macro[match.end():]
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
-        return str(macro).replace(REPLACEMENT_CHAR, "$")
+        res = str(macro).replace(REPLACEMENT_CHAR, "$")
+        if res.startswith("[") and res.endswith("]"):
+            # Optimization: This could just be another macro, in which case we can immediately expand it - TCO
+            start, end = find_macros(res)
+            if start == 0 and end == len(res):
+                # Tail call!
+                if debug:
+                    debug.append(f"[Step {self.found}] Tail calling {res}")
+                self.found += 1
+                return res[1:-1], True
+
+        return res, False
 
 
 async def setup(bot: Bot):

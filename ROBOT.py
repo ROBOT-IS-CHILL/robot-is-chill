@@ -23,6 +23,9 @@ from src.db import Database
 
 from numpy import set_printoptions as numpy_set_printoptions
 
+import pyximport
+pyximport.install()
+
 class Context(commands.Context):
     silent: bool = False
     ephemeral: bool = False
