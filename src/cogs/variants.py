@@ -486,7 +486,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
 
     # --- FILTERS ---
 
-    @add_variant()
+    @add_variant("-")
     async def hide(sprite):
         """Hides the tile."""
         sprite[..., 3] = 0
