@@ -418,7 +418,7 @@ class MacroCog:
         def jsonget(data: str, key: str):
             """Gets a value from a JSON object."""
             data = data.replace("\\[", "[").replace("\\]", "]")
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
             if isinstance(data, list):
@@ -428,8 +428,8 @@ class MacroCog:
         @builtin("json.set")
         def jsonset(data: str, key: str, value: str):
             """Sets a value in a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -443,7 +443,7 @@ class MacroCog:
         @builtin("json.remove")
         def jsonremove(data: str, key: str):
             """Removes a value from a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
@@ -455,7 +455,7 @@ class MacroCog:
         @builtin("json.len")
         def jsonlen(data: str):
             """Gets the length of a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
@@ -464,8 +464,8 @@ class MacroCog:
         @builtin("json.append")
         def jsonappend(data: str, value: str):
             """Appends a value to a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -477,8 +477,8 @@ class MacroCog:
         @builtin("json.insert")
         def jsoninsert(data: str, index: str, value: str):
             """Inserts a value into a JSON array at an index."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -491,7 +491,7 @@ class MacroCog:
         @builtin("json.keys")
         def jsonkeys(data: str):
             """Gets the keys of a JSON object as a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, dict), "json must be an object"
