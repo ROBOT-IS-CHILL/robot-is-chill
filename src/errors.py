@@ -16,6 +16,10 @@ class SplittingException(BabaError):
     """
 
 
+class TimeoutError(MiscError):
+    """The command timed out."""
+
+
 class InvalidFlagError(MiscError):
     """A flag failed to parse.
 

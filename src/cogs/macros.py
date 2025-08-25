@@ -28,7 +28,6 @@ class VariableRegistry:
 class MacroCog:
 
     def __init__(self, bot: Bot):
-        self.debug = []
         self.bot = bot
         self.variables = VariableRegistry()
         self.builtins: dict[str, BuiltinMacro] = {}
@@ -496,7 +495,7 @@ class MacroCog:
             """Runs some escaped MacroScript code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)"""
             self.found += 1
             try:
-                result, _ = self.parse_macros(unescape(code), False, init = False)
+                result, _ = self.parse_macros(unescape(code), None, init = False)
             except errors.FailedBuiltinMacro as e:
                 return f"false/{e.message}"
             except AssertionError as e:
@@ -678,9 +677,8 @@ class MacroCog:
 
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
-    def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
+    def parse_macros(self, objects: str, debug: list | None = None, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
         if init:
-            self.debug = []
             self.variables = {}
             self.found = 0
         if macros is None:
@@ -707,24 +705,24 @@ class MacroCog:
                 break
             terminal = objects[start + 1 : end - 1]
             self.found += 1
-            if debug_info:
-                self.debug.append(f"[Step {self.found}] {objects}")
+            if debug:
+                debug.append(f"[Step {self.found}] {objects}")
             try:
                 objects = (
                     objects[:start] +
-                    self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
+                    self.parse_term_macro(terminal, macros, self.found, cmd, debug) +
                     objects[end:]
                 )
             except errors.FailedBuiltinMacro as err:
-                if debug_info:
-                    self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
-                    return None, self.debug
+                if debug:
+                    debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
+                    return None
                 raise err
-        if debug_info:
-            self.debug.append(f"[Out] {objects}")
-        return objects, self.debug if len(self.debug) else None
+        if debug:
+            debug.append(f"[Out] {objects}")
+        return objects
 
-    def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug_info = False) -> str:
+    def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug = None) -> str:
         l = []
         was_escaped = False
         start = 0
@@ -737,11 +735,11 @@ class MacroCog:
                 l.append(raw_variant[start : i])
                 start = i + 1
         l.append(raw_variant[start:])
-        if debug_info:
-            self.debug.append(f"[Raw Macro] {raw_variant}")
-            self.debug.append(f"[Arguments]")
+        if debug:
+            debug.append(f"[Raw Macro] {raw_variant}")
+            debug.append(f"[Arguments]")
             for arg in l:
-                self.debug.append(f"\t\"{arg}\"")
+                debug.append(f"\t\"{arg}\"")
         raw_macro, *macro_args = l
         if raw_macro in self.builtins:
             try:
@@ -764,7 +762,7 @@ class MacroCog:
                     arg_amount += 1
                     argument = match.group(1)
                     if argument == "#":
-                        self.debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
+                        debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
                         infix = str(len(macro_args) - 1)
                     elif argument == "!":
                         infix = cmd
@@ -774,8 +772,8 @@ class MacroCog:
                             infix = macro_args[argument]
                         except IndexError:
                             infix = "\0" + str(argument)
-                    if debug_info:
-                        self.debug.append(f"[Step {step}:{arg_amount}] {macro}")
+                    if debug:
+                        debug.append(f"[Step {step}:{arg_amount}] {macro}")
                     macro = macro[:match.start()] + infix + macro[match.end():]
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)

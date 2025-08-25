@@ -7,8 +7,9 @@ import signal
 import sqlite3
 import sys
 import traceback
-import numpy
+from random import random
 
+import numpy
 import discord
 from discord.ext import commands
 import requests
@@ -192,10 +193,12 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error('A given link for the filterimage was invalid.')
             elif isinstance(error, errors.OverlayNotFound):
                 return await ctx.error(f'The overlay `{error}` does not exist.')
-            elif isinstance(error, asyncio.exceptions.TimeoutError):
-                return await ctx.error(f'The render took too long, so it was cancelled.')
             elif isinstance(error, errors.InvalidFlagError):
                 return await ctx.error(f'A flag failed to parse:\n> `{error}`')
+            elif isinstance(error, errors.TimeoutError):
+                if random() < 0.01:
+                    return await ctx.error("The command was `       TAKING TOO LONG` and was timed out.")
+                return await ctx.error("The command took too long and was timed out.")
             elif isinstance(error, errors.FailedBuiltinMacro):
                 if error.custom:
                     return await ctx.error(f'A macro created a custom error:\n> {error.message[:1024]}')

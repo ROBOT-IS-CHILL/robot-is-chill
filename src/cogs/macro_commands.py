@@ -8,7 +8,7 @@ import discord
 from discord import Member, User
 from discord.ext import commands, menus
 
-from .. import constants
+from .. import constants, errors
 from ..types import Bot, Context, Macro, BuiltinMacro
 from ..utils import ButtonPages
 
@@ -25,7 +25,7 @@ async def coro_part(func, *args, **kwargs):
 
 async def start_timeout(fn, *args, **kwargs):
     def handler(_signum, _frame):
-        raise AssertionError("The command took too long and was timed out.")
+        raise errors.TimeoutError()
 
     signal.signal(signal.SIGALRM, handler)
     signal.alarm(int(constants.TIMEOUT_DURATION))
@@ -235,20 +235,22 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         """Executes some given macroscript and outputs its return value."""
         try:
             macros = ctx.bot.macros | {}
-            debug_info = False
+            debug = None
             if match := re.match(r"^\s*--?d(?:ebug|bg)?", macro):
-                debug_info = True
+                debug = ["== Debug Logs =="]
                 macro = macro[match.end():]
             while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
                 macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
                 macro = macro[match.end():]
 
             def parse():
-                nonlocal debug_info
-                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug_info)
+                nonlocal debug
+                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug)
 
-            macro, debug = await start_timeout(parse)
-
+            try:
+                macro = await start_timeout(parse)
+            except errors.TimeoutError as err:
+                macro = None
             message, files = "", []
 
             if macro is not None:
@@ -265,7 +267,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             if debug is not None:
                 debug_file = "\n".join(debug)
                 out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8'))
+                out.write(bytes(debug_file, 'utf-8')[:8 * 1024 * 1024]) # cut to 8 MiB
                 out.seek(0)
                 files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
             return await ctx.reply(message, files=files)

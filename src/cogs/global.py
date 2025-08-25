@@ -169,7 +169,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 
     async def start_timeout(self, ctx, *args, timeout_multiplier: float = 1.0, **kwargs):
         def handler(_signum, _frame):
-            raise AssertionError("The command took too long and was timed out.")
+            raise errors.TimeoutError()
 
         signal.signal(signal.SIGALRM, handler)
         signal.alarm(int(constants.TIMEOUT_DURATION * timeout_multiplier))
@@ -340,7 +340,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             passes = 0
             while last_tiles != tiles and passes < 50:
                 last_tiles = tiles
-                tiles, _ = ctx.bot.macro_handler.parse_macros(tiles, False, user_macros, "r" if rule else "t")
+                tiles = ctx.bot.macro_handler.parse_macros(tiles, False, user_macros, "r" if rule else "t")
                 tiles = tiles.strip()
                 passes += 1
 
