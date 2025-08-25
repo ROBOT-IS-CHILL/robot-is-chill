@@ -705,18 +705,18 @@ class MacroCog:
         # Stack of prefixes, targets, and suffixes
         result_stack = [["", objects, ""]]
 
-        # a := [b][c], b := [c][c], [c] := !
-        # (, foo[a]bar, )
-        # (, foo[a]bar, ) (foo, [b][c], bar)
-        # (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c])
-        # (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c]) (, !, [c]) Concat pre+res+suf to -1.res
-        # (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c])
-        # (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c]) (, !, )
-        # (, foo[a]bar, ) (foo, [b][c], bar) (, !!, [c])
-        # (, foo[a]bar, ) (foo, !![c], bar)
-        # (, foo[a]bar, ) (foo, !![c], bar), (!!, !, )
-        # (, foo[a]bar, ) (foo, !!!, bar)
-        # (, foo!!!bar, )
+# a := [b][c], b := [c][c], [c] := !
+# (, foo[a]bar, )
+# (, foo[a]bar, ) (foo, [b][c], bar)
+# (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c])
+# (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c]) (, !, [c]) Concat pre+res+suf to -1.res
+# (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c])
+# (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c]) (, !, )
+# (, foo[a]bar, ) (foo, [b][c], bar) (, !!, [c])
+# (, foo[a]bar, ) (foo, !![c], bar)
+# (, foo[a]bar, ) (foo, !![c], bar), (!!, !, )
+# (, foo[a]bar, ) (foo, !!!, bar)
+# (, foo!!!bar, )
 
         while True:
             target = result_stack[-1][1]
@@ -794,7 +794,8 @@ class MacroCog:
                     arg_amount += 1
                     argument = match.group(1)
                     if argument == "#":
-                        debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
+                        if debug:
+                            debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
                         infix = str(len(macro_args) - 1)
                     elif argument == "!":
                         infix = cmd
