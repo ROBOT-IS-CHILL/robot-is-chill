@@ -514,7 +514,7 @@ class MacroCog:
             """Runs some escaped MacroScript code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)"""
             self.found += 1
             try:
-                result, _ = self.parse_macros(unescape(code), None, init = False)
+                result = self.parse_macros(unescape(code), None, init = False)
             except errors.FailedBuiltinMacro as e:
                 return f"false/{e.message}"
             except AssertionError as e:
