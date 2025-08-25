@@ -242,6 +242,9 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
                 macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
                 macro = macro[match.end():]
+            if match := re.match(r"^```\w*\n(.*)```$", macro):
+                macro = match.group(1)
+            macro = macro.strip()
 
             def parse():
                 nonlocal debug
