@@ -45,15 +45,24 @@ class MacroCog:
 
             return wrapper
 
+        def strnum(v):
+            if type(v) is float and v % 1 == 0:
+                return str(int(v))
+            return str(v)
+
         @builtin("to_float")
         def to_float(v):
             """Casts a value to a float."""
             if "j" in v:
                 return complex(v)
-            try:
-                return float(v)
-            except ValueError:
-                return int(v)
+            if v.startswith("0b"):
+                return int(v[2:], base = 2)
+            if v.startswith("0o"):
+                return int(v[2:], base = 8)
+            if v.startswith("0x"):
+                return int(v[2:], base = 16)
+            return float(v)
+
 
         @builtin("to_boolean")
         def to_boolean(v: str):
@@ -65,7 +74,7 @@ class MacroCog:
         @builtin("add")
         def add(*args: str):
             """Sums all inputs."""
-            return str(reduce(lambda x, y: x + to_float(y), args, 0))
+            return strnum(reduce(lambda x, y: x + to_float(y), args, 0))
 
         @builtin("is_number")
         def is_number(value: str):
@@ -80,29 +89,29 @@ class MacroCog:
         def pow_(a: str, b: str):
             """Raises a value to another value."""
             a, b = to_float(a), to_float(b)
-            return str(a ** b)
+            return strnum(a ** b)
 
         @builtin("log")
         def log_(x: str, base: str | None = None):
             """Takes the natural log of a value, or with an optional second argument, a specified base."""
             x = to_float(x)
             if base is None:
-                return str(log(x))
+                return strnum(log(x))
             else:
                 base = to_float(base)
-                return str(log(x, base))
+                return strnum(log(x, base))
 
         @builtin("real")
         def real(value: str):
             """Gets the real component of a complex value."""
             value = to_float(value) + 0j
-            return str(value.real)
+            return strnum(value.real)
 
         @builtin("imag")
         def imag(value: str):
             """Gets the imaginary component of a complex value."""
             value = to_float(value) + 0j
-            return str(value.imag)
+            return strnum(value.imag)
 
         @builtin("rand")
         def rand(seed_: str | None = None):
@@ -111,18 +120,18 @@ class MacroCog:
                 seed_ = to_float(seed_)
                 assert isinstance(seed_, float), "Seed cannot be complex"
                 seed(seed_)
-            return str(random())
+            return strnum(random())
 
         @builtin("subtract")
         def subtract(a: str, b: str):
             """Subtracts a value from another."""
             a, b = to_float(a), to_float(b)
-            return str(a - b)
+            return strnum(a - b)
 
         @builtin("hash")
         def hash_(value: str):
             """Gets the hash of a value."""
-            return str(hash(value))
+            return strnum(hash(value))
 
         @builtin("replace")
         def replace(value: str, *args: str):
@@ -185,14 +194,14 @@ class MacroCog:
         @builtin("multiply")
         def multiply(*args: str):
             """Multiplies all inputs."""
-            return str(reduce(lambda x, y: x * to_float(y), args, 1))
+            return strnum(reduce(lambda x, y: x * to_float(y), args, 1))
 
         @builtin("divide")
         def divide(a: str, b: str):
             """Divides a value by another value."""
             a, b = to_float(a), to_float(b)
             try:
-                return str(a / b)
+                return strnum(a / b)
             except ZeroDivisionError:
                 if type(a) is complex:
                     return "nan"
@@ -208,7 +217,7 @@ class MacroCog:
             """Takes the modulus of a value."""
             a, b = to_float(a), to_float(b)
             try:
-                return str(a % b)
+                return strnum(a % b)
             except ZeroDivisionError:
                 if a > 0:
                     return "inf"
