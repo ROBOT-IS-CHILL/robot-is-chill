@@ -2,13 +2,13 @@
 
 
 
-balt = {sprite = "balt", tiling = "character", color = [0, 1], tags = ["animal", "machine"]}
+balt = {sprite = "balt", tiling = "character", color = [0, 2], tags = ["animal", "machine"]}
 
-text_balt = {sprite = "text_balt", color = [0, 1], tiling = "none"}
+text_balt = {sprite = "text_balt", color = [0, 2], tiling = "none"}
 
-balalt = {sprite = "balalt", tiling = "tiling", color = [0, 1]}
+balalt = {sprite = "balalt", tiling = "tiling", color = [0, 2]}
 
-text_balalt = {sprite = "text_balalt", tiling = "none", color = [0, 1]}
+text_balalt = {sprite = "text_balalt", tiling = "none", color = [0, 2]}
 
 crystalball = {sprite = "crystalball", tiling = "none", color = [3, 0]}
 
@@ -16,7 +16,7 @@ fu = {sprite = "fu", tiling = "character", color = [3, 2]}
 
 text_fu = {sprite = "text_fu", tiling = "none", color = [3, 1], active = [3, 2]}
 
-jaja = {sprite = "jeje", tiling = "character", color = [2, 3]}
+jeje = {sprite = "jeje", tiling = "character", color = [2, 3]}
 
 text_jeje = {sprite = "text_jeje", tiling = "none", color = [2, 2], active = [2, 3]}
 

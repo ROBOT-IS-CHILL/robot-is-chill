@@ -723,6 +723,8 @@ class MacroCog:
         return objects
 
     def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug = None) -> str:
+        REPLACEMENT_CHAR = chr(0xFBABA)
+
         l = []
         was_escaped = False
         start = 0
@@ -751,7 +753,7 @@ class MacroCog:
             macro = macros[raw_macro].value
             macro = macro.replace("$#", str(len(macro_args)))
             macro = macro.replace("$!", cmd)
-            macro_args = ["/".join(macro_args), *macro_args]
+            macro_args = ["/".join(macro_args).replace("$", REPLACEMENT_CHAR), *macro_args]
             arg_amount = 0
             iters = None
             while iters != 0:
@@ -771,13 +773,13 @@ class MacroCog:
                         try:
                             infix = macro_args[argument]
                         except IndexError:
-                            infix = "\0" + str(argument)
+                            infix = REPLACEMENT_CHAR + str(argument)
                     if debug:
                         debug.append(f"[Step {step}:{arg_amount}] {macro}")
                     macro = macro[:match.start()] + infix + macro[match.end():]
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
-        return str(macro).replace("\0", "$")
+        return str(macro).replace(REPLACEMENT_CHAR, "$")
 
 
 async def setup(bot: Bot):

@@ -250,6 +250,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             try:
                 macro = await start_timeout(parse)
             except errors.TimeoutError as err:
+                if not debug:
+                    raise err
                 macro = None
             message, files = "", []
 
@@ -262,12 +264,11 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                     message = 'Output:'
                 else:
                     message = f'Output: ```\n{macro.replace("```", "``ˋ")}\n```'
-            else:
+            elif debug is not None:
                 message = "Error occurred while parsing macro. See debug info for details."
-            if debug is not None:
                 debug_file = "\n".join(debug)
                 out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8')[:8 * 1024 * 1024]) # cut to 8 MiB
+                out.write(bytes(debug_file, 'utf-8')[:8000000]) # cut to 8 MB
                 out.seek(0)
                 files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
             return await ctx.reply(message, files=files)
