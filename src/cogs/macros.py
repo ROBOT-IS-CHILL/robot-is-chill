@@ -321,7 +321,7 @@ class MacroCog:
             return str(reduce(lambda x, y: x or to_boolean(y), args, False)).lower()
         
         @builtin("error")
-        def error(_message: str):
+        def error(_message: str = "<unspecified>"):
             """Raises an error with a specified message."""
             raise errors.CustomMacroError(f"custom error: {_message}")
 
@@ -702,35 +702,57 @@ class MacroCog:
         if macros is None:
             macros = self.bot.macros
 
-        # Find each outmost pair of brackets
+        # Stack of prefixes, targets, and suffixes
+        result_stack = [["", objects, ""]]
+
+        # a := [b][c], b := [c][c], [c] := !
+        # (, foo[a]bar, )
+        # (, foo[a]bar, ) (foo, [b][c], bar)
+        # (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c])
+        # (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c]) (, !, [c]) Concat pre+res+suf to -1.res
+        # (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c])
+        # (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c]) (, !, )
+        # (, foo[a]bar, ) (foo, [b][c], bar) (, !!, [c])
+        # (, foo[a]bar, ) (foo, !![c], bar)
+        # (, foo[a]bar, ) (foo, !![c], bar), (!!, !, )
+        # (, foo[a]bar, ) (foo, !!!, bar)
+        # (, foo!!!bar, )
 
         while True:
-            # Find the next match
-            start, end = find_macros(objects, 0, len(objects))
+            target = result_stack[-1][1]
+            start, end = find_macros(target)
             if start == -1:
-                break
-            terminal = StringView(objects, start + 1, end - 1)
+                if len(result_stack) == 1:
+                    result = result_stack[0][1]
+                    break
+                pre, res, suf = result_stack.pop()
+                result_stack[-1][1] = str(pre) + str(res) + str(suf)
+                continue
+            if debug:
+                debug.append(f"[Step {self.found}] Macro at ({start}, {end})")
+            prefix = StringView(target, 0, start)
+            suffix = StringView(target, end, None)
+
             self.found += 1
             if debug:
-                debug.append(f"[Step {self.found}] {objects}")
+                debug.append(f"[Step {self.found}] {target}")
             try:
-                tail_call = True
-                while tail_call:
-                    terminal, tail_call = self.parse_term_macro(terminal, macros, self.found, cmd, debug)
-                objects = (
-                    objects[:start] + str(terminal) + objects[end:]
-                )
+                res = self.parse_term_macro(StringView(target, start + 1, end - 1), macros, self.found, cmd, debug)
+                result_stack.append([prefix, res, suffix])
             except errors.FailedBuiltinMacro as err:
                 if debug:
                     debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
                     return None
                 raise err
+
         if debug:
-            debug.append(f"[Out] {objects}")
-        return objects
+            debug.append(f"[Out] {result}")
+        return result
 
     def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug = None) -> str:
         REPLACEMENT_CHAR = chr(0xFBABA)
+
+        raw_variant = StringView(raw_variant)
 
         args = []
         was_escaped = False
@@ -759,8 +781,6 @@ class MacroCog:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
         elif raw_macro in macros:
             macro = macros[raw_macro].value
-            macro = macro.replace("$#", str(len(macro_args)))
-            macro = macro.replace("$!", cmd)
             macro_args = [None, *macro_args]
             arg_amount = 0
             iters = None
@@ -796,17 +816,7 @@ class MacroCog:
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
         res = macro.replace(REPLACEMENT_CHAR, "$")
-        if res.startswith("[") and res.endswith("]"):
-            # Optimization: This could just be another macro, in which case we can immediately expand it - TCO
-            start, end = find_macros(res, 0, len(res))
-            if start == 0 and end == len(res):
-                # Tail call!
-                if debug:
-                    debug.append(f"[Step {self.found}] Tail calling {res}")
-                self.found += 1
-                return StringView(res, 1, -1), True
-
-        return res, False
+        return res
 
 
 async def setup(bot: Bot):

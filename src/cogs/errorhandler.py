@@ -201,7 +201,7 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error("The command took too long and was timed out.")
             elif isinstance(error, errors.FailedBuiltinMacro):
                 if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {error.message[:1024]}')
+                    return await ctx.error(f'A macro created a custom error:\n> {str(error.message)[:1024]}')
                 else:
                     return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
             elif isinstance(error, commands.BadLiteralArgument):
@@ -247,7 +247,7 @@ class CommandErrorHandler(commands.Cog):
                 file=sys.stderr)
         except Exception as err:
             try:
-                title = f'**Unhandled exception in fallback handler!!!**'
+                title = f'**Error in error handler!!!**'
                 if len(title) > 32:
                     title = title[:32]
                 if os.name == "nt":
@@ -266,9 +266,12 @@ class CommandErrorHandler(commands.Cog):
                         os.path.curdir)
                 if len(trace) > 1000:
                     trace = trace[:500] + "\n\n...\n\n" + trace[-500:] 
+                err_desc = str(error)
+                if len(err_desc) > 500:
+                    err_desc = err_desc[:250] + "..." + err_desc[-250:]
                 emb = discord.Embed(
                     title=title,
-                    description=(f"## {type(err).__name__}\n```\n{trace}\n```"),
+                    description=(f"## {type(error).__name__}\n{err_desc}\n```\n{trace}\n```"),
                     color=0xFF0000
                 )
                 await ctx.error(msg='', embed=emb)
