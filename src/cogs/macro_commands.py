@@ -266,6 +266,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                     message = f'Output: ```\n{macro.replace("```", "``ˋ")}\n```'
             elif debug is not None:
                 message = "Error occurred while parsing macro. See debug info for details."
+
+            if debug is not None:
                 debug_file = "\n".join(debug)
                 out = io.BytesIO()
                 out.write(bytes(debug_file, 'utf-8')[:8000000]) # cut to 8 MB
