@@ -2,6 +2,7 @@ import io
 import signal
 from datetime import datetime
 from typing import Literal
+import time
 
 import inspect
 import discord
@@ -250,23 +251,28 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 nonlocal debug
                 return ctx.bot.macro_handler.parse_macros(macro.strip(), debug)
 
+            start = time.perf_counter_ns()
+
             try:
                 macro = await start_timeout(parse)
             except errors.TimeoutError as err:
                 if not debug:
                     raise err
                 macro = None
+
+            delta = time.perf_counter_ns() - start
+
             message, files = "", []
 
             if macro is not None:
-                if len(macro) > 1900:
+                if len(macro) > 1850:
                     out = io.BytesIO()
                     out.write(bytes(macro, 'utf-8'))
                     out.seek(0)
                     files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
-                    message = 'Output:'
+                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
                 else:
-                    message = f'Output: ```\n{macro.replace("```", "``ˋ")}\n```'
+                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
             elif debug is not None:
                 message = "Error occurred while parsing macro. See debug info for details."
 
