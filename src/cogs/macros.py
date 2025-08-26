@@ -804,7 +804,7 @@ class MacroCog:
                         if argument == 0 and macro_args[0] is None:
                             macro_args[0] = "/".join(str(arg) for arg in macro_args[1:]).replace("$", REPLACEMENT_CHAR)
                         try:
-                            infix = macro_args[argument]
+                            infix = str(macro_args[argument]).replace("$", REPLACEMENT_CHAR)
                         except IndexError:
                             infix = REPLACEMENT_CHAR + str(argument)
                     if debug:
