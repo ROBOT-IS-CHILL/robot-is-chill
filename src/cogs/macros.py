@@ -653,7 +653,7 @@ class MacroCog:
             assert len(self.variables[variable]) - (end - start) + len(payload // 2) \
                 <= constants.MAX_MACRO_VAR_SIZE, \
                 f"splice would push variable over size limit of {constants.MAX_MACRO_VAR_SIZE}"
-            self.variables[variable][start:end] = base64.b16decode(payload)
+            self.variables[variable][start:end] = base64.b16decode(payload, casefold=True)
             return ""
 
         @builtin("byteset")
