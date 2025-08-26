@@ -650,10 +650,10 @@ class MacroCog:
             start = int(to_float(start))
             end = int(to_float(end))
             assert end >= start, "slice end must not be less than start"
-            assert len(self.variables[variable]) - (end - start) + len(payload) \
+            assert len(self.variables[variable]) - (end - start) + len(payload // 2) \
                 <= constants.MAX_MACRO_VAR_SIZE, \
                 f"splice would push variable over size limit of {constants.MAX_MACRO_VAR_SIZE}"
-            self.variables[variable][start:end] = bytearray(payload, "utf-8")
+            self.variables[variable][start:end] = base64.b16decode(payload)
             return ""
 
         @builtin("byteset")
@@ -676,7 +676,7 @@ class MacroCog:
                 Gets the hexadecimal value of the character at the index `index` in the given variable.
 
                 Note that unlike most other macros, `byteindex` uses byte indices,
-                which does allow indexing into the middle of a character!
+                which does allow indexing into the middle of a character.
             """
             return f"{self.variables[variable][int(to_float(index))]:02x}"
 
