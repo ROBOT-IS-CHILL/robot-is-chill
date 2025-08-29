@@ -7,8 +7,9 @@ import signal
 import sqlite3
 import sys
 import traceback
-import numpy
+from random import random
 
+import numpy
 import discord
 from discord.ext import commands
 import requests
@@ -192,15 +193,17 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error('A given link for the filterimage was invalid.')
             elif isinstance(error, errors.OverlayNotFound):
                 return await ctx.error(f'The overlay `{error}` does not exist.')
-            elif isinstance(error, asyncio.exceptions.TimeoutError):
-                return await ctx.error(f'The render took too long, so it was cancelled.')
             elif isinstance(error, errors.InvalidFlagError):
                 return await ctx.error(f'A flag failed to parse:\n> `{error}`')
+            elif isinstance(error, errors.TimeoutError):
+                if random() < 0.01:
+                    return await ctx.error("The command was `       TAKING TOO LONG` and was timed out.")
+                return await ctx.error("The command took too long and was timed out.")
             elif isinstance(error, errors.FailedBuiltinMacro):
                 if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {error.message}')
+                    return await ctx.error(f'A macro created a custom error:\n> {str(error.message)[:1024]}')
                 else:
-                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw}`:\n> {error.message}')
+                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):
@@ -244,7 +247,7 @@ class CommandErrorHandler(commands.Cog):
                 file=sys.stderr)
         except Exception as err:
             try:
-                title = f'**Unhandled exception in fallback handler!!!**'
+                title = f'**Error in error handler!!!**'
                 if len(title) > 32:
                     title = title[:32]
                 if os.name == "nt":
@@ -263,9 +266,12 @@ class CommandErrorHandler(commands.Cog):
                         os.path.curdir)
                 if len(trace) > 1000:
                     trace = trace[:500] + "\n\n...\n\n" + trace[-500:] 
+                err_desc = str(error)
+                if len(err_desc) > 500:
+                    err_desc = err_desc[:250] + "..." + err_desc[-250:]
                 emb = discord.Embed(
                     title=title,
-                    description=(f"## {type(err).__name__}\n```\n{trace}\n```"),
+                    description=(f"## {type(error).__name__}\n{err_desc}\n```\n{trace}\n```"),
                     color=0xFF0000
                 )
                 await ctx.error(msg='', embed=emb)

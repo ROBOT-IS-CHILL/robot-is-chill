@@ -10,16 +10,33 @@ import base64
 import zlib
 import textwrap
 import asyncio
+from faststring import MString
+import cython
 
 from .. import constants, errors
 from ..types import Bot, BuiltinMacro, TilingMode
+from ..stringview import StringView
+
+from typing import Tuple
+
+
+from ..cythonic import find_macros
+
+class VariableRegistry:
+    def __init__(self):
+        self.inner = {}
+
+    def __getitem__(self, name):
+        return self.inner[name]
+
+    def __setitem__(self, name, value):
+        assert value <= constants.MAX_MACRO_VAR_SIZE, f"tried to set variable {name} to value larger than {constants.MAX_MACRO_SIZE}"
 
 class MacroCog:
 
     def __init__(self, bot: Bot):
-        self.debug = []
         self.bot = bot
-        self.variables = {}
+        self.variables = VariableRegistry()
         self.builtins: dict[str, BuiltinMacro] = {}
         self.found = 0
 
@@ -35,12 +52,24 @@ class MacroCog:
 
             return wrapper
 
+        def strnum(v):
+            if type(v) is float and v % 1 == 0:
+                return str(int(v))
+            return str(v)
+
         @builtin("to_float")
         def to_float(v):
             """Casts a value to a float."""
             if "j" in v:
                 return complex(v)
+            if v.startswith("0b"):
+                return int(v[2:], base = 2)
+            if v.startswith("0o"):
+                return int(v[2:], base = 8)
+            if v.startswith("0x"):
+                return int(v[2:], base = 16)
             return float(v)
+
 
         @builtin("to_boolean")
         def to_boolean(v: str):
@@ -52,7 +81,7 @@ class MacroCog:
         @builtin("add")
         def add(*args: str):
             """Sums all inputs."""
-            return str(reduce(lambda x, y: x + to_float(y), args, 0))
+            return strnum(reduce(lambda x, y: x + to_float(y), args, 0))
 
         @builtin("is_number")
         def is_number(value: str):
@@ -67,29 +96,29 @@ class MacroCog:
         def pow_(a: str, b: str):
             """Raises a value to another value."""
             a, b = to_float(a), to_float(b)
-            return str(a ** b)
+            return strnum(a ** b)
 
         @builtin("log")
         def log_(x: str, base: str | None = None):
             """Takes the natural log of a value, or with an optional second argument, a specified base."""
             x = to_float(x)
             if base is None:
-                return str(log(x))
+                return strnum(log(x))
             else:
                 base = to_float(base)
-                return str(log(x, base))
+                return strnum(log(x, base))
 
         @builtin("real")
         def real(value: str):
             """Gets the real component of a complex value."""
             value = to_float(value) + 0j
-            return str(value.real)
+            return strnum(value.real)
 
         @builtin("imag")
         def imag(value: str):
             """Gets the imaginary component of a complex value."""
             value = to_float(value) + 0j
-            return str(value.imag)
+            return strnum(value.imag)
 
         @builtin("rand")
         def rand(seed_: str | None = None):
@@ -98,18 +127,18 @@ class MacroCog:
                 seed_ = to_float(seed_)
                 assert isinstance(seed_, float), "Seed cannot be complex"
                 seed(seed_)
-            return str(random())
+            return strnum(random())
 
         @builtin("subtract")
         def subtract(a: str, b: str):
             """Subtracts a value from another."""
             a, b = to_float(a), to_float(b)
-            return str(a - b)
+            return strnum(a - b)
 
         @builtin("hash")
         def hash_(value: str):
             """Gets the hash of a value."""
-            return str(hash(value))
+            return strnum(hash(value))
 
         @builtin("replace")
         def replace(value: str, *args: str):
@@ -149,7 +178,7 @@ class MacroCog:
             > `[sequence/@/1/3/@]` -> `123`
             """
             s = []
-            for i in range(int(start), int(end) + 1):
+            for i in range(int(to_float(start)), int(to_float(end)) + 1):
                 s.append(string.replace(pattern, str(i)))
             return separator.join(s)
 
@@ -172,14 +201,14 @@ class MacroCog:
         @builtin("multiply")
         def multiply(*args: str):
             """Multiplies all inputs."""
-            return str(reduce(lambda x, y: x * to_float(y), args, 1))
+            return strnum(reduce(lambda x, y: x * to_float(y), args, 1))
 
         @builtin("divide")
         def divide(a: str, b: str):
             """Divides a value by another value."""
             a, b = to_float(a), to_float(b)
             try:
-                return str(a / b)
+                return strnum(a / b)
             except ZeroDivisionError:
                 if type(a) is complex:
                     return "nan"
@@ -195,7 +224,7 @@ class MacroCog:
             """Takes the modulus of a value."""
             a, b = to_float(a), to_float(b)
             try:
-                return str(a % b)
+                return strnum(a % b)
             except ZeroDivisionError:
                 if a > 0:
                     return "inf"
@@ -292,7 +321,7 @@ class MacroCog:
             return str(reduce(lambda x, y: x or to_boolean(y), args, False)).lower()
         
         @builtin("error")
-        def error(_message: str):
+        def error(_message: str = "<unspecified>"):
             """Raises an error with a specified message."""
             raise errors.CustomMacroError(f"custom error: {_message}")
 
@@ -341,24 +370,22 @@ class MacroCog:
         @builtin("store")
         def store(name: str, value: str):
             """Stores a value in a variable."""
-            assert len(self.variables) < 256, "cannot have more than 256 variables at once"
-            assert len(value) <= 65536, "values must be at most 65536 characters long"
-            self.variables[name] = value
+            self.variables[name] = bytearray(value, "utf-8")
             return ""
 
         @builtin("get")
         def get(name: str, value: str):
             """Gets the value of a variable, or a default."""
             try:
-                return self.variables[name]
+                return load(name)
             except KeyError:
-                self.variables[name] = value
-                return self.variables[name]
+                store(name, value)
+                return value
 
         @builtin("load")
         def load(name):
             """Gets the value of a variable, erroring if it doesn't exist."""
-            return self.variables[name]
+            return self.variables[name].decode("utf-8", errors = "replace")
 
         @builtin("drop")
         def drop(name):
@@ -398,7 +425,7 @@ class MacroCog:
         def jsonget(data: str, key: str):
             """Gets a value from a JSON object."""
             data = data.replace("\\[", "[").replace("\\]", "]")
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
             if isinstance(data, list):
@@ -408,8 +435,8 @@ class MacroCog:
         @builtin("json.set")
         def jsonset(data: str, key: str, value: str):
             """Sets a value in a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -423,7 +450,7 @@ class MacroCog:
         @builtin("json.remove")
         def jsonremove(data: str, key: str):
             """Removes a value from a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
@@ -435,7 +462,7 @@ class MacroCog:
         @builtin("json.len")
         def jsonlen(data: str):
             """Gets the length of a JSON object."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, (dict, list)), "json must be an array or an object"
@@ -444,8 +471,8 @@ class MacroCog:
         @builtin("json.append")
         def jsonappend(data: str, value: str):
             """Appends a value to a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -457,8 +484,8 @@ class MacroCog:
         @builtin("json.insert")
         def jsoninsert(data: str, index: str, value: str):
             """Inserts a value into a JSON array at an index."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
-            assert len(value) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
+            assert len(value) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             value = value.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
@@ -471,7 +498,7 @@ class MacroCog:
         @builtin("json.keys")
         def jsonkeys(data: str):
             """Gets the keys of a JSON object as a JSON array."""
-            assert len(data) <= 256, "json data must be at most 256 characters long"
+            assert len(data) <= constants.MAX_MACRO_VAR_SIZE, f"json data must be at most {constants.MAX_MACRO_VAR_SIZE} characters long"
             data = data.replace("\\[", "[").replace("\\]", "]")
             data = json.loads(data)
             assert isinstance(data, dict), "json must be an object"
@@ -487,7 +514,7 @@ class MacroCog:
             """Runs some escaped MacroScript code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)"""
             self.found += 1
             try:
-                result, _ = self.parse_macros(unescape(code), False, init = False)
+                result = self.parse_macros(unescape(code), None, init = False)
             except errors.FailedBuiltinMacro as e:
                 return f"false/{e.message}"
             except AssertionError as e:
@@ -584,7 +611,6 @@ class MacroCog:
             params = {}
             for param in queries:
                 name, pattern = param.split(":", 1)
-                print(name, pattern)
                 params[name] = pattern
             args = []
             for (name, pattern) in params.items():
@@ -612,118 +638,186 @@ class MacroCog:
                 for (row, ) in data_rows
             )
 
+        @builtin("bytesplice")
+        def bytesplice(variable, payload, start, end = None):
+            """
+                Splices a string `payload` into a variable's value between `start` and `end`.
+
+                Note that unlike most other macros, `bytesplice` uses byte indices,
+                which does allow indexing into the middle of a character.
+            """
+            end = start if end is None else end
+            start = int(to_float(start))
+            end = int(to_float(end))
+            assert end >= start, "slice end must not be less than start"
+            assert len(self.variables[variable]) - (end - start) + len(payload // 2) \
+                <= constants.MAX_MACRO_VAR_SIZE, \
+                f"splice would push variable over size limit of {constants.MAX_MACRO_VAR_SIZE}"
+            self.variables[variable][start:end] = base64.b16decode(payload, casefold=True)
+            return ""
+
+        @builtin("byteset")
+        def byteset(variable, index, payload):
+            """
+                Replaces the byte in the variable's value at the index `index` with the hexadecimal number in `payload`.
+
+                Note that unlike most other macros, `byteset` uses byte indices,
+                which does allow indexing into the middle of a character.
+            """
+            payload = int(payload, base = 16)
+            assert payload < 256, "payload character must be within [00, FF]"
+            index = int(to_float(index))
+            self.variables[variable][index] = payload
+            return ""
+
+        @builtin("byteget")
+        def byteget(variable, index):
+            """
+                Gets the hexadecimal value of the character at the index `index` in the given variable.
+
+                Note that unlike most other macros, `byteindex` uses byte indices,
+                which does allow indexing into the middle of a character.
+            """
+            return f"{self.variables[variable][int(to_float(index))]:02x}"
+
+        @builtin("argslice")
+        def argslice(sl, *args):
+            """
+                Gets a slice of the given arguments.
+
+                `sl` is of the form `<start>[:<stop>[:<step>]]`.
+            """
+            return "/".join(args[slice(*(
+                None if i == "" else (
+                    j := int(to_float(i)),
+                    j-1 if j > 0 else j
+                )[1] for i in sl.split(":")))])
+
         self.builtins = dict(sorted(self.builtins.items(), key=lambda tup: tup[0]))
 
-    def parse_macros(self, objects: str, debug_info: bool, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
+    def parse_macros(self, objects: str, debug: list | None = None, macros=None, cmd="x", init=True) -> tuple[Optional[str], Optional[list[str]]]:
         if init:
-            self.debug = []
             self.variables = {}
             self.found = 0
         if macros is None:
             macros = self.bot.macros
 
-        # Find each outmost pair of brackets
+        # Stack of prefixes, targets, and suffixes
+        result_stack = [["", objects, ""]]
+
+# a := [b][c], b := [c][c], [c] := !
+# (, foo[a]bar, )
+# (, foo[a]bar, ) (foo, [b][c], bar)
+# (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c])
+# (, foo[a]bar, ) (foo, [b][c], bar) (, [c][c], [c]) (, !, [c]) Concat pre+res+suf to -1.res
+# (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c])
+# (, foo[a]bar, ) (foo, [b][c], bar) (, ![c], [c]) (, !, )
+# (, foo[a]bar, ) (foo, [b][c], bar) (, !!, [c])
+# (, foo[a]bar, ) (foo, !![c], bar)
+# (, foo[a]bar, ) (foo, !![c], bar), (!!, !, )
+# (, foo[a]bar, ) (foo, !!!, bar)
+# (, foo!!!bar, )
 
         while True:
-            # Find the next match
-            start = None
-            end = 1
-            was_escaped = False
-            for i, c in enumerate(objects):
-                end = i + 1
-                if was_escaped:
-                    was_escaped = False
-                elif c == '\\':
-                    was_escaped = True
-                elif c == '[':
-                    start = i
-                elif c == ']' and start is not None:
+            target = result_stack[-1][1]
+            start, end = find_macros(target)
+            if start == -1:
+                if len(result_stack) == 1:
+                    result = result_stack[0][1]
                     break
-            else:
-                break
-            terminal = objects[start + 1 : end - 1]
-            self.found += 1
-            if debug_info:
-                if self.found > constants.MACRO_LIMIT:
-                    self.debug.append(f"[Error] Reached step limit of {constants.MACRO_LIMIT}.")
-                    return None, self.debug
-            else:
-                assert self.found <= constants.MACRO_LIMIT, f"Too many macros in one render! The limit is {constants.MACRO_LIMIT}, while you reached {self.found}."
-            if debug_info:
-                self.debug.append(f"[Step {self.found}] {objects}")
-            try:
-                objects = (
-                        objects[:start] +
-                        self.parse_term_macro(terminal, macros, self.found, cmd, debug_info) +
-                        objects[end:]
-                )
-            except errors.FailedBuiltinMacro as err:
-                if debug_info:
-                    self.debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
-                    return None, self.debug
-                raise err
-        if debug_info:
-            self.debug.append(f"[Out] {objects}")
-        return objects, self.debug if len(self.debug) else None
+                pre, res, suf = result_stack.pop()
+                result_stack[-1][1] = str(pre) + str(res) + str(suf)
+                continue
+            if debug:
+                debug.append(f"[Step {self.found}] Macro at ({start}, {end})")
+            prefix = StringView(target, 0, start)
+            suffix = StringView(target, end, None)
 
-    def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug_info = False) -> str:
-        l = []
+            self.found += 1
+            if debug:
+                debug.append(f"[Step {self.found}] {target}")
+            try:
+                res = self.parse_term_macro(StringView(target, start + 1, end - 1), macros, self.found, cmd, debug)
+                result_stack.append([prefix, res, suffix])
+            except errors.FailedBuiltinMacro as err:
+                if debug:
+                    debug.append(f"[Error] Error in \"{err.raw}\": {err.message}")
+                    return None
+                raise err
+
+        if debug:
+            debug.append(f"[Out] {result}")
+        return result
+
+    def parse_term_macro(self, raw_variant, macros, step = 0, cmd = "x", debug = None) -> str:
+        REPLACEMENT_CHAR = chr(0xFBABA)
+
+        raw_variant = StringView(raw_variant)
+
+        args = []
         was_escaped = False
         start = 0
-        for i, c in enumerate(raw_variant):
+        for i, c in enumerate(raw_variant.contents()):
             if was_escaped:
                 was_escaped = False
             elif c == '\\':
                 was_escaped = True
             elif c == '/':
-                l.append(raw_variant[start : i])
+                args.append(raw_variant[start : i])
                 start = i + 1
-        l.append(raw_variant[start:])
-        if debug_info:
-            self.debug.append(f"[Raw Macro] {raw_variant}")
-            self.debug.append(f"[Arguments]")
-            for arg in l:
-                self.debug.append(f"\t\"{arg}\"")
-        raw_macro, *macro_args = l
+        args.append(raw_variant[start:])
+        if debug:
+            debug.append(f"[Raw Macro] {raw_variant}")
+            debug.append(f"[Arguments]")
+            for arg in args:
+                debug.append(f"\t\"{arg}\"")
+        raw_macro, *macro_args = args
+        raw_macro = str(raw_macro)
         if raw_macro in self.builtins:
             try:
-                macro = self.builtins[raw_macro].function(*macro_args)
+                macro = self.builtins[raw_macro].function(*(str(arg) for arg in macro_args))
                 self.found -= 1
             except Exception as err:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
         elif raw_macro in macros:
             macro = macros[raw_macro].value
-            macro = macro.replace("$#", str(len(macro_args)))
-            macro = macro.replace("$!", cmd)
-            macro_args = ["/".join(macro_args), *macro_args]
+            macro_args = [None, *macro_args]
             arg_amount = 0
             iters = None
-            while iters != 0 and arg_amount <= constants.MACRO_ARG_LIMIT:
+            while iters != 0:
                 iters = 0
                 matches = [*re.finditer(r"\$(-?\d+|#|!)", macro)]
+                mac_list = []
+                last_start = len(macro)
                 for match in reversed(matches):
                     iters += 1
                     arg_amount += 1
-                    if arg_amount > constants.MACRO_ARG_LIMIT:
-                        break
                     argument = match.group(1)
                     if argument == "#":
-                        self.debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
+                        if debug:
+                            debug.append(f"[Step {step}:{arg_amount}:#] {len(macro_args) - 1} arguments")
                         infix = str(len(macro_args) - 1)
                     elif argument == "!":
                         infix = cmd
                     else:
                         argument = int(argument)
+                        if argument == 0 and macro_args[0] is None:
+                            macro_args[0] = "/".join(str(arg) for arg in macro_args[1:]).replace("$", REPLACEMENT_CHAR)
                         try:
-                            infix = macro_args[argument]
+                            infix = str(macro_args[argument]).replace("$", REPLACEMENT_CHAR)
                         except IndexError:
-                            infix = "\0" + str(argument)
-                    if debug_info:
-                        self.debug.append(f"[Step {step}:{arg_amount}] {macro}")
-                    macro = macro[:match.start()] + infix + macro[match.end():]
+                            infix = REPLACEMENT_CHAR + str(argument)
+                    if debug:
+                        debug.append(f"[Step {step}:{arg_amount}] {macro}")
+                    mac_list.append(StringView(macro, match.end(), last_start))
+                    mac_list.append(infix)
+                    last_start = match.start()
+                mac_list.append(StringView(macro, 0, last_start))
+                macro = "".join(str(s) for s in reversed(mac_list))
         else:
             raise errors.FailedBuiltinMacro(raw_variant, f"Macro `{raw_macro}` of `{raw_variant}` not found in the database!", False)
-        return str(macro).replace("\0", "$")
+        res = macro.replace(REPLACEMENT_CHAR, "$")
+        return res
 
 
 async def setup(bot: Bot):

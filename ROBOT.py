@@ -23,6 +23,8 @@ from src.db import Database
 
 from numpy import set_printoptions as numpy_set_printoptions
 
+import pyximport
+pyximport.install()
 
 class Context(commands.Context):
     silent: bool = False
@@ -168,6 +170,16 @@ bot = Bot(
     prefixes=config.prefixes,
     db_path=config.db_path
 )
+
+
+@bot.before_invoke
+async def before_invoke(ctx: Context):
+    await ctx.message.add_reaction("⚙️")
+
+
+@bot.after_invoke
+async def after_invoke(ctx: Context):
+    await ctx.message.remove_reaction("⚙️", bot.user)
 
 
 @bot.event

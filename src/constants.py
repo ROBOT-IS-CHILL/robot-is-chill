@@ -8,6 +8,9 @@ MAX_META_SIZE = 10
 MAX_TILES = 2584
 MAX_TEXT_LENGTH = 32
 
+MAX_MACRO_SIZE = 65536
+MAX_MACRO_VAR_SIZE = 65536
+
 # variants
 DIRECTION_TILINGS = {
     0, 2, 3
@@ -285,10 +288,6 @@ MESSAGE_LIMIT = 10
 
 CHARACTER_SHAPES = "long", "tall", "curved", "round", "segmented"
 CHARACTER_VARIANTS = "smooth", "fluffy", "fuzzy", "polygonal", "skinny", "belt-like"
-
-
-MACRO_LIMIT = 100000
-MACRO_ARG_LIMIT = 1000
 
 LETTER_IGNORE = [
     "text_you2",

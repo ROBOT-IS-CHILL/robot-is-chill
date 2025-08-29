@@ -2,13 +2,14 @@ import io
 import signal
 from datetime import datetime
 from typing import Literal
+import time
 
 import inspect
 import discord
 from discord import Member, User
 from discord.ext import commands, menus
 
-from .. import constants
+from .. import constants, errors
 from ..types import Bot, Context, Macro, BuiltinMacro
 from ..utils import ButtonPages
 
@@ -25,7 +26,7 @@ async def coro_part(func, *args, **kwargs):
 
 async def start_timeout(fn, *args, **kwargs):
     def handler(_signum, _frame):
-        raise AssertionError("The command took too long and was timed out.")
+        raise errors.TimeoutError()
 
     signal.signal(signal.SIGALRM, handler)
     signal.alarm(int(constants.TIMEOUT_DURATION))
@@ -99,33 +100,58 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         return await ctx.reply(f"Done. Moved all macros from account {source} to account {dest}.")
 
     @macro.command(aliases=["mk", "make"])
-    async def create(self, ctx: Context, name: str, value: str, *, description: str = None):
-        """Adds a macro to the database."""
-        assert len(name) <= 50, "Macro name cannot be larger than 50 characters!"
+    async def create(self, ctx: Context, name: str, value: str, *, description: str):
+        """
+        Adds a macro to the database.
+
+        If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
+        """
+        assert len(name) <= 100, "Macro name cannot be larger than 100 characters!"
         assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
+        assert name not in self.bot.macro_handler.builtins, f"Macro `{name}` already exists as a builtin!"
+        from_file = False
+        msg_words = ("added", "to")
+        if value == "<file>":
+            from_file = True
+            assert ctx.message.attachments, "No attachments found!"
+            if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
+                raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
+            value = (await ctx.message.attachments[0].read()).decode("utf-8", errors = "ignore")
+        if name in self.bot.macros:
+            macro = self.bot.macros[name]
+            assert macro.author == ctx.author.id, "You can't replace a macro you don't own, silly."
+            async with self.bot.db.conn.cursor() as cursor:
+                await cursor.execute(f"DELETE FROM macros WHERE name == ?", name)
+            msg_words = ("replaced", "in")
         async with self.bot.db.conn.cursor() as cursor:
-            await cursor.execute("SELECT value FROM macros WHERE name == ?", name)
-            dname = await cursor.fetchone()
-            if dname is not None:
-                return await ctx.error(
-                    f"Macro of name `{name}` already exists in the database!")
             assert re.search(r"(?<!(?<!\\)\\)/", name) is None, \
                 "A macro's name can't have an unescaped slash in it, as it'd clash with parsing arguments."
-            # Call the user out on not adding a description, hopefully making them want to add a good one
-            assert description is not None, \
-                "A description is _required_. Please describe what your macro does understandably!"
             command = "INSERT INTO macros VALUES (?, ?, ?, ?);"
             args = (name, value, description, ctx.author.id)
-            self.bot.macros[name] = Macro(value, description, ctx.author.id)
             await cursor.execute(command, args)
-            return await ctx.reply(f"Successfully added `{name}` to the database, aliased to `{value}`!")
+        self.bot.macros[name] = Macro(value, description, ctx.author.id)
+        if from_file:
+            value = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        return await ctx.reply(f"Successfully {msg_words[0]} `{name}` {msg_words[1]} the database, aliased to `{value}`!")
 
     @macro.command(aliases=["e"])
     async def edit(self, ctx: Context, name: str, attribute: Literal["value", "description", "name"], *, new: str):
-        """Edits a macro. You must own said macro to edit it."""
+        """
+        Edits a macro. You must own said macro to edit it.
+
+        If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
+        """
         assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
         if attribute == "name":
             assert new not in self.bot.macros, f"Macro `{new}` is already in the database!"
+            assert new not in self.bot.macro_handler.builtins, f"Macro `{new}` already exists as a builtin!"
+        from_file = False
+        if attribute == "value" and new == "<file>":
+            from_file = True
+            assert ctx.message.attachments, "No attachments found!"
+            if ctx.message.attachments[0].size > constants.MAX_MACRO_SIZE:
+                raise AssertionError(f"Macros must be at most {constants.MAX_MACRO_SIZE} bytes large.")
+            new = (await ctx.message.attachments[0].read()).decode("utf-8", errors = "ignore")
         async with self.bot.db.conn.cursor() as cursor:
             if not await ctx.bot.is_owner(ctx.author):
                 await cursor.execute("SELECT name FROM macros WHERE name == ? AND creator == ?", name, ctx.author.id)
@@ -139,6 +165,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             self.bot.macros[new] = mac
         else:
             setattr(self.bot.macros[name], attribute, new)
+        if from_file:
+            new = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
         return await ctx.reply(f"Edited `{name}`'s {attribute} to be `{new}`.")
 
     @macro.command(aliases=["rm", "remove", "del"])
@@ -156,7 +184,13 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
     @macro.command(aliases=["?", "list", "query"])
     async def search(self, ctx: Context, *, pattern: str = ''):
-        """Searches the database for macros by name."""
+        """
+            Searches the database for macros by name.
+
+            To search by author, prefix with `--author=<user>`, or `-a=<user>`.
+
+            To search for only builtins, prefix with `--builtin`, or `-b`.
+        """
         author = None
         builtin_only = False
         if match := re.search(r"--?a(?:uthor)?=(\S+)", pattern):
@@ -191,9 +225,10 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                     }
                 )
                 names = [name for (name,) in await cursor.fetchall()]
-        for name in ctx.bot.macro_handler.builtins:
-            if re.fullmatch(pattern, name) is not None:
-                names.append(f"**{name}**")
+        if author is None:
+            for name in ctx.bot.macro_handler.builtins:
+                if re.search(pattern, name) is not None:
+                    names.append(f"**{name}**")
         return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
 
     @macro.command(aliases=["x", "run"])
@@ -201,37 +236,50 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         """Executes some given macroscript and outputs its return value."""
         try:
             macros = ctx.bot.macros | {}
-            debug_info = False
+            debug = None
             if match := re.match(r"^\s*--?d(?:ebug|bg)?", macro):
-                debug_info = True
+                debug = ["== Debug Logs =="]
                 macro = macro[match.end():]
             while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
                 macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
                 macro = macro[match.end():]
+            macro = macro.strip()
+            if match := re.fullmatch(r"^```\w*(.*)```$", macro, re.DOTALL):
+                macro = match.group(1).strip()
 
             def parse():
-                nonlocal debug_info
-                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug_info)
+                nonlocal debug
+                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug)
 
-            macro, debug = await start_timeout(parse)
+            start = time.perf_counter_ns()
+
+            try:
+                macro = await start_timeout(parse)
+            except errors.TimeoutError as err:
+                if not debug:
+                    raise err
+                macro = None
+
+            delta = time.perf_counter_ns() - start
 
             message, files = "", []
 
             if macro is not None:
-                if len(macro) > 1900:
+                if len(macro) > 1850:
                     out = io.BytesIO()
                     out.write(bytes(macro, 'utf-8'))
                     out.seek(0)
                     files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
-                    message = 'Output:'
+                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
                 else:
-                    message = f'Output: ```\n{macro.replace("```", "``ˋ")}\n```'
-            else:
+                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
+            elif debug is not None:
                 message = "Error occurred while parsing macro. See debug info for details."
+
             if debug is not None:
                 debug_file = "\n".join(debug)
                 out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8'))
+                out.write(bytes(debug_file, 'utf-8')[:8000000]) # cut to 8 MB
                 out.seek(0)
                 files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
             return await ctx.reply(message, files=files)

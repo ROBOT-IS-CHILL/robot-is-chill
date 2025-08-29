@@ -2,13 +2,13 @@
 
 
 
-balt = {sprite = "balt", color = [0, 1], tiling = "character", tags = ["animal", "machine"]}
+balt = {sprite = "balt", color = [0, 2], tiling = "character", tags = ["animal", "machine"]}
 
-text_balt = {sprite = "text_balt", color = [0, 1], tiling = "none"}
+text_balt = {sprite = "text_balt", color = [0, 2], tiling = "none"}
 
-balalt_old = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
+balalt_old = {sprite = "balalt", color = [0, 2], tiling = "tiling"}
 
-text_balalt = {sprite = "text_balalt", color = [0, 1], tiling = "none"}
+text_balalt = {sprite = "text_balalt", color = [0, 2], tiling = "none"}
 
 crystalball = {sprite = "crystalball", color = [3, 0], tiling = "none"}
 
@@ -16,7 +16,7 @@ fu = {sprite = "fu", color = [3, 2], tiling = "character"}
 
 text_fu = {sprite = "text_fu", color = [3, 1], active = [3, 2], tiling = "none"}
 
-jaja = {sprite = "jeje", color = [2, 3], tiling = "character"}
+jeje = {sprite = "jeje", color = [2, 3], tiling = "character"}
 
 text_jeje = {sprite = "text_jeje", color = [2, 3], tiling = "none"}
 
@@ -85,3 +85,5 @@ text_poob = {sprite = "text_poob", color = [5, 4], tiling = "none"}
 #debugfrommisc = {sprite = "debugbutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 3], tiling = "none"}
 
 #knifefrommisc = {sprite = "knifebutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 2], tiling = "none"}
+
+text_ee = {sprite = "text_ee", color = [6, 2], tiling = "none"}
