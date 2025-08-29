@@ -24,7 +24,7 @@ fall = {sprite = "fall", color = [4, 3], tiling = "none"}
 
 rotator_rd = {sprite = "rotator_rd", color = [4, 1], tiling = "none"}
 
-converter = {sprite = "convertor", color = [4, 3], tiling = "none"}
+converter = {sprite = "convertor", color = [4, 3], tiling = "none", author = "clicktuck_suskriberz"}
 
 driller = {sprite = "driller", color = [3, 0], tiling = "none"}
 

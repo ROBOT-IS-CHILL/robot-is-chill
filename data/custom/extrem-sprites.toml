@@ -126,7 +126,7 @@ text_four = {sprite = "text_four", color = [1, 4], tiling = "none"}
 
 text_five = {sprite = "text_five", color = [2, 4], tiling = "none"}
 
-text_equal = {sprite = "text_equal", color = [0, 3], tiling = "none"}
+text_extremequal = {sprite = "text_equal", color = [0, 3], tiling = "none"}
 
 text_lessthan = {sprite = "text_lessthan", color = [0, 3], tiling = "none"}
 

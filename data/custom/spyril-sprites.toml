@@ -2,11 +2,11 @@
 
 
 
-bibi = {sprite = "bibi", tiling = "character", color = [0, 3]}
+bibi = {sprite = "bibi", color = [0, 3], tiling = "character"}
 
-koko = {sprite = "koko", tiling = "character", color = [2, 2]}
+koko = {sprite = "koko", color = [2, 2], tiling = "character"}
 
-mu = {sprite = "mu", tiling = "character", color = [3, 1]}
+mu = {sprite = "mu", color = [3, 1], tiling = "character"}
 
-fufu = {sprite = "fufu", tiling = "character", color = [5, 2]}
+fufu = {sprite = "fufu", color = [5, 2], tiling = "character"}
 

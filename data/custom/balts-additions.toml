@@ -4,47 +4,47 @@
 
 text_flafla = {sprite = "text_flafla", color = [2, 4], tiling = "none", source = "nova-sprites"}
 
-cucu = {sprite = "cucu", tiling = "character", color = [0, 3]}
+cucu = {sprite = "cucu", color = [0, 3], tiling = "character"}
 
 text_cucu = {sprite = "text_cucu", color = [0, 1], tiling = "none"}
 
-cookie = {sprite = "cookie", tiling = "none", color = [6, 1]}
+cookie = {sprite = "cookie", color = [6, 1], tiling = "none"}
 
 text_cookie = {sprite = "text_cookie", color = [6, 1], tiling = "none"}
 
-ika = {sprite = "ika", tiling = "character", color = [5, 3]}
+ika = {sprite = "ika", color = [5, 3], tiling = "character"}
 
 text_ika = {sprite = "text_ika", color = [5, 3], tiling = "none"}
 
-beta = {sprite = "beta", tiling = "none", color = [0, 3]}
+beta = {sprite = "beta", color = [0, 3], tiling = "none"}
 
 text_beta = {sprite = "text_beta", color = [0, 3], tiling = "none"}
 
-gun = {sprite = "gun", tiling = "directional", color = [0, 1]}
+gun = {sprite = "gun", color = [0, 1], tiling = "directional"}
 
 text_crash = {sprite = "text_crash", color = [2, 2], tiling = "none"}
 
-balalt = {sprite = "balalt", tiling = "tiling", color = [0, 1]}
+balalt = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
 
 text_balalt = {sprite = "text_balalt", color = [0, 1], tiling = "none"}
 
-balaltcorner = {sprite = "balaltcorner", tiling = "directional", color = [0, 1]}
+balaltcorner = {sprite = "balaltcorner", color = [0, 1], tiling = "directional"}
 
-bibi = {sprite = "bibi", tiling = "character", color = [0, 3]}
+bibi = {sprite = "bibi", color = [0, 3], tiling = "character"}
 
-happyerror = {sprite = "errorhappy", tiling = "none", color = [0, 3]}
+happyerror = {sprite = "errorhappy", color = [0, 3], tiling = "none"}
 
-"text_@" = {sprite = "text_@", tiling = "none", color = [0, 3]}
+"text_@" = {sprite = "text_@", color = [0, 3], tiling = "none"}
 
-"error?" = {sprite = "creepyerror", tiling = "none", color = [0, 3]}
+"error?" = {sprite = "creepyerror", color = [0, 3], tiling = "none"}
 
 text_bibi = {sprite = "text_bibi", color = [4, 1], tiling = "none"}
 
-koko = {sprite = "koko", tiling = "character", color = [2, 2]}
+koko = {sprite = "koko", color = [2, 2], tiling = "character"}
 
 text_koko = {sprite = "text_koko", color = [2, 2], tiling = "none"}
 
-mu = {sprite = "mu", tiling = "character", color = [3, 1]}
+mu = {sprite = "mu", color = [3, 1], tiling = "character"}
 
 text_mu = {sprite = "text_mu", color = [3, 1], tiling = "none"}
 
@@ -52,15 +52,15 @@ text_fufu = {sprite = "text_fufu", color = [5, 2], tiling = "none"}
 
 text_jaja = {sprite = "text_jaja", color = [2, 3], tiling = "none"}
 
-et = {sprite = "et", tiling = "character", color = [1, 4]}
+et = {sprite = "et", color = [1, 4], tiling = "character"}
 
 text_et = {sprite = "text_et", color = [1, 4], tiling = "none"}
 
-gugu = {sprite = "gugu", tiling = "character", color = [0, 2]}
+gugu = {sprite = "gugu", color = [0, 2], tiling = "character"}
 
 text_gugu = {sprite = "text_gugu", color = [0, 2], tiling = "none"}
 
-mobile = {sprite = "mobile", tiling = "none", color = [0, 1]}
+mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
 
 text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
 
