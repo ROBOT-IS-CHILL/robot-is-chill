@@ -1,8 +1,6 @@
 
 babainafreakinplane = {color = [0, 3], tiling = "none", sprite = "babainafreakinplane"}
 
-icon_lake = {color = [0, 3], tiling = "none", sprite = "icon_lake"}
-
 key_baba = {color = [0, 3], tiling = "animated_directional", sprite = "keybaba"}
 
 key_door = {color = [2, 4], tiling = "none", sprite = "keydoor"}

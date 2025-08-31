@@ -24,7 +24,7 @@ import PIL.ImageFont as ImageFont
 
 from src.tile import ProcessedTile, Tile
 from .. import constants, errors
-from ..types import Color, RenderContext
+from ..types import Color, RenderContext, TilingMode
 from ..utils import cached_open
 
 try:
@@ -383,6 +383,8 @@ class Renderer:
                     path = f"data/sprites/{source}/{sprite_name}_1.png"
                 elif tile.name == "default":
                     path = f"data/sprites/{source}/default_{frame + 1}.png"
+            elif tile.tiling == TilingMode.ICON:
+                path = f"data/sprites/{source}/{sprite_name}_1.png"
             try:
                 sprite = cached_open(
                     path, cache=raw_sprite_cache, fn=Image.open).convert("RGBA")

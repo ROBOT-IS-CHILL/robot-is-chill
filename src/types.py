@@ -326,6 +326,7 @@ class BuiltinMacro:
 
 
 class TilingMode(IntEnum):
+    ICON = -3
     CUSTOM = -2
     NONE = -1
     DIRECTIONAL = 0
@@ -337,6 +338,7 @@ class TilingMode(IntEnum):
     DIAGONAL_TILING = 6
 
     def __str__(self) -> str:
+        if self == TilingMode.ICON: return "icon"
         if self == TilingMode.CUSTOM: return "custom"
         if self == TilingMode.NONE: return "none"
         if self == TilingMode.DIRECTIONAL: return "directional"
@@ -349,6 +351,7 @@ class TilingMode(IntEnum):
 
     def parse(string: str) -> TilingMode | None:
         return {
+            "icon": TilingMode.ICON,
             "custom": TilingMode.CUSTOM,
             "none": TilingMode.NONE,
             "directional": TilingMode.DIRECTIONAL,
@@ -365,6 +368,8 @@ class TilingMode(IntEnum):
             return set()
         if self == TilingMode.DIAGONAL_TILING:
             return set(range(47))
+        if self == TilingMode.ICON:
+            return {0}
         if self == TilingMode.NONE:
             return {0}
         if self == TilingMode.DIRECTIONAL:

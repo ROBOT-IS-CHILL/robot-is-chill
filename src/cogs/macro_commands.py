@@ -303,13 +303,16 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 source_function = source_function._source
             try:
                 source = re.sub(r'r?""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
+                raw_source = source
                 source = f"```py\n{source}\n```"
             except OSError as err:
-                source = f"```\n<failed to get source code of builtin: {err}>\n```"
+                raw_source = f"<failed to get source code of builtin: {err}>"
+                source = f"```\n{raw_source}\n```"
         else:
             assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
             macro: TextMacro = self.bot.macros[name]
             author = macro.author
+            raw_source = source.strip()
             sanitized_source = macro.value.strip().replace('```', "'''")
             source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
@@ -338,7 +341,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 inline=False
             )
             buf = io.BytesIO()
-            buf.write(macro.value.encode("utf-8", "ignore"))
+            buf.write(raw_source.encode("utf-8", "ignore"))
             buf.seek(0)
             await ctx.reply(embed=emb, file=discord.File(buf, filename=f"{name}-value.txt"))
 
