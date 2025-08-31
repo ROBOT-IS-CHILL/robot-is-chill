@@ -286,8 +286,8 @@ The first number is how many frames are in a wobble frame, and the second is how
         assert (2 ** 0) <= int(match.group(2)), f"An animation timestep of 0 is impossible."
         ctx.animation = (int(match.group(1))), (int(match.group(2)))
 
-    @flags.register(match=r'(?:--format|-f)=(gif|png|pdf|zip|tiff|webp|mco)',
-                    syntax="--format|-f=<format: gif | png | pdf | zip | tiff | webp | mco>",
+    @flags.register(match=r'(?:--format|-f)=(gif|png|pdf|zip|tiff|webp)',
+                    syntax="--format|-f=<format: gif | png | pdf | zip | tiff | webp>",
                     )
     async def format(match, ctx):
         """Set the format of the render."""
