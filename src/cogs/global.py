@@ -935,11 +935,11 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 filepath = f"target/renders/levels/{level.code}.gif"
                 gif = discord.File(
                     filepath,
-                    filename=level.code + '.gif',
+                    filename=level.code + '.webp',
                     spoiler=spoiler)
             except FileNotFoundError:
                 await self.bot.get_cog("Reader").render_custom_level(fine_query)
-                filepath = f"target/renders/levels/{level.code}.gif"
+                filepath = f"target/renders/levels/{level.code}.webp"
                 gif = discord.File(
                     filepath,
                     filename=level.code + '.gif',
