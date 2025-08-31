@@ -819,7 +819,9 @@ class Renderer:
                 **kwargs
             )
         elif image_format == 'pdf':
-            save_images = [Image.fromarray(im) for im in images]
+            save_images = [
+                Image.fromarray(im).convert("RGB") for im in images
+            ]
             kwargs = {
                 'format': "PDF",
                 'save_all': True,
