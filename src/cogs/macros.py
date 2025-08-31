@@ -775,8 +775,7 @@ class MacroCog:
         raw_macro = str(raw_macro)
         if raw_macro in self.builtins:
             try:
-                macro = self.builtins[raw_macro].function(*(str(arg) for arg in macro_args))
-                self.found -= 1
+                macro = str(self.builtins[raw_macro].function(*(str(arg) for arg in macro_args)))
             except Exception as err:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
         elif raw_macro in macros:
