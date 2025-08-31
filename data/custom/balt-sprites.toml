@@ -87,3 +87,15 @@ text_poob = {sprite = "text_poob", color = [5, 4], tiling = "none"}
 #knifefrommisc = {sprite = "knifebutmovedfrommiscincaseit'sdifferentsomehow", color = [0, 2], tiling = "none"}
 
 text_ee = {sprite = "text_ee", color = [6, 2], tiling = "none"}
+
+muro = {sprite = "muro", color = [3, 1], tiling = "character"}
+
+kakai = {sprite = "kakai", color = [4, 2], tiling = "character"}
+
+elira = {sprite = "elira", color = [2, 4], tiling = "character"}
+
+text_muro = {sprite = "text_muro", color = [3, 1], tiling = "none"}
+
+text_kakai = {sprite = "text_kakai", color = [4, 2], tiling = "none"}
+
+text_elira = {sprite = "text_elira", color = [2, 4], tiling = "none"}
