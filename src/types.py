@@ -281,10 +281,9 @@ class RenderContext:
     before_images: list[Image] = field(default_factory=lambda: [])
     palette: str = "default"
     background_images: list[str] | list[Image] | None = None
-    out: str | BinaryIO = "target/renders/render.gif"
+    out: str | BinaryIO = "target/renders/render.webp"
     background: tuple[int, int] | None = None
     upscale: int = 2
-    extra_out: str | BinaryIO | None = None
     extra_name: str | None = None
     frames: list[int] = (1, 2, 3)
     animation: tuple[int, int] = None
@@ -292,7 +291,7 @@ class RenderContext:
     speed: int = 200
     crop: tuple[int, int, int, int] = (0, 0, 0, 0)
     pad: tuple[int, int, int, int] = (0, 0, 0, 0)
-    image_format: str = 'gif'
+    image_format: str = 'webp'
     loop: bool = True
     spacing: int = constants.DEFAULT_SPRITE_SIZE
     boomerang: bool = False

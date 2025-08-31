@@ -286,7 +286,6 @@ class Renderer:
         self.save_frames(background_images,
                          ctx.out,
                          durations,
-                         extra_out=ctx.extra_out,
                          extra_name=ctx.extra_name,
                          image_format=ctx.image_format,
                          loop=ctx.loop,
@@ -693,7 +692,6 @@ class Renderer:
             images: list[np.ndarray],
             out: str | BinaryIO,
             durations: list[int],
-            extra_out: str | BinaryIO | None = None,
             extra_name: str = 'render',
             image_format: str = 'gif',
             loop: bool = True,
@@ -776,7 +774,7 @@ class Renderer:
             kwargs = {
                 'format': "PNG",
                 'save_all': True,
-                'append_images': save_images,
+                'append_images': save_images[1:],
                 'default_image': True,
                 'loop': 0,
                 'duration': durations
@@ -787,19 +785,62 @@ class Renderer:
                 out,
                 **kwargs
             )
-        if not isinstance(out, str):
-            out.seek(0)
-        if extra_name is None:
-            extra_name = 'render'
-        if extra_out is not None:
-            file = zipfile.PyZipFile(extra_out, "x")
+        elif image_format == 'tiff':
+            save_images = [Image.fromarray(im) for im in images]
+            kwargs = {
+                'format': "TIFF",
+                'save_all': True,
+                'append_images': save_images[1:],
+                'default_image': True,
+                'loop': 0,
+                'duration': durations
+            }
+            if not loop:
+                kwargs['loop'] = 1
+            save_images[0].save(
+                out,
+                **kwargs
+            )
+        elif image_format == 'webp':
+            save_images = [Image.fromarray(im) for im in images]
+            kwargs = {
+                'format': "WEBP",
+                'save_all': True,
+                'append_images': save_images[1:],
+                'default_image': True,
+                'loop': 0,
+                'duration': durations,
+                "lossless": True
+            }
+            if not loop:
+                kwargs['loop'] = 1
+            save_images[0].save(
+                out,
+                **kwargs
+            )
+        elif image_format == 'pdf':
+            save_images = [Image.fromarray(im) for im in images]
+            kwargs = {
+                'format': "PDF",
+                'save_all': True,
+                'append_images': save_images[1:],
+            }
+            save_images[0].save(
+                out,
+                **kwargs
+            )
+        elif image_format == 'zip':
+            file = zipfile.PyZipFile(out, "x")
             for i, img in enumerate(images):
                 buffer = BytesIO()
                 Image.fromarray(img).save(buffer, "PNG")
                 file.writestr(
-                    f"{extra_name}_{i // 3}_{(i % 3) + 1}.png",
+                    f"{i+1}.png",
                     buffer.getvalue())
             file.close()
+        else:
+            raise AssertionError(f"Filetype {image_format} not supported!")
+        out.seek(0)
 
 
 async def setup(bot: Bot):

@@ -460,7 +460,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 grid_shape = layer_grid.shape
                 # Handles variants based on `:` affixes
                 render_ctx.out = BytesIO()
-                render_ctx.extra_out = BytesIO() if render_ctx.raw_output else None
                 full_grid = await self.handle_grid(ctx, layer_grid, possible_variants, render_ctx.tileborder)
                 parsing_overhead = time.perf_counter() - parsing_overhead
                 full_tiles, unique_tiles, rendered_frames, render_overhead = await self.bot.renderer.render_full_tiles(
@@ -533,12 +532,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 embed.add_field(name="Render statistics", value=stats)
             else:
                 embed = None
-            if render_ctx.extra_out is not None:
-                render_ctx.extra_out.seek(0)
-                await ctx.reply(description[:2000], embed=embed,
-                                files=[discord.File(render_ctx.extra_out, filename=f"raw.zip"), image])
-            else:
-                await ctx.reply(description[:2000], embed=embed, file=image)
+            await ctx.reply(description[:2000], embed=embed, file=image)
         finally:
             signal.alarm(0)
 
