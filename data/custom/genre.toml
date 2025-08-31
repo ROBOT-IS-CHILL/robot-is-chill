@@ -17,7 +17,7 @@ plat_baba = {color = [0, 3], tiling = "directional", sprite = "platbaba"}
 
 plat_door = {color = [0, 3], tiling = "none", sprite = "platdoor"}
 
-plat_elira = {color = [2, 4], tiling = "none", sprite = "platelira", extra_frames = [8]}
+plat_elira = {color = [2, 4], tiling = "none", sprite = "platelira", extra_frames = [16]}
 
 plat_kakai = {color = [4, 2], tiling = "directional", sprite = "platkakai"}
 
