@@ -1,0 +1,46 @@
+
+babainafreakinplane = {color = [0, 3], tiling = "none", sprite = "babainafreakinplane"}
+
+icon_lake = {color = [0, 3], tiling = "none", sprite = "icon_lake"}
+
+key_baba = {color = [0, 3], tiling = "animated_directional", sprite = "keybaba"}
+
+key_door = {color = [2, 4], tiling = "none", sprite = "keydoor"}
+
+key_key = {color = [2, 4], tiling = "none", sprite = "keykey"}
+
+key_goal = {color = [2, 4], tiling = "none", sprite = "keygoal"}
+
+key_orb = {color = [4, 1], tiling = "none", sprite = "keyorb"}
+
+key_wall = {color = [1, 1], tiling = "none", sprite = "keywall"}
+
+plat_baba = {color = [0, 3], tiling = "directional", sprite = "platbaba"}
+
+plat_door = {color = [0, 3], tiling = "none", sprite = "platdoor"}
+
+plat_elira = {color = [2, 4], tiling = "none", sprite = "platelira", extra_frames = [8]}
+
+plat_kakai = {color = [4, 2], tiling = "directional", sprite = "platkakai"}
+
+plat_key = {color = [2, 4], tiling = "none", sprite = "platkey"}
+
+plat_log = {color = [6, 1], tiling = "directional", sprite = "platlog"}
+
+plat_muro = {color = [3, 1], tiling = "directional", sprite = "platmuro"}
+
+plat_orb = {color = [4, 1], tiling = "none", sprite = "platorb"}
+
+plat_rock = {color = [0, 3], tiling = "none", sprite = "platrock"}
+
+static = {color = [2, 1], tiling = "none", sprite = "static"}
+
+synth_box = {color = [0, 3], tiling = "none", sprite = "synthbox"}
+
+synth_rail = {color = [0, 3], tiling = "none", sprite = "synthrail"}
+
+synth_star = {color = [0, 3], tiling = "none", sprite = "synthstar"}
+
+synth_tile = {color = [0, 3], tiling = "none", sprite = "synthtile"}
+
+text_genre = {color = [4, 1], tiling = "none", sprite = "text_genre"}
