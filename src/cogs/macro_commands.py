@@ -312,8 +312,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
             macro: TextMacro = self.bot.macros[name]
             author = macro.author
-            raw_source = source.strip()
-            sanitized_source = macro.value.strip().replace('```', "'''")
+            raw_source = macro.value.strip()
+            sanitized_source = raw_source.replace('```', "'''")
             source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
             title=name
