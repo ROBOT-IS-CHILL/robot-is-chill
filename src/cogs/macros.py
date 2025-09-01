@@ -594,7 +594,7 @@ class MacroCog:
         @builtin("tiles")
         def tiles(*queries: str):
             """
-            Performs a search on the tile database, and returns the names of all tiles that match, separated by spaces.
+            Performs a search on the tile database, and returns the names of all tiles that match, separated by `/`.
 
             The arguments are expected to be an arbitrarily long list of search queries.
 
