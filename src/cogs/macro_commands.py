@@ -233,7 +233,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
     @macro.command(aliases=["x", "run"])
     async def execute(self, ctx: Context, *, macro: str):
-        """Executes some given macroscript and outputs its return value."""
+        """Executes some given code and outputs its return value."""
         try:
             macros = ctx.bot.macros | {}
             debug = None
