@@ -600,9 +600,10 @@ class MacroCog:
 
             Valid search queries are:
 
-            - `name:<pattern>` Matches the tile name using a regex pattern
+            - `name:<pattern>` Fully matches the tile name using a regex pattern (e.g. `baba` will match baba only, but `baba.*` will match all tiles starting with baba)
             - `tiling:<tiling mode>` Matches the tiling mode
             - `source:<string>` Matches the source the tile came from
+            - `tag:<string>` Matches if the tile has this tag
 
             Note that database operations are slow, and using this too many times may time out your execution.
             It's recommended to store the output of this to a variable.
@@ -624,13 +625,16 @@ class MacroCog:
                 elif name == "source":
                     query = query + " AND source == ?"
                     args.append(pattern)
+                elif name == "tag":
+                    query = query + " AND INSTR(tags, ?)"
+                    args.append(pattern.strip())
                 else:
                     raise AssertionError(f"invalid query {name}")
 
             cur = self.bot.db.conn._conn.cursor()
             result = cur.execute("SELECT DISTINCT name FROM tiles WHERE " + query, args)
             data_rows = result.fetchall()
-            return " ".join(
+            return "/".join(
                 str(row).replace("\\", "\\\\")
                     .replace("[", "\\[").replace("/", "\\/")
                     .replace("]", "\\]").replace(" ", "\\ ")
