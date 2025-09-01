@@ -99,3 +99,55 @@ text_muro = {sprite = "text_muro", color = [3, 1], tiling = "none"}
 text_kakai = {sprite = "text_kakai", color = [4, 2], tiling = "none"}
 
 text_elira = {sprite = "text_elira", color = [2, 4], tiling = "none"}
+
+text_niko = {color = [2, 4], tiling = "none", sprite = "text_niko", tags = ["balt_texts"]}
+
+text_norvey = {color = [0, 3], tiling = "none", sprite = "text_norvey", tags = ["balt_texts"]}
+
+text_infinite = {color = [4, 1], tiling = "none", sprite = "text_infinite", tags = ["balt_texts"]}
+
+text_flowey = {color = [3, 4], tiling = "none", sprite = "text_flowey", tags = ["balt_texts"]}
+
+text_truck = {color = [4, 4], tiling = "none", sprite = "text_truck", tags = ["balt_texts"]}
+
+text_hess = {color = [5, 3], tiling = "none", sprite = "text_hess", tags = ["balt_texts"]}
+
+text_goat = {color = [0, 3], tiling = "none", sprite = "text_goat", tags = ["balt_texts"]}
+
+text_beer = {color = [6, 2], tiling = "none", sprite = "text_beer", tags = ["balt_texts"]}
+
+text_deer = {color = [6, 2], tiling = "none", sprite = "text_deer", tags = ["balt_texts"]}
+
+text_ing = {color = [0, 3], tiling = "none", sprite = "text_ing", tags = ["balt_texts"]}
+
+text_asgore = {color = [2, 2], tiling = "none", sprite = "text_asgore", tags = ["balt_texts"]}
+
+text_toriel = {color = [4, 2], tiling = "none", sprite = "text_toriel", tags = ["balt_texts"]}
+
+text_asriel = {color = [2, 4], tiling = "none", sprite = "text_asriel", tags = ["balt_texts"]}
+
+text_togore = {color = [5, 4], tiling = "none", sprite = "text_togore", tags = ["balt_texts"]}
+
+text_enby = {color = [0, 3], tiling = "none", sprite = "text_enby", tags = ["balt_texts"]}
+
+text_gas = {color = [1, 4], tiling = "none", sprite = "text_gas", tags = ["balt_texts"]}
+
+text_mundane = {color = [0, 2], tiling = "none", sprite = "text_mundane", tags = ["balt_texts"]}
+
+text_titan = {color = [1, 1], tiling = "none", sprite = "text_titan", tags = ["balt_texts"]}
+
+text_fisz = {color = [2, 3], tiling = "none", sprite = "text_fisz", tags = ["balt_texts"]}
+
+text_keykey = {color = [2, 4], tiling = "none", sprite = "text_keykey", tags = ["balt_texts"]}
+
+text_foefoe = {color = [5, 3], tiling = "none", sprite = "text_foefoe", tags = ["balt_texts"]}
+
+text_ass = {color = [2, 3], tiling = "none", sprite = "text_ass", tags = ["balt_texts"]}
+
+text_shit = {color = [6, 1], tiling = "none", sprite = "text_shit", tags = ["balt_texts"]}
+
+text_dinner = {color = [3, 3], tiling = "none", sprite = "text_dinner", tags = ["balt_texts"]}
+
+text_aiko = {color = [2, 4], tiling = "none", sprite = "text_aiko", tags = ["balt_texts"]}
+
+text_explosions = {color = [2, 3], tiling = "none", sprite = "text_explosions", tags = ["balt_texts"]}
