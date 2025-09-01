@@ -136,6 +136,7 @@ class APIHandler(BaseHTTPRequestHandler):
             return
         self.send_response(response["status"])
         self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         data = json.dumps(response["data"]).encode("utf-8")
         self.ratelimit_data(len(data))
