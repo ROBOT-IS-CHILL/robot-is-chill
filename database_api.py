@@ -156,7 +156,7 @@ def main():
 
     info(f"Connected!")
 
-    server_address = ('', 8000)
+    server_address = ('', 443)
     httpd = HTTPServer(server_address, APIHandler)
     httpd.serve_forever()
 
