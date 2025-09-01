@@ -27,7 +27,7 @@ def handler(func):
 
 def root_handler(apih):
     global endpoint_handlers
-    return [*endpoint_handlers.keys()]
+    return {"status": 200, "data": [*endpoint_handlers.keys()]}
 
 
 @handler
@@ -64,7 +64,7 @@ def tiles(apih, query):
         command += " AND INSTR(name, ?)"
         args.append(query["name"][0])
     if "source" in query:
-        command += " AND INSTR(source, ?)"
+        command += " AND source == ?"
         args.append(query["source"][0])
     if "tag" in query:
         for t in query["tag"]:
@@ -94,7 +94,7 @@ class APIHandler(BaseHTTPRequestHandler):
         url = urlparse(self.path)
         path = Path(url.path)
         if len(path.parents) == 0:
-            return root_handler
+            return (root_handler)(self)
         if path.parent != Path("/"):
             return None
         if path.suffix != ".json":
