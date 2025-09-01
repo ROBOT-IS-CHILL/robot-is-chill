@@ -114,6 +114,13 @@ class APIHandler(BaseHTTPRequestHandler):
         ratelimit_stuff[self.addr] = time.time() + max(0, math.log(data_len, 1.5))
         debug(ratelimit_stuff[self.addr] - time.time())
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')
+        self.end_headers()
+
     def do_GET(self):
         self.addr = self.client_address[0]
         if self.handle_ratelimits():
