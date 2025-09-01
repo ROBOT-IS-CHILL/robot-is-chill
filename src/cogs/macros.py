@@ -611,7 +611,10 @@ class MacroCog:
             query = "1"
             params = {}
             for param in queries:
-                name, pattern = param.split(":", 1)
+                try:
+                    name, pattern = param.split(":", 1)
+                except ValueError:
+                    raise AssertionError(f"search query `{param}` is malformed - must be of the form `<attribute>:<query>`")
                 params[name] = pattern
             args = []
             for (name, pattern) in params.items():
