@@ -594,15 +594,16 @@ class MacroCog:
         @builtin("tiles")
         def tiles(*queries: str):
             """
-            Performs a search on the tile database, and returns the names of all tiles that match, separated by spaces.
+            Performs a search on the tile database, and returns the names of all tiles that match, separated by `/`.
 
             The arguments are expected to be an arbitrarily long list of search queries.
 
             Valid search queries are:
 
-            - `name:<pattern>` Matches the tile name using a regex pattern
+            - `name:<pattern>` Fully matches the tile name using a regex pattern (e.g. `baba` will match baba only, but `baba.*` will match all tiles starting with baba)
             - `tiling:<tiling mode>` Matches the tiling mode
             - `source:<string>` Matches the source the tile came from
+            - `tag:<string>` Matches if the tile has this tag
 
             Note that database operations are slow, and using this too many times may time out your execution.
             It's recommended to store the output of this to a variable.
@@ -610,7 +611,10 @@ class MacroCog:
             query = "1"
             params = {}
             for param in queries:
-                name, pattern = param.split(":", 1)
+                try:
+                    name, pattern = param.split(":", 1)
+                except ValueError:
+                    raise AssertionError(f"search query `{param}` is malformed - must be of the form `<attribute>:<query>`")
                 params[name] = pattern
             args = []
             for (name, pattern) in params.items():
@@ -624,13 +628,16 @@ class MacroCog:
                 elif name == "source":
                     query = query + " AND source == ?"
                     args.append(pattern)
+                elif name == "tag":
+                    query = query + " AND INSTR(tags, ?)"
+                    args.append(pattern.strip())
                 else:
                     raise AssertionError(f"invalid query {name}")
 
             cur = self.bot.db.conn._conn.cursor()
             result = cur.execute("SELECT DISTINCT name FROM tiles WHERE " + query, args)
             data_rows = result.fetchall()
-            return " ".join(
+            return "/".join(
                 str(row).replace("\\", "\\\\")
                     .replace("[", "\\[").replace("/", "\\/")
                     .replace("]", "\\]").replace(" ", "\\ ")
@@ -775,8 +782,7 @@ class MacroCog:
         raw_macro = str(raw_macro)
         if raw_macro in self.builtins:
             try:
-                macro = self.builtins[raw_macro].function(*(str(arg) for arg in macro_args))
-                self.found -= 1
+                macro = str(self.builtins[raw_macro].function(*(str(arg) for arg in macro_args)))
             except Exception as err:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
         elif raw_macro in macros:

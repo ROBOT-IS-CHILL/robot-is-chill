@@ -289,7 +289,8 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 _no_sign_limit=True,
                 upscale=1,
                 _disable_limit=True,
-                cropped=True
+                cropped=True,
+                image_format="gif"
             )
         )
 
@@ -367,7 +368,8 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 upscale=1,
                 _disable_limit=True,
                 sign_texts=sign_texts,
-                _no_sign_limit=True
+                _no_sign_limit=True,
+                image_format="gif"
             )
         )
         # Return level metadata
