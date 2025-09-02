@@ -1,6 +1,6 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
-
+2 = {sprite = "???", color = [4, 2], tiling = "character", author = "baltdev"}
 
 bubu = {sprite = "bubu", tiling = "character", color = [4, 4]}
 

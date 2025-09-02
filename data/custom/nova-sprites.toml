@@ -12,8 +12,6 @@ text_flafla = {sprite = "text_flafla", tiling = "none", color = [6, 1], active =
 
 paint = {sprite = "paint", tiling = "none", color = [2, 2]}
 
-2 = {sprite = "sflafla", color = [4, 2], tiling = "character"}
-
 flafla_old = {sprite = "flafla", color = [2, 4], tiling = "character"}
 
 skele = {sprite = "skele", tiling = "character", color = [0, 3]}
