@@ -314,7 +314,9 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             author = macro.author
             raw_source = macro.value.strip()
             sanitized_source = raw_source.replace('```', "'''")
-            source = f"```wren\n{sanitized_source}\n```"
+            source = "``"
+            if sanitized_source:
+                source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
             title=name
         )
