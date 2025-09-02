@@ -176,7 +176,7 @@ async def filter_blob(filter_name):
         res = await cur.execute("SELECT data, absolute FROM filters WHERE name == ?", filter_name)
         row = await res.fetchone()
         if row is None:
-            return b"", 404
+            return f"No filter by the name {query['name']} exists in the database", 404
         return row[0], 200, {"absolute": row[1], "Content-Type": "image/png"}
 
 
