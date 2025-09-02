@@ -70,7 +70,7 @@ async def tiles():
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return b"", 404
+            return f"No tile by the name {query['name']} exists in the database", 404
         ret = {}
         for row in rows:
             name, active_color_x, active_color_y, inactive_color_x, inactive_color_y, source, sprite, tiling, tags \
@@ -116,7 +116,7 @@ async def macros():
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return b"", 404
+            return f"No macro by the name {query['name']} exists in the database", 404
         ret = {}
         for row in rows:
             row = {key: val for key, val in zip(row.keys(), (*row, ))}
@@ -156,7 +156,7 @@ async def filters():
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return b"", 404
+            return f"No filter by the name {query['name']} exists in the database", 404
         ret = {}
         for row in rows:
             row = {key: val for key, val in zip(row.keys(), (*row, ))}
