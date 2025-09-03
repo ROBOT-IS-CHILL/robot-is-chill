@@ -29,4 +29,6 @@ landscaping = {sprite = "landscaping", color = [2, 4], tiling = "none"}
 
 me2 = {sprite = "me2", color = [4, 1], tiling = "character"}
 
-tileedge2 = {sprite = "tileedge", tiling = "tiling", color = [0, 3]}
+tileedge2 = {sprite = "tileedge", color = [0, 3], tiling = "tiling"}
+
+balalt = {sprite = "balalt", color = [0, 1], tiling = "tiling"}

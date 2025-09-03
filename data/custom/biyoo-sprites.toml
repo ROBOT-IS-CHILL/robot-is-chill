@@ -50,3 +50,36 @@ text_raspberry = {sprite = "text_raspberry", color = [4, 2], tiling = "none"}
 
 egg2 = {sprite = "egg2", color = [0, 3], tiling = "none"}
 
+youtube = {sprite = "youtube", color = [0, 3], tiling = "none"}
+
+text_youtube = {sprite = "text_youtube", color = [2, 1], tiling = "none"}
+
+pear = {sprite = "pear", color = [5, 4], tiling = "none"}
+
+shack = {sprite = "shack", color = [6, 1], tiling = "none"}
+
+arrowsign = {sprite = "sign", color = [6, 1], tiling = "directional"}
+
+compass = {sprite = "compass", color = [0, 3], tiling = "none"}
+
+text_compass = {sprite = "text_compass", color = [0, 2], tiling = "none"}
+
+sawlarge = {sprite = "sawlarge", color = [0, 1], tiling = "custom", extra_frames = [0, 16]}
+
+sawthin = {sprite = "sawthin", color = [0, 1], tiling = "custom", extra_frames = [0, 16]}
+
+keyboard = {sprite = "board", color = [0, 2], tiling = "none"}
+
+text_keyboard = {sprite = "text_board", color = [0, 2], tiling = "none"}
+
+lego = {sprite = "lego", color = [0, 3], tiling = "none"}
+# These two aren't supposed to be white, but "whatever color you want" isn't possible here.
+text_lego = {sprite = "lego", color = [0, 3], tiling = "none"}
+
+rockguitar = {sprite = "rockguitar", color = [3, 1], tiling = "none"}
+
+fbaba = {sprite = "fbaba", color = [0, 3], tiling = "character"}
+
+cactus3 = {sprite = "cactus3", color = [5, 3], tiling = "none"}
+
+text_cactus3 = {sprite = "text_cactus3", color = [5, 3], tiling = "none"}

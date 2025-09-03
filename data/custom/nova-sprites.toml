@@ -2,21 +2,21 @@
 
 
 
-cookie = {sprite = "cookie", tiling = "none", color = [6, 1]}
+cookie = {sprite = "cookie", color = [6, 1], tiling = "none"}
 
-text_cookie = {sprite = "text_cookie", tiling = "none", color = [6, 0], active = [6, 1]}
+text_cookie = {sprite = "text_cookie", color = [6, 0], active = [6, 1], tiling = "none"}
 
-flafla = {sprite = "sflafla", tiling = "character", color = [2, 4]}
+flafla = {sprite = "sflafla", color = [2, 4], tiling = "character"}
 
-text_flafla = {sprite = "text_flafla", tiling = "none", color = [6, 1], active = [2, 4]}
+text_flafla = {sprite = "text_flafla", color = [6, 1], active = [2, 4], tiling = "none"}
 
-paint = {sprite = "paint", tiling = "none", color = [2, 2]}
+paint = {sprite = "paint", color = [2, 2], tiling = "none"}
 
 flafla_old = {sprite = "flafla", color = [2, 4], tiling = "character"}
 
-skele = {sprite = "skele", tiling = "character", color = [0, 3]}
+skele = {sprite = "skele", color = [0, 3], tiling = "character"}
 
-lili = {sprite = "lili", tiling = "character", color = [4, 2]}
+lili = {sprite = "lili", color = [4, 2], tiling = "character"}
 
 ugrid = {sprite = "ugrid", color = [0, 3], tiling = "diagonal_tiling"}
 

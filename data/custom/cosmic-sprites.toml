@@ -2,13 +2,13 @@
 
 
 
-fred = {sprite = "fred", tiling = "character", color = [4, 1]}
+fred = {sprite = "fred", color = [4, 1], tiling = "character"}
 
-text_fred = {sprite = "text_fred", tiling = "none", color = [4, 0], active = [4, 1]}
+text_fred = {sprite = "text_fred", color = [4, 1], tiling = "none"}
 
-beta = {sprite = "beta", tiling = "none", color = [0, 3]}
+beta = {sprite = "beta", color = [0, 3], tiling = "none"}
 
-pacman = {sprite = "pacman", tiling = "animated_directional", color = [2, 4]}
+pacman = {sprite = "pacman", color = [2, 4], tiling = "animated_directional"}
 
 adad = {sprite = "adad", color = [3, 3], tiling = "character"}
 

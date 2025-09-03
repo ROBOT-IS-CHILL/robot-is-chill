@@ -2,25 +2,25 @@
 
 
 
-balt = {sprite = "balt", tiling = "character", color = [0, 2], tags = ["animal", "machine"]}
+balt = {sprite = "balt", color = [0, 2], tiling = "character", tags = ["animal", "machine"]}
 
 text_balt = {sprite = "text_balt", color = [0, 2], tiling = "none"}
 
-balalt = {sprite = "balalt", tiling = "tiling", color = [0, 2]}
+balalt_old = {sprite = "balalt", color = [0, 2], tiling = "tiling"}
 
-text_balalt = {sprite = "text_balalt", tiling = "none", color = [0, 2]}
+text_balalt = {sprite = "text_balalt", color = [0, 2], tiling = "none"}
 
-crystalball = {sprite = "crystalball", tiling = "none", color = [3, 0]}
+crystalball = {sprite = "crystalball", color = [3, 0], tiling = "none"}
 
-fu = {sprite = "fu", tiling = "character", color = [3, 2]}
+fu = {sprite = "fu", color = [3, 2], tiling = "character"}
 
-text_fu = {sprite = "text_fu", tiling = "none", color = [3, 1], active = [3, 2]}
+text_fu = {sprite = "text_fu", color = [3, 1], active = [3, 2], tiling = "none"}
 
-jeje = {sprite = "jeje", tiling = "character", color = [2, 3]}
+jeje = {sprite = "jeje", color = [2, 3], tiling = "character"}
 
-text_jeje = {sprite = "text_jeje", tiling = "none", color = [2, 2], active = [2, 3]}
+text_jeje = {sprite = "text_jeje", color = [2, 3], tiling = "none"}
 
-metronome = {sprite = "metronome", tiling = "animated", color = [0, 3]}
+metronome = {sprite = "metronome", color = [0, 3], tiling = "animated"}
 
 babalpha = {sprite = "babalpha", color = [0, 3], tiling = "directional"}
 

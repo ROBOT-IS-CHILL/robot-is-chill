@@ -4,45 +4,81 @@
 
 build_auto = {sprite = "build_auto", color = [0, 3], tiling = "none"}
 
-build_biy = {sprite = "build_biy", color = [0, 3], tiling = "none"}
-
-build_chamber = {sprite = "build_chamber", color = [0, 3], tiling = "none"}
-
-build_conveyor = {sprite = "build_conveyor", color = [0, 3], tiling = "none"}
-
-build_expand = {sprite = "build_expand", color = [0, 3], tiling = "none"}
-
-build_fence = {sprite = "build_fence", color = [0, 3], tiling = "none"}
-
-build_hall = {sprite = "build_hall", color = [0, 3], tiling = "none"}
-
-build_path = {sprite = "build_path", color = [0, 3], tiling = "none"}
-
 build_placeholder = {sprite = "build_placeholder", color = [0, 3], tiling = "none"}
-
-build_pond = {sprite = "build_pond", color = [0, 3], tiling = "none"}
-
-build_rise = {sprite = "build_rise", color = [0, 3], tiling = "directional"}
-
-build_win = {sprite = "build_win", color = [0, 3], tiling = "none"}
-
-text_build = {sprite = "text_build", color = [2, 3], tiling = "none"}
-
-text_collapse = {sprite = "text_collapse", color = [4, 4], tiling = "none"}
 
 text_unit = {sprite = "text_unit", color = [0, 3], tiling = "none"}
 
 text_zoning = {sprite = "text_zoning", color = [4, 1], tiling = "none"}
 
-build_one = {sprite = "build_one", color = [0, 3], tiling = "none"}
+text_collapse = {sprite = "text_collapse", color = [4, 4], tiling = "none"}
 
-build_moat = {sprite = "build_moat", color = [0, 3], tiling = "none"}
+build_conveyor = {sprite = "build_conveyor", color = [0, 3], tiling = "none"}
+
+build_path = {sprite = "build_path", color = [0, 3], tiling = "none"}
+
+build_divorce = {sprite = "build_divorce", color = [0, 3], tiling = "none"}
 
 build_scenic = {sprite = "build_scenic", color = [0, 3], tiling = "none"}
 
-build_cargo = {sprite = "build_cargo", color = [0, 3], tiling = "directional"}
+build_who = {sprite = "build_who", color = [0, 3], tiling = "none"}
 
-build_collapse = {sprite = "build_collapse", color = [0, 3], tiling = "none"}
+build_win = {sprite = "build_win", color = [0, 3], tiling = "none"}
+
+build_gjvmvzx = {sprite = "build_gjvmvzx", color = [0, 3], tiling = "none"}
+
+build_connector = {sprite = "build_connector", color = [0, 3], tiling = "none"}
 
 build_arrow = {sprite = "build_arrow", color = [0, 3], tiling = "directional"}
 
+build_pain = {sprite = "build_pain", color = [0, 3], tiling = "none"}
+
+build_collapse = {sprite = "build_collapse", color = [0, 3], tiling = "none"}
+
+build_fence = {sprite = "build_fence", color = [0, 3], tiling = "none"}
+
+build_jaywalk = {sprite = "build_jaywalk", color = [0, 3], tiling = "directional"}
+
+build_spot = {sprite = "build_spot", color = [0, 3], tiling = "none"}
+
+build_cargo = {sprite = "build_cargo", color = [0, 3], tiling = "directional"}
+
+build_more = {sprite = "build_more", color = [0, 3], tiling = "none"}
+
+build_expand = {sprite = "build_expand", color = [0, 3], tiling = "none"}
+
+build_repel = {sprite = "build_repel", color = [0, 3], tiling = "directional"}
+
+build_chamber = {sprite = "build_chamber", color = [0, 3], tiling = "none"}
+
+build_hall = {sprite = "build_hall", color = [0, 3], tiling = "directional"}
+
+build_biy = {sprite = "build_biy", color = [0, 3], tiling = "none"}
+
+build_pond = {sprite = "build_pond", color = [0, 3], tiling = "none"}
+
+build_flowerbed = {sprite = "build_flowerbed", color = [0, 3], tiling = "none"}
+
+build_hi = {sprite = "build_hi", color = [0, 3], tiling = "directional"}
+
+build_melt = {sprite = "build_melt", color = [0, 3], tiling = "none"}
+
+build_through = {sprite = "build_through", color = [0, 3], tiling = "directional"}
+
+build_track = {sprite = "build_track", color = [0, 3], tiling = "directional"}
+
+build_love = {sprite = "build_love", color = [0, 3], tiling = "none"}
+
+build_canister = {sprite = "build_canister", color = [0, 3], tiling = "directional"}
+
+build_rise = {sprite = "build_rise", color = [0, 3], tiling = "directional"}
+
+build_relax = {sprite = "build_relax", color = [0, 3], tiling = "none"}
+
+build_one = {sprite = "build_one", color = [0, 3], tiling = "none"}
+
+build_chilled = {sprite = "build_chilled", color = [0, 3], tiling = "none"}
+
+build_moat = {sprite = "build_moat", color = [0, 3], tiling = "none"}
+
+# As far as I can tell, this line kinda just went missing in the reordering?
+text_build = {sprite = "text_build", color = [2, 3], tiling = "none"}
