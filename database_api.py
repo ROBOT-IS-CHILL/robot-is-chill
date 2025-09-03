@@ -120,11 +120,12 @@ async def macros():
         ret = {}
         for row in rows:
             row = {key: val for key, val in zip(row.keys(), (*row, ))}
-            if "name" in query:
-                return row
             name = row["name"]
             del row["name"]
-
+            if "data_only" in query:
+                row = row["value"]
+                if "name" in query:
+                    return row
             ret[name] = row
         return ret
 
@@ -164,6 +165,7 @@ async def filters():
                 return row
             name = row["name"]
             del row["name"]
+            row["absolute"] = row["absolute"] != 0
             ret[name] = row
         return ret
 
