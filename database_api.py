@@ -16,6 +16,11 @@ from src.types import TilingMode
 app = Quart(__name__, instance_relative_config=True)
 rate_limiter = RateLimiter(app)
 
+CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
+}
 
 @app.before_serving
 async def init_globals():
@@ -34,7 +39,7 @@ async def init_globals():
 @app.route("/", methods = ["GET"])
 @rate_exempt
 async def root():
-    return jsonify(["macros", "tiles", "filters"])
+    return jsonify(["macros", "tiles", "filters"]), 200, CORS_HEADERS
 
 
 @app.route("/tiles.json", methods = ["GET"])
@@ -62,7 +67,7 @@ async def tiles():
     if "tiling" in query:
         tiling = TilingMode.parse(query["tiling"][0])
         if tiling is None:
-            return 'Invalid query "tiling": not a tiling mode', 400
+            return 'Invalid query "tiling": not a tiling mode', 400, CORS_HEADERS
         command += " AND TILING == ?"
         args.append(tiling + 0)
     command += " ORDER BY version DESC"
@@ -70,7 +75,7 @@ async def tiles():
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return f"No tile by the name {query['name'][0]} exists in the database", 404
+            return f"No tile by the name {query['name'][0]} exists in the database", 404, CORS_HEADERS
         ret = {}
         for row in rows:
             name, active_color_x, active_color_y, inactive_color_x, inactive_color_y, source, sprite, tiling, tags \
@@ -83,8 +88,8 @@ async def tiles():
                 "tags": tags.split("\t") if tags else []
             }
             if "name" in query:
-                return ret[name]
-        return ret
+                return ret[name], CORS_HEADERS
+        return ret, CORS_HEADERS
 
 
 @app.route("/macros.json", methods = ["GET"])
@@ -108,7 +113,7 @@ async def macros():
         try:
             args.append(int(query["author"][0]))
         except ValueError as e:
-            return 'Invalid query "author": must be an integer', 400
+            return 'Invalid query "author": must be an integer', 400, CORS_HEADERS
     if "data_only" in query:
         command = "SELECT name, value" + command.removeprefix("SELECT *")
 
@@ -116,7 +121,7 @@ async def macros():
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return f"No macro by the name {query['name'][0]} exists in the database", 404
+            return f"No macro by the name {query['name'][0]} exists in the database", 404, CORS_HEADERS
         ret = {}
         for row in rows:
             row = {key: val for key, val in zip(row.keys(), (*row, ))}
@@ -125,9 +130,9 @@ async def macros():
             if "data_only" in query:
                 row = row["value"]
                 if "name" in query:
-                    return row
+                    return row, CORS_HEADERS
             ret[name] = row
-        return ret
+        return ret, CORS_HEADERS
 
 
 @app.route("/filters.json", methods = ["GET"])
@@ -151,23 +156,23 @@ async def filters():
         try:
             args.append(int(query["author"][0]))
         except ValueError as e:
-            return 'Invalid query "author": must be an integer', 400
+            return 'Invalid query "author": must be an integer', 400, CORS_HEADERS
 
     async with globals.conn.cursor() as cur:
         res = await cur.execute(command, *args)
         rows = await res.fetchall()
         if "name" in query and len(rows) == 0:
-            return f"No filter by the name {query['name'][0]} exists in the database", 404
+            return f"No filter by the name {query['name'][0]} exists in the database", 404, CORS_HEADERS
         ret = {}
         for row in rows:
             row = {key: val for key, val in zip(row.keys(), (*row, ))}
             if "name" in query:
-                return row
+                return row, CORS_HEADERS
             name = row["name"]
             del row["name"]
             row["absolute"] = row["absolute"] != 0
             ret[name] = row
-        return ret
+        return ret, CORS_HEADERS
 
 
 @app.route("/filters/<string:filter_name>.png", methods = ["GET"])
@@ -179,14 +184,10 @@ async def filter_blob(filter_name):
         row = await res.fetchone()
         if row is None:
             return f"No filter by the name {filter_name} exists in the database", 404
-        return row[0], 200, {"absolute": row[1], "Content-Type": "image/png"}
+        return row[0], 200, {"absolute": row[1], "Content-Type": "image/png"} | CORS_HEADERS
 
 
 @app.route("/<path:_>", methods = ["OPTIONS"])
 @rate_exempt
 async def cors_stuff():
-    return b"", 200, {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
-    }
+    return b"", 200, CORS_HEADERS
