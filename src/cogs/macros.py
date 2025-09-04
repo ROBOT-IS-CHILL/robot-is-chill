@@ -789,6 +789,8 @@ class MacroCog:
         if raw_macro in self.builtins:
             try:
                 macro = str(self.builtins[raw_macro].function(*(str(arg) for arg in macro_args)))
+            except errors.TimeoutError as e:
+                raise
             except Exception as err:
                 raise errors.FailedBuiltinMacro(raw_variant, err, isinstance(err, errors.CustomMacroError))
         elif raw_macro in macros:
