@@ -543,40 +543,32 @@ class MacroCog:
             return text.title()
 
         @builtin("base64.encode")
-        def base64encode(*args: str):
+        def base64encode(string):
             """Encodes a string as base64."""
-            assert len(args) >= 1, "base64.encode macro must receive 1 or more arguments"
-            string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = string.encode('utf-8')
-            base64_bytes = base64.b64encode(text_bytes)
+            base64_bytes = base64.b64encode(text_bytes, b"-_")
             return base64_bytes.decode('utf-8')
-        
+
         @builtin("base64.decode")
-        def base64decode(*args: str):
+        def base64decode(string: str):
             """Decodes a base64 string."""
-            assert len(args) >= 1, "base64.decode macro must receive 1 or more arguments"
-            string = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_bytes = string.encode('utf-8')
-            text_bytes = base64.b64decode(base64_bytes)
+            text_bytes = base64.b64decode(base64_bytes, b"-_")
             return text_bytes.decode('utf-8')
 
         @builtin("zlib.compress")
-        def zlibcompress(*args: str):
+        def zlibcompress(data: str):
             """Compresses a string using zlib."""
-            assert len(args) >= 1, "zlib.compress macro must receive 1 or more arguments"
-            data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             text_bytes = data.encode('utf-8')
             compressed_bytes = zlib.compress(text_bytes)
-            base64_compressed = base64.b64encode(compressed_bytes)
+            base64_compressed = base64.b64encode(compressed_bytes, b"-_")
             return base64_compressed.decode('utf-8')
-        
+
         @builtin("zlib.decompress")
-        def zlibdecompress(*args: str):
+        def zlibdecompress(data):
             """Decompressses a string using zlib."""
-            assert len(args) >= 1, "zlib.decompress macro must receive 1 or more arguments"
-            data = reduce(lambda x, y: str(x) + "/" + str(y), args)
             base64_compressed = data.encode('utf-8')
-            compressed_bytes = base64.b64decode(base64_compressed)
+            compressed_bytes = base64.b64decode(base64_compressed, b"-_")
             text_bytes = zlib.decompress(compressed_bytes)
             return text_bytes.decode('utf-8')
 
