@@ -511,10 +511,16 @@ class MacroCog:
         
         @builtin("try")
         def try_(code: str):
-            """Runs some escaped MacroScript code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)"""
+            """
+                WARNING: This macro is deprecated, and will be removed soon.
+
+                Runs some escaped code. Returns two slash-seperated arguments: if the code errored, and the output/error message (depending on whether it errored.)
+            """
             self.found += 1
             try:
                 result = self.parse_macros(unescape(code), None, init = False)
+            except errors.TimeoutError as e:
+                raise
             except errors.FailedBuiltinMacro as e:
                 return f"false/{e.message}"
             except AssertionError as e:
