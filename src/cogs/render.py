@@ -123,14 +123,14 @@ class Renderer:
             [get_first_frame(tile)[:2] if not (tile is None or tile.empty) else (0, 0) for tile in grid.flatten()])
         sizes = sizes.reshape((*grid.shape, 2))
         assert sizes.size > 0, "The render must have at least one tile in it."
-        assert len(ctx.sign_texts) <= constants.MAX_SIGN_TEXTS or ctx._no_sign_limit, \
+        assert len(ctx.sign_texts) <= constants.MAX_SIGN_TEXTS or ctx.bypass_limits, \
             f"Too many sign texts! The limit is `{constants.MAX_SIGN_TEXTS}`, while you have `{len(ctx.sign_texts)}`."
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
                 size = int(
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
-                assert size <= constants.DEFAULT_SPRITE_SIZE * 2, f"Font size of `{size}` is too large! The maximum is `{constants.DEFAULT_SPRITE_SIZE * 2}`."
+                assert size <= constants.DEFAULT_SPRITE_SIZE * 2 or ctx.bypass_limits, f"Font size of `{size}` is too large! The maximum is `{constants.DEFAULT_SPRITE_SIZE * 2}`."
                 if sign_text.font is not None:
                     ctx.sign_texts[i].font = ImageFont.truetype(f"data/fonts/{sign_text.font}.ttf", size=size)
                 else:
@@ -166,9 +166,9 @@ class Renderer:
         default_size = np.array((int(sizes.shape[2] * ctx.spacing + top + bottom),
                                  int(sizes.shape[3] * ctx.spacing + left + right)))
         true_size = default_size * ctx.upscale
-        if not ctx._disable_limit:
+        if not ctx.bypass_limits:
             assert all(
-                true_size[::-1] <= constants.MAX_IMAGE_SIZE), f"Image of size `{true_size[::-1]}` is larger than the maximum allowed size of `{constants.MAX_IMAGE_SIZE}`!"
+                true_size[::-1] <= constants.MAX_IMAGE_SIZE) or ctx.bypass_limits, f"Image of size `{true_size[::-1]}` is larger than the maximum allowed size of `{constants.MAX_IMAGE_SIZE}`!"
         steps = np.zeros(
             (((animation_timestep if animation_wobble else len(frames)) * grid.shape[0]), *default_size, 4),
             dtype=np.uint8)
@@ -260,7 +260,7 @@ class Renderer:
                         text = re.sub(r"(?<!\\)\\n", "\n", text)
                         text = re.sub(r"\\(.)", r"\1", text)
                         assert len(
-                            text) <= constants.MAX_SIGN_TEXT_LENGTH, f"Sign text of length {len(text)} is too long! The maximum is `{constants.MAX_SIGN_TEXT_LENGTH}`."
+                            text) <= constants.MAX_SIGN_TEXT_LENGTH or ctx.bypass_limits, f"Sign text of length {len(text)} is too long! The maximum is `{constants.MAX_SIGN_TEXT_LENGTH}`."
                         pos = (left + sign_text.xo + (
                                     ctx.spacing * ctx.upscale * (sign_text.x + anchor_disps[sign_text.anchor[0]])),
                                top + sign_text.yo + (ctx.spacing * ctx.upscale * (
