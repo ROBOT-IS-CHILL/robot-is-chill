@@ -324,6 +324,9 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                     interp = match.group().strip().replace('`', "'")
                     raise AssertionError(f"Flag `{interp}` isn't valid.")
 
+            if render_ctx.bypass_limits:
+                signal.alarm(0)
+
             offset = 0
             for match in re.finditer(r"(?<!\\)\"(.*?)(?<!\\)\"", tiles, flags=re.RegexFlag.DOTALL):
                 a, b = match.span()

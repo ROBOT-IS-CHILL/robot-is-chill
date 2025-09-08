@@ -150,6 +150,13 @@ async def setup(bot: Bot):
         """Makes text default to letters."""
         ctx.letters = True
 
+    @flags.register(match=r"--bypass-limits",
+                    syntax="--bypass-limits")
+    async def bypass_limits(match, ctx):
+        """Bypasses time limits. Owner only."""
+        assert ctx.ctx.bot.is_owner(ctx.ctx.message.author), "Sorry, only bot admins can bypass time limits."
+        ctx.bypass_limits = True
+
     @flags.register(
         match=r"(?:--frames|-frames|-f)=([123]+)",
         syntax="(--frames | -f)=<frame: 1, 2, or 3 (arbitrary # of times)>")
