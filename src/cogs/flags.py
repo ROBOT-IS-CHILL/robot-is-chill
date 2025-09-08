@@ -154,7 +154,7 @@ async def setup(bot: Bot):
                     syntax="--bypass-limits")
     async def bypass_limits(match, ctx):
         """Bypasses time limits. Owner only."""
-        assert ctx.ctx.bot.is_owner(ctx.ctx.message.author), "Sorry, only bot admins can bypass time limits."
+        assert await ctx.ctx.bot.is_owner(ctx.ctx.message.author), "Sorry, only bot admins can bypass time limits."
         ctx.bypass_limits = True
 
     @flags.register(
