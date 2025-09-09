@@ -4,8 +4,6 @@
 
 cnimi = {sprite = "nimicrown", color = [0, 3], tiling = "character"}
 
-text_cnimi = {sprite = "text_nimicrown", color = [0, 3], tiling = "none"}
-
 animi = {sprite = "nimiastronaut", color = [0, 3], tiling = "character"}
 
 hnimi = {sprite = "nimicave", color = [0, 3], tiling = "character"}

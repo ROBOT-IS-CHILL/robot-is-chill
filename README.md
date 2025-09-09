@@ -42,3 +42,9 @@ Step by step:
 9. Restart the bot
 
 Everything should be working fine!
+
+---
+
+## Licensing
+
+Everything except for the `data/` folder is licensed under the GPL. Everything in the `data/custom` folder is licensed under the GPL. Everything else has all rights reserved to their respective authors. Ask the respective authors about usage rights.
