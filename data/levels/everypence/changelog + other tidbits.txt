@@ -6,7 +6,7 @@
 
  hey! thanks for downloading B)
 
-it's advised that you beat the main game before playing, and are at least a bit familiar with the new words from new adventures (mostly just EAT, although FEELING, STILL, and AUTO are in a few levels). most of the time, when the new adventures words *are* used they're placed in unchangeable rules within a level, so even if you're unfamiliar with them you should be fine as they're pretty self explanatory :)
+it's advised that you beat the main game before playing, and are at least a bit familiar with the new words from new adventures (mostly just EAT, although AUTO, STILL, FEELING, and BROKEN are in a few levels). most of the time, when the new adventures words *are* used they're placed in unchangeable rules within a level, so even if you're unfamiliar with them you should be fine as they're pretty self explanatory :)
 
 
 
@@ -14,12 +14,11 @@ it's advised that you beat the main game before playing, and are at least a bit 
 
   > it's completely unmodded! all of the new things are made using hidden text and the like, so feel free to tear it apart using the editor to see how it works :)
 
-  > this is an extention of a MUCH shorter pack i made for the baba is you discord competition Keep It Simple. progress from that pack won't carry over, sorry!
+  > this is an extension of a MUCH shorter pack i made for the baba is you discord competition with the theme Keep It Simple. progress from that pack won't carry over, sorry!
 
   > contains an original soundtrack; playing with sound on is highly advised!
 
-  > all the music, concepts, art, new sprites + palettes are created by me!! use it in whatever you want,,, as long as i am credited, of course.
-
+  > all the music, concepts, art, new sprites + palettes are created by me!! you have my permission to use it in whatever you want,,, as long as i am credited, of course.
 
 
 
@@ -73,9 +72,9 @@ it's advised that you beat the main game before playing, and are at least a bit 
  2 - Foggy Memory
  3 - Thunderstorm
  4 - Timmmmberrrr!
- 5 - Another Day
+ 5 - Curious Channel
  6 - Aftermath
- 7 - Curious Channel
+ 7 - Another Day
  8 - Fumigation Services
  9 - Ball of Fluff
  10 - Takes Two to Tango
@@ -109,8 +108,9 @@ it's advised that you beat the main game before playing, and are at least a bit 
  5 - Sworn Protection
  6 - Restricted Access
  7 - Lunar Eclipse
- 8 - This Land, Mine
- 9 - Just Dropping By
+ 8 - Drain Cleaning (by amateurprocoal)
+ 9 - This Land, Mine
+ 10 - Just Dropping By
  . - Early Access (extra of Restricted Access, solution by Randomiser)
  X = Tales - The Temple
  O = Heads - The Temple
@@ -144,6 +144,17 @@ it's advised that you beat the main game before playing, and are at least a bit 
 
 		UPDATE LOG :)
 
+	V1.6
+
+	LEVEL CHANGES:
+ - the winner of the Everypence level contest, Drain Cleaning by amateurprocoal, has been added to world 3! it's very cool
+ - made Foggy Memory (world 1, level 2) much cleaner, and hopefully less difficult for first time players
+ - reordered the levels in world 1 just a tad. a teeny amount. a smidge
+
+	BUG FIXES:
+ - doing any move that wasn't IDLE in a cutscene used to break it - this has been fixed!
+ - reformatted the hidden text in a few levels. it should now be entirely impossible to form rules with text you can't see
+ - fixed a few spots where LOOP wouldn't work
 
 
 	V1.5

@@ -1,0 +1,359 @@
+
+
+
+Nimi's Garden (Deluxe!)
+
+
+
+Disclaimer: 
+
+If you have a playthrough of Nimi's Garden in progress, your save data
+will NOT carry over (and if it does, I highly suggest deleting it because existing
+save data could cause major problems).
+
+The good news:
+
+If you want to extremely quickly regain your progress, you can enable debug mode and
+"ctrl+m" your way through the levels you've already beaten.
+
+	To enable debug mode, find your Baba is You save data (if on Windows,
+	most likely in %appdata%), open settings.txt, and set debug to
+	"debug=1" under the [settings] category.
+	Once you've done this, you can press "ctrl" and "m" at the same
+	time to instantly win a level!
+
+Also, there are spoilers for late-game stuff near the bottom of this document.
+Read beyond the general changes section at your own risk!
+
+---------------------------------------------------------------------------
+
+General Changes:
+
+ - Adjusted requirements for progressing through worlds & the overworld.
+ - Rearranged most maps.
+ - Desert is now world 4; Magic is now world 5.
+
+ - Unique theme for Roots.
+ - New music, effects and sprites.
+
+ (Thanks to shrugsimontiger for these next two)
+ - Removed Topple in favor of Unstack.
+ - Throw no longer uses hidden text.
+
+ - Clues moved from some levels to others (ex: Build-a-Ladder)
+ - Clues use the BASED mod by PlasmaFlare instead of hidden text.
+
+ - 29 old levels removed.
+ - 50 brand-new levels added.
+ - New secrets..?
+ - Tons of level adjustments, renames, decheeses, reworks etc.
+
+ - Added some level subtitles.
+ - Updated credits.
+
+---------------------------------------------------------------------------
+
+Removed Levels: (29)
+
+ - Thorny Passages
+ - Passing Around
+ - Nimi Doesn't Respond
+
+ - Too Much Lava
+
+ - Say the Magic Words
+
+ - Welcome Back
+ - Cooperative Pastures
+ - Relocate
+ - Swift Lockpick
+ - Beastmaster
+ - Feeble
+
+ - Piling Leaves
+ - Poltergeist
+ - Constant Correction
+
+ - Really Tall Spikes
+ - Well Protected Grove
+ - Floaty Chamber
+ - Topple Queen
+ - High Security
+
+ - Changing Course
+ - We All Love Alternators
+
+ - Maw of the Beast
+ - Echo Chamber
+
+ - Test Tubes
+ - Victory Not in the Open
+ - Treacherous Facility
+
+ - Getting Creative
+ - Cut and Paste
+ - Rescue Mission
+
+---------------------------------------------------------------------------
+
+New Levels: (50)
+
+ - The Sinking Trio
+
+ - Desired Turns
+ - A Lesson in Combining
+
+ - Fields of Nimi
+ - Not in Vain
+ - Huh?
+ - Industrial Cove
+ - Eruption
+ - Spare Keys
+
+ - Guardian Angels
+ - I'll Keep You Safe
+ - Up and Over
+ - Spring Loaded
+ - Dominoes?
+ - ... Dominoes?
+ 
+ - Hot off the Press
+ - Dance for Me
+
+ - All Alone
+ - Lumberjack
+ - No Longer Out of Reach
+ - Leapfrog
+ - Early Bird
+ - Off and On Again
+ - Split Path
+
+ - Build-A-Bridge
+ - False Advertising
+ - Infiltration
+
+ - On Patrol
+ - It's a Distraction
+ - Even More Slippery
+
+ - Meld
+ - Tools at Your Disposal
+
+ - Fast as Light
+ - Chutes
+ - One-Turn Window
+ - Ground Control
+ - Death Passage
+
+ - No Escape
+ - Digital Nightmare
+ - The Uninvited
+
+ - Forever Leak
+ - Sharing is Caring
+ - Disco Divertimento Duo
+ - Intercardinal
+ - The Show and the Encore
+ - Overwhelming Regret
+ - Fragile
+ - Return of... Dominoes?
+ - Show 10
+ - Where it All Began
+
+---------------------------------------------------------------------------
+
+Level Edits
+
+- There's probably some cheese fixes and decoration/object changes I forgot
+  to note in this list. Sorry!
+
+-----------------
+
+Overworld
+ - New music - Map2 by DogeisCut
+
+Nimi's Garden - Moved some stuff around, added brief credits.
+Tiled Room
+
+-----------------
+
+World 1: Oceanic Trench
+ - A lot of cleaned up decoration throughout this world in general.
+
+Bending the Rules  - Name change (from Junction)
+Can't Have Both    - Name change (from Barrier)
+Keep it Clear      - Larger and cleaner level
+Rerouting          - Larger and cleaner level
+Ninety Degrees     - Name change (from Bent Sentences)
+Water Leak         - The puzzle now utilizes the bending IS
+Shuffle            - More room on the right side
+Seafloor Shipwreck - Cleaned up baserule layout
+
+-----------------
+
+World 2: The Laboratory
+ - New music - Planet by DogeisCut
+ - The least-touched world in this update.
+
+No Loss        - Added a suggestion to hover over STABLE objects with the cursor
+Midnight Snack - WIN solution should be a little bit more of a puzzle now
+Mech Suit      - Name change (from Volatile) + ROBOT IS MOVE baserule to cause less confusion
+
+-----------------
+
+World 3: Temple of Legend
+
+Rising Walls - Object changes
+Protector - Name change (from Two Layers of Protection), rule layout change and cheese fix
+
+-----------------
+
+World 4: Barren Badlands
+
+Fields of Retribution - Object changes + ALL & KARMA are stuck
+Sandy Cove            - Level rework
+Crackling Cauldron    - Pickaxe is tiled correctly
+Engarde!              - Level reverted to an older, less messy version
+Restructure           - A little more room on the left + cheese fix
+Come Out and Play!    - Removed the dumb beginning part
+
+ - Moved from world 8 and had a re-theme
+Downgrade             - Name change (from Downgrading)
+
+-----------------
+
+World 5: Magic Show
+ - World is now split up into 2 sections
+ - THAT levels use Jamming music
+
+Passer              - Moved PASS
+Blocker             - Level rework
+Hat Trick           - Cheese fix
+Relayer             - Removed bad beginning part
+Handy Platform      - Reverted back to original idea for the level
+Arcane Barriers     - Removed bad beginning part + cheese fix
+Domino Line         - Fixed like 5 unintended solutions
+Magician's Scramble - Simplified level
+Long Distance       - "long distancce" + object changes
+Hourglass           - Blocked off unnecessary text
+Tunnel of Love      - Essentially an entirely new level
+
+-----------------
+
+World 6: Wistful Plains
+
+Word Leak         - Less noise
+Poke              - Level rework
+Deforestation     - Removed decoration
+Poisonous Orchard - Removed decoration
+Le Chateau        - All play areas are larger, CLUE solution is more of a puzzle
+Kaze              - Larger play area + name change (from Strong Winds)
+
+ - Levels moved from world 8 and had a re-theme
+Fast-Flowing Waterworks
+Role Rescindment
+Surge Protection
+
+-----------------
+
+World 7: Autumnal Thicket
+ - A new decorative object scattered about
+
+Small Glade            - Rearranged things
+Hedge Hopping          - Level rework
+Stuck in Here with You - Level rework
+
+-----------------
+
+World 8: Castle Grounds
+ - TOPPLE repalced with UNSTACK (some puzzles are fundamentally different as a result,
+   but pretty much the same in idea/solution.)
+ - New WALL sprite
+
+Jump the Gutter - Level rework
+Dangerous Hall  - Name change (from Shifting Storage) + level rework
+Gardening       - Hopefully made second part less confusing + cheese fix
+Jail            - Removed unnecessary baserule + object change (sorry keke)
+Build-a-Ladder  - Removed the CLUE from the level
+
+
+ - Levels moved from world 4 and had a re-theme
+Repentance
+Deal With the Devil
+We Don't Forget
+Cactus Dance       - Cheese fix
+Stuck in the Sauna - Name change (from Prisoner)
+Wizardry           - Name change (from Limited Resources) + level edited to have less confusing baserules
+
+-----------------
+
+World 9: Frigid Summit
+
+Line of Communication - Rearranged baserules & enforced one solution
+Rabbit Hole           - Changed first part of the level
+Force Through         - Cheese fix + Added CLUE
+Fix the Flag          - Cheese fix
+Protective Bunny      - Cheese fix
+Sokoslip              - Removed CLUE
+Locked in Place       - Name change (from Even More Slippery) + object change
+Just a Peek           - Simplified level
+
+-----------------
+
+World 10: Fungal Quarry
+
+And One Back Down      - Cheese fix
+Echolocation           - Cheese fix + slight rework
+The Wrecking Crew      - Enforced ideal machine
+Quintuple Jointed      - Replaced AND with ON to prevent chaos
+Mining with Explosives - Removed FUNGUS IS FUNGUS baserule
+Drunken Spelunker      - Cheese Fix
+Shove                  - Edited level geometry
+
+-----------------
+
+World 11: Rust Area
+
+Space Generator    - Cheese fix + new object
+Double Placement   - Removed TALL (NIMI ON FLAG IS WIN)
+Superior Moves     - Cheese fix
+Cosmic Transit     - Complete level rework + name change (from Interstellar Movement)
+Crossing the Gulch - Removed BELT
+
+-----------------
+
+World 12: Secret Software
+ - Small map changes
+ - New music - City by DogeisCut, Pixel by DogeisCut
+ - New particle effect - Paravoid by DizzyAndy
+
+Expand                  - Name change (from Expansion)
+Condense                - Name change (from Condensation)
+Who Put the IS There?   - Name change (from This Level Got Keke'd) + removed 2 letters
+Troublesome Letter      - Name change (from Who Put the IS There?) + removed 2 letters
+I Need Your Names Again - Name change (from Sorry, Say that Again) + removed tedious beginning part
+Plugged                 - Name change (from I T. I T. IT.) + simpler level
+Taken Off the List      - **** + cheese fix
+Reading the Wrong Way   - Level rework, but same idea
+
+-----------------
+
+The Roots
+ - Roots has its own theme now, so most aesthetics were changed
+ - New music - All is Revert by shrugsimontiger, Best by DogeisCut
+
+Don't Get Caught   - Cleaned up baserule layout
+Skitter Along      - Added walls near the top + hopefully fixed a very bad thing
+Neighbor           - The player needs to manually make the lizard face right
+Smuggler           - Cheese fix + hopefully fixed a very bad thing
+Savestate          - Cheese fix
+Pointer Playground - Simplified level + cheese fix + hopefully fixed a very bad thing
+Grounded           - Removed TALL (other rules adjusted to make the level possible to WIN)
+
+-----------------
+
+Abducted
+
+Rainbow          - Difficulty buff
+Isn't it Obvious
+Prepared Flight  - Level rework + name change (from Flight Preparations)

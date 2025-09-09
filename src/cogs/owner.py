@@ -1295,9 +1295,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             if (bot_world_path := pathlib.Path(bot_path) / "levels" / world_name).exists():
                 shutil.rmtree(bot_world_path)
             shutil.copytree(world, bot_world_path, dirs_exist_ok=True)
-            replace(path / "Palettes", bot_path / "palettes" / world_name)
-            shutil.copytree(world / "Sprites", bot_path / "sprites" / world_name, dirs_exist_ok=True)
-            replace(world / "Images", pathlib.Path(bot_path) / "images" / world_name)
+            replace(world / "Palettes", bot_path / "palettes" / world_name)
+            replace(world / "Sprites", bot_path / "sprites" / world_name)
+            replace(world / "Images", bot_path / "images" / world_name)
         await message.edit(content="Done.")
 
 
