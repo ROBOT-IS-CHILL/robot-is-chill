@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 from glob import glob
 from io import BytesIO
+import random
 import time
 import typing
 import zipfile
@@ -11,6 +12,7 @@ import re
 import json
 import tomlkit
 import urllib
+import hashlib
 from pathlib import Path
 
 import requests
@@ -326,7 +328,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 if (color_x, color_y) in color_table:
                     color_x, color_y = color_table[(color_x, color_y)]
             else:
-                with Image.open('data/palettes/default.png') as l:
+                with Image.open('data/palettes/vanilla/default.png') as l:
                     default_palette = np.array(
                         l.convert('RGB'), dtype=np.uint8)
                 closest_color = np.argmin(np.sum(abs(
@@ -626,6 +628,43 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         await self.load_custom_tiles()
         self.bot.loading = False
         return await ctx.send("Done. Loaded all tile data.")
+
+    @commands.command()
+    @commands.is_owner()
+    async def loadpalettes(self, ctx: Context):
+        """Refetches palette data from the filesystem."""
+        self.bot.loading = True
+        await self.bot.db.conn.execute('DELETE FROM palettes')
+        self.bot.db.palette_cache = {}
+
+        async with self.bot.db.conn.cursor() as cur:
+            pals = []
+            for path in pathlib.Path("data/palettes/").glob(f"*/*.png"):
+                source = path.parts[-2]
+                name = path.stem
+                buf = BytesIO()
+                with Image.open(path) as im:
+                    im = im.convert("RGBA")
+                    hashed_im = hashlib.md5(im.tobytes()).hexdigest()
+                    im.save(buf, format = "PNG")
+                buf.seek(0)
+                pals.append({"name": name, "source": source, "data": buf.getvalue(), "hash": hashed_im})
+            await cur.executemany(
+                '''
+                INSERT INTO palettes
+                VALUES (
+                    :name,
+                    :source,
+                    :data,
+                    :hash
+                )
+                ON CONFLICT(hash) DO NOTHING;
+                ''',
+                pals
+            )
+        self.bot.db.store_palettes()
+        self.bot.loading = False
+        return await ctx.send("Done. Reloaded palette data.")
 
     async def load_initial_tiles(self):
         """Loads tile data from `data/values.lua` files."""
@@ -948,6 +987,11 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         """:3"""
         await ctx.author.send(":3")
 
+    @commands.command(hidden = True)
+    async def woof(self, ctx: Context):
+        """:3"""
+        await ctx.reply(random.choice(["Woof!", "Bark!", "Arf arf!", "Ruff!"]))
+
     @commands.command()
     @commands.is_owner()
     async def hidden(self, ctx: Context):
@@ -1240,7 +1284,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         message = await ctx.reply(f"Adding sprites...")
         replace(path / "Sprites", bot_path / "sprites" / "vanilla")
         shutil.copytree(path / "Sprites", bot_path / "sprites" / "vanilla", dirs_exist_ok=True)
-        shutil.copytree(path / "Palettes", bot_path / "palettes", dirs_exist_ok=True)
+        shutil.copytree(path / "Palettes", bot_path / "palettes" / "vanilla", dirs_exist_ok=True)
         shutil.copy2(path / "merged.ttf", bot_path / "fonts" / "default.ttf")
         shutil.copy2(path / "Editor" / "editor_objectlist.lua", bot_path / "editor_objectlist.lua")
         shutil.copy2(path / "values.lua", bot_path / "values.lua")
@@ -1251,6 +1295,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             if (bot_world_path := pathlib.Path(bot_path) / "levels" / world_name).exists():
                 shutil.rmtree(bot_world_path)
             shutil.copytree(world, bot_world_path, dirs_exist_ok=True)
+            replace(path / "Palettes", bot_path / "palettes" / world_name)
             shutil.copytree(world / "Sprites", bot_path / "sprites" / world_name, dirs_exist_ok=True)
             replace(world / "Images", pathlib.Path(bot_path) / "images" / world_name)
         await message.edit(content="Done.")

@@ -204,6 +204,11 @@ class CommandErrorHandler(commands.Cog):
                     return await ctx.error(f'A macro created a custom error:\n> {str(error.message)[:1024]}')
                 else:
                     return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
+            elif isinstance(error, errors.NoPaletteError):
+                palette = error.args[0]
+                if palette[1] is None:
+                    return await ctx.error(f"Palette `{palette[0].replace('`', '')[:32]}` does not exist!")
+                return await ctx.error(f"Palette `{palette[1].replace('`', '')[:32]}/{palette[0].replace('`', '')[:32]}` does not exist!")
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):

@@ -230,7 +230,7 @@ class Renderer:
             step = step[u:-d if d > 0 else None, l:-r if r > 0 else None]
             if ctx.background is not None:
                 if len(ctx.background) < 4:
-                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.palette_cache, ctx.background)
+                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.bot.db, ctx.background)
                 ctx.background = np.array(ctx.background).astype(np.float32)
                 step_f = step.astype(np.float32) / 255
                 step_f[..., :3] = step_f[..., 3, np.newaxis]

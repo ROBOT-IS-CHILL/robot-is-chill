@@ -228,10 +228,10 @@ class Color(tuple):
                 return super(Color, cls).__new__(cls, (int(x), int(y)))
             except ValueError:
                 traceback.print_exc()
-                raise AssertionError("Failed to parse seemingly valid color! This should never happen.")
+                raise AssertionError(f"Failed to parse color `{value.replace('`', '')[:32]}`.")
 
     @staticmethod
-    def parse(tile, palette_cache, color=None):
+    def parse(tile, db, color=None):
         if color is None:
             color = tile.color
         if type(color) == str:
@@ -240,7 +240,8 @@ class Color(tuple):
             return color
         else:
             try:
-                pal = palette_cache[tile.palette].convert("RGBA")
+                pal = db.palette(*tile.palette)
+                assert pal is not None, ""
                 return pal.getpixel(color)
             except IndexError:
                 raise AssertionError(f"The palette index `{color}` is outside of the palette.")
@@ -279,7 +280,7 @@ class RenderContext:
     """A holder class for all the attributes of a render."""
     ctx: Context = None
     before_images: list[Image] = field(default_factory=lambda: [])
-    palette: str = "default"
+    palette: tuple[str, str | None] = ("default", "vanilla")
     background_images: list[str] | list[Image] | None = None
     out: str | BinaryIO = "target/renders/render.webp"
     background: tuple[int, int] | None = None

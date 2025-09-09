@@ -244,7 +244,10 @@ async def setup(bot):
             if inactive is not None:
                 color = constants.INACTIVE_COLORS[color]
             try:
-                color = bot.renderer.palette_cache[ctx.palette].getpixel(color)
+                palette = renderer.bot.db.palette(ctx.palette)
+                if palette is None:
+                    raise errors.NoPaletteError(ctx.palette)
+                color = palette.getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(sign.text, color)
         sign.color = color
@@ -269,7 +272,7 @@ async def setup(bot):
         """Sets the sign text's stroke."""
         if len(color) < 4:
             try:
-                color = bot.renderer.palette_cache[ctx.palette].getpixel(color)
+                color = bot.renderer.bot.db[ctx.palette].getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(sign.text, color)
         sign.stroke = color, size
@@ -316,19 +319,22 @@ async def setup(bot):
 
     # --- COLORING ---
 
-    palette_names = tuple([Path(p).stem for p in glob.glob("data/palettes/*.png")])
-
     @add_variant("palette/", "p!", no_function_name=True)
     async def palette(tile, palette: str):
         """Sets the tile's palette. For a list of palettes, try `search type:palette`."""
-        assert palette in palette_names, f"Palette `{palette}` was not found!"
-        tile.palette = palette
+        if "." in palette:
+            tile.palette = (*palette.split(".", 1)[::-1],)
+        else:
+            tile.palette = (palette, None)
 
     @add_variant("ac", "~")
     async def apply(sprite, *, tile, wobble, renderer):
         """Immediately applies the sprite's default color."""
         tile.custom_color = True
-        rgba = renderer.palette_cache[tile.palette].getpixel(tile.color)
+        palette = renderer.bot.db.palette(tile.palette)
+        if palette is None:
+            raise errors.NoPaletteError(tile.palette)
+        rgba = palette.getpixel(tile.color)
         sprite = recolor(sprite, rgba)
         return sprite
 
@@ -360,7 +366,10 @@ If [0;36minactive[0m is set and the color isn't hexadecimal, the color will sw
             if inactive is not None:
                 color = constants.INACTIVE_COLORS[color]
             try:
-                rgba = renderer.palette_cache[tile.palette].getpixel(color)
+                palette = renderer.bot.db.palette(tile.palette)
+                if palette is None:
+                    raise errors.NoPaletteError(tile.palette)
+                rgba = palette.getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(tile.name, color)
         return recolor(sprite, rgba)
@@ -391,8 +400,8 @@ Interpolates color through CIELUV color space by default. This can be toggled wi
 If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrapolated, as opposed to clamping from 0% to 100%.
 [0;36mDither[0ming does nothing with [0;36msteps[0m set to 0."""
         tile.custom_color = True
-        src = Color.parse(tile, renderer.palette_cache)
-        dst = Color.parse(tile, renderer.palette_cache, color=color)
+        src = Color.parse(tile, renderer.bot.db)
+        dst = Color.parse(tile, renderer.bot.db, color=color)
         if not raw:
             src = np.hstack((cv2.cvtColor(np.array([[src[:3]]], dtype=np.uint8), cv2.COLOR_RGB2Luv)[0, 0], src[3]))
             dst = np.hstack((cv2.cvtColor(np.array([[dst[:3]]], dtype=np.uint8), cv2.COLOR_RGB2Luv)[0, 0], dst[3]))
@@ -814,7 +823,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("flood")
     async def floodfill(sprite, color: Color, inside: Optional[bool] = True, *, tile, wobble, renderer):
         """Floodfills either inside or outside a sprite with a given brightness value."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         sprite[sprite[:, :, 3] == 0] = 0  # Optimal
         sprite_alpha = sprite[:, :, 3]  # Stores the alpha channel separately
         sprite_alpha[sprite_alpha > 0] = -1  # Sets all nonzero numbers to a number that's neither 0 nor 255.
@@ -840,7 +849,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("pf")
     async def pointfill(sprite, color: Color, x: int, y: int, *, tile, wobble, renderer):
         """Floodfills a sprite starting at a given point."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         assert x >= 0 and y >= 0 and y < sprite.shape[0] and x < sprite.shape[1], f"Target point `{x},{y}` must be inside the sprite!"
         target_color = sprite[y,x]
         sprite[sprite[:, :, 3] == 0] = 0  # Optimal
@@ -863,7 +872,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("rm")
     async def remove(sprite, color: Color, invert: Optional[bool] = False, *, tile, wobble, renderer):
         """Removes a certain color from the sprite. If [36minvert[0m is on, then it removes all but that color."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         if invert:
             sprite[(sprite[:, :, 0] != color[0]) | (sprite[:, :, 1] != color[1]) | (sprite[:, :, 2] != color[2])] = 0
         else:
@@ -873,8 +882,8 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("rp")
     async def replace(sprite, color1: Color, color2: Color, invert: Optional[bool] = False, *, tile, wobble, renderer):
         """Replaces a certain color with a different color. If [36minvert[0m is on, then it replaces all but that color."""
-        color1 = Color.parse(tile, renderer.palette_cache, color1)
-        color2 = Color.parse(tile, renderer.palette_cache, color2)
+        color1 = Color.parse(tile, renderer.bot.db, color1)
+        color2 = Color.parse(tile, renderer.bot.db, color2)
         if invert:
             sprite[(sprite[:, :, 0] != color1[0]) | (sprite[:, :, 1] != color1[1]) | (sprite[:, :, 2] != color1[2])] = color2
         else:
@@ -1038,7 +1047,10 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
     @add_variant("ps")
     async def palette_snap(sprite, *, tile, wobble, renderer):
         """Snaps all the colors in the tile to the specified palette."""
-        palette_colors = np.array(renderer.palette_cache[tile.palette].convert("RGB")).reshape(-1, 3)
+        pal = renderer.bot.db(tile.palette)
+        if pal is None:
+            raise errors.NoPaletteError(tile.palette)
+        palette_colors = np.array(pal.convert("RGB")).reshape(-1, 3)
         sprite_lab = cv2.cvtColor(sprite.astype(np.float32) / 255, cv2.COLOR_RGB2Lab)
         diff_matrix = np.full((palette_colors.shape[0], *sprite.shape[:-1]), 999)
         for i, color in enumerate(palette_colors):

@@ -24,9 +24,11 @@ class Database:
     conn: asqlite.Connection
     bot: None
     filter_cache: dict[str, (Image.Image, bool)]
+    palette_store: dict[(str, str), Image.Image]
 
     def __init__(self, bot):
         self.filter_cache = {}
+        self.palette_store = {}
         self.bot = bot
 
     async def connect(self, db: str) -> None:
@@ -42,6 +44,20 @@ class Database:
         print("Initialized database connection.")
         await self.create_tables()
         print("Verified database tables.")
+        await self.store_palettes()
+        print("Stored palettes.")
+
+    async def store_palettes(self):
+        async with self.conn.cursor() as cur:
+            res = await cur.execute("""
+                SELECT name, source, data FROM palettes
+            """)
+            res = [(*row, ) for row in await res.fetchall()]
+        for (name, source, data) in res:
+            im = Image.open(BytesIO(data))
+            im.load()
+            self.palette_store[(name, None)] = im.copy()
+            self.palette_store[(name, source)] = im.copy()
 
     async def close(self) -> None:
         """Teardown."""
@@ -184,6 +200,16 @@ class Database:
                 );
                 '''
             )
+            await cur.execute(
+                '''
+                CREATE TABLE IF NOT EXISTS palettes (
+                    name TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    data BLOB NOT NULL,
+                    hash INT UNIQUE NOT NULL
+                );
+                '''
+            )
 
     async def tile(self, name: str, *, maximum_version: int = 1000) -> TileData | None:
         """Convenience method to fetch a single thing of tile data.
@@ -201,6 +227,15 @@ class Database:
         if row is None:
             return None
         return TileData.from_row(row)
+
+    def palette(self, name: str, source: str = None) -> Image.Image | None:
+        """Convenience method to fetch a palette from the database.
+
+        Returns None on failure.
+        """
+        if type(name) is tuple:
+            name, source = name
+        return self.palette_store.get((name, source))
 
     async def tiles(self, names: Iterable[str], *, maximum_version: int = 1000) -> AsyncGenerator[TileData, None]:
         """Convenience method to fetch a single thing of tile data.

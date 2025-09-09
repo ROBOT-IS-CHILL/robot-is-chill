@@ -88,12 +88,8 @@ class Bot(commands.Bot):
         self.renderer = None
         self.flags = None
         self.variants = None
-        self.palette_cache = {}
         self.macros = {}
         self.baba_loaded = True
-        for path in glob.glob("data/palettes/*.png"):
-            with Image.open(path) as im:
-                self.palette_cache[Path(path).stem] = im.convert("RGBA").copy()
         numpy_set_printoptions(
             threshold=sys.maxsize,
             linewidth=sys.maxsize

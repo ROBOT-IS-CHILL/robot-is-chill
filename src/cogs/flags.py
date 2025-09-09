@@ -115,19 +115,15 @@ async def setup(bot: Bot):
         m = match.group(1)
         if m is None:
             m = 0, 4
-        ctx.background = Color.parse(Tile(palette=ctx.palette), bot.renderer.palette_cache, m)
+        ctx.background = Color.parse(Tile(palette=ctx.palette), bot.db, m)
 
-    @flags.register(match=r"(?:--palette|-p)=(\w+)",
+    @flags.register(match=r"(?:--palette|-p)=(\w+)(?:\.(\w+))?",
                     syntax="(-p | --palette)=<palette: str>")
     async def palette(match, ctx):
         """Sets the palette to use for the render. For a list of palettes, try `search type:palette`."""
         palette = match.group(1)
-        if palette == "random":
-            palette = random.choice(listdir("data/palettes"))[:-4]
-        elif palette + ".png" not in listdir("data/palettes"):
-            raise InvalidFlagError(
-                f"Could not find a palette with name \"{palette}\".")
-        ctx.palette = palette
+        palette_source = match.group(2)
+        ctx.palette = (palette, palette_source)
 
     @flags.register(match=r"--raw|-r(?:=(.+))?",
                     syntax="(-r | --raw)=<name: str>")

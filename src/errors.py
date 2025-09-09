@@ -16,6 +16,10 @@ class SplittingException(BabaError):
     """
 
 
+class NoPaletteError(MiscError):
+    """No palette of the given name."""
+
+
 class TimeoutError(MiscError):
     """The command timed out."""
 

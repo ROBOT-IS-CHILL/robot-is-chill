@@ -83,3 +83,24 @@ class ButtonPages(ViewMenuPages,inherit_buttons=False):
     @menus.button('⏹', position=menus.Last())
     async def stop_pages(self, payload):
         self.stop()
+
+
+def split_escaped(string: str, splitters: list[str]) -> list[str]:
+    res = []
+    buf = ""
+    last_escaped = False
+    for c in string:
+        if last_escaped:
+            buf += c
+            last_escaped = False
+            continue
+        if c == "\\":
+            last_escaped = True
+            continue
+        if c in splitters:
+            res.append(buf)
+            buf = ""
+            continue
+        buf += c
+    res.append(buf)
+    return res
