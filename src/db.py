@@ -53,11 +53,17 @@ class Database:
                 SELECT name, source, data FROM palettes
             """)
             res = [(*row, ) for row in await res.fetchall()]
+        vanilla_palettes = []
         for (name, source, data) in res:
             im = Image.open(BytesIO(data))
             im.load()
             self.palette_store[(name, None)] = im.copy()
             self.palette_store[(name, source)] = im.copy()
+            if source == "vanilla":
+                vanilla_palettes.append((name, im.copy()))
+        # Hack to prioritize vanilla
+        for name, pal in vanilla_palettes:
+            self.palette_store[(name, None)] = pal
 
     async def close(self) -> None:
         """Teardown."""
