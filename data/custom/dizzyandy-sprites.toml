@@ -468,4 +468,74 @@ text_ae = {sprite = "text_ae", color = [0, 3], tiling = "none"}
 
 text_oe = {sprite = "text_oe", color = [0, 3], tiling = "none"}
 
-text_eh = {sprite = "text_eh", color = [0, 1], tiling = "none", author = "dizzyandy"}
+text_time = {sprite = "text_time", color = [4, 3], tiling = "none"}
+
+and = {sprite = "and", color = [0, 3], tiling = "directional"}
+
+"&srv" = {sprite = "&srv", color = [3, 0], tiling = "none"}
+
+"text_&srv" = {sprite = "text_&srv", color = [3, 0], tiling = "none"}
+
+"----" = {sprite = "----", color = [4, 3], tiling = "none"}
+
+"text_----" = {sprite = "text_----", color = [4, 3], tiling = "none"}
+
+"t.is" = {sprite = "t.is", color = [0, 2], tiling = "none"}
+
+"text_t.is" = {sprite = "text_t.is", color = [0, 2], tiling = "none"}
+
+"!whr" = {sprite = "!whr", color = [5, 4], tiling = "none"}
+
+"text_!whr" = {sprite = "text_!whr", color = [5, 4], tiling = "none"}
+
+"£-13" = {sprite = "£-13", color = [2, 4], tiling = "none"}
+
+"text_£-13" = {sprite = "text_£-13", color = [2, 4], tiling = "none"}
+
+"sw0^" = {sprite = "sw0^", color = [2, 2], tiling = "none"}
+
+"text_sw0^" = {sprite = "text_sw0^", color = [2, 2], tiling = "none"}
+
+"51level.l" = {sprite = "51level.l", color = [1, 2], tiling = "none"}
+
+"text_51level.l" = {sprite = "text_51level.l", color = [1, 2], tiling = "none"}
+
+"gt()" = {sprite = "gt()", color = [1, 2], tiling = "none"}
+
+"text_gt()" = {sprite = "text_gt()", color = [1, 2], tiling = "none"}
+
+"vltr" = {sprite = "vltr", color = [4, 2], tiling = "none"}
+
+"ro't" = {sprite = "ro't", color = [6, 2], tiling = "none"}
+
+_CONTENTS_ = {sprite = "_CONTENTS_", color = [4, 4], tiling = "none"}
+
+"[INTERNAL:SCENE:LAKE_PUSH5_ALT]" = {sprite = "internalscenelakepush5alt", color = [3, 3], tiling = "none"}
+
+"text_isin2" = {sprite = "text_isin2", color = [0, 3], tiling = "none"}
+
+"text_birbir" = {sprite = "text_birbir", color = [0, 3], tiling = "none"}
+
+"text_yard" = {sprite = "text_yard", color = [4, 2], tiling = "none"}
+
+"birbir" = {sprite = "birbir", color = [0, 3], tiling = "directional"}
+
+"text_wait" = {sprite = "text_wait", color = [2, 3], tiling = "none"}
+
+"text_drain" = {sprite = "text_drain", color = [1, 3], tiling = "none"}
+
+"text_respawn" = {sprite = "text_respawn", color = [3, 3], tiling = "none"}
+
+"text_void" = {sprite = "text_void", color = [4, 0], tiling = "none"}
+
+"door2" = {sprite = "door2", color = [2, 3], tiling = "none"}
+
+"text_steer" = {sprite = "text_steer", color = [0, 1], tiling = "none"}
+
+"text_door2" = {sprite = "text_door2", color = [2, 3], tiling = "none"}
+
+"text_ana" = {sprite = "text_ana", color = [2, 3], tiling = "none"}
+
+"text_held" = {sprite = "text_held", color = [2, 4], tiling = "none"}
+
+"text_mono" = {sprite = "text_mono", color = [0, 2], tiling = "none"}
