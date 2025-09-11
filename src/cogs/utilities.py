@@ -432,7 +432,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
         if "/" in palette:
             color = palette
             palette = ("default", "vanilla")
-        else if "." in palette:
+        elif "." in palette:
             palette = (*palette.split(".", 1)[::-1], )
         else:
             palette = (palette, None)
