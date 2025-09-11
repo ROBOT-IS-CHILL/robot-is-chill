@@ -497,8 +497,10 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             except errors.TextGenerationError as e:
                 return await self.handle_custom_text_errors(ctx, e)
 
-            filename = datetime.utcnow().strftime(
-                f"render_%Y-%m-%d_%H.%M.%S.{render_ctx.image_format}")
+            filename = render_ctx.custom_filename
+            if filename is None:
+                filename = datetime.utcnow().strftime(f"render_%Y-%m-%d_%H.%M.%S")
+            filename = f"{filename}.{render_ctx.image_format}"
             image = discord.File(render_ctx.out, filename=filename, spoiler=spoiler)
             if hasattr(ctx, "fake") or hasattr(ctx, "is_from_file"):
                 prefix = ""

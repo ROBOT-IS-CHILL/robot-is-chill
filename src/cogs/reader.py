@@ -125,13 +125,13 @@ class Grid:
         maxstack = 1
 
         # Why can't you just be normal?
-        palette = self.bot.db.palette(tile.palette)
+        palette = self.bot.db.palette((self.palette, self.world))
         if palette is None:
-            raise errors.NoPaletteError(tile.palette)
-        rgba = palette.getpixel(tile.color)
+            palette = self.bot.db.palette((self.palette, "vanilla"))
+        if palette is None:
+            raise errors.NoPaletteError((self.palette, self.world))
 
-        palette_img = Image.open(
-            f"data/palettes/{self.palette}.png").convert("RGB")
+        palette_img = palette.convert("RGB")
         for y in range(self.height):
             for x in range(self.width):
                 maxstack = max(maxstack, len(self.cells[y * self.width + x]))
@@ -140,10 +140,13 @@ class Grid:
         for i in range(maxstack):
             for y in range(self.height):
                 for x in range(self.width):
-                    try:
-
-                        item = sorted(
-                            self.cells[y * self.width + x], key=lambda item: item.layer, reverse=False)[i]
+                    # try:
+                        try:
+                            item = sorted(
+                                self.cells[y * self.width + x], key=lambda item: item.layer, reverse=False
+                            )[i]
+                        except IndexError:
+                            continue
                         item: Item
                         if item.tiling in constants.DIRECTION_TILINGS:
                             variant = item.direction * 8
@@ -184,8 +187,8 @@ class Grid:
                                 color)),
                         )
                         layer_grid[i][y][x] = ProcessedTile(empty=False, frames=frames)
-                    except BaseException:
-                        pass
+                    # except BaseException:
+                    #     pass
         return layer_grid
 
 
@@ -291,7 +294,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
-                palette=grid.palette,
+                palette=(grid.palette, grid.world),
                 background=(0, 4),
                 out=out,
                 sign_texts=sign_texts,
@@ -370,7 +373,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
-                palette=grid.palette,
+                palette=(grid.palette, grid.world),
                 background_images=frames,
                 background=background,
                 out=f"target/renders/{grid.world}/{grid.filename}.gif",

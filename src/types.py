@@ -241,7 +241,7 @@ class Color(tuple):
         else:
             try:
                 pal = db.palette(*tile.palette)
-                assert pal is not None, ""
+                assert pal is not None, f"Palette for parsed color is none?? `{tile}`"
                 return pal.getpixel(color)
             except IndexError:
                 raise AssertionError(f"The palette index `{color}` is outside of the palette.")
@@ -312,6 +312,7 @@ class RenderContext:
     letters: bool = False
     limited_palette: bool = False
     bypass_limits: bool = False
+    custom_filename: str | None = None
 
 
 

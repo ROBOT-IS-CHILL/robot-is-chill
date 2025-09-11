@@ -235,7 +235,12 @@ class Database:
         """
         if type(name) is tuple:
             name, source = name
-        return self.palette_store.get((name, source))
+        res = self.palette_store.get((name, source))
+        if res is None and source is not None and source != "vanilla":
+            res = self.palette_store.get((name, "vanilla"))
+        if res is None and source is not None:
+            res = self.palette_store.get((name, None))
+        return res
 
     async def tiles(self, names: Iterable[str], *, maximum_version: int = 1000) -> AsyncGenerator[TileData, None]:
         """Convenience method to fetch a single thing of tile data.

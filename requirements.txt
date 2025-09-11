@@ -21,3 +21,5 @@ cpmpy
 
 tomlkit
 cython
+
+pathvalidate

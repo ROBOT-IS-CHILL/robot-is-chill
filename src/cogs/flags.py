@@ -4,10 +4,11 @@ import random
 import re
 from os import listdir
 from typing import TYPE_CHECKING
-import discord
 
+import discord
 import requests
 from PIL import Image
+import pathvalidate
 
 from .. import constants
 from ..errors import InvalidFlagError
@@ -117,28 +118,35 @@ async def setup(bot: Bot):
             m = 0, 4
         ctx.background = Color.parse(Tile(palette=ctx.palette), bot.db, m)
 
-    @flags.register(match=r"(?:--palette|-p)=(\w+)(?:\.(\w+))?",
+    @flags.register(match=r"(?:--palette|-p)=(?:(\w+)\.)?(\w+)",
                     syntax="(-p | --palette)=<palette: str>")
     async def palette(match, ctx):
         """Sets the palette to use for the render. For a list of palettes, try `search type:palette`."""
-        palette = match.group(1)
-        palette_source = match.group(2)
+        palette_source = match.group(1)
+        palette = match.group(2)
         ctx.palette = (palette, palette_source)
 
     @flags.register(match=r"--raw|-r(?:=(.+))?",
                     syntax="(-r | --raw)=<name: str>")
     async def raw(match, ctx):
-        """Outputs a zip file with the render as PNG frames.
-        Also makes the default color white for everything, and sets the render scale to 1."""
-        ctx.raw_output = True
-        ctx.upscale = 1
-        ctx.extra_name = match.group(1) if match.group(1) else None
+        """Deprecated."""
+        raise AssertionError("\n".join(line.strip() for line in """
+            The `--raw` flag has been removed.
+            To get the same behavior, you can use `-F=<filename> -f=zip -m=1`.
+            Additionally, if you're making a tile, it might be a good idea to use `-co` as well.
+        """.splitlines()))
 
-    @flags.register(match=r"--comment=(.*)",
-                    syntax="--comment=<comment: str>")
-    async def comment(match, ctx):
-        """Just a comment, does nothing."""
-        pass
+    @flags.register(match=r"(?:--filename|-F)=(.+)",
+                    syntax="(-F | --filename)=<name: str>")
+    async def filename(match, ctx):
+        """
+        Sets the filename of the render.
+        When used in conjunction with `--format=zip`, each frame in the zip will be named `<filename>_<frame // 3>_<frame % 3>.png`.
+        The filename must be at most 64 characters long, and must be valid.
+        """
+        filename = match.group(1)
+        assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
+        ctx.custom_filename = filename
 
     @flags.register(match=r"--letter",
                     syntax="--letter")

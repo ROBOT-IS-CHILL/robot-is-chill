@@ -838,13 +838,18 @@ class Renderer:
             for i, img in enumerate(images):
                 buffer = BytesIO()
                 Image.fromarray(img).save(buffer, "PNG")
+                if ctx.custom_filename:
+                    filename = f"{ctx.custom_filename}_{i // 3}_{(i % 3) + 1}.png"
+                else:
+                    filename = f"{i + 1}.png"
                 file.writestr(
-                    f"{i+1}.png",
+                    filename,
                     buffer.getvalue())
             file.close()
         else:
             raise AssertionError(f"Filetype {image_format} not supported!")
-        out.seek(0)
+        if type(out) is not str:
+            out.seek(0)
 
 
 async def setup(bot: Bot):
