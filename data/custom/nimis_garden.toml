@@ -22,8 +22,6 @@ bnimi = {sprite = "nimisnow", color = [0, 3], tiling = "character"}
 
 fnimi = {sprite = "nimistraw", color = [0, 3], tiling = "character"}
 
-snimi = {sprite = "nimisunglasses", color = [0, 3], tiling = "character"}
-
 lnimi = {sprite = "nimizelda", color = [0, 3], tiling = "character"}
 
 wnimi = {sprite = "nimiwitch", color = [0, 3], tiling = "character"}
