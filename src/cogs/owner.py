@@ -662,7 +662,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 ''',
                 pals
             )
-        self.bot.db.store_palettes()
+        await self.bot.db.store_palettes()
         self.bot.loading = False
         return await ctx.send("Done. Reloaded palette data.")
 
