@@ -7,7 +7,7 @@ import re
 import numpy as np
 
 from src.types import TilingMode
-from . import errors, constants
+from . import errors, constants, utils
 from .cogs.variants import parse_signature
 from .db import TileData
 from .types import Variant, Context, RegexDict
@@ -52,12 +52,13 @@ class TileSkeleton:
     raw_string: str = ""
     variants: dict[str: Variant, str: Variant, str: Variant] = field(
         default_factory=lambda: {"sprite": [], "tile": [], "post": []})
-    palette: str = "default"
+    palette: tuple[str, str | None] = ("default", "vanilla")
     empty: bool = True
     easter_egg: bool = False
 
     @classmethod
-    async def parse(cls, bot, possible_variants, string: str, rule: bool = True, palette: str = "default",
+    async def parse(cls, bot, possible_variants, string: str, rule: bool = True,
+                    palette: tuple[str, str | None] = ("default", "vanilla"),
                     global_variant="", possible_variant_names=[], macros={}):
         out = cls()
         explicitly_text = False
@@ -77,14 +78,16 @@ class TileSkeleton:
         out.empty = False
         out.raw_string = string
         out.palette = palette
-        raw_variants = re.split(r"[;:]", string)
+        last_escaped = False
+
+        raw_variants = utils.split_escaped(string, (":", ";"))
         out.name = raw_variants.pop(0)
         if not explicitly_text and (
                 ((explicitly_tile or not rule) and out.name in (".", "-", "empty")) or
                 (not explicitly_tile and rule and out.name.removeprefix("text_") in (".", "-"))
         ):
             return cls()
-        raw_variants[0:0] = global_variant.split(":")
+        raw_variants[0:0] = utils.split_escaped(global_variant, (":", ))
         if out.name == "2":
             # Easter egg!
             out.easter_egg = True

@@ -1,0 +1,24 @@
+[general]
+prize_max=226
+author=Marlowe
+name=$4,2Nimi's Garden$0,3
+mods=1
+firstlevel=246level
+themecount=53
+clear_max=12
+start=233level
+bonus_max=3
+
+[levels]
+levelid=388
+rolling_levelid=392
+
+[Plasma Mods]
+disable_stable_display=0
+
+[Word Salad]
+music_when_only_vessels=1
+
+[btd456creeper]
+infloop_level_glitch=0
+

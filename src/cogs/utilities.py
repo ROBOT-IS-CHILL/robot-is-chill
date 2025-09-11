@@ -20,7 +20,7 @@ from PIL import Image, ImageFont, ImageDraw
 import src.types
 
 from . import flags
-from .. import constants
+from .. import constants, errors
 from ..tile import Tile
 from ..types import Bot, Context, Variant, Color
 from ..utils import ButtonPages
@@ -309,14 +309,17 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                     results["level", f"{world}/{id}"] = data
 
         if flags.get("type") == "palette":
-            q = f"*{plain_query}*.png" if plain_query else "*.png"
-            out = []
-            for path in Path("data/palettes").glob(q):
-                out.append(
-                    (("palette", path.parts[-1][:-4]), path.parts[-1][:-4]))
-            out.sort()
-            for a, b in out:
-                results[a] = b
+            palettes = []
+            for key in self.bot.db.palette_store.keys():
+                if key[1] is None:
+                    continue
+                if plain_query not in key[0]:
+                    assert False, f"{(plain_query, key)}"
+                    continue
+                palettes.append(key[1] + "." + key[0])
+            palettes.sort()
+            for pal in palettes:
+                results["palette", pal] = pal
 
         if flags.get("type") == "mod":
             q = f"*{plain_query}*.toml" if plain_query else "*.toml"
@@ -425,20 +428,27 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
 
         This is useful for picking colors from the palette.
         """
-        p_cache = self.bot.renderer.palette_cache
-        img = p_cache.get(palette, None)
-        if img is None:
-            if "/" not in palette:
-                return await ctx.error(f'The palette `{palette.replace("`", "")[:16]}` could not be found.')
-            palette, color = "default", palette
+        rawpal = palette
+        if "/" in palette:
+            color = palette
+            palette = ("default", "vanilla")
+
+        if "." in palette:
+            palette = (*palette.split(".", 1)[::-1], )
+        else:
+            palette = (palette, None)
+
         if color is not None:
-            r, g, b, _ = Color.parse(Tile(name="<palette command>", palette=palette), p_cache, color)
+            r, g, b, _ = Color.parse(Tile(name="<palette command>", palette=palette), self.bot.db, color)
             d = discord.Embed(
                 color=discord.Color.from_rgb(r, g, b),
                 title=f"Color: #{hex((r << 16) | (g << 8) | b)[2:].zfill(6)}"
             )
             return await ctx.reply(embed=d)
         else:
+            img = self.bot.db.palette(palette, strict = True)
+            if img is None:
+                raise errors.NoPaletteError(palette)
             txtwid, txthgt = img.size
             pal_img = img.resize(
                 (img.width * constants.PALETTE_PIXEL_SIZE,
@@ -459,7 +469,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                             f"{x},{y}",
                             (1, 1, 1, 255),
                             font,
-                            layout_engine=ImageFont.LAYOUT_BASIC)
+                            layout_engine=ImageFont.Layout.BASIC)
                     else:
                         draw.text(
                             (x * constants.PALETTE_PIXEL_SIZE,
@@ -467,12 +477,12 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                             f"{x},{y}",
                             (255, 255, 255, 255),
                             font,
-                            layout_engine=ImageFont.LAYOUT_BASIC)
+                            layout_engine=ImageFont.Layout.BASIC)
             buf = BytesIO()
             pal_img.save(buf, format="PNG")
             buf.seek(0)
-            file = discord.File(buf, filename=f"{palette[:16]}.png")
-            await ctx.reply(f"Palette `{palette[:16]}`:", file=file)
+            file = discord.File(buf, filename=f"{rawpal}.png")
+            await ctx.reply(f"Palette `{rawpal}`:", file=file)
 
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     @commands.command(name="hint", aliases=["hints"])

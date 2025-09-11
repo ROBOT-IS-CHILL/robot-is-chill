@@ -397,7 +397,7 @@ class GeneratorCog(commands.Cog, name="Generation Commands"):
                             f"{attributes['seed']}_{(direction + walkcycle_frame) % 32}_{wobble_frame + 1}.png",
                             buffer.getvalue())
             with Image.open('data/generator/preview_bg.png') as bg:
-                palette = np.array(self.bot.renderer.palette_cache["default"])
+                palette = np.array(self.bot.db.palette("default"))
                 bg: Image.Image = bg.convert('RGBA')
                 for image in final_zip.namelist():
                     with final_zip.open(image) as imfile:

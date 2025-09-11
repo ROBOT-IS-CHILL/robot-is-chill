@@ -153,8 +153,10 @@ class CommandErrorHandler(commands.Cog):
 
             elif isinstance(error, AssertionError) or isinstance(error, NotImplementedError):
                 await self.logger.send(embed=emb)
-                if len(error.args) == 0:
+                if len(error.args) == 0 or len(error.args[0]) == 0:
                     raise error
+                if len(error.args[0]) == 0:
+                    raise
                 return await ctx.error(error.args[0])
 
             elif isinstance(error, ZeroDivisionError):
@@ -204,6 +206,11 @@ class CommandErrorHandler(commands.Cog):
                     return await ctx.error(f'A macro created a custom error:\n> {str(error.message)[:1024]}')
                 else:
                     return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
+            elif isinstance(error, errors.NoPaletteError):
+                palette = error.args[0]
+                if palette[1] is None:
+                    return await ctx.error(f"Palette `{palette[0].replace('`', '')[:32]}` does not exist!")
+                return await ctx.error(f"Palette `{palette[1].replace('`', '')[:32]}/{palette[0].replace('`', '')[:32]}` does not exist!")
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):

@@ -177,8 +177,13 @@ class MacroCog:
             > `[sequence/@/1/5/(@)/,]` -> `(1),(2),(3),(4),(5)`
             > `[sequence/@/1/3/@]` -> `123`
             """
+            start, end = int(to_float(start)), int(to_float(end))
+            step = 1
+            if end < start:
+                step = -1
+                end -= 2
             s = []
-            for i in range(int(to_float(start)), int(to_float(end)) + 1):
+            for i in range(start, end + 1, step):
                 s.append(string.replace(pattern, str(i)))
             return separator.join(s)
 

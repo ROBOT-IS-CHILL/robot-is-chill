@@ -1,0 +1,131 @@
+$3,3
+$3,3
+$3,3
+$4,2Nimi's Garden
+$3,3
+$5,2By Marlowe
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2An adventure in
+$4,1Baba is you
+$3,3
+$0,3by Hempuli
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Using The MegaModpack
+$3,3
+$1,3By PlasmaFlare
+$3,3
+$3,3
+$4,2With mods by
+$3,3
+$1,3PlasmaFlare
+$3,1Patashu
+$0,3Randomiser
+$2,4Mathguy
+$3,1Emilyemmi
+$2,3Wrecking Games
+$2,1Huebird
+$0,3BTD456Creeper
+$4,4shrugsimontiger
+$3,3
+$3,3
+$4,2Custom modpack branch
+$3,3
+$4,4by shrugsimontiger
+$3,3
+$3,3
+$4,2BASED Mod
+$3,3
+$1,3by PlasmaFlare
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Additional Sprites & Palettes By
+$3,3
+$5,2Marlowe
+$3,3Lumsel
+$1,4Cycy
+$2,1Huebird
+$1,4DizzyAndy
+$1,3PlasmaFlare
+$0,1Balt
+$0,2Robot Is Chill
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Custom music by
+$3,3
+$2,3Chepaki
+$4,4shrugsimontiger
+$4,1DogeisCut
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Custom particle effects by
+$3,3
+$5,2Marlowe
+$1,4DizzyAndy
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2If you use anything from this pack
+$4,2for your own creations, please
+$4,2be sure to give credit to the
+$4,2creator of that asset!
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Pre-Deluxe modpack branch
+$3,3
+$4,1by ocean
+$3,3
+$3,3
+$3,3
+$4,2Playtesters (Mice)
+$3,3
+$1,2JustImagineIt
+$4,4Mathguy
+$0,3 13520 
+$4,2 24ayn5 
+$4,4shrugsimontiger
+$3,3
+$3,3
+$3,3
+$4,2Playthroughs on
+$4,2Twitch & Youtube
+$4,2that i gained
+$4,2feedback from
+$3,3
+$4,4shrugsimontiger
+$4,2 24ayn5 
+$0,3Kawasaki
+$6,2Itsumi
+$2,2Zoom Plays
+$1,3Icely
+$3,3
+$3,3
+$3,3
+$3,3
+$4,4shrugsimontiger
+$4,2provided an immense amount
+$4,2of help in general
+$3,3
+$3,3
+$3,3
+$3,3
+$4,2Thank you for playing!
+$3,3
+
+
+
+

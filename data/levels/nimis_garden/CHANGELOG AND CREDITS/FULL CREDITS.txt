@@ -1,0 +1,152 @@
+Nimi's Garden
+ -Marlowe
+
+2022-2024
+
+Baba is You
+ -Hempuli
+
+MegaModpack
+ -Put together by PlasmaFlare
+ ---PlasmaFlare
+ ---Patashu
+ ---Randomiser
+ ---Mathguy
+ ---Emilyemmi
+ ---Wrecking Games
+ ---Huebird
+ ---BTD456Creeper
+ --- + shrugsimontiger's custom branch
+
+Specific Mods (used in the levelpack)
+ -BTD456Creeper
+ ---Offset
+ ---Visit
+ ---Glitch
+
+ -Randomiser
+ ---Persist
+
+ -PlasmaFlare
+ ---Arrow Properties
+ ---Turning Text
+ ---Omni/Pivot Connectors
+ ---This, That, Block, Pass, Relay
+ ---Cut and Pack
+ ---Stable
+ ---Guard
+ ---Filler Text (...)
+
+ -Huebird
+ ---Alive and Vessel
+ ---Karma, Sinful, Repent
+ ---Hop
+ ---Echo
+
+ -WreckingGames
+ ---Starts, Contains, Ends
+
+ -Patashu
+ ---Slip & Slide
+ ---Launch
+ ---Send
+ ---Lazy
+ ---Tall
+ ---Oneway
+ ---Copy
+ ---Drunk
+ ---Property Verbs
+ ---Topple
+ ---Print & Scrawl
+
+ -shrugsimontiger
+ ---Nimi's garden megamodpack branch
+ ---Throw
+ ---Unstack
+ ---Bug fixes, property renaming
+
+BASED Mod
+ -PlasmaFlare
+ 
+Sprites
+ -Marlowe
+ ---Acorn, Amoeba, Angler, Armour, Axe, Barrel, Beaker, Cactus,
+ ---Cursor, Dotted Wall, Fairy, Faucet, File, Fungus, Hat, Magic, Nimi,
+ ---Pickaxe, Portal, Sand, Spikes, Stone, Temple Tile & Wall, Throw,
+ ---Tumble, Vial, Virus, Wand, Warning, Overworld Maps, Icons, Peace
+
+ -DizzyAndy
+ ---Gust, Folium, WallAlpha, Metal Wall, Wooden Wall
+
+ -Lumsel
+ ---Coral, Tar
+
+ -Cycy
+ ---Carrot
+
+ -Huebird
+ ---Heart, Spade, Club, Diamond
+
+ -PlasmaFlare
+ ---Fox
+
+ -Balt
+ ---Campfire
+ ---Several Texts & Drafts from Robot is Chill
+ -----Clue & Reveal
+
+Palettes
+ -Marlowe
+ ---Cave, Cave2, Digital, Digital2, Magic, Mars, Oldcastle,
+ ---Peak, Plains, Roots, Sandy, Temple, Trench, Woods, Woods2
+
+ -Balt
+ ---Laboratory
+
+Custom Particle Effects
+ -Hempuli (Original Code)
+ -Marlowe
+ ---Sandstorm
+ ---Yellowstars
+ ---Snowyclouds
+ ---Colorsmoke
+ -DizzyAndy
+ ---Paravoid
+ ---Void
+ ---Helping me do it myself :)
+
+Music
+ -Chepaki
+ ---Sand is Hot
+ ---Baba is Float
+
+ -DogeisCut
+ ---Best, City, Map2, More, Pixel, Planet, Yang
+
+ -shrugsimontiger
+ ---All is Revert
+
+Immense amount of help & playtesting
+ -shrugsimontiger
+
+Pre-Release Playtesting
+ -JustImagineIt
+ -Mathguy
+ -13520
+
+Deluxe Update Playtesting
+ -JustImagineIt
+ -24ayn5
+ -shrugsimontiger
+
+Playthroughs on YouTube/Twitch (that i saw)
+ -24ayn5
+ -かわさき(Kawasaki)
+ -shrugsimontiger
+ -いつみ(Itsumi)
+ -Zoom Plays
+ -Icely Puzzles
+
+If you use anything from this pack for your
+own creations, please be sure to give credit
+to the creator of the asset!

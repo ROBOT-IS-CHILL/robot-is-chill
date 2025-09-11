@@ -1,0 +1,1 @@
+-- movecommand(), dopush() and moveblock() have been merged

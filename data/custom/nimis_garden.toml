@@ -1,0 +1,30 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+cnimi = {sprite = "nimicrown", color = [0, 3], tiling = "character"}
+
+animi = {sprite = "nimiastronaut", color = [0, 3], tiling = "character"}
+
+hnimi = {sprite = "nimicave", color = [0, 3], tiling = "character"}
+
+cownimi = {sprite = "nimicowboy", color = [0, 3], tiling = "character"}
+
+enimi = {sprite = "nimiheadphones", color = [0, 3], tiling = "character"}
+
+mnimi = {sprite = "nimimagician", color = [0, 3], tiling = "character"}
+
+gnimi = {sprite = "nimiscientist", color = [0, 3], tiling = "character"}
+
+znimi = {sprite = "nimiscuba", color = [0, 3], tiling = "character"}
+
+bnimi = {sprite = "nimisnow", color = [0, 3], tiling = "character"}
+
+fnimi = {sprite = "nimistraw", color = [0, 3], tiling = "character"}
+
+snimi = {sprite = "nimisunglasses", color = [0, 3], tiling = "character"}
+
+lnimi = {sprite = "nimizelda", color = [0, 3], tiling = "character"}
+
+wnimi = {sprite = "nimiwitch", color = [0, 3], tiling = "character"}
+

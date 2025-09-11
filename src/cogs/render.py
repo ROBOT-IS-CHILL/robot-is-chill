@@ -230,7 +230,7 @@ class Renderer:
             step = step[u:-d if d > 0 else None, l:-r if r > 0 else None]
             if ctx.background is not None:
                 if len(ctx.background) < 4:
-                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.palette_cache, ctx.background)
+                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.bot.db, ctx.background)
                 ctx.background = np.array(ctx.background).astype(np.float32)
                 step_f = step.astype(np.float32) / 255
                 step_f[..., :3] = step_f[..., 3, np.newaxis]
@@ -722,6 +722,10 @@ class Renderer:
                             colors, counts = np.unique(frame.reshape(-1, 4), axis=0, return_counts=True)
                             total_colors.extend(colors)
                             total_counts.extend(counts)
+                    for bg_frame in ctx.background_images.values():
+                        colors, counts = np.unique(bg_frames.reshape(-1, 4), axis=0, return_counts=True)
+                        total_colors.extend(colors)
+                        total_counts.extend(counts)
                     total_colors, total_counts = np.array(total_colors), np.array(total_counts)
                     colors, inverse_indices = np.unique(total_colors, axis=0, return_inverse=True)
                     final_counts = np.bincount(inverse_indices, weights=total_counts)
@@ -838,13 +842,18 @@ class Renderer:
             for i, img in enumerate(images):
                 buffer = BytesIO()
                 Image.fromarray(img).save(buffer, "PNG")
+                if ctx.custom_filename:
+                    filename = f"{ctx.custom_filename}_{i // 3}_{(i % 3) + 1}.png"
+                else:
+                    filename = f"{i + 1}.png"
                 file.writestr(
-                    f"{i+1}.png",
+                    filename,
                     buffer.getvalue())
             file.close()
         else:
             raise AssertionError(f"Filetype {image_format} not supported!")
-        out.seek(0)
+        if type(out) is not str:
+            out.seek(0)
 
 
 async def setup(bot: Bot):

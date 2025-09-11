@@ -3,7 +3,7 @@ $3,3
 $3,3
 $2,3Thanks For Playing
 $3,4Repose
-$2,3By Regal
+$2,3By Marlowe
 $3,3
 $3,3
 $3,3

@@ -25,6 +25,7 @@ from PIL import Image
 from src import constants
 from src.db import CustomLevelData, LevelData
 from src.utils import cached_open
+from .. import errors
 from ..tile import ProcessedTile
 
 from ..types import Bot, Context, SignText, RenderContext
@@ -41,13 +42,14 @@ class Grid:
     """This stores the information of a single Baba level, in a format readable
     by the renderer."""
 
-    def __init__(self, filename: str, world: str):
+    def __init__(self, bot, filename: str, world: str):
         """Initializes a blank grid, given a path to the level file.
 
         This should not be used; you should use Reader.read_map()
         instead to generate a filled grid.
         """
         # The location of the level
+        self.bot = bot
         self.fp: str = f"data/levels/{world}/{filename}.l"
         self.filename: str = filename
         self.world: str = world
@@ -77,8 +79,11 @@ class Grid:
                 return True
             if y == 0 or y == self.height - 1:
                 return True
-            return any(
-                item.sprite in valid for item in self.cells[y * self.width + x])
+            try:
+                return any(
+                    item.sprite in valid for item in self.cells[y * self.width + x])
+            except IndexError:
+                return True
 
         def open_sprite(world: str, sprite: str, variant: int, wobble: int,
                         *, cache: dict[str, Image.Image]) -> Image.Image:
@@ -121,8 +126,15 @@ class Grid:
 
         sprite_cache = {}
         maxstack = 1
-        palette_img = Image.open(
-            f"data/palettes/{self.palette}.png").convert("RGB")
+
+        # Why can't you just be normal?
+        palette = self.bot.db.palette((self.palette, self.world))
+        if palette is None:
+            palette = self.bot.db.palette((self.palette, "vanilla"))
+        if palette is None:
+            raise errors.NoPaletteError((self.palette, self.world))
+
+        palette_img = palette.convert("RGB")
         for y in range(self.height):
             for x in range(self.width):
                 maxstack = max(maxstack, len(self.cells[y * self.width + x]))
@@ -131,10 +143,13 @@ class Grid:
         for i in range(maxstack):
             for y in range(self.height):
                 for x in range(self.width):
-                    try:
-
-                        item = sorted(
-                            self.cells[y * self.width + x], key=lambda item: item.layer, reverse=False)[i]
+                    # try:
+                        try:
+                            item = sorted(
+                                self.cells[y * self.width + x], key=lambda item: item.layer, reverse=False
+                            )[i]
+                        except IndexError:
+                            continue
                         item: Item
                         if item.tiling in constants.DIRECTION_TILINGS:
                             variant = item.direction * 8
@@ -175,8 +190,8 @@ class Grid:
                                 color)),
                         )
                         layer_grid[i][y][x] = ProcessedTile(empty=False, frames=frames)
-                    except BaseException:
-                        pass
+                    # except BaseException:
+                    #     pass
         return layer_grid
 
 
@@ -282,13 +297,13 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
-                palette=grid.palette,
+                limited_palette=True,
+                palette=(grid.palette, grid.world),
                 background=(0, 4),
                 out=out,
                 sign_texts=sign_texts,
-                _no_sign_limit=True,
+                bypass_limits=True,
                 upscale=1,
-                _disable_limit=True,
                 cropped=True,
                 image_format="gif"
             )
@@ -361,14 +376,14 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
-                palette=grid.palette,
+                limited_palette=True,
+                palette=(grid.palette, grid.world),
                 background_images=frames,
                 background=background,
                 out=f"target/renders/{grid.world}/{grid.filename}.gif",
                 upscale=1,
-                _disable_limit=True,
+                bypass_limits=True,
                 sign_texts=sign_texts,
-                _no_sign_limit=True,
                 image_format="gif"
             )
         )
@@ -453,7 +468,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
             if path.exists(f"data/levels/{world}/Images"):
                 shutil.copytree(f"data/levels/{world}/Images", f"data/images/{world}", dirs_exist_ok=True)
             if path.exists(f"data/levels/{world}/Palettes"):
-                shutil.copytree(f"data/levels/{world}/Palettes", f"data/palettes/", dirs_exist_ok=True)
+                shutil.copytree(f"data/levels/{world}/Palettes", f"data/palettes/{world}", dirs_exist_ok=True)
             if path.exists(f"data/levels/{world}/Sprites"):
                 shutil.copytree(f"data/levels/{world}/Sprites", f"data/sprites/{world}", dirs_exist_ok=True)
 
@@ -464,7 +479,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 await message.edit(content=f"""Loading maps...
 - Current world: `{world}` ({world_index}/{len(world_glob)})
 - {levels_done}/{len(levels)} levels done ({total_levels_done}/{level_amount} in total)
-- ETA: Will be done <t:{int(time.time() + ((sum(pruned_deltas) / len(pruned_deltas)) * (level_amount - total_levels_done)))}:R>""")
+- ETA: Will be done in {(sum(pruned_deltas) / len(pruned_deltas)) * (level_amount - total_levels_done):0.2f} seconds""")
 
             for i, level in enumerate(levels):
                 t = time.perf_counter()
@@ -476,10 +491,11 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                         keep_background=True,
                 )
                 total_levels_done += 1
-                deltas = [(time.perf_counter() - t)] + deltas[:-1]
+                deltas.append(time.perf_counter() - t)
                 if time.time() - last_time >= 1:
-                    await update_message(i)
                     last_time = time.time()
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(update_message(i))
                 await asyncio.sleep(0)
 
         await message.edit(content=f"All maps loaded.\nUpdating database...")
@@ -548,7 +564,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
 
         Returns a Grid object containing the level data.
         """
-        grid = Grid(filename, source)
+        grid = Grid(self.bot, filename, source)
         if data is None:
             stream = open(grid.fp, "rb")
         else:
