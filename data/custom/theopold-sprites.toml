@@ -592,3 +592,6 @@ fofad = {sprite = "fofad", color = [1, 4], tiling = "character"}
 
 bubbub = {sprite = "bubbub2", color = [1, 4], tiling = "character"}
 
+# moved here because, while it's based off of an official sprite, theopold made the wobble
+tag = {sprite = "tag", color = [0, 3], tiling = "none"}
+

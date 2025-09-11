@@ -171,13 +171,11 @@ note = {sprite = "note", color = [0, 3], tiling = "none", author = "theuserwhois
 note2 = {sprite = "note2", color = [0, 3], tiling = "none", author = "theuserwhoishere"}
 
 
-# andy
-
+# note from andy: i did not make these, someone.
 
 walla = {sprite = "walla", color = [1, 1], tiling = "none"}
 
-# made with the bot
-text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none", author = "dizzyandy / verdantvernan"}
+text_nudge = {sprite = "text_nudge", color = [5, 3], tiling = "none"}
 
 kulu = {sprite = "kulu", color = [0, 3], tiling = "character"}
 
@@ -344,33 +342,6 @@ wall2 = {sprite = "wall2", color = [4, 4], tiling = "diagonal_tiling"}
 # These were added at https://discord.com/channels/556333985882439680/556906122183704596/992214531143106580
 # As far as I can tell, these are either made by Hempuli, or recreated by Balt.
 #
-text_pride = {sprite = "text_pride", color = [4, 1], tiling = "none"}
-
-text_ampersand = {sprite = "text_ampersand", color = [0, 3], tiling = "none"}
-
-text_jan = {sprite = "text_jan", color = [2, 2], tiling = "none"}
-
-text_feb = {sprite = "text_feb", color = [2, 3], tiling = "none"}
-
-text_mar = {sprite = "text_mar", color = [2, 4], tiling = "none"}
-
-text_apr = {sprite = "text_apr", color = [5, 3], tiling = "none"}
-
-text_may = {sprite = "text_may", color = [5, 2], tiling = "none"}
-
-text_jun = {sprite = "text_jun", color = [1, 4], tiling = "none"}
-
-text_jul = {sprite = "text_jul", color = [3, 3], tiling = "none"}
-
-text_aug = {sprite = "text_aug", color = [3, 0], tiling = "none"}
-
-text_sep = {sprite = "text_sep", color = [4, 1], tiling = "none"}
-
-text_oct = {sprite = "text_oct", color = [4, 2], tiling = "none"}
-
-text_nov = {sprite = "text_nov", color = [0, 1], tiling = "none"}
-
-text_dec = {sprite = "text_dec", color = [6, 1], tiling = "none"}
 #
 
 diamond = {sprite = "diamond", color = [2, 2], tiling = "none"}
@@ -493,9 +464,6 @@ text_pig = {sprite = "text_pig", color = [4, 2], tiling = "none"}
 
 # Note to self: ask tuwih about this before I send the commit.
 text_yrducio = {sprite = "text_yrducio", color = [3, 1], tiling = "none"}
-
-# "refers to a cyan colored keke"
-text_link4 = {sprite = "text_link", color = [1, 4], tiling = "none"}
 
 goomy = {sprite = "goomy", color = [4, 4], tiling = "character"}
 

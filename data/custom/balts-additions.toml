@@ -60,10 +60,6 @@ gugu = {sprite = "gugu", color = [0, 2], tiling = "character"}
 
 text_gugu = {sprite = "text_gugu", color = [0, 2], tiling = "none"}
 
-mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
-
-text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
-
 pet = {sprite = "pet", color = [3, 1], tiling = "none"}
 
 babaglitch = {sprite = "babaglitch", color = [0, 3], tiling = "character"}
