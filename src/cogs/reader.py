@@ -627,7 +627,10 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 grid.width
             )
             obj = config.get("paths", f"{i}object")
-            path = self.defaults_by_object[obj].copy()
+            default = self.defaults_by_object.get(obj)
+            if default is None:
+                continue
+            path = default.copy()
             path.direction = config.getint("paths", f"{i}dir")
             grid.cells[pos].append(path)
 
