@@ -12,7 +12,6 @@ text_zoning = {sprite = "text_zoning", color = [4, 1], tiling = "none"}
 
 text_collapse = {sprite = "text_collapse", color = [4, 4], tiling = "none"}
 
-build_conveyor = {sprite = "build_conveyor", color = [0, 3], tiling = "none"}
 text_build = {sprite = "text_build", color = [2, 3], tiling = "none"}
 
 text_built = {sprite = "text_built", color = [3, 4], tiling = "none"}
