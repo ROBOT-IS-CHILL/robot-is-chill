@@ -314,7 +314,6 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                 if key[1] is None:
                     continue
                 if plain_query not in key[0]:
-                    assert False, f"{(plain_query, key)}"
                     continue
                 palettes.append(key[1] + "." + key[0])
             palettes.sort()
