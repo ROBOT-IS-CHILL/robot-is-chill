@@ -446,7 +446,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             )
             return await ctx.reply(embed=d)
         else:
-            img = self.bot.db.palette(palette)
+            img = self.bot.db.palette(palette, strict = True)
             if img is None:
                 raise errors.NoPaletteError(palette)
             txtwid, txthgt = img.size
@@ -481,8 +481,8 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             buf = BytesIO()
             pal_img.save(buf, format="PNG")
             buf.seek(0)
-            file = discord.File(buf, filename=f"{rawpal[:16]}.png")
-            await ctx.reply(f"Palette `{rawpal[:16]}`:", file=file)
+            file = discord.File(buf, filename=f"{rawpal}.png")
+            await ctx.reply(f"Palette `{rawpal}`:", file=file)
 
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     @commands.command(name="hint", aliases=["hints"])

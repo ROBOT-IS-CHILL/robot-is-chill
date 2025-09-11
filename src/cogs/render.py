@@ -722,6 +722,10 @@ class Renderer:
                             colors, counts = np.unique(frame.reshape(-1, 4), axis=0, return_counts=True)
                             total_colors.extend(colors)
                             total_counts.extend(counts)
+                    for bg_frame in ctx.background_images.values():
+                        colors, counts = np.unique(bg_frames.reshape(-1, 4), axis=0, return_counts=True)
+                        total_colors.extend(colors)
+                        total_counts.extend(counts)
                     total_colors, total_counts = np.array(total_colors), np.array(total_counts)
                     colors, inverse_indices = np.unique(total_colors, axis=0, return_inverse=True)
                     final_counts = np.bincount(inverse_indices, weights=total_counts)

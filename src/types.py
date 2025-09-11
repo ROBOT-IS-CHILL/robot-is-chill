@@ -299,9 +299,6 @@ class RenderContext:
     random_animations: bool = True
     expand: bool = False
     sign_texts: list = field(default_factory=lambda: [])
-    _disable_limit: bool = False
-    _no_sign_limit: bool = False
-    raw_output: bool = False
     do_embed: bool = False
     global_variant: str = ""
     macros: dict = field(default_factory=lambda: {})

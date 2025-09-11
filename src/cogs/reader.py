@@ -79,8 +79,11 @@ class Grid:
                 return True
             if y == 0 or y == self.height - 1:
                 return True
-            return any(
-                item.sprite in valid for item in self.cells[y * self.width + x])
+            try:
+                return any(
+                    item.sprite in valid for item in self.cells[y * self.width + x])
+            except IndexError:
+                return True
 
         def open_sprite(world: str, sprite: str, variant: int, wobble: int,
                         *, cache: dict[str, Image.Image]) -> Image.Image:
@@ -294,13 +297,13 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
+                limited_palette=True,
                 palette=(grid.palette, grid.world),
                 background=(0, 4),
                 out=out,
                 sign_texts=sign_texts,
-                _no_sign_limit=True,
+                bypass_limits=True,
                 upscale=1,
-                _disable_limit=True,
                 cropped=True,
                 image_format="gif"
             )
@@ -373,14 +376,14 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
         await self.bot.renderer.render(
             [objects],
             RenderContext(
+                limited_palette=True,
                 palette=(grid.palette, grid.world),
                 background_images=frames,
                 background=background,
                 out=f"target/renders/{grid.world}/{grid.filename}.gif",
                 upscale=1,
-                _disable_limit=True,
+                bypass_limits=True,
                 sign_texts=sign_texts,
-                _no_sign_limit=True,
                 image_format="gif"
             )
         )
@@ -476,7 +479,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 await message.edit(content=f"""Loading maps...
 - Current world: `{world}` ({world_index}/{len(world_glob)})
 - {levels_done}/{len(levels)} levels done ({total_levels_done}/{level_amount} in total)
-- ETA: Will be done <t:{int(time.time() + ((sum(pruned_deltas) / len(pruned_deltas)) * (level_amount - total_levels_done)))}:R>""")
+- ETA: Will be done in {(sum(pruned_deltas) / len(pruned_deltas)) * (level_amount - total_levels_done):0.2f} seconds""")
 
             for i, level in enumerate(levels):
                 t = time.perf_counter()
@@ -488,10 +491,11 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                         keep_background=True,
                 )
                 total_levels_done += 1
-                deltas = [(time.perf_counter() - t)] + deltas[:-1]
+                deltas.append(time.perf_counter() - t)
                 if time.time() - last_time >= 1:
-                    await update_message(i)
                     last_time = time.time()
+                    loop = asyncio.get_running_loop()
+                    loop.create_task(update_message(i))
                 await asyncio.sleep(0)
 
         await message.edit(content=f"All maps loaded.\nUpdating database...")

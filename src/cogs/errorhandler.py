@@ -155,6 +155,8 @@ class CommandErrorHandler(commands.Cog):
                 await self.logger.send(embed=emb)
                 if len(error.args) == 0 or len(error.args[0]) == 0:
                     raise error
+                if len(error.args[0]) == 0:
+                    raise
                 return await ctx.error(error.args[0])
 
             elif isinstance(error, ZeroDivisionError):

@@ -228,7 +228,7 @@ class Database:
             return None
         return TileData.from_row(row)
 
-    def palette(self, name: str, source: str = None) -> Image.Image | None:
+    def palette(self, name: str, source: str = None, strict: bool = False) -> Image.Image | None:
         """Convenience method to fetch a palette from the database.
 
         Returns None on failure.
@@ -236,9 +236,9 @@ class Database:
         if type(name) is tuple:
             name, source = name
         res = self.palette_store.get((name, source))
-        if res is None and source is not None and source != "vanilla":
+        if not strict and res is None and source is not None and source != "vanilla":
             res = self.palette_store.get((name, "vanilla"))
-        if res is None and source is not None:
+        if not strict and res is None and source is not None:
             res = self.palette_store.get((name, None))
         return res
 
