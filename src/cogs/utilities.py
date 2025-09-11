@@ -422,11 +422,16 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
 
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
     @commands.command(name="palette", aliases=['pal'])
-    async def show_palette(self, ctx: Context, palette: str = 'default', color: str = None):
+    async def show_palette(self, ctx: Context, palette: str = 'default', color: str = None, extra: str = None):
         """Displays palette image, or details about a palette index.
 
         This is useful for picking colors from the palette.
         """
+        raw = False
+        if palette in ("-r", "--raw"):
+            raw = True
+            palette, color = color, extra
+
         rawpal = palette
         if "/" in palette:
             color = palette
@@ -447,35 +452,38 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             img = self.bot.db.palette(palette, strict = True)
             if img is None:
                 raise errors.NoPaletteError(palette)
-            txtwid, txthgt = img.size
-            pal_img = img.resize(
-                (img.width * constants.PALETTE_PIXEL_SIZE,
-                 img.height * constants.PALETTE_PIXEL_SIZE),
-                resample=Image.NEAREST
-            ).convert("RGBA")
-            font = ImageFont.truetype("data/fonts/04b03.ttf", 16)
-            draw = ImageDraw.Draw(pal_img)
-            for y in range(txthgt):
-                for x in range(txtwid):
-                    n = pal_img.getpixel(
-                        (x * constants.PALETTE_PIXEL_SIZE,
-                         (y * constants.PALETTE_PIXEL_SIZE)))
-                    if (n[0] + n[1] + n[2]) / 3 > 128:
-                        draw.text(
+            if raw:
+                pal_img = img
+            else:
+                txtwid, txthgt = img.size
+                pal_img = img.resize(
+                    (img.width * constants.PALETTE_PIXEL_SIZE,
+                     img.height * constants.PALETTE_PIXEL_SIZE),
+                    resample=Image.NEAREST
+                ).convert("RGBA")
+                font = ImageFont.truetype("data/fonts/04b03.ttf", 16)
+                draw = ImageDraw.Draw(pal_img)
+                for y in range(txthgt):
+                    for x in range(txtwid):
+                        n = pal_img.getpixel(
                             (x * constants.PALETTE_PIXEL_SIZE,
-                             (y * constants.PALETTE_PIXEL_SIZE) - 2),
-                            f"{x},{y}",
-                            (1, 1, 1, 255),
-                            font,
-                            layout_engine=ImageFont.Layout.BASIC)
-                    else:
-                        draw.text(
-                            (x * constants.PALETTE_PIXEL_SIZE,
-                             (y * constants.PALETTE_PIXEL_SIZE) - 2),
-                            f"{x},{y}",
-                            (255, 255, 255, 255),
-                            font,
-                            layout_engine=ImageFont.Layout.BASIC)
+                             (y * constants.PALETTE_PIXEL_SIZE)))
+                        if (n[0] + n[1] + n[2]) / 3 > 128:
+                            draw.text(
+                                (x * constants.PALETTE_PIXEL_SIZE,
+                                 (y * constants.PALETTE_PIXEL_SIZE) - 2),
+                                f"{x},{y}",
+                                (1, 1, 1, 255),
+                                font,
+                                layout_engine=ImageFont.Layout.BASIC)
+                        else:
+                            draw.text(
+                                (x * constants.PALETTE_PIXEL_SIZE,
+                                 (y * constants.PALETTE_PIXEL_SIZE) - 2),
+                                f"{x},{y}",
+                                (255, 255, 255, 255),
+                                font,
+                                layout_engine=ImageFont.Layout.BASIC)
             buf = BytesIO()
             pal_img.save(buf, format="PNG")
             buf.seek(0)
