@@ -10,7 +10,6 @@ import base64
 import zlib
 import textwrap
 import asyncio
-from faststring import MString
 import cython
 
 from .. import constants, errors
