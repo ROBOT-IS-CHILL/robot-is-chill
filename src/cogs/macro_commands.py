@@ -238,11 +238,16 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     async def execute(self, ctx: Context, *, macro: str):
         """Executes some given code and outputs its return value."""
         try:
+            debug = None
+            if match := re.fullmatch(r"^(--debug|-d)", macro, re.DOTALL):
+                macro = macro[match.end(1):].strip()
+                debug = []
             macro = macro.strip()
             if match := re.fullmatch(r"^```\w*(.*)```$", macro, re.DOTALL):
                 macro = match.group(1).strip()
 
             async def parse():
+                nonlocal debug
                 return await ctx.bot.macro_handler.parse_macros(macro.strip())
 
             start = time.perf_counter_ns()
@@ -255,6 +260,14 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             delta = time.perf_counter_ns() - start
 
             message, files = "", []
+
+            if debug is not None:
+                buf = io.StringIO()
+                for line in debug:
+                    buf.write(line)
+                    buf.write("\n")
+                buf.seek(0)
+                files.append(discord.File(buf, filename = f"debug-{datetime.now().isoformat()}.log"))
 
             if macro is not None:
                 if len(macro) > 1850:
