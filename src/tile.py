@@ -13,10 +13,8 @@ from .db import TileData
 from .types import Variant, Context, RegexDict
 
 
-def parse_variants(bot, possible_variants: RegexDict[Variant], raw_variants: list[str],
-                   name=None, possible_variant_names=None, macros=None):
-    if macros is None:
-        macros = {}
+async def parse_variants(bot, possible_variants: RegexDict[Variant], raw_variants: list[str],
+                   name=None, possible_variant_names=None):
     if possible_variant_names is None:
         possible_variant_names = []
     out = {}
@@ -24,7 +22,7 @@ def parse_variants(bot, possible_variants: RegexDict[Variant], raw_variants: lis
     while i < len(raw_variants):
         raw_variant = raw_variants[i]
         if raw_variant.startswith("m!"):
-            parsed = bot.macro_handler.parse_macros(f"[{raw_variant[2:]}]", False, macros)
+            parsed = await bot.macro_handler.parse_macros(f"[{raw_variant[2:]}]")
             macro = str(parsed)
             del raw_variants[i]
             raw_variants[i:i] = macro.split(":")  # Extend at index i
@@ -59,7 +57,7 @@ class TileSkeleton:
     @classmethod
     async def parse(cls, bot, possible_variants, string: str, rule: bool = True,
                     palette: tuple[str, str | None] = ("default", "vanilla"),
-                    global_variant="", possible_variant_names=[], macros={}):
+                    global_variant="", possible_variant_names=[]):
         out = cls()
         explicitly_text = False
         explicitly_tile = False
@@ -97,8 +95,8 @@ class TileSkeleton:
                 # NOTE: text_anni should be tiling -1, but Hempuli messed it up I guess
                 out.name = (await cur.fetchall())[0][0]
             raw_variants.insert(0, "m!2ify")
-        out.variants |= parse_variants(bot, possible_variants, raw_variants, name=out.name,
-                                       possible_variant_names=possible_variant_names, macros=macros)
+        out.variants |= await parse_variants(bot, possible_variants, raw_variants, name=out.name,
+                                       possible_variant_names=possible_variant_names)
         return out
 
 

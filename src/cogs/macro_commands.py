@@ -30,7 +30,7 @@ async def start_timeout(fn, *args, **kwargs):
 
     signal.signal(signal.SIGALRM, handler)
     signal.alarm(int(constants.TIMEOUT_DURATION))
-    return fn(*args, **kwargs)
+    return await fn(*args, **kwargs)
 
 
 class MacroQuerySource(menus.ListPageSource):
@@ -132,6 +132,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         self.bot.macros[name] = Macro(value, description, ctx.author.id)
         if from_file:
             value = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Successfully {msg_words[0]} `{name}` {msg_words[1]} the database, aliased to `{value}`!")
 
     @macro.command(aliases=["e"])
@@ -167,6 +168,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             setattr(self.bot.macros[name], attribute, new)
         if from_file:
             new = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Edited `{name}`'s {attribute} to be `{new}`.")
 
     @macro.command(aliases=["rm", "remove", "del"])
@@ -180,6 +182,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 assert check is not None, "You can't delete a macro you don't own, silly."
             await cursor.execute(f"DELETE FROM macros WHERE name == ?", name)
         del self.bot.macros[name]
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Deleted `{name}`.")
 
     @macro.command(aliases=["?", "list", "query"])
@@ -235,29 +238,18 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     async def execute(self, ctx: Context, *, macro: str):
         """Executes some given code and outputs its return value."""
         try:
-            macros = ctx.bot.macros | {}
-            debug = None
-            if match := re.match(r"^\s*--?d(?:ebug|bg)?", macro):
-                debug = ["== Debug Logs =="]
-                macro = macro[match.end():]
-            while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
-                macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
-                macro = macro[match.end():]
             macro = macro.strip()
             if match := re.fullmatch(r"^```\w*(.*)```$", macro, re.DOTALL):
                 macro = match.group(1).strip()
 
-            def parse():
-                nonlocal debug
-                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug)
+            async def parse():
+                return await ctx.bot.macro_handler.parse_macros(macro.strip())
 
             start = time.perf_counter_ns()
 
             try:
                 macro = await start_timeout(parse)
             except errors.TimeoutError as err:
-                if not debug:
-                    raise err
                 macro = None
 
             delta = time.perf_counter_ns() - start
@@ -273,15 +265,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                     message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
                 else:
                     message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
-            elif debug is not None:
-                message = "Error occurred while parsing macro. See debug info for details."
 
-            if debug is not None:
-                debug_file = "\n".join(debug)
-                out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8')[:8000000]) # cut to 8 MB
-                out.seek(0)
-                files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
             return await ctx.reply(message, files=files)
         finally:
             signal.alarm(0)

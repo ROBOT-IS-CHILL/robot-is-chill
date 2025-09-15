@@ -338,12 +338,11 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 tiles = tiles[:a - offset] + text + tiles[b - offset:]
                 offset += (b - a) - len(text)
 
-            user_macros = ctx.bot.macros | render_ctx.macros
             last_tiles = None
             passes = 0
             while last_tiles != tiles and passes < 50:
                 last_tiles = tiles
-                tiles = ctx.bot.macro_handler.parse_macros(tiles, False, user_macros, "r" if rule else "t")
+                tiles = await ctx.bot.macro_handler.parse_macros(tiles, "r" if rule else "t")
                 tiles = tiles.strip()
                 passes += 1
 
@@ -409,7 +408,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                         variants = parse_variants(
                                             self.bot,
                                             font_variants, variants,
-                                            macros=user_macros
                                         ).get("sign", [])
                                         for variant in variants:
                                             await variant.apply(sign_text, bot=self.bot, ctx=render_ctx)
@@ -440,7 +438,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                                 palette=render_ctx.palette,
                                                 global_variant=render_ctx.global_variant,
                                                 possible_variant_names=possible_variant_names,
-                                                macros=user_macros
                                             )
                                             for _ in range(layer_grid.shape[0] - d)
                                         ]
@@ -454,7 +451,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                                 )[0] + tile,
                                                 rule,
                                                 possible_variant_names=possible_variant_names,
-                                                macros=user_macros,
                                                 palette=render_ctx.palette
                                             )
                                             for _ in range(layer_grid.shape[0] - d)

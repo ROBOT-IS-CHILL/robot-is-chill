@@ -20,6 +20,7 @@ import config
 import webhooks
 from src.types import Macro
 from src.db import Database
+import macrosia_glue
 
 from numpy import set_printoptions as numpy_set_printoptions
 
@@ -111,6 +112,8 @@ class Bot(commands.Bot):
 
     async def on_ready(self) -> None:
         await self.db.connect(self.db_path)
+        macrosia_glue.connect_to_db(self.db_path)
+        self.macro_handler.update_macros()
         print("Loading macros...")
         async with self.db.conn.cursor() as cur:
             await cur.execute("SELECT * from macros")
