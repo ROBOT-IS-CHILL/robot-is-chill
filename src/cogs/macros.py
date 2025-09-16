@@ -14,7 +14,7 @@ import cython
 import macrosia_glue
 
 from .. import constants, errors
-from ..types import Bot, BuiltinMacro, TilingMode
+from ..types import Bot, TilingMode
 from ..stringview import StringView
 
 from typing import Tuple
