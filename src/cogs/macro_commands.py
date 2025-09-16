@@ -10,7 +10,7 @@ from discord import Member, User
 from discord.ext import commands, menus
 
 from .. import constants, errors
-from ..types import Bot, Context, Macro, BuiltinMacro
+from ..types import Bot, Context, Macro
 from ..utils import ButtonPages
 
 import re
@@ -22,15 +22,6 @@ async def coro_part(func, *args, **kwargs):
         return await result
 
     return wrapper
-
-
-async def start_timeout(fn, *args, **kwargs):
-    def handler(_signum, _frame):
-        raise errors.TimeoutError()
-
-    signal.signal(signal.SIGALRM, handler)
-    signal.alarm(int(constants.TIMEOUT_DURATION))
-    return await fn(*args, **kwargs)
 
 
 class MacroQuerySource(menus.ListPageSource):
@@ -239,7 +230,8 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         """Executes some given code and outputs its return value."""
         try:
             debug = None
-            if match := re.fullmatch(r"^(--debug|-d)", macro, re.DOTALL):
+            error = None
+            if match := re.fullmatch(r"^(--debug|-d).*$", macro, re.DOTALL):
                 macro = macro[match.end(1):].strip()
                 debug = []
             macro = macro.strip()
@@ -247,15 +239,18 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 macro = match.group(1).strip()
 
             async def parse():
-                nonlocal debug
-                return await ctx.bot.macro_handler.parse_macros(macro.strip())
+                nonlocal debug, error
+                try:
+                    return await ctx.bot.macro_handler.parse_macros(macro.strip(), debug = debug)
+                except errors.MacroError as err:
+                    if debug is None:
+                        raise
+                    error = err
+                    return None
 
             start = time.perf_counter_ns()
 
-            try:
-                macro = await start_timeout(parse)
-            except errors.TimeoutError as err:
-                macro = None
+            macro = await parse()
 
             delta = time.perf_counter_ns() - start
 
@@ -263,6 +258,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
             if debug is not None:
                 buf = io.StringIO()
+                buf.write("[Debug Log]\n")
                 for line in debug:
                     buf.write(line)
                     buf.write("\n")
@@ -291,20 +287,12 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     @macro.command(aliases=["i", "get"])
     async def info(self, ctx: Context, name: str):
         """Gets info about a specific macro."""
+        source = None
         if name in self.bot.macro_handler.builtins:
-            macro = self.bot.macro_handler.builtins[name]
-            source_function = macro.function
+            macro = None
+            desc = self.bot.macro_handler.builtins[name]
             author = ctx.bot.user.id
             name = f"{name} (builtin)"
-            if hasattr(source_function, "_source"):
-                source_function = source_function._source
-            try:
-                source = re.sub(r'r?""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
-                raw_source = source
-                source = f"```py\n{source}\n```"
-            except OSError as err:
-                raw_source = f"<failed to get source code of builtin: {err}>"
-                source = f"```\n{raw_source}\n```"
         else:
             assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
             macro: TextMacro = self.bot.macros[name]
@@ -312,6 +300,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             raw_source = macro.value.strip()
             sanitized_source = raw_source.replace('```', "'''")
             source = "``"
+            desc = macro.description
             if sanitized_source:
                 source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
@@ -319,17 +308,18 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         )
         emb.add_field(
             name="",
-            value=macro.description
+            value=desc
         )
-        emb.add_field(
-            name="Source" if isinstance(macro, BuiltinMacro) else "Value",
-            value=source,
-            inline=False
-        )
+        if source is not None:
+            emb.add_field(
+                name="Value",
+                value=source,
+                inline=False
+            )
         user = await ctx.bot.fetch_user(author)
         emb.set_footer(text=f"{user.name}",
                        icon_url=user.avatar.url if user.avatar is not None else
-                       f"https://cdn.discordapp.com/embed/avatars/{int(user.discriminator) % 5}.png")
+                       f"https://cdn.discordapp.com/embed/avatars/{int(user.id) % 5}.png")
         try:
             await ctx.reply(embed=emb)
         except discord.errors.HTTPException:

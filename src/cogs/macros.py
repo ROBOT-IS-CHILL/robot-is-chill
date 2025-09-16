@@ -28,8 +28,8 @@ class MacroCog:
     def update_macros(self):
         macrosia_glue.update_macros()
 
-    async def parse_macros(self, objects: str, debug = None, cmd="x") -> str:
-        res, val, tb = await macrosia_glue.evaluate(objects, ord(cmd), constants.MACRO_STEP_LIMIT, debug)
+    async def parse_macros(self, objects: str, cmd="x", debug = None) -> str:
+        res, val, tb = await macrosia_glue.evaluate(objects, ord(cmd), constants.TIMEOUT_DURATION, debug)
         if not res:
             raise errors.MacroError(val, tb)
         return val
