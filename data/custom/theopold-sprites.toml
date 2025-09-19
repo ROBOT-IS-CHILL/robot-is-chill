@@ -564,9 +564,9 @@ text_cufol = {sprite = "text_cufol", color = [0, 1], tiling = "none"}
 
 text_teltel = {sprite = "text_teltel", color = [5, 4], tiling = "none"}
 
-empty2 = {sprite = "empty2", color = [0, 3], tiling = "none"}
+empty3 = {sprite = "empty2", color = [0, 3], tiling = "none"}
 
-edge2 = {sprite = "edge2", color = [1, 1], tiling = "none"}
+edge3 = {sprite = "edge2", color = [1, 1], tiling = "none"}
 
 zat2 = {sprite = "zat2", color = [4, 0], tiling = "character"}
 
