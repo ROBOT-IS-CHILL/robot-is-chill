@@ -675,3 +675,5 @@ needs = {sprite = "needs", color = [5, 3], tiling = "none"}
 rest = {sprite = "rest", color = [3, 2], tiling = "none"}
 
 scale = {sprite = "scale", color = [0, 2], tiling = "none"}
+
+holiday = {sprite = "holiday", color = [2, 1], tiling = "none"}
