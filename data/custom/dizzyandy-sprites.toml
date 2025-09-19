@@ -588,3 +588,90 @@ text_tbd = {sprite = "text_tbd", color = [0, 3], tiling = "none"}
 
 text_dummy = {sprite = "text_dummy", color = [0, 3], tiling = "none"}
 
+day = {sprite = "day", color = [4, 4], tiling = "none"}
+
+night = {sprite = "night", color = [1, 1], tiling = "none"}
+
+sins = {sprite = "sins", color = [5, 3], tiling = "none"}
+
+against = {sprite = "against", color = [0, 3], tiling = "none"}
+
+humanity = {sprite = "humanity", color = [3, 3], tiling = "none"}
+
+sinsagainsthumanity = {sprite = "sinsagainsthumanity", color = [0, 3], tiling = "none"}
+
+whitecheckmark = {sprite = "whitecheckmark", color = [0, 3], tiling = "none"}
+
+"=tile" = {sprite = "=tile", color = [1, 0], tiling = "none"}
+
+blobj_baba = {sprite = "blobj_baba", color = [4, 1], tiling = "none"}
+
+mistake = {sprite = "mistake", color = [4, 2], tiling = "none"}
+
+atilespecificallymadeupjustforthisrender = {sprite = "atilespecificallymadeupjustforthisrender", color = [4, 0], tiling = "none"}
+
+catilespecificallymadeupjustforthisrender = {sprite = "catilespecificallymadeupjustforthisrender", color = [1, 2], tiling = "none"}
+
+kuwi_build = {sprite = "kuwi_build", color = [0, 3], tiling = "none"}
+
+keyske = {sprite = "keyske", color = [2, 4], tiling = "none"}
+
+whiteboard = {sprite = "whiteboard", color = [0, 3], tiling = "none"}
+
+thingthatshouldbetotherightofthebabatile = {sprite = "thingthatshouldbetotherightofthebabatile", color = [0, 2], tiling = "none"}
+
+saying = {sprite = "saying", color = [3, 3], tiling = "none"}
+
+areallycooltriangle = {sprite = "areallycooltriangle", color = [3, 2], tiling = "none"}
+
+definitely = {sprite = "definitely", color = [5, 2], tiling = "none"}
+
+text_xk2 = {sprite = "text_xk2", color = [2, 2], tiling = "none"}
+
+text_dk4 = {sprite = "text_dk4", color = [3, 4], tiling = "none"}
+
+text_wk4 = {sprite = "text_wk4", color = [3, 4], tiling = "none"}
+
+text_hk6 = {sprite = "text_hk6", color = [3, 3], tiling = "none"}
+
+text_xk5 = {sprite = "text_xk5", color = [0, 3], tiling = "none"}
+
+fo_tb = {sprite = "fo_tb", color = [1, 2], tiling = "none"}
+
+fo_fl = {sprite = "fo_fl", color = [5, 2], tiling = "none"}
+
+fo_bu = {sprite = "fo_bu", color = [5, 1], tiling = "none"}
+
+fo_tb = {sprite = "fo_tb", color = [1, 2], tiling = "none"}
+
+fo_ta = {sprite = "fo_ta", color = [5, 4], tiling = "none"}
+
+fo_ss = {sprite = "fo_ss", color = [0, 3], tiling = "none"}
+
+thip = {sprite = "thip", color = [0, 3], tiling = "none"}
+
+trophy = {sprite = "trophy", color = [2, 4], tiling = "none"}
+
+every = {sprite = "every", color = [4, 2], tiling = "none"}
+
+babafrombiy = {sprite = "babafrombiy", color = [0, 3], tiling = "character"}
+
+flagfrombiy = {sprite = "flagfrombiy", color = [2, 4], tiling = "none"}
+
+rockfrombiy = {sprite = "rockfrombiy", color = [6, 2], tiling = "none"}
+
+atilethatspacesBABAandbabaoutperfectly = {sprite = "atilethatspacesBABAandbabaoutperfectly", color = [1, 2], tiling = "none"} 
+
+floor = {sprite = "floor", color = [4, 3], tiling = "tiled"}
+
+ceiling = {sprite = "ceiling", color = [6, 0], tiling = "none"}
+
+factory = {sprite = "factory", color = [0, 1], tiling = "none"}
+
+i1 = {sprite = "i1", color = [2, 4], tiling = "none"}
+
+needs = {sprite = "needs", color = [5, 3], tiling = "none"}
+
+rest = {sprite = "rest", color = [3, 2], tiling = "none"}
+
+scale = {sprite = "scale", color = [0, 2], tiling = "none"}
