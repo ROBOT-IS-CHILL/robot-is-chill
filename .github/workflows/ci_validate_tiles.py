@@ -80,8 +80,8 @@ entry_model = {
     "tags": opt(islist(isstr)),
     "active_color": opt(iscol),
     "source": opt(isstr),
-    "text_type": opt(isint)
-    "text_direction": opt(isint)
+    "text_type": opt(isint),
+    "text_direction": opt(isint),
     "object_id": opt(isint)
 }
 
