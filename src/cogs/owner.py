@@ -892,7 +892,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             db_dict["source"] = d.get("source", source)
             tmode = TilingMode.parse(d.get("tiling", "none"))
             assert tmode is not None, f"Tiling mode {d['tiling']} is not valid"
-            db_dict["tiling"] = +
+            db_dict["tiling"] = +tmode
             db_dict["text_type"] = d.get("text_type", 0)
             db_dict["text_direction"] = d.get("text_direction")
             db_dict["tags"] = "\t".join(d.get("tags", []))
