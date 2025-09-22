@@ -48,4 +48,6 @@ Everything should be working fine!
 
 ## Licensing
 
-Everything except for the `data/` folder is licensed under the GPL. Everything in the `data/custom` folder is licensed under the GPL. Everything else has all rights reserved to their respective authors. Ask the respective authors about usage rights.
+<img width="1144" height="46" alt="image" src="https://github.com/user-attachments/assets/1266af14-4a34-412c-9f0a-8c7cd61e8ac0" />
+
+Everything except for the `data/` folder is licensed under the BSD 3-Clause License. Everything in the `data/custom` folder is licensed under the BSD 3-Clause License. Everything else has all rights reserved to their respective authors. Ask the respective authors about usage rights.
