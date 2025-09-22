@@ -235,9 +235,10 @@ class CommandErrorHandler(commands.Cog):
                 buf.seek(0)
                 buf.truncate(8 * 1000 * 1000)
                 if len(buf.getvalue()) < 1024:
+                    val = buf.getvalue().replace('`', '\'')
                     return await ctx.error(
                         f'Macro execution failed: {error.args[0]}\n'\
-                        f"Traceback: ```\n{buf.getvalue().replace('`', '\'')}\n```"
+                        f"Traceback: ```\n{val}\n```"
                     )
                 return await ctx.error(
                     f'Macro execution failed: {error.args[0]}\n'\
