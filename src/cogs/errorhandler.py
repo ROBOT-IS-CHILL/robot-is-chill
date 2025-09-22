@@ -228,7 +228,7 @@ class CommandErrorHandler(commands.Cog):
             elif isinstance(error, errors.MacroError):
                 buf = io.StringIO()
                 buf.write("-----\n")
-                for traceback_frame in error.args[1]:
+                for traceback_frame in reversed(error.args[1]):
                     buf.write(traceback_frame)
                     buf.write("\n-----\n")
                 buf.seek(0)

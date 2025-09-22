@@ -265,15 +265,24 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 buf.seek(0)
                 files.append(discord.File(buf, filename = f"debug-{datetime.now().isoformat()}.log"))
 
-            if macro is not None:
-                if len(macro) > 1850:
-                    out = io.BytesIO()
-                    out.write(bytes(macro, 'utf-8'))
-                    out.seek(0)
-                    files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
-                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
-                else:
-                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
+            if macro is None:
+                buf = io.StringIO()
+                buf.write(f"[Error while executing macros!]\n{error.args[0]}\nTraceback:\n-----\n")
+                for traceback_frame in reversed(error.args[1]):
+                    buf.write(traceback_frame)
+                    buf.write("\n-----\n")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+                macro = buf.getvalue()
+            if len(macro) > 1850:
+                out = io.BytesIO()
+                out.write(bytes(macro, 'utf-8'))
+                out.seek(0)
+                out.truncate(8 * 1000 * 1000)
+                files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
+                message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
+            else:
+                message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
 
             return await ctx.reply(message, files=files)
         finally:
@@ -291,6 +300,11 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         if name in self.bot.macro_handler.builtins:
             macro = None
             desc = self.bot.macro_handler.builtins[name]
+            desc = "\n".join(line.strip() for line in desc.splitlines())
+            desc = re.sub(r"^# (.*)$", r"__\1__", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\. (.*)$", r"\1. \2", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\.\.\. (.*)$", r"\1. [Variadic] \2", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\? (.*)$", r"\1. [Optional] \2", desc, flags = re.MULTILINE)
             author = ctx.bot.user.id
             name = f"{name} (builtin)"
         else:
