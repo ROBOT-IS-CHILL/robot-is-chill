@@ -5,16 +5,16 @@ import sys
 
 def main():
     # For now, all we're checking is if they parse
-    failed = False
+    failures = []
     for file in Path("data/custom").glob("*.toml"):
-        print(f"Testing {file}...")
         try:
             with open(file, "rb") as f:
                 tomllib.load(f)
         except Exception as err:
-            print(f"File {file} failed to parse!")
-            failed = True
-    return 1 if failed else 0
+            failures.append((file, err))
+    for path, err in failures:
+        print(f"File {path} failed to parse: {err}")
+    return 1 if len(failures) else 0
 
 
 if __name__ == "__main__":

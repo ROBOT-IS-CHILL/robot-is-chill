@@ -552,17 +552,17 @@ pipis = {sprite = "pipis", color = [1, 3], tiling = "none"}
 
 text_pipis = {sprite = "text_pipis", color = [0, 1], tiling = "none"}
 
-risfa = {sprite = "risfa", color = [0, 2], tiling = character"}
+risfa = {sprite = "risfa", color = [0, 2], tiling = "character"}
 
 text_risfa = {sprite = "text_risfa", color = [0, 2], tiling = "none"}
 
-deer = {sprite = "deer", color = [0, 3], tiling = character"}
+deer = {sprite = "deer", color = [0, 3], tiling = "character"}
 
 text_swim = {sprite = "text_swim", color = [5, 4], tiling = "none"}
 
 text_reason = {sprite = "text_reason", color = [0, 3], tiling = "none"}
 
-vk10 = {sprite = "vk10", color = [0, 1], tiling = character"}
+vk10 = {sprite = "vk10", color = [0, 1], tiling = "character"}
 
 soul_fire = {sprite = "soul_fire", color = [1, 4], tiling = "none"}
 
@@ -641,8 +641,6 @@ fo_tb = {sprite = "fo_tb", color = [1, 2], tiling = "none"}
 fo_fl = {sprite = "fo_fl", color = [5, 2], tiling = "none"}
 
 fo_bu = {sprite = "fo_bu", color = [5, 1], tiling = "none"}
-
-fo_tb = {sprite = "fo_tb", color = [1, 2], tiling = "none"}
 
 fo_ta = {sprite = "fo_ta", color = [5, 4], tiling = "none"}
 
