@@ -2,22 +2,22 @@
 
 
 
-glyph_event_ = {sprite = "glyph_eventpre", color = [5, 2], active_color = [5, 3], tiling = "none"}
+glyph_event_ = {sprite = "glyph_eventpre", color = [5, 2], active = [5, 3], tiling = "none"}
 
-glyph_glyph_ = {sprite = "glyph_glyphpre", color = [6, 1], active_color = [3, 3], tiling = "none"}
+glyph_glyph_ = {sprite = "glyph_glyphpre", color = [6, 1], active = [3, 3], tiling = "none"}
 
-glyph_logic_ = {sprite = "glyph_logicpre", color = [3, 2], active_color = [3, 1], tiling = "none"}
+glyph_logic_ = {sprite = "glyph_logicpre", color = [3, 2], active = [3, 1], tiling = "none"}
 
-glyph_node_ = {sprite = "glyph_nodepre", color = [3, 0], active_color = [2, 4], tiling = "none"}
+glyph_node_ = {sprite = "glyph_nodepre", color = [3, 0], active = [2, 4], tiling = "none"}
 
-glyph_text_ = {sprite = "glyph_textpre", color = [4, 0], active_color = [4, 1], tiling = "none"}
+glyph_text_ = {sprite = "glyph_textpre", color = [4, 0], active = [4, 1], tiling = "none"}
 
-text_event_ = {sprite = "text_eventpre", color = [5, 2], active_color = [5, 3], tiling = "none"}
+text_event_ = {sprite = "text_eventpre", color = [5, 2], active = [5, 3], tiling = "none"}
 
-text_glyph_ = {sprite = "text_glyphpre", color = [6, 1], active_color = [3, 3], tiling = "none"}
+text_glyph_ = {sprite = "text_glyphpre", color = [6, 1], active = [3, 3], tiling = "none"}
 
-text_logic_ = {sprite = "text_logicpre", color = [3, 2], active_color = [3, 1], tiling = "none"}
+text_logic_ = {sprite = "text_logicpre", color = [3, 2], active = [3, 1], tiling = "none"}
 
-text_node_ = {sprite = "text_nodepre", color = [3, 0], active_color = [2, 4], tiling = "none"}
+text_node_ = {sprite = "text_nodepre", color = [3, 0], active = [2, 4], tiling = "none"}
 
-text_text_ = {sprite = "text_textpre", color = [4, 0], active_color = [4, 1], tiling = "none"}
+text_text_ = {sprite = "text_textpre", color = [4, 0], active = [4, 1], tiling = "none"}

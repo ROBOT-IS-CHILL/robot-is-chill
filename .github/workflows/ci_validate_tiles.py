@@ -5,14 +5,20 @@ from typing import Optional
 
 
 def isstr(val):
+    if val is None:
+        return False, "missing"
     return type(val) is str, "not a string"
 
 
 def isint(val):
+    if val is None:
+        return False, "missing"
     return type(val) is int, "not an integer"
 
 
 def iscol(val):
+    if val is None:
+        return False, "missing"
     if type(val) is not list:
         return False, "not a list"
     if len(val) != 2:
@@ -25,6 +31,8 @@ def iscol(val):
 
 
 def istiling(val):
+    if val is None:
+        return False, "missing"
     if type(val) is not str:
         return False, "tiling is not a string"
     return val in {
@@ -51,6 +59,8 @@ def opt(fn):
 
 def islist(fn):
     def wrap(val):
+        if val is None:
+            return False, "missing"
         if type(val) is not list:
             return False, "was not list"
         for i, el in enumerate(val):
@@ -68,19 +78,25 @@ entry_model = {
     "extra_frames": opt(islist(isint)),
     "author": opt(isstr),
     "tags": opt(islist(isstr)),
-    "active": opt(iscol),
-    "source": opt(isstr)
+    "active_color": opt(iscol),
+    "source": opt(isstr),
+    "text_type": opt(isint)
+    "text_direction": opt(isint)
+    "object_id": opt(isint)
 }
 
 
 def check_entries(entry: dict) -> list[str]:
     failures = []
 
-    for key, value in entry.items():
-        if (fn := entry_model.get(key)) is not None:
-            res, err = fn(value)
-            if not res:
-                failures.append(f"Entry `{key}` failed: {err}")
+    for key, fn in entry_model.items():
+        val = entry.get(key)
+        res, err = fn(val)
+        if not res:
+            failures.append(f"Entry `{key}` failed: {err}")
+    for key in entry.keys():
+        if key not in entry_model:
+            failures.append(f"Extraneous entry `{key}`")
     return failures
 
 

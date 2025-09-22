@@ -881,11 +881,11 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             db_dict = {key: value for key, value in d.items()}
             db_dict["name"] = name
             inactive = d.pop("color")
-            if d.get("active") is not None:
+            if d.get("active_color") is not None:
                 db_dict["inactive_color_x"] = inactive[0]
                 db_dict["inactive_color_y"] = inactive[1]
-                db_dict["active_color_x"] = d["active"][0]
-                db_dict["active_color_y"] = d["active"][1]
+                db_dict["active_color_x"] = d["active_color"][0]
+                db_dict["active_color_y"] = d["active_color"][1]
             else:
                 db_dict["inactive_color_x"] = db_dict["active_color_x"] = inactive[0]
                 db_dict["inactive_color_y"] = db_dict["active_color_y"] = inactive[1]

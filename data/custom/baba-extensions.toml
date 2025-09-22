@@ -10,7 +10,7 @@ level = {sprite = "level", color = [1, 2], tiling = "none", tags = ["baba_specia
 
 sale = {sprite = "sale", color = [4, 2], tiling = "none"}
 
-text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none", type = 0} # type??
+text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none"}
 
 spore = {sprite = "spore", color = [0, 3], tiling = "none"}
 
