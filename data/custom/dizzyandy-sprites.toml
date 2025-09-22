@@ -658,9 +658,9 @@ flagfrombiy = {sprite = "flagfrombiy", color = [2, 4], tiling = "none"}
 
 rockfrombiy = {sprite = "rockfrombiy", color = [6, 2], tiling = "none"}
 
-atilethatspacesBABAandbabaoutperfectly = {sprite = "atilethatspacesBABAandbabaoutperfectly", color = [1, 2], tiling = "none"} 
+atilethatspacesBABAandbabaoutperfectly = {sprite = "atilethatspacesBABAandbabaoutperfectly", color = [1, 2], tiling = "none"}
 
-floor = {sprite = "floor", color = [4, 3], tiling = "tiled"}
+floor = {sprite = "floor", color = [4, 3], tiling = "tiling"}
 
 ceiling = {sprite = "ceiling", color = [6, 0], tiling = "none"}
 
