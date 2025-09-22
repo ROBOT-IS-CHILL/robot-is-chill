@@ -42,6 +42,7 @@ class CommandErrorHandler(commands.Cog):
         ctx   : Context
         error : Exception
         """
+        self.bot.loading = False
         try:
             if self.logger is None:
                 self.logger = await self.setup_logger(webhooks.error_id)
