@@ -222,7 +222,10 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         if author is None:
             for name in ctx.bot.macro_handler.builtins:
                 if re.search(pattern, name) is not None:
-                    names.append(f"**{name}**")
+                    if name == "":
+                        names.append("`\u200b`")  # ZWSP
+                    else:
+                        names.append(f"**{name}**")
         return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
 
     @macro.command(aliases=["x", "run"])
