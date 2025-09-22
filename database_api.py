@@ -52,7 +52,12 @@ async def tiles():
         for key, vals in parse_qs(query, keep_blank_values=True, max_num_fields=8).items()
     }
 
-    command = "SELECT name, active_color_x, active_color_y, inactive_color_x, inactive_color_y, source, sprite, tiling, tags FROM tiles WHERE 1"
+    command = """
+        SELECT name, active_color_x, active_color_y,
+               inactive_color_x, inactive_color_y,
+               source, sprite, tiling, tags
+       FROM tiles WHERE 1
+    """
     args = []
     if "name" in query:
         command += " AND name == ?"
@@ -65,11 +70,8 @@ async def tiles():
             command += " AND INSTR(tag, ?)"
             args.append(t)
     if "tiling" in query:
-        tiling = TilingMode.parse(query["tiling"][0])
-        if tiling is None:
-            return 'Invalid query "tiling": not a tiling mode', 400, CORS_HEADERS
         command += " AND TILING == ?"
-        args.append(tiling + 0)
+        args.append(query)
     command += " ORDER BY version DESC"
     async with globals.conn.cursor() as cur:
         res = await cur.execute(command, *args)
@@ -78,13 +80,13 @@ async def tiles():
             return f"No tile by the name {query['name'][0]} exists in the database", 404, CORS_HEADERS
         ret = {}
         for row in rows:
-            name, active_color_x, active_color_y, inactive_color_x, inactive_color_y, source, sprite, tiling, tags \
-                = row
+            name, active_color_x, active_color_y, inactive_color_x, inactive_color_y,\
+                source, sprite, tiling, tags = row
             ret[name] = {
                 "active_color": [active_color_x, active_color_y],
                 "inactive_color": [inactive_color_x, inactive_color_y],
                 "sprite": [source, sprite],
-                "tiling": str(TilingMode(tiling)),
+                "tiling": tiling,
                 "tags": tags.split("\t") if tags else []
             }
             if "name" in query:
