@@ -14,7 +14,7 @@ crystalball = {sprite = "crystalball", color = [3, 0], tiling = "none"}
 
 fu = {sprite = "fu", color = [3, 2], tiling = "character"}
 
-text_fu = {sprite = "text_fu", color = [3, 1], active = [3, 2], tiling = "none"}
+text_fu = {sprite = "text_fu", color = [3, 1], active_color = [3, 2], tiling = "none"}
 
 jeje = {sprite = "jeje", color = [2, 3], tiling = "character"}
 
