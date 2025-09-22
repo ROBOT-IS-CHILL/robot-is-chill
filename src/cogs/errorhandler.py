@@ -8,7 +8,10 @@ import sqlite3
 import sys
 import traceback
 from random import random
+import io
+from datetime import datetime
 
+import pyo3_runtime
 import numpy
 import discord
 from discord.ext import commands
@@ -17,7 +20,7 @@ import requests
 import webhooks
 from ..types import Bot, Context
 from .. import errors, constants
-
+import macrosia_glue
 
 class DummyLogger:
     async def send(self, *args, **kwargs): pass
@@ -168,6 +171,27 @@ class CommandErrorHandler(commands.Cog):
                 await self.logger.send(embed=emb)
                 return await ctx.error(f'An error occurred while calcuating something!\n> {error.args[0]}')
 
+            elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):
+                buf = io.StringIO()
+                buf.write("Error occurred at {}\n".format(datetime.utcnow().strftime(f"%Y-%m-%d %H:%M:%S UTC")))
+                buf.write("Message content:\n")
+                buf.write(ctx.message.content)
+                buf.write("\n\nBacktrace:\n")
+                buf.write(f"{error}")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+
+                await ctx.error(
+                    "PyO3 binding panicked!\n"\
+                    "This is a __critical bug__, and should be reported to the developers as soon as possible.\n"\
+                    "Attached is a backtrace of the panic.\n"\
+                    "Please send this file to the developers.\n"\
+                    "The bot will be restarted to prevent data corruption.",
+                    file=discord.File(buf, filename = "traceback.log")
+                )
+                self.bot.exit_code = 1
+                return await self.bot.close()
+
             elif isinstance(error, commands.BadArgument):
                 await self.logger.send(embed=emb)
                 return await ctx.error(f"Invalid argument provided. Check the help command for the proper format.")
@@ -202,11 +226,24 @@ class CommandErrorHandler(commands.Cog):
                 if random() < 0.01:
                     return await ctx.error("The command was `       TAKING TOO LONG` and was timed out.")
                 return await ctx.error("The command took too long and was timed out.")
-            elif isinstance(error, errors.FailedBuiltinMacro):
-                if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {str(error.message)[:1024]}')
-                else:
-                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw[:64]}`:\n> {error.message}')
+            elif isinstance(error, errors.MacroError):
+                buf = io.StringIO()
+                buf.write("-----\n")
+                for traceback_frame in reversed(error.args[1]):
+                    buf.write(traceback_frame)
+                    buf.write("\n-----\n")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+                if len(buf.getvalue()) < 1024:
+                    return await ctx.error(
+                        f'Macro execution failed: {error.args[0]}\n'\
+                        f"Traceback: ```\n{buf.getvalue().replace('`', '\'')}\n```"
+                    )
+                return await ctx.error(
+                    f'Macro execution failed: {error.args[0]}\n'\
+                    'Traceback:',
+                    file=discord.File(buf, filename=datetime.utcnow().strftime(f"%Y-%m-%d-%H.%M.%S-macro-tb.log"))
+                )
             elif isinstance(error, errors.NoPaletteError):
                 palette = error.args[0]
                 if palette[1] is None:

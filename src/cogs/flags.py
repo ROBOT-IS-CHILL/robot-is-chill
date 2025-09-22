@@ -325,9 +325,3 @@ The first number is how many frames are in a wobble frame, and the second is how
         """Make the render reverse at the end."""
         ctx.boomerang = True
 
-    @flags.register(match=r"(?:--macro|-mc)=(.+?)\|(.+)",
-                    syntax="--macro|-mc=<name: str>|<variants: Variant[]>",
-                    )
-    async def macro(match, ctx):
-        """Define macros for variants."""
-        ctx.macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)

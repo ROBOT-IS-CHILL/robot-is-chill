@@ -258,6 +258,9 @@ class Macro:
     description: str
     author: int
 
+@dataclass
+class ExternalMacro:
+    description: str
 
 @dataclass
 class SignText:
@@ -311,18 +314,6 @@ class RenderContext:
     bypass_limits: bool = False
     custom_filename: str | None = None
 
-
-
-
-@define
-class BuiltinMacro:
-    """A built-in macro."""
-
-    description: str
-    """A description of what the macro does."""
-
-    function: Callable
-    """The function to call to run the macro."""
 
 
 class TilingMode(IntEnum):
