@@ -890,7 +890,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 db_dict["inactive_color_x"] = db_dict["active_color_x"] = inactive[0]
                 db_dict["inactive_color_y"] = db_dict["active_color_y"] = inactive[1]
             db_dict["source"] = d.get("source", source)
-            db_dict["tiling"] = +TilingMode.parse(d.get("tiling", "none"))
+            tmode = TilingMode.parse(d.get("tiling", "none"))
+            assert tmode is not None, f"Tiling mode {d['tiling']} is not valid"
+            db_dict["tiling"] = +
             db_dict["text_type"] = d.get("text_type", 0)
             db_dict["text_direction"] = d.get("text_direction")
             db_dict["tags"] = "\t".join(d.get("tags", []))
