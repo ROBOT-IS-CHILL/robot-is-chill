@@ -23,6 +23,7 @@ cogs = [
 	"src.cogs.flags",
 	"src.cogs.macro_commands",
 	"src.cogs.macros",
+	"src.cogs.loading",
 	"src.cogs.filter",
 	"jishaku"
 ]
