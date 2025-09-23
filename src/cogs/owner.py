@@ -3,6 +3,7 @@ from __future__ import annotations
 import shutil
 from glob import glob
 from io import BytesIO
+import io
 import random
 import time
 import typing
@@ -1314,6 +1315,66 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         embed.add_field(name="ID", value=str(guild.id))
         embed.add_field(name="Member Count", value=str(guild.member_count))
         await webhook.send(embed=embed)
+
+    @commands.command()
+    @commands.is_owner()
+    async def dumpletters(self, ctx: Context):
+        """cba"""
+        res = await self.bot.db.conn.execute("SELECT * FROM letters")
+        rows = await res.fetchall()
+        tomlfile = {}
+        buf = io.BytesIO()
+        zfile = zipfile.ZipFile(buf, "x")
+        chars = {}
+        for row in rows:
+            mode, char, width, s0, s1, s2 = row
+            charcode = f"U+{ord(char):04x}" if (
+                ord(char) not in range(32, 127) or
+                char in (".", "/", "\\", ":", "|", "*", "?", "<", ">")
+            ) else char
+            zfile.mkdir(charcode)
+            if char not in chars:
+                chars[char] = ({}, charcode)
+            if (mode, width) not in chars[char][0]:
+                chars[char][0][(mode, width)] = []
+            chars[char][0][(mode, width)].append((s0, s1, s2))
+        for char, (widths, charcode) in chars.items():
+            tomlfile[charcode] = {"value": char}
+            for (mode, width), tuples in widths.items():
+                if mode not in tomlfile[charcode]:
+                    tomlfile[charcode][mode] = []
+                for i, (s0, s1, s2) in enumerate(tuples):
+                    s = ""
+                    first = True
+                    while True:
+                        s = chr((i % 26) + 97) + s
+                        i //= 26
+                        if first:
+                            i -= 1
+                            first = False
+                        if i <= 0: break
+                    tomlfile[charcode][mode].append(f"{mode}_{width}{s}.png")
+                    with zfile.open(f"{charcode}/{mode}_{width}{s}.png", "w") as imbuf:
+                        def fix(arr):
+                            _, w = arr.shape
+                            if w > width:
+                                return arr[:, :width]
+                            return np.pad(arr, ((0, 0), (0, width - w)))
+                        f0 = fix(np.array(Image.open(io.BytesIO(s0))))
+                        f1 = fix(np.array(Image.open(io.BytesIO(s1))))
+                        f2 = fix(np.array(Image.open(io.BytesIO(s2))))
+                        sheet = np.zeros((f0.shape[0], width * 3), dtype=np.uint8)
+                        sheet[:, :width] = f0
+                        sheet[:, width: width * 2] = f1
+                        sheet[:, width * 2:] = f2
+                        sheet = np.dstack((np.ones_like(sheet) * 255, sheet))
+                        Image.fromarray(sheet, "LA").save(imbuf)
+        buf.seek(0)
+        tbuf = io.StringIO()
+        tomlkit.dump(tomlfile, tbuf)
+        tbuf.seek(0)
+        await ctx.send(files=[discord.File(buf, filename="letters.zip"), discord.File(tbuf, filename="letters.toml")])
+
 
 
 async def setup(bot: Bot):
