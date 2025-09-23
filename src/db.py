@@ -76,7 +76,7 @@ class Database:
         (Useful for documentation.)
         """
         async with self.conn.cursor() as cur:
-            await cur.execute(
+            await cur.executescript(
                 '''
                 CREATE TABLE IF NOT EXISTS tiles (
                     name TEXT NOT NULL,
@@ -88,7 +88,7 @@ class Database:
                     inactive_color_x INTEGER DEFAULT 0,
                     inactive_color_y INTEGER DEFAULT 1,
                     tiling TEXT NOT NULL DEFAULT "none",
-                    # It would be better to store these in a separate table but idrc
+                    -- It would be better to store these in a separate table but idrc
                     tags TEXT NOT NULL DEFAULT "",
                     extra_frames TEXT,
                     object_id TEXT,
@@ -115,7 +115,7 @@ class Database:
                     char TEXT UNIQUE PRIMARY KEY,
                     width INTEGER NOT NULL,
                     mode TEXT NOT NULL,
-                    frames BLOB NOT NULL,
+                    frames BLOB NOT NULL
                 );
                 CREATE TABLE IF NOT EXISTS users (
                     user_id INTEGER UNIQUE PRIMARY KEY,

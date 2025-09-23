@@ -38,12 +38,9 @@ from ..db import TileData
 from ..types import Bot, Context
 
 
-class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
+class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
     def __init__(self, bot: Bot):
         self.bot = bot
-        self.identifies = []
-        self.resumes = []
-        # Are assets loading?
         self.bot.loading = False
 
 
@@ -683,38 +680,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
     @commands.command()
     @commands.is_owner()
     async def loadletters(self, ctx: Context):
-        """Scrapes individual letters from vanilla sprites."""
         await self.bot.db.conn.execute("DELETE FROM letters")
-        ignored = constants.LETTER_IGNORE
-        fetch = await self.bot.db.conn.fetchall(
-            f'''
-            SELECT * FROM tiles
-            WHERE sprite LIKE "text\\___%" ESCAPE "\\"
-                AND (source == 'vanilla' OR source == 'baba' OR source == 'new_adv' OR source == 'museum')
-                AND text_direction IS NULL;
-            '''
-        )
-        for i, row in enumerate(fetch):
-            data = TileData.from_row(row)
-            if data.sprite not in ignored:
-                try:
-                    await self.load_letter(
-                        data.sprite,
-                        data.text_type,  # type: ignore
-                        data.source
-                    )
-                except FileNotFoundError:
-                    pass
 
-        await self.load_ready_letters()
-
-        await ctx.send("Letters loaded.")
-
-    @commands.command()
-    @commands.is_owner()
-    async def loadletters(self, ctx: Context):
-
-        with open("data/letters.toml", "rb") as f:
+        with open("data/letters/letters.toml", "rb") as f:
             letters: dict[str, dict] = tomllib.load(f)
         data = []
         for letter, entry in letters.items():
@@ -723,9 +691,10 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                     with Image.open(Path("data/letters") / letter / path) as im:
                         img_data = np.array(im.convert("LA"))[..., 1] > 0
                     _, width = img_data.shape
+                    width //= 3
                     io = BytesIO()
-                    np.save(io, [img_data[i * (width + 1) : i * (width + 1) + width] for i in range(3)])
-                    data.append((letter["value"], mode, width, io.getvalue()))
+                    np.save(io, [img_data[:, i * width : (i + 1) * width] for i in range(3)])
+                    data.append((entry["value"], mode, width, io.getvalue()))
 
         await self.bot.db.conn.executemany(
             '''
@@ -772,4 +741,4 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
 
 
 async def setup(bot: Bot):
-    await bot.add_cog(OwnerCog(bot))
+    await bot.add_cog(LoadingCog(bot))

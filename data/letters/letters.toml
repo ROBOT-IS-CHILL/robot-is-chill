@@ -1,4 +1,337 @@
-['a']
-value = "a"
-normal = ["5.png", "6.png", "7.png", "8.png"]
-letter = ["letter.png"]
+[h]
+small = ["small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_10h.png", "small_6a.png", "small_6b.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+
+[i]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_4a.png", "small_4b.png", "small_3a.png", "small_3b.png", "small_3c.png", "small_6a.png", "small_6b.png", "small_6c.png"]
+big = ["big_8a.png", "big_8b.png", "big_8c.png", "big_8d.png", "big_6a.png"]
+letter = ["letter_12a.png"]
+
+[d]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_11a.png", "small_7a.png"]
+big = ["big_7a.png", "big_7b.png", "big_7c.png", "big_7d.png", "big_7e.png", "big_7f.png", "big_7g.png", "big_8a.png"]
+letter = ["letter_12a.png"]
+
+[e]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_8n.png", "small_8o.png", "small_8p.png", "small_8q.png", "small_8r.png", "small_8s.png", "small_8t.png", "small_8u.png", "small_8v.png", "small_8w.png", "small_8x.png", "small_8y.png", "small_8z.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png", "small_6k.png", "small_6l.png", "small_6m.png", "small_6n.png", "small_6o.png", "small_6p.png", "small_6q.png", "small_6r.png", "small_6s.png", "small_6t.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_9p.png", "small_9q.png", "small_9r.png", "small_9s.png", "small_9t.png", "small_9u.png", "small_9v.png", "small_9w.png", "small_9x.png", "small_9y.png", "small_9z.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_10h.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_7m.png", "small_7n.png", "small_7o.png", "small_7p.png", "small_7q.png", "small_7r.png", "small_7s.png", "small_7t.png", "small_7u.png", "small_7v.png", "small_7w.png", "small_7x.png", "small_7y.png", "small_5a.png", "small_5b.png", "small_5c.png", "small_5d.png", "small_5e.png", "small_5f.png", "small_5g.png", "small_11a.png"]
+big = ["big_6a.png", "big_6b.png", "big_6c.png", "big_6d.png", "big_6e.png", "big_6f.png", "big_6g.png", "big_6h.png", "big_7a.png", "big_7b.png", "big_7c.png", "big_7d.png", "big_7e.png", "big_7f.png", "big_7g.png", "big_7h.png", "big_7i.png", "big_7j.png", "big_9a.png", "big_9b.png"]
+letter = ["letter_12a.png"]
+
+[f]
+small = ["small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_10a.png"]
+big = ["big_6a.png"]
+letter = ["letter_12a.png"]
+
+[o]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_7m.png", "small_7n.png", "small_7o.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_10h.png", "small_10i.png", "small_10j.png", "small_10k.png", "small_10l.png", "small_10m.png", "small_10n.png", "small_10o.png", "small_10p.png", "small_10q.png", "small_10r.png", "small_10s.png", "small_10t.png", "small_10u.png", "small_10v.png", "small_10w.png", "small_10x.png", "small_10y.png", "small_10z.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_9p.png", "small_9q.png", "small_9r.png", "small_9s.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_5a.png", "small_11a.png", "small_11b.png"]
+big = ["big_9a.png", "big_9b.png", "big_9c.png", "big_7a.png", "big_7b.png", "big_7c.png", "big_7d.png", "big_7e.png"]
+letter = ["letter_12a.png"]
+
+[l]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_7m.png", "small_7n.png", "small_7o.png", "small_7p.png", "small_7q.png", "small_7r.png", "small_7s.png", "small_7t.png", "small_7u.png", "small_5a.png", "small_5b.png", "small_5c.png", "small_5d.png", "small_5e.png", "small_5f.png", "small_5g.png", "small_5h.png", "small_5i.png", "small_5j.png", "small_5k.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png", "small_6k.png", "small_6l.png", "small_6m.png", "small_6n.png", "small_6o.png", "small_6p.png", "small_6q.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_8n.png", "small_8o.png", "small_8p.png", "small_8q.png", "small_8r.png", "small_8s.png", "small_10a.png", "small_10b.png"]
+big = ["big_7a.png", "big_7b.png"]
+letter = ["letter_12a.png"]
+
+[w]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_11a.png", "small_11b.png", "small_11c.png", "small_12a.png", "small_12b.png", "small_12c.png", "small_12d.png", "small_12e.png", "small_12f.png", "small_12g.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_6a.png"]
+big = ["big_12a.png", "big_12b.png", "big_7a.png", "big_7b.png"]
+letter = ["letter_12a.png"]
+
+[a]
+small = ["small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_10h.png", "small_10i.png", "small_10j.png", "small_10k.png", "small_10l.png", "small_10m.png", "small_10n.png", "small_10o.png", "small_10p.png", "small_10q.png", "small_10r.png", "small_10s.png", "small_10t.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_9p.png", "small_9q.png", "small_9r.png", "small_9s.png", "small_9t.png", "small_9u.png", "small_9v.png", "small_9w.png", "small_9x.png", "small_9y.png", "small_9z.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_11a.png", "small_11b.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_6a.png"]
+big = ["big_8a.png", "big_8b.png", "big_8c.png", "big_9a.png", "big_9b.png", "big_9c.png", "big_9d.png", "big_7a.png", "big_7b.png", "big_7c.png"]
+letter = ["letter_12a.png"]
+
+[t]
+small = ["small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_9p.png", "small_9q.png", "small_9r.png", "small_9s.png", "small_9t.png", "small_9u.png", "small_9v.png", "small_9w.png", "small_9x.png", "small_9y.png", "small_9z.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png", "small_6k.png", "small_6l.png", "small_6m.png", "small_6n.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_8n.png", "small_8o.png", "small_8p.png", "small_8q.png", "small_11a.png", "small_11b.png", "small_11c.png", "small_11d.png", "small_11e.png", "small_11f.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png"]
+big = ["big_9a.png", "big_9b.png", "big_6a.png", "big_6b.png", "big_8a.png", "big_8b.png"]
+letter = ["letter_12a.png"]
+
+[n]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_10h.png", "small_10i.png", "small_10j.png", "small_10k.png", "small_10l.png", "small_10m.png", "small_10n.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_8n.png", "small_11a.png", "small_11b.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_6a.png"]
+big = ["big_8a.png", "big_8b.png", "big_9a.png", "big_9b.png", "big_7a.png"]
+letter = ["letter_12a.png"]
+
+[y]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_7a.png", "small_7b.png", "small_10a.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_6a.png"]
+big = ["big_8a.png", "big_8b.png", "big_7a.png"]
+letter = ["letter_12a.png"]
+
+[m]
+small = ["small_11a.png", "small_11b.png", "small_11c.png", "small_11d.png", "small_11e.png", "small_11f.png", "small_11g.png", "small_11h.png", "small_11i.png", "small_11j.png", "small_12a.png", "small_12b.png", "small_12c.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_8a.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_6a.png", "small_7a.png", "small_7b.png"]
+big = ["big_11a.png", "big_11b.png", "big_7a.png", "big_8a.png"]
+letter = ["letter_12a.png"]
+
+[p]
+small = ["small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png"]
+big = ["big_7a.png", "big_6a.png"]
+letter = ["letter_12a.png"]
+
+[r]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_8n.png", "small_8o.png", "small_8p.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_11a.png", "small_11b.png", "small_11c.png", "small_11d.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_9n.png", "small_9o.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_7m.png", "small_7n.png", "small_7o.png", "small_7p.png", "small_7q.png", "small_7r.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png"]
+big = ["big_7a.png", "big_7b.png", "big_7c.png", "big_7d.png", "big_7e.png", "big_8a.png", "big_6a.png"]
+letter = ["letter_12a.png"]
+
+[u]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_11a.png", "small_11b.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png"]
+big = ["big_7a.png"]
+letter = ["letter_12a.png"]
+
+[g]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_9a.png", "small_9b.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_6a.png", "small_6b.png"]
+big = ["big_7a.png", "big_7b.png", "big_7c.png", "big_8a.png", "big_8b.png"]
+letter = ["letter_12a.png"]
+
+[s]
+small = ["small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_7j.png", "small_7k.png", "small_7l.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_10g.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_8i.png", "small_8j.png", "small_8k.png", "small_8l.png", "small_8m.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_9l.png", "small_9m.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png"]
+big = ["big_8a.png", "big_8b.png", "big_7a.png", "big_7b.png", "big_7c.png"]
+letter = ["letter_12a.png"]
+
+[b]
+small = ["small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_9j.png", "small_9k.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_10d.png", "small_10e.png", "small_10f.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_7h.png", "small_7i.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png"]
+big = ["big_6a.png", "big_6b.png", "big_6c.png", "big_7a.png"]
+letter = ["letter_12a.png"]
+
+[k]
+small = ["small_11a.png", "small_11b.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_9f.png", "small_9g.png", "small_9h.png", "small_9i.png", "small_10a.png", "small_10b.png", "small_10c.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png", "small_8f.png", "small_8g.png", "small_8h.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_6a.png"]
+big = ["big_7a.png", "big_7b.png", "big_8a.png"]
+letter = ["letter_12a.png"]
+
+[c]
+small = ["small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png"]
+big = ["big_8a.png", "big_8b.png", "big_7a.png", "big_7b.png", "big_7c.png", "big_6a.png"]
+letter = ["letter_12a.png"]
+
+[v]
+small = ["small_10a.png", "small_10b.png", "small_10c.png", "small_11a.png", "small_11b.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_6a.png"]
+big = ["big_8a.png", "big_8b.png"]
+letter = ["letter_12a.png"]
+
+[x]
+small = ["small_10a.png", "small_10b.png", "small_7a.png", "small_6a.png", "small_8a.png"]
+big = ["big_7a.png", "big_8a.png"]
+letter = ["letter_12a.png"]
+
+[j]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_6a.png"]
+big = ["big_8a.png", "big_8b.png"]
+letter = ["letter_12a.png"]
+
+[z]
+small = ["small_8a.png", "small_8b.png", "small_8c.png", "small_6a.png"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+
+["!"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_10a.png", "small_6a.png", "small_8a.png"]
+
+["'"]
+big = ["big_8a.png", "big_9a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png", "small_9a.png"]
+
+["("]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png"]
+
+[")"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png"]
+
+[-]
+big = ["big_8a.png", "big_9a.png"]
+small = ["small_4a.png", "small_8a.png", "small_9a.png"]
+
+[0]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[1]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[2]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[3]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[4]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[5]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[6]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[7]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[8]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[9]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png", "small_8b.png"]
+
+[_]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png"]
+
+["U+002e"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png"]
+
+[q]
+big = ["big_7a.png", "big_9a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_7a.png"]
+
+["U+003f"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+00fa"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_4a.png", "small_6a.png", "small_8a.png"]
+
+["U+0431"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0433"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+0434"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0436"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0438"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0439"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+
+["U+043b"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+043f"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0443"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+0444"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+
+["U+0446"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0447"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0448"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+0449"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+044a"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+044b"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+044c"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+044d"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+044e"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_8a.png"]
+
+["U+044f"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+0451"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+
+["="]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png"]
+
+["+"]
+big = ["big_8a.png"]
+letter = ["letter_12a.png"]
+small = ["small_6a.png", "small_8a.png"]
+
+["U+002a"]
+letter = ["letter_12a.png"]
