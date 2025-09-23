@@ -405,10 +405,10 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                                     if (match := re.fullmatch(r"\{(.*)}(.*)", tile)) is not None:
                                         sign_text = SignText(text=match.group(1), x=x, y=y, time_start=d)
                                         variants = [variant for variant in match.group(2).split(":") if len(variant)]
-                                        variants = await parse_variants(
+                                        variants = (await parse_variants(
                                             self.bot,
                                             font_variants, variants,
-                                        ).get("sign", [])
+                                        )).get("sign", [])
                                         for variant in variants:
                                             await variant.apply(sign_text, bot=self.bot, ctx=render_ctx)
                                         layer_grid[d:, l, y, x] = TileSkeleton()
