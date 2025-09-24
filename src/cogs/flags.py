@@ -148,6 +148,16 @@ async def setup(bot: Bot):
         assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
         ctx.custom_filename = filename
 
+    @flags.register(match=r"(?:--prefix|-P)=(.+)",
+                syntax="(-P | --prefix)=<name: str>")
+    async def prefix(match, ctx):
+        """
+        Sets the default prefix of the render.
+        For example, `-p=text` is the same as rendering using `=rule`.
+        """
+        prefix = match.group(1)
+        ctx.prefix = prefix
+
     @flags.register(match=r"--letter",
                     syntax="--letter")
     async def letters(match, ctx):

@@ -104,7 +104,8 @@ class Grid:
                         return cached_open(
                             path.format(maybe_world),
                             cache=cache,
-                            fn=Image.open).convert("RGBA")
+                            fn=Image.open
+                        ).convert("RGBA")
                     except FileNotFoundError:
                         continue
             else:

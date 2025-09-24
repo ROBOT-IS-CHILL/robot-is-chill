@@ -204,7 +204,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 header = '+'
                 for i, column in enumerate(formattable_columns):
                     max_length = 0
-                    for cell in column:
+                    for j, cell in enumerate(column):
+                        if type(cell) is bytes:
+                            column[j] = cell = f"[blob: {len(cell)} bytes]"
                         if len(str(cell)) > max_length:
                             max_length = len(str(cell))
                     for j, cell in enumerate(column):
