@@ -112,7 +112,7 @@ class Database:
                     author TEXT NOT NULL
                 );
                 CREATE TABLE IF NOT EXISTS letters (
-                    char TEXT UNIQUE PRIMARY KEY,
+                    char TEXT NOT NULL,
                     width INTEGER NOT NULL,
                     mode TEXT NOT NULL,
                     frames BLOB NOT NULL

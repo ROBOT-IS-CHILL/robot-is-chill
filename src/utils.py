@@ -85,10 +85,11 @@ class ButtonPages(ViewMenuPages,inherit_buttons=False):
         self.stop()
 
 
-def split_escaped(string: str, splitters: list[str]) -> list[str]:
+def split_escaped(string: str, splitters: list[str], keep: bool = False, with_prefix: bool = False) -> list[str]:
     res = []
     buf = ""
     last_escaped = False
+    last_splitter = None
     for c in string:
         if last_escaped:
             buf += c
@@ -96,11 +97,28 @@ def split_escaped(string: str, splitters: list[str]) -> list[str]:
             continue
         if c == "\\":
             last_escaped = True
+            if keep:
+                buf += c
             continue
         if c in splitters:
-            res.append(buf)
+            res.append((buf, last_splitter) if with_prefix else buf)
+            last_splitter = c
             buf = ""
             continue
         buf += c
-    res.append(buf)
+    res.append((buf, last_splitter) if with_prefix else buf)
     return res
+
+
+def find_unescaped(string: str, target: tuple[str]) -> int:
+    last_escaped = False
+    for i, c in enumerate(string):
+        if last_escaped:
+            last_escaped = False
+            continue
+        if c == "\\":
+            last_escaped = True
+            continue
+        if c in target:
+            return i
+    return -1

@@ -421,17 +421,16 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 inactive_y = int(c_y)
                 active_x = int(a_x)
                 active_y = int(a_y)
-            tiling = int(tiling)
+            tiling = TilingMode(int(tiling))
             if tiling == TilingMode.TILING:
                 # Check for diagonal tiling
                 if pathlib.Path(f"data/sprites/vanilla/{sprite}_16_1.png").exists():
-                    tiling = +TilingMode.DIAGONAL_TILING
-            type = int(type)
+                    tiling = TilingMode.DIAGONAL_TILING
+            tiling = str(tiling)
             initial_objects[obj] = dict(
                 name=name,
                 sprite=sprite,
                 tiling=tiling,
-                text_type=type,
                 inactive_color_x=inactive_x,
                 inactive_color_y=inactive_y,
                 active_color_x=active_x,
@@ -440,7 +439,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             )
 
         await self.bot.db.conn.executemany(
-            f'''
+            '''
             INSERT INTO tiles(
                 name,
                 sprite,
@@ -451,8 +450,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 active_color_x,
                 active_color_y,
                 tiling,
-                text_type,
-                object_id
+                object_id,
             )
             VALUES (
                 :name,
@@ -464,20 +462,17 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 :active_color_x,
                 :active_color_y,
                 :tiling,
-                :text_type,
                 :object_id
             )
             ON CONFLICT(name, version)
             DO UPDATE SET
                 sprite=excluded.sprite,
-                source='vanilla',
                 inactive_color_x=excluded.inactive_color_x,
                 inactive_color_y=excluded.inactive_color_y,
                 active_color_x=excluded.active_color_x,
                 active_color_y=excluded.active_color_y,
                 tiling=excluded.tiling,
-                object_id=excluded.object_id,
-                text_type=excluded.text_type;
+                object_id=excluded.object_id;
             ''',
             initial_objects.values()
         )
@@ -517,11 +512,12 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             active_y = int(a_y)
             inactive_x = int(c_x)
             inactive_y = int(c_y)
-            tiling = int(tiling)
+            tiling = TilingMode(int(tiling))
             if tiling == TilingMode.TILING:
                 # Check for diagonal tiling
                 if pathlib.Path(f"data/sprites/vanilla/{sprite}_16_1.png").exists():
-                    tiling = +TilingMode.DIAGONAL_TILING
+                    tiling = TilingMode.DIAGONAL_TILING
+            tiling = str(tiling)
             text_type = int(text_type)
             tag_list = []
             for tag in re.finditer(tag_pattern, raw_tags):
@@ -554,7 +550,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 :active_color_x,
                 :active_color_y,
                 :tiling,
-                :text_type,
                 NULL,
                 :tags,
                 '',
@@ -569,7 +564,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 active_color_x=excluded.active_color_x,
                 active_color_y=excluded.active_color_y,
                 tiling=excluded.tiling,
-                text_type=excluded.text_type,
                 tags=:tags;
             ''',
             objects
@@ -595,7 +589,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             db_dict["source"] = d.get("source", source)
             tmode = TilingMode.parse(d.get("tiling", "none"))
             assert tmode is not None, f"Tiling mode {d['tiling']} is not valid"
-            db_dict["tiling"] = +tmode
+            db_dict["tiling"] = str(tmode)
             db_dict["tags"] = "\t".join(d.get("tags", []))
             db_dict["extra_frames"] = "\t".join(str(value) for value in d.get("extra_frames", []))
             db_dict["object_id"] = d.get("object_id")
@@ -685,8 +679,13 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         with open("data/letters/letters.toml", "rb") as f:
             letters: dict[str, dict] = tomllib.load(f)
         data = []
+        seen_values = set()
         for letter, entry in letters.items():
+            if entry["value"] in seen_values:
+                raise AssertionError(f"Entry {letter} is duplicated with character {entry['value']}!")
+            seen_values.add(entry["value"])
             for mode, paths in entry.items():
+                if mode == "value": continue
                 for path in paths:
                     with Image.open(Path("data/letters") / letter / path) as im:
                         img_data = np.array(im.convert("LA"))[..., 1] > 0
@@ -694,7 +693,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                     width //= 3
                     io = BytesIO()
                     np.save(io, [img_data[:, i * width : (i + 1) * width] for i in range(3)])
-                    data.append((entry["value"], mode, width, io.getvalue()))
+                    data.append((entry["value"], width, mode, io.getvalue()))
 
         await self.bot.db.conn.executemany(
             '''
