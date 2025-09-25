@@ -310,6 +310,11 @@ async def setup(bot):
         tile.altered_frame = True
         tile.frame = (tile.frame - 1) % 32
 
+    @add_variant("tw", "textwidth")
+    async def textwidth(tile, width: int):
+        """Sets the width of the custom text the text generator tries to expand to."""
+        tile.text_squish_width = width
+
     @add_variant("f", hashed=False)
     async def frames(tile, *frame: int):
         """Sets the wobble of the tile to the specified frame(s). 1 or 3 can be specified."""
@@ -817,7 +822,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("disp")
     async def displace(post, x: int, y: int):
         """Displaces the tile by the specified coordinates."""
-        post.displacement = [post.displacement[0] - x, post.displacement[1] - y]
+        post.displacement = [post.displacement[0] + x, post.displacement[1] + y]
 
     # Original code by Charlotte (CenTdemeern1)
     @add_variant("flood")

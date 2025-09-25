@@ -120,7 +120,7 @@ letter = ["letter_12a.png"]
 
 [c]
 value = "c"
-small = ["small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_6j.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png"]
+small = ["small_4a.png", "small_6a.png", "small_6b.png", "small_6c.png", "small_6d.png", "small_6e.png", "small_6f.png", "small_6g.png", "small_6h.png", "small_6i.png", "small_9a.png", "small_9b.png", "small_9c.png", "small_9d.png", "small_9e.png", "small_7a.png", "small_7b.png", "small_7c.png", "small_7d.png", "small_7e.png", "small_7f.png", "small_7g.png", "small_8a.png", "small_8b.png", "small_8c.png", "small_8d.png", "small_8e.png"]
 big = ["big_8a.png", "big_8b.png", "big_7a.png", "big_7b.png", "big_7c.png", "big_6a.png"]
 letter = ["letter_12a.png"]
 
