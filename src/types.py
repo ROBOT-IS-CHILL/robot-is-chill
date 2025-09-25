@@ -277,8 +277,16 @@ class SignText:
     alignment: str = "center"
     anchor: str = "md"
     stroke: tuple[tuple[int, int, int, int], int] = (0, 0, 0, 0), 0
+
+    name: str = "<st>"
     prefix: str = ""
+    postfix: str = "<st>"
     variants: list = field(default_factory=list)
+
+    def clone(self):
+        clone = SignText(**self.__dict__)
+        clone.variants = [var for var in self.variants]
+        return clone
 
 @dataclass
 class RenderContext:

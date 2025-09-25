@@ -131,41 +131,50 @@ class Renderer:
                     ctx.sign_texts[i].font = ImageFont.truetype(f"data/fonts/{sign_text.font}.ttf", size=size)
                 else:
                     ctx.sign_texts[i].font = FONT.font_variant(size=size)
-        left = right = top = bottom = 0
-        if not ctx.cropped:
-            for (y, x, _z, _t), tile in grid.items():
-                if not isinstance(tile, ProcessedTile):
-                    continue
-                ox, oy = tile.displacement if ctx.expand else (0, 0)
-                left = max(left, max(
-                    (frame.shape[1] - ctx.spacing) - x * ctx.spacing + ox
-                    for frame in tile.frames if frame is not None
-                ))
-                top = max(top, max(
-                    (frame.shape[0] - ctx.spacing) - y * ctx.spacing + oy
-                    for frame in tile.frames if frame is not None
-                ))
-                right = max(right, max(
-                    (frame.shape[1] - ctx.spacing) + x * ctx.spacing - width * ctx.spacing + ox
-                    for frame in tile.frames if frame is not None
-                ))
-                top = max(top, max(
-                    (frame.shape[0] - ctx.spacing) - y * ctx.spacing - height * ctx.spacing + oy
-                    for frame in tile.frames if frame is not None
-                ))
-        default_size = np.array((int(height * ctx.spacing + top + bottom),
+        left_offset = top_offset = right_offset = bottom_offset = 0
+        left = top = 0
+        actual_width = actual_height = 0
+        expected_width, expected_height = width * ctx.spacing, height * ctx.spacing
+        for (y, x, _z, _t), tile in grid.items():
+            if not isinstance(tile, ProcessedTile):
+                continue
+            if all(frame is None for frame in tile.frames):
+                continue
+            max_height, max_width = (
+                max(frame.shape[0] for frame in tile.frames if frame is not None),
+                max(frame.shape[1] for frame in tile.frames if frame is not None)
+            )
+            px, py = tile.displacement if ctx.expand else (0, 0)
+            left_offset = max(left_offset, -px)
+            right_offset = max(right_offset, px)
+            top_offset = max(top_offset, -py)
+            bottom_offset = max(bottom_offset, py)
+            px += x * ctx.spacing
+            py += y * ctx.spacing
+            left_boundary = int(math.ceil(px - max(0, (max_width - ctx.spacing) / 2)))
+            right_boundary = int(math.ceil(px + ctx.spacing + max(0, (max_width - ctx.spacing) / 2)))
+            top_boundary = int(math.ceil(py - max(0, (max_height - ctx.spacing) / 2)))
+            bottom_boundary = int(math.ceil(py + ctx.spacing + max(0, (max_height - ctx.spacing) / 2)))
+            left = max(left, -left_boundary)
+            top = max(top, -top_boundary)
+            actual_width = max(actual_width, right_boundary)
+            actual_height = max(actual_height, bottom_boundary)
+        right = max(0, actual_width - expected_width)
+        bottom = max(0, actual_height - expected_height)
+
+        final_size = np.array((int(height * ctx.spacing + top + bottom),
                                  int(width * ctx.spacing + left + right)))
-        true_size = default_size * ctx.upscale
+        true_size = final_size * ctx.upscale
         if not ctx.bypass_limits:
             assert all(
                 true_size[::-1] <= constants.MAX_IMAGE_SIZE) or ctx.bypass_limits, f"Image of size `{true_size[::-1]}` is larger than the maximum allowed size of `{constants.MAX_IMAGE_SIZE}`!"
         steps = np.zeros(
-            (((animation_timestep if animation_wobble else len(frames)) * stime), *default_size, 4),
+            (((animation_timestep if animation_wobble else len(frames)) * stime), *final_size, 4),
             dtype=np.uint8)
 
         if ctx.background_images:
             for f, frame in enumerate(frames):
-                img = Image.new("RGBA", tuple(default_size[::-1]))
+                img = Image.new("RGBA", tuple(final_size[::-1]))
                 # for loop in case multiple background images are used
                 # (i.e. baba's world map)
                 bg_img: Image.Image = ctx.background_images[(frame - 1) % len(ctx.background_images)].convert("RGBA")
@@ -175,16 +184,16 @@ class Renderer:
                     q = i + animation_wobble * f
                     steps[q] = np.array(img)
         for (y, x, z, t), tile in grid.items():
+            print(y, x, z, t, tile.name)
             if tile is None:
                 continue
             await asyncio.sleep(0)
             first_frame = get_first_frame(tile)
             displacement = (
-                y * ctx.spacing - int((first_frame[0] - ctx.spacing) / 2) + top - tile.displacement[1],
-                x * ctx.spacing - int((first_frame[1] - ctx.spacing) / 2) + left - tile.displacement[0]
+                y * ctx.spacing - int((first_frame[0] - ctx.spacing) / 2) + top + tile.displacement[1],
+                x * ctx.spacing - int((first_frame[1] - ctx.spacing) / 2) + left + tile.displacement[0]
             )
             for i, frame in enumerate(frames[animation_timestep * t:animation_timestep * (t + 1)]):
-                print(f"frame {i}")
                 image_index = i + animation_timestep * t
                 wobble = tile.wobble_frames[
                     min(len(tile.wobble_frames) - 1, frame - 1)] if tile.wobble_frames is not None \
@@ -192,22 +201,27 @@ class Renderer:
                     else frame - 1
                 final_wobble = functools.reduce(lambda a, b: a if b is None else b, tile.frames)
                 image = tile.frames[wobble] if tile.frames[wobble] is not None else final_wobble
-                dslice = (default_size - (first_frame + displacement))
-                dst_slice = (
-                    slice(int(max(-displacement[0], 0)), int(dslice[0]) if dslice[0] < 0 else None),
-                    slice(int(max(-displacement[1], 0)), int(dslice[1]) if dslice[1] < 0 else None)
-                )
-                image = image[*dst_slice]
+                if image is None:
+                    continue
+                lcrop = max(0, -displacement[1])
+                tcrop = max(0, -displacement[0])
+                rcrop = max(0, (displacement[1] + image.shape[1]) - final_size[1])
+                bcrop = max(0, (displacement[0] + image.shape[0]) - final_size[0])
+                image = image[
+                    slice(tcrop, -bcrop if bcrop > 0 else None),
+                    slice(lcrop, -rcrop if rcrop > 0 else None)
+                ]
                 if image.size < 1:
                     continue
-                # Get the part of the image to paste on
                 src_slice = (
-                    slice(int(max(displacement[0], 0)), int(image.shape[0] + max(displacement[0], 0))),
-                    slice(int(max(displacement[1], 0)), int(image.shape[1] + max(displacement[1], 0)))
+                    slice(max(0, displacement[0]), displacement[0] + image.shape[0]),
+                    slice(max(0, displacement[1]), displacement[1] + image.shape[1])
                 )
                 index = int(image_index), *src_slice
-                print(index)
                 try:
+                    assert steps[index].shape == image.shape, \
+                        f"Failed to composite tile {tile.name} onto scene: `{steps[index].shape}` != `{image.shape}`\n"\
+                        "This is a bug. Please send the command you just ran to a developer."
                     steps[index] = self.blend(tile.blending, steps[index], image, tile.keep_alpha)
                 except IndexError:
                     pass  # warnings.warn(f"Couldn't place {tile} at {x}, {y}, {index}")
@@ -217,7 +231,6 @@ class Renderer:
         d = d
         wobble_range = np.arange(steps.shape[0]) // animation_timestep
         for i, step in enumerate(steps):
-            print(f"step {i}")
             step = step[u:-d if d > 0 else None, l:-r if r > 0 else None]
             if ctx.background is not None:
                 if len(ctx.background) < 4:
@@ -246,20 +259,26 @@ class Renderer:
                 if ctx.image_format == "gif" and ctx.background is None:
                     draw.fontmode = "1"
                 for sign_text in ctx.sign_texts:
+                    for var in sign_text.variants:
+                        if var.type == "sign":
+                            await var.apply(sign_text, bot=self.bot, ctx=ctx)
                     if wobble_range[i] == sign_text.t:
                         text = sign_text.text
                         text = re.sub(r"(?<!\\)\\n", "\n", text)
                         text = re.sub(r"\\(.)", r"\1", text)
                         assert len(
                             text) <= constants.MAX_SIGN_TEXT_LENGTH or ctx.bypass_limits, f"Sign text of length {len(text)} is too long! The maximum is `{constants.MAX_SIGN_TEXT_LENGTH}`."
-                        pos = (left + sign_text.xo + (
-                                    ctx.spacing * ctx.upscale * (sign_text.x + anchor_disps[sign_text.anchor[0]])),
-                               top + sign_text.yo + (ctx.spacing * ctx.upscale * (
-                                           sign_text.y + anchor_disps[sign_text.anchor[1]])))
-                        draw.multiline_text(pos, text, font=sign_text.font,
-                                            align=sign_text.alignment, anchor=sign_text.anchor,
-                                            fill=sign_text.color, features=("liga", "dlig", "clig"),
-                                            stroke_fill=sign_text.stroke[0], stroke_width=sign_text.stroke[1])
+                        try:
+                            pos = (left + sign_text.xo + (
+                                        ctx.spacing * ctx.upscale * (sign_text.x + anchor_disps[sign_text.anchor[0]])),
+                                   top + sign_text.yo + (ctx.spacing * ctx.upscale * (
+                                               sign_text.y + anchor_disps[sign_text.anchor[1]])))
+                            draw.multiline_text(pos, text, font=sign_text.font,
+                                                align=sign_text.alignment, anchor=sign_text.anchor,
+                                                fill=sign_text.color, features=("liga", "dlig", "clig"),
+                                                stroke_fill=sign_text.stroke[0], stroke_width=sign_text.stroke[1])
+                        except KeyError:
+                            raise AssertionError(f"Sign text anchor `{sign_text.anchor}` is unsupported!")
                 sign_arr = np.array(im)
                 step = self.blend("normal", step, sign_arr, True)
             if ctx.image_format == "gif":
@@ -448,7 +467,10 @@ class Renderer:
     async def get_cached_letter_widths(self, text: str, char: str, mode: str) -> list[int]:
         if not hasattr(self, "letter_width_cache"):
             self.letter_width_cache = {}
-        if (char, mode) not in self.letter_cache:
+        if char in (" ", "~"):
+            if mode == "big": return [8, 9, 10, 11, 12]
+            else: return [4, 5, 6, 7, 8, 9, 10, 11, 12]
+        if (char, mode) not in self.letter_width_cache:
             async with self.bot.db.conn.cursor() as cur:
                 res = await cur.execute(
                     "SELECT DISTINCT width FROM letters WHERE char = ? AND mode = ?;",
@@ -456,7 +478,7 @@ class Renderer:
                 )
                 rows = await cur.fetchall()
             self.letter_width_cache[char, mode] = [row[0] for row in rows]
-        return random.choice(self.letter_width_cache[char, mode])
+        return self.letter_width_cache[char, mode]
 
     async def get_cached_letter(self, text: str, char: str, mode: str, width: int) -> np.ndarray:
         if not hasattr(self, "letter_cache"):
@@ -467,7 +489,6 @@ class Renderer:
                     "SELECT frames FROM letters WHERE char = ? AND mode = ? AND width = ?;",
                     char, mode, width
                 )
-                print(char, mode, width)
                 rows = await cur.fetchall()
             versions = []
             exists = False
@@ -493,20 +514,17 @@ class Renderer:
     ) -> np.ndarray:
         """Generates a custom text sprite."""
         text = tile.name.removeprefix("text_")
-        lines = utils.split_escaped(text, ["/"], True)
-        raw = "".join(lines)
-
+        text = "".join(c.lower() if c.isascii() else c for c in text)
+        lines = utils.split_escaped(text, ["/"])
+        raw = "/".join(lines)
 
         if tile.style == "letter":
             mode = "letter"
-        elif len(lines) > 1:
-            mode = "small"
         else:
-            mode = "big"
-            if len(raw) >= 4:
-                mode = "small"
-                if tile.style != "oneline":
-                    lines = [text[:len(text) // 2], text[len(text) // 2:]]
+            mode = "normal"
+            if len(raw) >= (tile.text_squish_width // 12) and tile.style != "oneline" and len(lines) == 1:
+                text = lines[0]
+                lines = [text[:len(text) // 2], text[len(text) // 2:]]
 
         if mode == "letter":
             maxlen = max(len(line) for line in lines)
@@ -514,7 +532,7 @@ class Renderer:
             height = 24 * len(lines)
             sprite = Image.new("L", (width, height))
             for y, line in enumerate(lines):
-                line = " ".join(utils.split_escaped(line, ["~"]))
+                line = line.replace("~", " ")
                 y *= 24
                 offset = (maxlen - len(line)) * 6
                 for x, c in enumerate(line):
@@ -529,8 +547,73 @@ class Renderer:
                     ))[wobble]
                     sprite.paste(letter_sprite, (x, y))
         else:
-            raise AssertionError(f"TODO: mode {mode}")
-
+            max_line_width = 0
+            line_chars = []
+            line_widths = []
+            line_spacings = []
+            for line in lines:
+                char_space = 0
+                char_widths = []
+                # Step 1. Calculate all widths of line
+                mode = "big" if len(line) * 8 <= tile.text_squish_width else "small"
+                for char in line:
+                    widths = [(w, mode) for w in await self.get_cached_letter_widths(text, char, mode)]
+                    if len(widths) == 0 and mode == "big":
+                        widths = [(w, "small") for w in await self.get_cached_letter_widths(text, char, "small")]
+                    assert len(widths) > 0, f"The text `{text.replace('`', '\'')}` could not be generated, since no sprites for `{char.replace('`', '\'')}` exist."
+                    widths = sorted(widths, key = lambda width_mode: width_mode[0])
+                    char_widths.append((char, widths))
+                # Step 2. See where minimum is in relation to tile size, space out characters to match
+                char_width = sum(c[1][0][0] for c in char_widths)
+                i = 0
+                found_any = False
+                scramble = [*range(len(char_widths))]
+                random.shuffle(scramble)
+                while char_width < tile.text_squish_width:
+                    index = scramble[i]
+                    if len(char_widths[index][1]) > 1:
+                        found_any = True
+                        smaller = char_widths[index][1].pop(0)[0]
+                        char_width = char_width - smaller + char_widths[index][1][0][0]
+                    i += 1
+                    if i >= len(char_widths):
+                        if not found_any: break
+                        random.shuffle(scramble)
+                        i = 0
+                        found_any = False
+                if char_width < tile.text_squish_width:
+                    char_space = (tile.text_squish_width - char_width) // (len(line) + 2)
+                    char_width += char_space
+                line_chars.append(char_widths)
+                line_widths.append(char_width)
+                line_spacings.append(char_space)
+            max_line_width = max(w + s * (len(c) - 1) for c, w, s in zip(line_chars, line_widths, line_spacings))
+            print(max_line_width)
+            if max_line_width == 0:
+                sprite = Image.new("L", (24, 24))
+            else:
+                # Step 3: Generate each line
+                sprite = Image.new("L", (max_line_width, len(lines) * 12))
+                for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
+                    x = (max_line_width - line_width) // 2
+                    for char, widths in line:
+                        width, mode = widths[0]
+                        if char in (" ", "~"):
+                            x += width
+                            continue
+                        letter_sprite = (await self.get_cached_letter(
+                            text = tile.name,
+                            char = char,
+                            mode = mode,
+                            width = width
+                        ))[wobble]
+                        oy = (12 - letter_sprite.height) // 2
+                        sprite.paste(letter_sprite, (x, y * 12 + oy))
+                        x += width + char_spacing
+                if sprite.height < 24:
+                    spr = Image.new("L", (sprite.width, 24))
+                    spr.paste(sprite, (0, (24 - sprite.height) // 2))
+                    sprite = spr
         sprite = Image.merge("RGBA", (sprite, sprite, sprite, sprite))
         sprite = sprite.resize(
             (int(sprite.width * ctx.gscale), int(sprite.height * ctx.gscale)), Image.NEAREST)

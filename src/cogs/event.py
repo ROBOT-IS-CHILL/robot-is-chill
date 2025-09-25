@@ -33,7 +33,6 @@ If you feel this was unjustified, please DM the bot owner.''')
         if self.bot.config['debug']:
             content = ctx.message.content[:100]
             content = "".join(c if (32 <= ord(c) < 127) | (ord(c) == 10) else f"\\x{ord(c):02X}" for c in content)
-            print(f"{datetime.datetime.now()}\n{ctx.author.name}\n{content}", flush=True)
         return True
 
 async def setup(bot: Bot):
