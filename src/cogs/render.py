@@ -372,7 +372,9 @@ class Renderer:
                                 ) -> Image.Image:
         sprite = None
         if tile.custom:
-            if tile.sprite is None:
+            if isinstance(tile.sprite, np.ndarray):
+                sprite = tile.sprite[(tile.frame * 3) + frame]
+            else:
                 sprite = await self.generate_sprite(
                     tile,
                     style=tile.style or "noun",
@@ -380,8 +382,6 @@ class Renderer:
                     position=(x, y),
                     ctx=ctx
                 )
-            elif isinstance(tile.sprite, np.ndarray):
-                sprite = tile.sprite[(tile.frame * 3) + frame]
         else:
             source, sprite_name = tile.sprite
             path = f"data/sprites/{source}/{sprite_name}_{tile.frame}_{frame + 1}.png"
@@ -486,7 +486,7 @@ class Renderer:
         if (char, mode, width) not in self.letter_cache:
             async with self.bot.db.conn.cursor() as cur:
                 res = await cur.execute(
-                    "SELECT frames FROM letters WHERE char = ? AND mode = ? AND width = ?;",
+                    "SELECT frames FROM letters WHERE char = ? AND mode = ? AND width = ? ORDER BY frames;",
                     char, mode, width
                 )
                 rows = await cur.fetchall()
@@ -500,7 +500,7 @@ class Renderer:
             if not exists:
                 raise errors.BadCharacter(text, mode, char)
             self.letter_cache[char, mode, width] = versions
-        return random.choice(self.letter_cache[char, mode, width])
+        return self.letter_cache[char, mode, width]
 
     async def generate_sprite(
             self,
@@ -513,6 +513,8 @@ class Renderer:
             ctx: RenderContext
     ) -> np.ndarray:
         """Generates a custom text sprite."""
+        if seed is None:
+            seed = position[0] * 7 + position[1] * 13
         text = tile.name.removeprefix("text_")
         text = "".join(c.lower() if c.isascii() else c for c in text)
         lines = utils.split_escaped(text, ["/"])
@@ -522,10 +524,12 @@ class Renderer:
             mode = "letter"
         else:
             mode = "normal"
-            if len(raw) >= (tile.text_squish_width // 12) and tile.style != "oneline" and len(lines) == 1:
+            if len(text) >= (tile.text_squish_width // 6) and tile.style != "oneline" and len(lines) == 1:
                 text = lines[0]
                 lines = [text[:len(text) // 2], text[len(text) // 2:]]
 
+        rng = random.Random()
+        rng.seed(seed)
         if mode == "letter":
             maxlen = max(len(line) for line in lines)
             width = maxlen * 12
@@ -539,27 +543,33 @@ class Renderer:
                     x *= 12
                     x += offset
                     if c == " ": continue
-                    letter_sprite = (await self.get_cached_letter(
+                    letter_sprite = rng.choice(await self.get_cached_letter(
                         text = tile.name,
                         char = c,
                         mode = "letter",
                         width = 12
                     ))[wobble]
                     sprite.paste(letter_sprite, (x, y))
+                    char_index += 1
         else:
             max_line_width = 0
             line_chars = []
             line_widths = []
             line_spacings = []
             for line in lines:
+                if not len(line):
+                    line_chars.append([])
+                    line_widths.append(0)
+                    line_spacings.append(0)
+                    continue
                 char_space = 0
                 char_widths = []
                 # Step 1. Calculate all widths of line
-                mode = "big" if len(line) * 8 <= tile.text_squish_width else "small"
+                mode = "big" if len(lines) == 1 else "small"
                 for char in line:
                     widths = [(w, mode) for w in await self.get_cached_letter_widths(text, char, mode)]
-                    if len(widths) == 0 and mode == "big":
-                        widths = [(w, "small") for w in await self.get_cached_letter_widths(text, char, "small")]
+                    if mode == "big":
+                        widths.extend((w, "small") for w in await self.get_cached_letter_widths(text, char, "small"))
                     assert len(widths) > 0, f"The text `{text.replace('`', '\'')}` could not be generated, since no sprites for `{char.replace('`', '\'')}` exist."
                     widths = sorted(widths, key = lambda width_mode: width_mode[0])
                     char_widths.append((char, widths))
@@ -568,7 +578,7 @@ class Renderer:
                 i = 0
                 found_any = False
                 scramble = [*range(len(char_widths))]
-                random.shuffle(scramble)
+                rng.shuffle(scramble)
                 while char_width < tile.text_squish_width:
                     index = scramble[i]
                     if len(char_widths[index][1]) > 1:
@@ -578,7 +588,7 @@ class Renderer:
                     i += 1
                     if i >= len(char_widths):
                         if not found_any: break
-                        random.shuffle(scramble)
+                        rng.shuffle(scramble)
                         i = 0
                         found_any = False
                 if char_width < tile.text_squish_width:
@@ -601,7 +611,7 @@ class Renderer:
                         if char in (" ", "~"):
                             x += width
                             continue
-                        letter_sprite = (await self.get_cached_letter(
+                        letter_sprite = rng.choice(await self.get_cached_letter(
                             text = tile.name,
                             char = char,
                             mode = mode,
