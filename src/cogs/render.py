@@ -570,7 +570,11 @@ class Renderer:
                     widths = [(w, mode) for w in await self.get_cached_letter_widths(text, char, mode)]
                     if mode == "big":
                         widths.extend((w, "small") for w in await self.get_cached_letter_widths(text, char, "small"))
-                    assert len(widths) > 0, f"The text `{text.replace('`', '\'')}` could not be generated, since no sprites for `{char.replace('`', '\'')}` exist."
+                    assert len(widths) > 0, (
+                        sane_text := text.replace('`', '\''),
+                        sane_char := char.replace('`', '\''),
+                        f"The text `{sane_text}` could not be generated, since no sprites for `{sane_char}` exist."
+                    )[2]
                     widths = sorted(widths, key = lambda width_mode: width_mode[0])
                     char_widths.append((char, widths))
                 # Step 2. See where minimum is in relation to tile size, space out characters to match
