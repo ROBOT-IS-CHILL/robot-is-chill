@@ -143,9 +143,9 @@ discord.utils.setup_logging()
 
 
 if Path("alpha").exists():
-    config.prefixes = ['[']
+    config.prefixes = ['[', '`[']
 elif Path("beta").exists():
-    config.prefixes = ['-']
+    config.prefixes = ['-', '`-']
 
 # Establishes the bot
 bot = Bot(
