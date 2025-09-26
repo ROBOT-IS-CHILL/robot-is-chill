@@ -191,6 +191,7 @@ class Tile:
             if metadata.tiling == TilingMode.TILING or metadata.tiling == TilingMode.DIAGONAL_TILING:
                 handle_tiling(value, grid, width, height, position, tile_borders=tile_borders)
         else:
+            esc_name = name
             name = tile.name
             if name[:5] == "text_":
                 value = cls(name=name, tiling=TilingMode.NONE, variants=tile.variants, custom=True,
@@ -208,7 +209,7 @@ class Tile:
                 value = cls(name=name, tiling=TilingMode.CHARACTER, variants=tile.variants, custom=True,
                             sprite=character[0], color=color, palette=tile.palette)
             else:
-                raise errors.TileNotFound(name)
+                raise errors.TileNotFound(esc_name)
         for variant in value.variants:
             if variant.type == "tile":
                 await variant.apply(value)
