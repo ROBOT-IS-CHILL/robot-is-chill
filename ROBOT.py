@@ -141,6 +141,7 @@ class Bot(commands.Bot):
 
 discord.utils.setup_logging()
 
+
 if Path("alpha").exists():
     config.prefixes = ['[']
 elif Path("beta").exists():
