@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+git push
 CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 ssh root@107.172.159.51 /bin/sh <<EOF  
 	cd /root/ric-staging
