@@ -519,12 +519,18 @@ class Renderer:
         text = "".join(c.lower() if c.isascii() else c for c in text)
         lines = utils.split_escaped(text, ["/"])
         raw = "/".join(lines)
+        target_width = tile.text_squish_width
 
         if tile.style == "letter":
             mode = "letter"
         else:
-            mode = "normal"
-            if len(text) >= (tile.text_squish_width // 6) and tile.style != "oneline" and len(lines) == 1:
+            if tile.style == "beta":
+                target_width //= 2
+                mode = "beta"
+                wobble = 0
+            else:
+                mode = "normal"
+            if len(text) >= (tile.text_squish_width // 6) and not tile.oneline and len(lines) == 1:
                 text = lines[0]
                 lines = [text[:len(text) // 2], text[len(text) // 2:]]
 
@@ -562,10 +568,12 @@ class Renderer:
                     line_widths.append(0)
                     line_spacings.append(0)
                     continue
-                char_space = 0
+                char_space = 1 if tile.style == "beta" else 0
                 char_widths = []
                 # Step 1. Calculate all widths of line
                 mode = "big" if len(lines) == 1 else "small"
+                if tile.style == "beta":
+                    mode = "beta"
                 for char in line:
                     widths = [(w, mode) for w in await self.get_cached_letter_widths(text, char, mode)]
                     if mode == "big":
@@ -578,26 +586,25 @@ class Renderer:
                     widths = sorted(widths, key = lambda width_mode: width_mode[0])
                     char_widths.append((char, widths))
                 # Step 2. See where minimum is in relation to tile size, space out characters to match
-                char_width = sum(c[1][0][0] for c in char_widths)
+                char_width = sum(c[1][0][0] for c in char_widths) + char_space * (len(char_widths) - 1)
                 i = 0
                 found_any = False
-                scramble = [*range(len(char_widths))]
-                rng.shuffle(scramble)
-                while char_width < tile.text_squish_width:
-                    index = scramble[i]
-                    if len(char_widths[index][1]) > 1:
+                while char_width < target_width:
+                    if len(char_widths[i][1]) > 1:
                         found_any = True
-                        smaller = char_widths[index][1].pop(0)[0]
-                        char_width = char_width - smaller + char_widths[index][1][0][0]
+                        smaller = char_widths[i][1].pop(0)[0]
+                        char_width = char_width - smaller + char_widths[i][1][0][0]
                     i += 1
                     if i >= len(char_widths):
                         if not found_any: break
-                        rng.shuffle(scramble)
                         i = 0
                         found_any = False
-                if char_width < tile.text_squish_width:
-                    char_space = (tile.text_squish_width - char_width) // (len(line) + 2)
-                    char_width += char_space
+                if char_width < target_width:
+                    added_padding = (target_width - char_width) // (len(line) + 2)
+                    if mode == "beta":
+                        added_padding = (added_padding // 2) * 2
+                    char_space += added_padding
+                    char_width += added_padding
                 line_chars.append(char_widths)
                 line_widths.append(char_width)
                 line_spacings.append(char_space)
@@ -607,7 +614,8 @@ class Renderer:
                 sprite = Image.new("L", (24, 24))
             else:
                 # Step 3: Generate each line
-                sprite = Image.new("L", (max_line_width, len(lines) * 12))
+                line_height = 6 if tile.style == "beta" else 12
+                sprite = Image.new("L", (max_line_width, len(lines) * line_height))
                 for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
                     x = (max_line_width - line_width) // 2
                     for char, widths in line:
@@ -621,14 +629,16 @@ class Renderer:
                             mode = mode,
                             width = width
                         ))[wobble]
-                        oy = (12 - letter_sprite.height) // 2
-                        sprite.paste(letter_sprite, (x, y * 12 + oy))
+                        oy = (line_height - letter_sprite.height) // 2
+                        sprite.paste(letter_sprite, (x, y * line_height + oy))
                         x += width + char_spacing
-                if sprite.height < 24:
-                    spr = Image.new("L", (sprite.width, 24))
-                    spr.paste(sprite, (0, (24 - sprite.height) // 2))
+                if sprite.height < line_height * 2:
+                    spr = Image.new("L", (sprite.width, line_height))
+                    spr.paste(sprite, (0, (line_height - sprite.height) // 2))
                     sprite = spr
         sprite = Image.merge("RGBA", (sprite, sprite, sprite, sprite))
+        if tile.style == "beta":
+            sprite = sprite.resize((sprite.width * 2, sprite.height * 2), Image.NEAREST)
         sprite = sprite.resize(
             (int(sprite.width * ctx.gscale), int(sprite.height * ctx.gscale)), Image.NEAREST)
         return np.array(sprite)

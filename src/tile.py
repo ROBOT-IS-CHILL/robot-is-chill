@@ -154,6 +154,7 @@ class Tile:
     custom_color: bool = False
     color: tuple[int, int] = (0, 3)
     custom: bool = False
+    oneline: bool = False
     style: Literal["noun", "property", "letter"] = "noun"
     palette: tuple[str, str] = ("default", "vanilla")
     overlay: str | None = None

@@ -604,6 +604,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                         img_data = np.array(im.convert("LA"))[..., 1] > 0
                     _, width = img_data.shape
                     width //= 3
+                    print(path, width)
                     io = BytesIO()
                     np.save(io, [img_data[:, i * width : (i + 1) * width] for i in range(3)])
                     data.append((entry["value"], width, mode, io.getvalue()))
