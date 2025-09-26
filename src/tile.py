@@ -183,7 +183,6 @@ class Tile:
         position: tuple[int, int, int, int], tile_borders: bool = False, ctx: Context = None
     ):
         name = utils.split_escaped(tile.name, [])[0]
-        print(name)
         metadata = tile_data_cache.get(name)
         if metadata is not None:
             value = cls(name=tile.name, sprite=(metadata.source, metadata.sprite), tiling=metadata.tiling,
