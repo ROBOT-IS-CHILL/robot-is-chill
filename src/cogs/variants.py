@@ -491,8 +491,12 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("1line", "1l")
     async def oneline(tile):
         """Makes custom words appear in one line."""
-        tile.style = "oneline"
+        tile.oneline = True
 
+    @add_variant()
+    async def beta(tile):
+        """Makes custom words appear as beta text."""
+        tile.style = "beta"
 
     # --- FILTERS ---
 
