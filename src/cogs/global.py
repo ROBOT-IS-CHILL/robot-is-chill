@@ -458,8 +458,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             tiles = emoji.demojize(objects.strip(), language='alias')\
                 .replace(":hearts:", "♥")  # keep the heart, for the people
             tiles = re.sub(r'<a?(:.+?:)\d+?>', r'\1', tiles)
-            tiles = re.sub(r"\\(?=[:<])", "", tiles)
-            tiles = re.sub(r"(?<!\\)`", "", tiles)
+            tiles = tiles.removeprefix("`").removesuffix("`")
             # Replace some phrases
             replace_list = [
                 ['а', 'a'],
@@ -498,18 +497,10 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             if render_ctx.bypass_limits:
                 signal.alarm(0)
 
-            offset = 0
-            for match in re.finditer(r"(?<!\\)\"(.*?)(?<!\\)\"", tiles, flags=re.RegexFlag.DOTALL):
-                a, b = match.span()
-                text = match.group(1)
-                prefix = "tile_" if rule else "text_"
-                sliced = re.split("([\n ]|$)", text)
-                zipped = zip(sliced[1::2], sliced[:-1:2])
-                text = "".join(f"{prefix}{t}{joiner}" if t != "-" else f"-{joiner}" for joiner, t in zipped)
-                tiles = tiles[:a - offset] + text + tiles[b - offset:]
-                offset += (b - a) - len(text)
+            print(tiles)
 
             tiles = await ctx.bot.macro_handler.parse_macros(tiles, "r" if rule else "t")
+            print(tiles)
             tiles = tiles.strip()
 
             tile_grid, shape = await self.parse_tile_grid(render_ctx, tiles)
