@@ -166,6 +166,34 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
         if self.bot.channel == "development":
             await ctx.reply(random.choice(["Squeak!", "Squeak squeak!"]))
 
+    @commands.command(hidden = True)
+    async def syncmacros(self, ctx: Context):
+        """Syncs macros from production."""
+        assert self.bot.channel != "production", "> you're already on prod, dumbass\n-balt"
+        async with ctx.typing():
+            r = requests.get('https://ric-api.sno.mba/macros.json')
+            r.raise_for_status()
+            data = r.json()
+            macros = []
+            for name, data in data.items():
+                macros.append({"name": name} | data)
+            async with ctx.bot.db.conn.cursor() as cur:
+                await cur.execute("DELETE FROM macros;")
+                await cur.executemany(
+                    '''
+                    INSERT INTO macros
+                    VALUES (
+                        :name,
+                        :value,
+                        :description,
+                        :creator
+                    )
+                    ON CONFLICT(name) DO NOTHING;
+                    ''',
+                    macros
+                )
+            return await ctx.reply("Synchronized macros from production.")
+
     @commands.command()
     @commands.is_owner()
     async def hidden(self, ctx: Context):
