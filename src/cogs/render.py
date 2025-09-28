@@ -615,8 +615,8 @@ class Renderer:
             else:
                 # Step 3: Generate each line
                 line_height = 6 if tile.style == "beta" else 12
-                sprite = Image.new("L", (int(max_line_width), int(max(ctx.spacing, len(lines) * line_height))))
-                dy = (max(ctx.spacing, len(lines) * line_height) - (len(lines) * line_height)) / 2
+                sprite = Image.new("L", (int(max_line_width), int(max(line_height * 2, len(lines) * line_height))))
+                dy = (max(line_height * 2, len(lines) * line_height) - (len(lines) * line_height)) / 2
                 for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
                     x = (max_line_width - line_width) / 2
                     for char, widths in line:
