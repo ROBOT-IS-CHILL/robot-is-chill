@@ -173,6 +173,13 @@ bot = Bot(
     db_path=config.db_path
 )
 
+if Path("alpha").exists():
+    bot.channel = "development"
+elif Path("beta").exists():
+    bot.channel = "staging"
+else:
+    bot.channel = "production"
+
 
 @bot.before_invoke
 async def before_invoke(ctx: Context):

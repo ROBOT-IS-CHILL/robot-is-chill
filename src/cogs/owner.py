@@ -149,14 +149,22 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             await ctx.send(f"Left {guild}.")
 
     @commands.command(hidden = True)
-    async def meow(self, ctx: Context):
-        """:3"""
-        await ctx.author.send(":3")
+    async def woof(self, ctx: Context):
+        """:3 (Dog)"""
+        if self.bot.channel == "production":
+            await ctx.reply(random.choice(["Woof!", "Bark!", "Arf arf!", "Ruff!"]))
 
     @commands.command(hidden = True)
-    async def woof(self, ctx: Context):
-        """:3"""
-        await ctx.reply(random.choice(["Woof!", "Bark!", "Arf arf!", "Ruff!"]))
+    async def meow(self, ctx: Context):
+        """:3 (Cat)"""
+        if self.bot.channel == "staging":
+            await ctx.reply(random.choice(["Mraow!", "Mrow!", "Meow!", "Purr...", "*Hiss*", "*bap*"]))
+
+    @commands.command(hidden = True)
+    async def squeak(self, ctx: Context):
+        """:3 (Bunny)"""
+        if self.bot.channel == "development":
+            await ctx.reply(random.choice(["Squeak!", "Squeak squeak!"]))
 
     @commands.command()
     @commands.is_owner()

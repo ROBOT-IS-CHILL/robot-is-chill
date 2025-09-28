@@ -589,27 +589,30 @@ class Renderer:
                 char_width = sum(c[1][0][0] for c in char_widths) + char_space * (len(char_widths) - 1)
                 i = 0
                 found_any = False
+                seq = [i for i in range(len(char_widths))]
+                rng.shuffle(seq)
                 while char_width < target_width:
-                    if len(char_widths[i][1]) > 1:
+                    index = seq[i]
+                    if len(char_widths[index][1]) > 1:
                         found_any = True
-                        smaller = char_widths[i][1].pop(0)[0]
-                        char_width = char_width - smaller + char_widths[i][1][0][0]
+                        smaller = char_widths[index][1].pop(0)[0]
+                        char_width = char_width - smaller + char_widths[index][1][0][0]
                     i += 1
                     if i >= len(char_widths):
                         if not found_any: break
                         i = 0
+                        rng.shuffle(seq)
                         found_any = False
                 if char_width < target_width:
-                    added_padding = (target_width - char_width) / (len(line) + 2)
+                    added_padding = (target_width - char_width) / (len(line) -1)
                     if mode == "beta":
                         added_padding = (added_padding / 2) * 2
                     char_space += added_padding
-                    char_width += added_padding
+                    char_width
                 line_chars.append(char_widths)
                 line_widths.append(char_width + char_space * (len(char_widths) - 1))
                 line_spacings.append(char_space)
-            max_line_width = max(w + s * (len(c) - 1) for c, w, s in zip(line_chars, line_widths, line_spacings))
-            print(max_line_width)
+            max_line_width = max(line_widths)
             if max_line_width == 0:
                 sprite = Image.new("L", (24, 24))
             else:
@@ -618,11 +621,11 @@ class Renderer:
                 sprite = Image.new("L", (int(max_line_width), int(max(line_height * 2, len(lines) * line_height))))
                 dy = (max(line_height * 2, len(lines) * line_height) - (len(lines) * line_height)) / 2
                 for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
-                    x = (max_line_width - line_width) / 2
+                    x = 0
                     for char, widths in line:
                         width, mode = widths[0]
                         if char in (" ", "~"):
-                            x += width
+                            x += width + char_spacing
                             continue
                         letter_sprite = rng.choice(await self.get_cached_letter(
                             text = tile.name,
