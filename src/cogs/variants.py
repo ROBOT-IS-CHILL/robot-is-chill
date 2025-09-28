@@ -238,7 +238,7 @@ async def setup(bot):
         sign.yo += y
 
     @add_variant(no_function_name=True)
-    async def sign_color(sign, color: Color, inactive: Optional[Literal["inactive", "in"]] = None, *, bot, ctx):
+    async def sign_color(sign, color: Color, inactive: Optional[Literal["inactive", "in"]] = None, *, bot, ctx, renderer):
         """Sets the sign text's color. See the sprite counterpart for details."""
         if len(color) < 4:
             if inactive is not None:
@@ -268,7 +268,7 @@ async def setup(bot):
         sign.anchor = anchor
 
     @add_variant()
-    async def stroke(sign, color: Color, size: int, *, bot, ctx):
+    async def stroke(sign, color: Color, size: int, *, bot, ctx, renderer):
         """Sets the sign text's stroke."""
         if len(color) < 4:
             try:

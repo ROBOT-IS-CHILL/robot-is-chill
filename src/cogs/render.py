@@ -261,7 +261,7 @@ class Renderer:
                 for sign_text in ctx.sign_texts:
                     for var in sign_text.variants:
                         if var.type == "sign":
-                            await var.apply(sign_text, bot=self.bot, ctx=ctx)
+                            await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
                     if wobble_range[i] == sign_text.t:
                         text = sign_text.text
                         text = re.sub(r"(?<!\\)\\n", "\n", text)
@@ -600,13 +600,13 @@ class Renderer:
                         i = 0
                         found_any = False
                 if char_width < target_width:
-                    added_padding = (target_width - char_width) // (len(line) + 2)
+                    added_padding = (target_width - char_width) / (len(line) + 2)
                     if mode == "beta":
-                        added_padding = (added_padding // 2) * 2
+                        added_padding = (added_padding / 2) * 2
                     char_space += added_padding
                     char_width += added_padding
                 line_chars.append(char_widths)
-                line_widths.append(char_width)
+                line_widths.append(char_width + char_space * (len(char_widths) - 1))
                 line_spacings.append(char_space)
             max_line_width = max(w + s * (len(c) - 1) for c, w, s in zip(line_chars, line_widths, line_spacings))
             print(max_line_width)
@@ -615,9 +615,10 @@ class Renderer:
             else:
                 # Step 3: Generate each line
                 line_height = 6 if tile.style == "beta" else 12
-                sprite = Image.new("L", (max_line_width, len(lines) * line_height))
+                sprite = Image.new("L", (int(max_line_width), int(max(ctx.spacing, len(lines) * line_height))))
+                dy = (max(ctx.spacing, len(lines) * line_height) - (len(lines) * line_height)) / 2
                 for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
-                    x = (max_line_width - line_width) // 2
+                    x = (max_line_width - line_width) / 2
                     for char, widths in line:
                         width, mode = widths[0]
                         if char in (" ", "~"):
@@ -627,14 +628,14 @@ class Renderer:
                             text = tile.name,
                             char = char,
                             mode = mode,
-                            width = width
+                            width = int(width)
                         ))[wobble]
-                        oy = (line_height - letter_sprite.height) // 2
-                        sprite.paste(letter_sprite, (x, y * line_height + oy))
+                        oy = (line_height - letter_sprite.height) / 2 + dy
+                        sprite.paste(letter_sprite, (int(x), int(y * line_height + oy)))
                         x += width + char_spacing
                 if sprite.height < line_height * 2:
                     spr = Image.new("L", (sprite.width, line_height))
-                    spr.paste(sprite, (0, (line_height - sprite.height) // 2))
+                    spr.paste(sprite, (0, int((line_height - sprite.height) / 2)))
                     sprite = spr
         sprite = Image.merge("RGBA", (sprite, sprite, sprite, sprite))
         if tile.style == "beta":
