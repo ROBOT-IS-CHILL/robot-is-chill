@@ -33,6 +33,8 @@ class TileSkeleton:
     raw_string: str = ""
     variants: list = field(default_factory = list)
     palette: tuple[str, str | None] = ("default", "vanilla")
+    beta: bool = False
+    custom: bool = False
 
     def clone(self):
         clone = TileSkeleton(**self.__dict__)
@@ -105,6 +107,13 @@ class TileSkeleton:
             if split == ";":
                 var.persistent = True
             out.variants.append(var)
+        vars = []
+        for variant in out.variants:
+            if variant.type == "skel":
+                await variant.apply(out)
+            else:
+                vars.append(variant)
+        out.variants = vars
         return out
 
 
@@ -145,7 +154,7 @@ def handle_tiling(tile: Tile, grid, width, height, pos, tile_borders=False):
 @dataclass
 class Tile:
     """A tile that's ready for processing."""
-    name: str = "Undefined (if this is showing, something's gone horribly wrong)"
+    name: str = None
     sprite: tuple[str, str] | np.ndarray | None = None
     tiling: TilingMode = TilingMode.NONE
     surrounding: int = 0b00000000  # RULDEQZC
@@ -167,6 +176,7 @@ class Tile:
     variants: list = field(default_factory = list)
     altered_frame: bool = False
     text_squish_width: int = 24
+    undef: bool = False
 
     def __hash__(self):
         return hash((self.name, self.sprite if type(self.sprite) is tuple else 0, self.frame,
@@ -183,37 +193,55 @@ class Tile:
         width: int, height: int,
         position: tuple[int, int, int, int], tile_borders: bool = False, ctx: Context = None
     ):
-        name = utils.split_escaped(tile.name, [])[0]
+        esc_name = name = utils.split_escaped(tile.name, [])[0]
+        value = cls(custom = tile.custom)
         metadata = tile_data_cache.get(name)
+        if tile.beta:
+            value.style = "beta"
         if metadata is not None:
-            value = cls(name=tile.name, sprite=(metadata.source, metadata.sprite), tiling=metadata.tiling,
-                        color=metadata.active_color, variants=tile.variants,
-                        palette=tile.palette)
+            value.name = tile.name
+            value.sprite = (metadata.source, metadata.sprite)
+            value.tiling = metadata.tiling
+            value.color = color=metadata.active_color
+            value.variants = variants=tile.variants
+            value.palette = palette=tile.palette
             if metadata.tiling == TilingMode.TILING or metadata.tiling == TilingMode.DIAGONAL_TILING:
                 handle_tiling(value, grid, width, height, position, tile_borders=tile_borders)
         else:
-            esc_name = name
             name = tile.name
             if name[:5] == "text_":
-                value = cls(name=name, tiling=TilingMode.NONE, variants=tile.variants, custom=True,
-                            palette=tile.palette)
+                value.name = name
+                value.tiling = TilingMode.NONE
+                value.variants = tile.variants
+                value.custom = True
+                value.palette = tile.palette
             elif name[:5] == "char_" and ctx is not None:  # allow external calling for potential future things?
                 seed = int(name[5:]) if re.fullmatch(r'-?\d+', name[5:]) else name[5:]
                 character = ctx.bot.generator.generate(seed=seed)
                 color = character[1]["color"]
-                value = cls(name=name, tiling=TilingMode.CHARACTER, variants=tile.variants, custom=True,
-                            sprite=character[0], color=color, palette=tile.palette)
+                value.name=name
+                value.tiling=TilingMode.CHARACTER
+                value.variants=tile.variants
+                value.custom=True
+                value.sprite=character[0]
+                value.color=color
+                value.palette=tile.palette
             elif name[:6] == "cchar_" and ctx is not None:  # allow external calling for potential future things? again?
                 customid = int(name[6:]) if re.fullmatch(r'-?\d+', name[6:]) else name[6:]
                 character = ctx.bot.generator.generate(customid=customid)
                 color = character[1]["color"]
-                value = cls(name=name, tiling=TilingMode.CHARACTER, variants=tile.variants, custom=True,
-                            sprite=character[0], color=color, palette=tile.palette)
+                value.name=name
+                value.tiling=TilingMode.CHARACTER
+                value.variants=tile.variants
+                value.custom=True
+                value.sprite=character[0]
+                value.color=color
+                value.palette=tile.palette
             else:
                 raise errors.TileNotFound(esc_name)
         for variant in value.variants:
             if variant.type == "tile":
-                await variant.apply(value)
+                await variant.apply(value, tile_data_cache=tile_data_cache)
                 if value.surrounding != 0:
                     if metadata.tiling == TilingMode.TILING:
                         value.surrounding &= 0b11110000

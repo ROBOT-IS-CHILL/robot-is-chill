@@ -609,11 +609,12 @@ class Renderer:
                     if mode == "beta":
                         added_padding = (added_padding // 2) * 2
                     char_space += added_padding
-                    char_width
+                char_width = sum(c[1][0][0] for c in char_widths) + char_space * (len(char_widths) - 1)
                 line_chars.append(char_widths)
-                line_widths.append(char_width + char_space * (len(char_widths) - 1))
+                line_widths.append(char_width)
                 line_spacings.append(char_space)
             max_line_width = max(line_widths)
+            print("Max line width: ", max_line_width)
             if max_line_width == 0:
                 sprite = Image.new("L", (24, 24))
             else:

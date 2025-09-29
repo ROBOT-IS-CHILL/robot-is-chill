@@ -494,9 +494,13 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         tile.oneline = True
 
     @add_variant()
-    async def beta(tile):
+    async def beta(skel):
         """Makes custom words appear as beta text."""
-        tile.style = "beta"
+        nonlocal bot
+        if (await bot.db.tile(skel.name + "beta")) is not None:
+            skel.name += "beta"
+        skel.custom = True
+        skel.beta = True
 
     # --- FILTERS ---
 
