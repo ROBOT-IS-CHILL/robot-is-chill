@@ -468,7 +468,8 @@ class Renderer:
         if not hasattr(self, "letter_width_cache"):
             self.letter_width_cache = {}
         if char in (" ", "~"):
-            if mode == "big": return [8, 9, 10, 11, 12]
+            if mode == "beta": return [1, 2, 3, 4, 5]
+            elif mode == "big": return [8, 9, 10, 11, 12]
             else: return [4, 5, 6, 7, 8, 9, 10, 11, 12]
         if (char, mode) not in self.letter_width_cache:
             async with self.bot.db.conn.cursor() as cur:
