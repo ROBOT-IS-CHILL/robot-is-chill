@@ -104,6 +104,7 @@ def main():
     failures = []
     for file in Path("data/custom").glob("*.toml"):
         try:
+            print(f"Checking {file}...")
             with open(file, "rb") as f:
                 data = tomllib.load(f)
             failed = False
