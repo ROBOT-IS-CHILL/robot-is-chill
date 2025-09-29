@@ -604,7 +604,7 @@ class Renderer:
                         rng.shuffle(seq)
                         found_any = False
                 if char_width < target_width:
-                    added_padding = min((target_width - char_width) / (len(line) - 1), 2)
+                    added_padding = min((target_width - char_width) / max(1, len(line) - 1), 2)
                     if mode == "beta":
                         added_padding = (added_padding // 2) * 2
                     char_space += added_padding
