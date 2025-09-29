@@ -162,8 +162,8 @@ class CommandErrorHandler(commands.Cog):
                 if len(error.args[0]) == 0:
                     raise
                 return await ctx.error(error.args[0])
-                
-            elif isinstance(err, errors.UnknownVariant):
+
+            elif isinstance(error, errors.UnknownVariant):
                 return await ctx.error(
                     f"The variant for `{word}:{variant}` doesn't exist."
                 )
