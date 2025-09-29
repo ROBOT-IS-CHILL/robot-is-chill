@@ -163,10 +163,6 @@ class CommandErrorHandler(commands.Cog):
                     raise
                 return await ctx.error(error.args[0])
 
-            elif isinstance(error, ArithmeticError):
-                await self.logger.send(embed=emb)
-                return await ctx.error(f'An error occurred while calcuating something!\n> {error.args[0]}')
-
             elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):
                 buf = io.StringIO()
                 buf.write("Error occurred at {}\n".format(datetime.utcnow().strftime(f"%Y-%m-%d %H:%M:%S UTC")))
