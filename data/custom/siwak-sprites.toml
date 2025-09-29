@@ -36,3 +36,6 @@ text_candy = {sprite = "text_candy", color = [2, 3], tiling = "none"}
 
 text_banner = {sprite = "text_banner", color = [2, 2], tiling = "none"}
 
+babah = {sprite = "babah", color = [0, 3], tiling = "character"}
+
+jijic = {sprite = "jijic", color = [2, 3], tiling = "character"}
