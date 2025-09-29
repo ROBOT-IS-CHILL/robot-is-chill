@@ -2,145 +2,145 @@
 
 
 
-annibeta = {sprite = "annibeta", tiling = "animated_directional", color = [6, 0]}
+beta_anni = {sprite = "annibeta", tiling = "animated_directional", color = [6, 0]}
 
-bababeta = {sprite = "bababeta", tiling = "animated_directional", color = [0, 3]}
+beta_baba = {sprite = "bababeta", tiling = "animated_directional", color = [0, 3]}
 
-beltbeta = {sprite = "beltbeta", tiling = "directional", color = [1, 3], extra_frames = [1, 9, 17, 25]}
+beta_belt = {sprite = "beltbeta", tiling = "directional", color = [1, 3], extra_frames = [1, 9, 17, 25]}
 
-boxbeta = {sprite = "boxbeta", tiling = "none", color = [6, 0]}
+beta_box = {sprite = "boxbeta", tiling = "none", color = [6, 0]}
 
-debug_testerbeta = {sprite = "debug_testerbeta", tiling = "none", color = [1, 4]}
+beta_debug_tester = {sprite = "debug_testerbeta", tiling = "none", color = [1, 4]}
 
-doorbeta = {sprite = "doorbeta", tiling = "none", color = [2, 2]}
+beta_door = {sprite = "doorbeta", tiling = "none", color = [2, 2]}
 
-hedgebeta = {sprite = "edgebeta", tiling = "none", color = [5, 2]}
+beta_hedge = {sprite = "edgebeta", tiling = "none", color = [5, 2]}
 
-errorbeta = {sprite = "errorbeta", tiling = "none", color = [1, 4]}
+beta_error = {sprite = "errorbeta", tiling = "none", color = [1, 4]}
 
-flagbeta = {sprite = "flagbeta", tiling = "none", color = [2, 4]}
+beta_flag = {sprite = "flagbeta", tiling = "none", color = [2, 4]}
 
-grassbeta = {sprite = "grassbeta", tiling = "tiling", color = [5, 0]}
+beta_grass = {sprite = "grassbeta", tiling = "tiling", color = [5, 0]}
 
-handbeta = {sprite = "handbeta", tiling = "directional", color = [0, 3]}
+beta_hand = {sprite = "handbeta", tiling = "directional", color = [0, 3]}
 
-heartbeta = {sprite = "heartbeta", tiling = "none", color = [4, 1]}
+beta_heart = {sprite = "heartbeta", tiling = "none", color = [4, 1]}
 
-icebeta = {sprite = "icebeta", tiling = "none", color = [1, 4]}
+beta_ice = {sprite = "icebeta", tiling = "none", color = [1, 4]}
 
-kekebeta = {sprite = "kekebeta", tiling = "animated_directional", color = [2, 2]}
+beta_keke = {sprite = "kekebeta", tiling = "animated_directional", color = [2, 2]}
 
-keybeta = {sprite = "keybeta", tiling = "none", color = [2, 4]}
+beta_key = {sprite = "keybeta", tiling = "none", color = [2, 4]}
 
-lavabeta = {sprite = "lavabeta", tiling = "tiling", color = [3, 4]}
+beta_lava = {sprite = "lavabeta", tiling = "tiling", color = [3, 4]}
 
-mebeta = {sprite = "mebeta", tiling = "animated_directional", color = [3, 1]}
+beta_me = {sprite = "mebeta", tiling = "animated_directional", color = [3, 1]}
 
-metalbeta = {sprite = "metalbeta", tiling = "none", color = [0, 0]}
+beta_metal = {sprite = "metalbeta", tiling = "none", color = [0, 0]}
 
-rockbeta = {sprite = "rockbeta", tiling = "none", color = [6, 2]}
+beta_rock = {sprite = "rockbeta", tiling = "none", color = [6, 2]}
 
-skullbeta = {sprite = "skullbeta", tiling = "directional", color = [2, 0]}
+beta_skull = {sprite = "skullbeta", tiling = "directional", color = [2, 0]}
 
-text_rockbeta = {sprite = "text_rockbeta", tiling = "none", color = [6, 0]}
+text_beta_rock = {sprite = "text_rockbeta", tiling = "none", color = [6, 0]}
 
-text_allbeta = {sprite = "text_allbeta", tiling = "none", color = [0, 3]}
+text_beta_all = {sprite = "text_allbeta", tiling = "none", color = [0, 3]}
 
-text_andbeta = {sprite = "text_andbeta", tiling = "none", color = [0, 3]}
+text_beta_and = {sprite = "text_andbeta", tiling = "none", color = [0, 3]}
 
-text_annibeta = {sprite = "text_annibeta", tiling = "none", color = [0, 3]}
+text_beta_anni = {sprite = "text_annibeta", tiling = "none", color = [0, 3]}
 
-text_bababeta = {sprite = "text_bababeta", tiling = "none", color = [0, 3]}
+text_beta_baba = {sprite = "text_bababeta", tiling = "none", color = [0, 3]}
 
-text_beltbeta = {sprite = "text_beltbeta", tiling = "none", color = [1, 3]}
+text_beta_belt = {sprite = "text_beltbeta", tiling = "none", color = [1, 3]}
 
-text_bestbeta = {sprite = "text_bestbeta", tiling = "none", color = [2, 4]}
+text_beta_best = {sprite = "text_bestbeta", tiling = "none", color = [2, 4]}
 
-text_doorbeta = {sprite = "text_doorbeta", tiling = "none", color = [2, 2]}
+text_beta_door = {sprite = "text_doorbeta", tiling = "none", color = [2, 2]}
 
-text_emptybeta = {sprite = "text_emptybeta", tiling = "none", color = [0, 3]}
+text_beta_empty = {sprite = "text_emptybeta", tiling = "none", color = [0, 3]}
 
-text_flagbeta = {sprite = "text_flagbeta", tiling = "none", color = [2, 4]}
+text_beta_flag = {sprite = "text_flagbeta", tiling = "none", color = [2, 4]}
 
-text_grassbeta = {sprite = "text_grassbeta", tiling = "none", color = [5, 2]}
+text_beta_grass = {sprite = "text_grassbeta", tiling = "none", color = [5, 2]}
 
-# text_morebeta = {sprite = "text_morebeta", tiling = "none", color = [4, 1]}
+# text_beta_more = {sprite = "text_morebeta", tiling = "none", color = [4, 1]}
 
-text_handbeta = {sprite = "text_handbeta", tiling = "none", color = [0, 3]}
+text_beta_hand = {sprite = "text_handbeta", tiling = "none", color = [0, 3]}
 
-# text_lovebeta = {sprite = "text_lovebeta", tiling = "none", color = [4, 1]}
+# text_beta_love = {sprite = "text_lovebeta", tiling = "none", color = [4, 1]}
 
-text_hidebeta = {sprite = "text_hidebeta", tiling = "none", color = [3, 2]}
+text_beta_hide = {sprite = "text_hidebeta", tiling = "none", color = [3, 2]}
 
-text_holdbeta = {sprite = "text_holdbeta", tiling = "none", color = [2, 4]}
+text_beta_hold = {sprite = "text_holdbeta", tiling = "none", color = [2, 4]}
 
-text_hotbeta = {sprite = "text_hotbeta", tiling = "none", color = [3, 4]}
+text_beta_hot = {sprite = "text_hotbeta", tiling = "none", color = [3, 4]}
 
-text_icebeta = {sprite = "text_icebeta", tiling = "none", color = [1, 4]}
+text_beta_ice = {sprite = "text_icebeta", tiling = "none", color = [1, 4]}
 
-text_isinbeta = {sprite = "text_isinbeta", tiling = "none", color = [0, 3]}
+text_beta_isin = {sprite = "text_isinbeta", tiling = "none", color = [0, 3]}
 
-text_inbeta = {sprite = "text_inbeta", tiling = "none", color = [0, 3]}
+text_beta_in = {sprite = "text_inbeta", tiling = "none", color = [0, 3]}
 
-text_isbeta = {sprite = "text_isbeta", tiling = "none", color = [0, 3]}
+text_beta_is = {sprite = "text_isbeta", tiling = "none", color = [0, 3]}
 
-text_kekebeta = {sprite = "text_kekebeta", tiling = "none", color = [2, 2]}
+text_beta_keke = {sprite = "text_kekebeta", tiling = "none", color = [2, 2]}
 
-text_keybeta = {sprite = "text_keybeta", tiling = "none", color = [2, 4]}
+text_beta_key = {sprite = "text_keybeta", tiling = "none", color = [2, 4]}
 
-text_killbeta = {sprite = "text_killbeta", tiling = "none", color = [2, 0]}
+text_beta_kill = {sprite = "text_killbeta", tiling = "none", color = [2, 0]}
 
-text_lavabeta = {sprite = "text_lavabeta", tiling = "none", color = [3, 4]}
+text_beta_lava = {sprite = "text_lavabeta", tiling = "none", color = [3, 4]}
 
-text_mebeta = {sprite = "text_mebeta", tiling = "none", color = [3, 1]}
+text_beta_me = {sprite = "text_mebeta", tiling = "none", color = [3, 1]}
 
-text_meltbeta = {sprite = "text_meltbeta", tiling = "none", color = [1, 4]}
+text_beta_melt = {sprite = "text_meltbeta", tiling = "none", color = [1, 4]}
 
-text_metalbeta = {sprite = "text_metalbeta", tiling = "none", color = [0, 3]}
+text_beta_metal = {sprite = "text_metalbeta", tiling = "none", color = [0, 3]}
 
-text_movebeta = {sprite = "text_movebeta", tiling = "none", color = [5, 4]}
+text_beta_move = {sprite = "text_movebeta", tiling = "none", color = [5, 4]}
 
-text_notbeta = {sprite = "text_notbeta", tiling = "none", color = [2, 2]}
+text_beta_not = {sprite = "text_notbeta", tiling = "none", color = [2, 2]}
 
-text_openbeta = {sprite = "text_openbeta", tiling = "none", color = [2, 4]}
+text_beta_open = {sprite = "text_openbeta", tiling = "none", color = [2, 4]}
 
-text_pullbeta = {sprite = "text_pullbeta", tiling = "none", color = [6, 0]}
+text_beta_pull = {sprite = "text_pullbeta", tiling = "none", color = [6, 0]}
 
-text_pushbeta = {sprite = "text_pushbeta", tiling = "none", color = [6, 0]}
+text_beta_push = {sprite = "text_pushbeta", tiling = "none", color = [6, 0]}
 
-text_safebeta = {sprite = "text_safebeta", tiling = "none", color = [0, 3]}
+text_beta_safe = {sprite = "text_safebeta", tiling = "none", color = [0, 3]}
 
-text_shiftbeta = {sprite = "text_shiftbeta", tiling = "none", color = [0, 3]}
+text_beta_shift = {sprite = "text_shiftbeta", tiling = "none", color = [0, 3]}
 
-text_shutbeta = {sprite = "text_shutbeta", tiling = "none", color = [2, 2]}
+text_beta_shut = {sprite = "text_shutbeta", tiling = "none", color = [2, 2]}
 
-text_sinkbeta = {sprite = "text_sinkbeta", tiling = "none", color = [3, 2]}
+text_beta_sink = {sprite = "text_sinkbeta", tiling = "none", color = [3, 2]}
 
-text_bonebeta = {sprite = "text_bonebeta", tiling = "none", color = [2, 0]}
+text_beta_bone = {sprite = "text_bonebeta", tiling = "none", color = [2, 0]}
 
-text_stopbeta = {sprite = "text_stopbeta", tiling = "none", color = [5, 2]}
+text_beta_stop = {sprite = "text_stopbeta", tiling = "none", color = [5, 2]}
 
-text_swapbeta = {sprite = "text_swapbeta", tiling = "none", color = [3, 1]}
+text_beta_swap = {sprite = "text_swapbeta", tiling = "none", color = [3, 1]}
 
-text_telebeta = {sprite = "text_telebeta", tiling = "none", color = [1, 4]}
+text_beta_tele = {sprite = "text_telebeta", tiling = "none", color = [1, 4]}
 
-text_textbeta = {sprite = "text_textbeta", tiling = "none", color = [4, 1]}
+text_beta_text = {sprite = "text_textbeta", tiling = "none", color = [4, 1]}
 
-text_wallbeta = {sprite = "text_wallbeta", tiling = "none", color = [0, 0]}
+text_beta_wall = {sprite = "text_wallbeta", tiling = "none", color = [0, 0]}
 
-text_waterbeta = {sprite = "text_waterbeta", tiling = "none", color = [3, 2]}
+text_beta_water = {sprite = "text_waterbeta", tiling = "none", color = [3, 2]}
 
-text_weakbeta = {sprite = "text_weakbeta", tiling = "none", color = [1, 2]}
+text_beta_weak = {sprite = "text_weakbeta", tiling = "none", color = [1, 2]}
 
-text_whatbeta = {sprite = "text_whatbeta", tiling = "none", color = [0, 3]}
+text_beta_what = {sprite = "text_whatbeta", tiling = "none", color = [0, 3]}
 
-text_winbeta = {sprite = "text_winbeta", tiling = "none", color = [2, 4]}
+text_beta_win = {sprite = "text_winbeta", tiling = "none", color = [2, 4]}
 
-text_youbeta = {sprite = "text_youbeta", tiling = "none", color = [4, 1]}
+text_beta_you = {sprite = "text_youbeta", tiling = "none", color = [4, 1]}
 
-wallbeta = {sprite = "wallbeta", tiling = "tiling", color = [0, 0]}
+beta_wall = {sprite = "wallbeta", tiling = "tiling", color = [0, 0]}
 
-waterbeta = {sprite = "waterbeta", tiling = "tiling", color = [3, 2]}
+beta_water = {sprite = "waterbeta", tiling = "tiling", color = [3, 2]}
 
-whatbeta = {sprite = "whatbeta", tiling = "none", color = [0, 3]}
+beta_what = {sprite = "whatbeta", tiling = "none", color = [0, 3]}
 
