@@ -164,13 +164,8 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error(error.args[0])
 
             elif isinstance(error, errors.UnknownVariant):
-                try:
-                    word, variant, *rest = error.args
-                except ValueError:
-                    word, *rest = error.args
-                    variant = '(Unspecified in error)'
                 return await ctx.error(
-                    f"The variant for `{word}:{variant}` doesn't exist."
+                    f"The variant `{error.args[1]}` doesn't exist."
                 )
 
             elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):
