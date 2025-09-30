@@ -227,6 +227,8 @@ class CommandErrorHandler(commands.Cog):
                     return await ctx.error("The command was `       TAKING TOO LONG` and was timed out.")
                 return await ctx.error("The command took too long and was timed out.")
             elif isinstance(error, errors.MacroError):
+                if error.args[1] is None:
+                    return await ctx.error(f'Macro execution failed: {error.args[0]}')
                 buf = io.StringIO()
                 buf.write("-----\n")
                 for traceback_frame in reversed(error.args[1]):
