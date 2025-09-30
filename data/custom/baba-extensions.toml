@@ -1,6 +1,7 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
 
+grid = {sprite = "grid", source = "baba", color = [4, 2], tiling = "none"}
 
 plus = {sprite = "plus", color = [0, 3], tiling = "none"}
 
