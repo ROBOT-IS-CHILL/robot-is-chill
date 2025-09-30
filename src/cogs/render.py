@@ -132,38 +132,42 @@ class Renderer:
                 else:
                     ctx.sign_texts[i].font = FONT.font_variant(size=size)
         left_offset = top_offset = right_offset = bottom_offset = 0
-        left = top = 0
+        left = top = right = bottom = 0
         actual_width = actual_height = 0
         expected_width, expected_height = width * ctx.spacing, height * ctx.spacing
-        for (y, x, _z, _t), tile in grid.items():
-            if not isinstance(tile, ProcessedTile):
-                continue
-            if all(frame is None for frame in tile.frames):
-                continue
-            max_height, max_width = (
-                max(frame.shape[0] for frame in tile.frames if frame is not None),
-                max(frame.shape[1] for frame in tile.frames if frame is not None)
-            )
-            px, py = tile.displacement if ctx.expand else (0, 0)
-            left_offset = max(left_offset, -px)
-            right_offset = max(right_offset, px)
-            top_offset = max(top_offset, -py)
-            bottom_offset = max(bottom_offset, py)
-            px += x * ctx.spacing
-            py += y * ctx.spacing
-            left_boundary = int(math.ceil(px - max(0, (max_width - ctx.spacing) / 2)))
-            right_boundary = int(math.ceil(px + ctx.spacing + max(0, (max_width - ctx.spacing) / 2)))
-            top_boundary = int(math.ceil(py - max(0, (max_height - ctx.spacing) / 2)))
-            bottom_boundary = int(math.ceil(py + ctx.spacing + max(0, (max_height - ctx.spacing) / 2)))
-            left = max(left, -left_boundary)
-            top = max(top, -top_boundary)
-            actual_width = max(actual_width, right_boundary)
-            actual_height = max(actual_height, bottom_boundary)
-        right = max(0, actual_width - expected_width)
-        bottom = max(0, actual_height - expected_height)
+        if ctx.cropped:
+            actual_width, actual_height = expected_width, expected_height
+        else:
+            for (y, x, _z, _t), tile in grid.items():
+                if not isinstance(tile, ProcessedTile):
+                    continue
+                if all(frame is None for frame in tile.frames):
+                    continue
+                max_height, max_width = (
+                    max(frame.shape[0] for frame in tile.frames if frame is not None),
+                    max(frame.shape[1] for frame in tile.frames if frame is not None)
+                )
+                px, py = tile.displacement if ctx.expand else (0, 0)
+                left_offset = max(left_offset, -px)
+                right_offset = max(right_offset, px)
+                top_offset = max(top_offset, -py)
+                bottom_offset = max(bottom_offset, py)
+                px += x * ctx.spacing
+                py += y * ctx.spacing
+                left_boundary = int(math.ceil(px - max(0, (max_width - ctx.spacing) / 2)))
+                right_boundary = int(math.ceil(px + ctx.spacing + max(0, (max_width - ctx.spacing) / 2)))
+                top_boundary = int(math.ceil(py - max(0, (max_height - ctx.spacing) / 2)))
+                bottom_boundary = int(math.ceil(py + ctx.spacing + max(0, (max_height - ctx.spacing) / 2)))
+                left = max(left, -left_boundary)
+                top = max(top, -top_boundary)
+                actual_width = max(actual_width, right_boundary)
+                actual_height = max(actual_height, bottom_boundary)
+            right = max(0, actual_width - expected_width)
+            bottom = max(0, actual_height - expected_height)
 
         final_size = np.array((int(height * ctx.spacing + top + bottom),
                                  int(width * ctx.spacing + left + right)))
+        print(final_size)
         true_size = final_size * ctx.upscale
         if not ctx.bypass_limits:
             assert all(
@@ -203,28 +207,29 @@ class Renderer:
                 image = tile.frames[wobble] if tile.frames[wobble] is not None else final_wobble
                 if image is None:
                     continue
-                lcrop = max(0, -displacement[1])
-                tcrop = max(0, -displacement[0])
-                rcrop = max(0, (displacement[1] + image.shape[1]) - final_size[1])
-                bcrop = max(0, (displacement[0] + image.shape[0]) - final_size[0])
-                image = image[
-                    slice(tcrop, -bcrop if bcrop > 0 else None),
-                    slice(lcrop, -rcrop if rcrop > 0 else None)
-                ]
-                if image.size < 1:
+                """
+                # Image ranges
+                y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
+                x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
+
+                # Overlay ranges
+                y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
+                x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
+                """
+                dy, dx = displacement
+                y1, y2 = max(0, dy), min(final_size[0], dy + image.shape[0])
+                x1, x2 = max(0, dx), min(final_size[1], dx + image.shape[1])
+                y1o, y2o = max(0, -dy), min(image.shape[0], final_size[0] - dy)
+                x1o, x2o = max(0, -dx), min(image.shape[1], final_size[1] - dx)
+                if y1 >= y2 or x1 >= x2 or y1o >= y2o or x1o >= x2o:
                     continue
-                src_slice = (
-                    slice(max(0, displacement[0]), displacement[0] + image.shape[0]),
-                    slice(max(0, displacement[1]), displacement[1] + image.shape[1])
-                )
-                index = int(image_index), *src_slice
-                try:
-                    assert steps[index].shape == image.shape, \
-                        f"Failed to composite tile {tile.name} onto scene: `{steps[index].shape}` != `{image.shape}`\n"\
-                        "This is a bug. Please send the command you just ran to a developer."
-                    steps[index] = self.blend(tile.blending, steps[index], image, tile.keep_alpha)
-                except IndexError:
-                    pass  # warnings.warn(f"Couldn't place {tile} at {x}, {y}, {index}")
+                cropped_step = steps[int(image_index)][y1:y2, x1:x2]
+                cropped_tile = image[y1o:y2o, x1o:x2o]
+
+                assert cropped_step.shape == cropped_tile.shape, \
+                    f"Failed to composite tile {tile.name} onto scene: `{cropped_step.shape}` != `{cropped_tile.shape}`\n"\
+                    "This is a bug. Please send the command you just ran to a developer."
+                cropped_step[:] = self.blend(tile.blending, cropped_step, cropped_tile, tile.keep_alpha)
         background_images = [np.array(image.convert("RGBA")) for image in ctx.before_images]
         l, u, r, d = ctx.crop
         r = r
