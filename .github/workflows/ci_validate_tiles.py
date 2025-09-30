@@ -84,7 +84,6 @@ entry_model = {
     "version": opt(isint),
 }
 
-
 def check_entries(entry: dict) -> list[str]:
     failures = []
 
@@ -101,6 +100,7 @@ def check_entries(entry: dict) -> list[str]:
 
 def main():
     failures = []
+    global_tiles = {}
     for file in Path("data/custom").glob("*.toml"):
         try:
             print(f"Checking {file}...")
@@ -109,6 +109,10 @@ def main():
             failed = False
             for tile, entry in data.items():
                 fails = check_entries(entry)
+                if tile in global_tiles:
+                    fails.append(f"Tile already exists in {global_tiles[tile]}")
+                else:
+                    global_tiles[tile] = file
                 if len(fails):
                     if not failed:
                         failed = True
