@@ -5,6 +5,6 @@ ssh root@107.172.159.51 /bin/sh <<EOF
 	cd /root/ric-staging
 	systemctl stop ric-staging
 	git checkout $CURR_BRANCH
-	git pull -f
+	git pull -f --rebase
 	systemctl start ric-staging
 EOF
