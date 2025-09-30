@@ -272,9 +272,6 @@ text_border = {sprite = "text_border", color = [1, 0], tiling = "none"}
 text_badbad_old = {sprite = "text_badbad", color = [1, 4], tiling = "none"}
 
 #These two are to be removed?
-mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
-
-text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
 
 baljeet = {sprite = "baljeet", color = [6, 1], tiling = "none"}
 

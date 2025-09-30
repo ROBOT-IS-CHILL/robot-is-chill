@@ -2,21 +2,9 @@
 
 # This source needs to go.
 
-text_flafla = {sprite = "text_flafla", color = [2, 4], tiling = "none", source = "nova-sprites"}
-
 cucu = {sprite = "cucu", color = [0, 3], tiling = "character"}
 
 text_cucu = {sprite = "text_cucu", color = [0, 1], tiling = "none"}
-
-cookie = {sprite = "cookie", color = [6, 1], tiling = "none"}
-
-text_cookie = {sprite = "text_cookie", color = [6, 1], tiling = "none"}
-
-ika = {sprite = "ika", color = [5, 3], tiling = "character"}
-
-text_ika = {sprite = "text_ika", color = [5, 3], tiling = "none"}
-
-beta = {sprite = "beta", color = [0, 3], tiling = "none"}
 
 text_beta = {sprite = "text_beta", color = [0, 3], tiling = "none"}
 
@@ -24,13 +12,11 @@ gun = {sprite = "gun", color = [0, 1], tiling = "directional"}
 
 text_crash = {sprite = "text_crash", color = [2, 2], tiling = "none"}
 
-balalt = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
+balalt2 = {sprite = "balalt", color = [0, 1], tiling = "tiling"}
 
-text_balalt = {sprite = "text_balalt", color = [0, 1], tiling = "none"}
+text_balalt2 = {sprite = "text_balalt", color = [0, 1], tiling = "none"}
 
-balaltcorner = {sprite = "balaltcorner", color = [0, 1], tiling = "directional"}
-
-bibi = {sprite = "bibi", color = [0, 3], tiling = "character"}
+balaltcorner2 = {sprite = "balaltcorner", color = [0, 1], tiling = "directional"}
 
 happyerror = {sprite = "errorhappy", color = [0, 3], tiling = "none"}
 
@@ -40,11 +26,7 @@ happyerror = {sprite = "errorhappy", color = [0, 3], tiling = "none"}
 
 text_bibi = {sprite = "text_bibi", color = [4, 1], tiling = "none"}
 
-koko = {sprite = "koko", color = [2, 2], tiling = "character"}
-
 text_koko = {sprite = "text_koko", color = [2, 2], tiling = "none"}
-
-mu = {sprite = "mu", color = [3, 1], tiling = "character"}
 
 text_mu = {sprite = "text_mu", color = [3, 1], tiling = "none"}
 

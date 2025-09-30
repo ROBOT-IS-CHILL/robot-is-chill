@@ -88,7 +88,7 @@ orb2 = {sprite = "orb2", color = [4, 1], tiling = "none"}
 
 text_bedturn = {sprite = "text_bedturn", color = [1, 4], tiling = "none"}
 
-text_bill = {sprite = "text_bill", color = [2, 4], tiling = "none"}
+text_bill2 = {sprite = "text_bill", color = [2, 4], tiling = "none"}
 
 text_orb2 = {sprite = "text_orb2", color = [4, 1], tiling = "none"}
 
