@@ -109,7 +109,7 @@ def main():
             failed = False
             for tile, entry in data.items():
                 fails = check_entries(entry)
-                if tile in global_tiles:
+                if tile in global_tiles and "source" not in entry and "version" not in entry:
                     fails.append(f"Tile already exists in {global_tiles[tile]}")
                 else:
                     global_tiles[tile] = file
