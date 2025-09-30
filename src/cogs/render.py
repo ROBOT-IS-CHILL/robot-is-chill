@@ -99,9 +99,18 @@ class Renderer:
             with Image.open(path) as im:
                 self.palette_cache[Path(path).stem] = im.convert("RGBA").copy()
         self.overlay_cache = {}
+        self.font_cache = {}
         for path in glob.glob("data/overlays/*.png"):
             with Image.open(path) as im:
                 self.overlay_cache[Path(path).stem] = np.array(im.convert("RGBA"))
+
+    def get_cached_font(self, font, size):
+        if (font, size) not in self.font_cache:
+            if font is None:
+                self.font_cache[font, size] = FONT.font_variant(size=size)
+            else:
+                self.font_cache[font, size] = ImageFont.truetype(f"data/fonts/{font}.ttf", size=size)
+        return self.font_cache[font, size]
 
     async def render(
         self,
@@ -127,10 +136,10 @@ class Renderer:
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
                 assert size <= constants.DEFAULT_SPRITE_SIZE * 2 or ctx.bypass_limits, f"Font size of `{size}` is too large! The maximum is `{constants.DEFAULT_SPRITE_SIZE * 2}`."
-                if sign_text.font is not None:
-                    ctx.sign_texts[i].font = ImageFont.truetype(f"data/fonts/{sign_text.font}.ttf", size=size)
-                else:
-                    ctx.sign_texts[i].font = FONT.font_variant(size=size)
+                ctx.sign_texts[i].font = self.get_cached_font(sign_text.font, size)
+                for var in sign_text.variants:
+                    if var.type == "sign":
+                        await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
         left_offset = top_offset = right_offset = bottom_offset = 0
         left = top = right = bottom = 0
         actual_width = actual_height = 0
@@ -264,9 +273,6 @@ class Renderer:
                 if ctx.image_format == "gif" and ctx.background is None:
                     draw.fontmode = "1"
                 for sign_text in ctx.sign_texts:
-                    for var in sign_text.variants:
-                        if var.type == "sign":
-                            await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
                     if wobble_range[i] == sign_text.t:
                         text = sign_text.text
                         text = re.sub(r"(?<!\\)\\n", "\n", text)
