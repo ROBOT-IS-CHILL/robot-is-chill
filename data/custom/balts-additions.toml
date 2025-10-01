@@ -100,8 +100,6 @@ hat = {sprite = "hat", color = [0, 1], tiling = "none"}
 
 crewmate = {sprite = "crewmate", color = [2, 2], tiling = "character"}
 
-fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "baltdev"}
-
 nope2 = {sprite = "nope", color = [2, 2], tiling = "none"}
 
 platform = {sprite = "platform", color = [0, 3], tiling = "character"}
@@ -133,8 +131,6 @@ folt = {sprite = "folt", color = [5, 1], tiling = "character", author = "baltdev
 jilt = {sprite = "jilt", color = [6, 1], tiling = "character", author = "baltdev"}
 
 ilt = {sprite = "ilt", color = [1, 3], tiling = "character", author = "baltdev"}
-
-text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none", author = "baltdev"}
 
 text_ouch = {sprite = "text_ouch", color = [2, 3], tiling = "none", author = "baltdev"}
 

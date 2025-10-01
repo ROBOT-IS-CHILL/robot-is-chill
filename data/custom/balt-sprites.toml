@@ -155,3 +155,7 @@ text_explosions = {color = [2, 3], tiling = "none", sprite = "text_explosions", 
 kanpe = {sprite = "kanpe", color = [4, 4], tiling = "character", tags = ["animal"], author = "baltdev"}
 
 text_kanpe = {sprite = "text_kanpe", color = [4, 4], tiling = "none", tags = ["animal"], author = "baltdev"}
+
+text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none", author = "baltdev"}
+
+fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "baltdev"}
