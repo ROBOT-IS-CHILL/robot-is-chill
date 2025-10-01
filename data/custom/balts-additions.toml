@@ -1,6 +1,6 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
-
+# This source needs to go.
 
 text_flafla = {sprite = "text_flafla", color = [2, 4], tiling = "none", source = "nova-sprites"}
 
@@ -56,9 +56,9 @@ et = {sprite = "et", color = [1, 4], tiling = "character"}
 
 text_et = {sprite = "text_et", color = [1, 4], tiling = "none"}
 
-gugu = {sprite = "gugu", color = [0, 2], tiling = "character"}
+gugu = {sprite = "gugu", color = [0, 2], tiling = "character", author = "baltdev"}
 
-text_gugu = {sprite = "text_gugu", color = [0, 2], tiling = "none"}
+text_gugu = {sprite = "text_gugu", color = [0, 2], tiling = "none", author = "baltdev"}
 
 pet = {sprite = "pet", color = [3, 1], tiling = "none"}
 
@@ -90,7 +90,7 @@ furret = {sprite = "furret", color = [2, 4], tiling = "directional"}
 
 fullest = {sprite = "fullest", color = [0, 3], tiling = "none"}
 
-adoballs = {sprite = "adoballs", color = [0, 3], tiling = "animated"}
+adoballs = {sprite = "adoballs", color = [0, 3], tiling = "animated", author = "baltdev"}
 
 cent = {sprite = "CenT", color = [0, 3], tiling = "character"}
 
@@ -100,7 +100,7 @@ hat = {sprite = "hat", color = [0, 1], tiling = "none"}
 
 crewmate = {sprite = "crewmate", color = [2, 2], tiling = "character"}
 
-fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character"}
+fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "baltdev"}
 
 nope2 = {sprite = "nope", color = [2, 2], tiling = "none"}
 
@@ -118,25 +118,25 @@ line2 = {sprite = "line2", color = [0, 3], tiling = "tiling"}
 
 text_tilde = {sprite = "text_tilde", color = [0, 3], tiling = "none"}
 
-rdbar = {sprite = "rdbar", color = [5, 2], tiling = "directional"}
+rdbar = {sprite = "rdbar", color = [5, 2], tiling = "directional", author = "baltdev"}
 
 octagon = {sprite = "octagon", color = [2, 2], tiling = "none"}
 
-hazelstorm = {sprite = "hazelstorm", color = [3, 3], tiling = "directional"}
+hazelstorm = {sprite = "hazelstorm", color = [3, 3], tiling = "directional", author = "baltdev"}
 
-kelt = {sprite = "kelt", color = [2, 1], tiling = "character"}
+kelt = {sprite = "kelt", color = [2, 1], tiling = "character", author = "baltdev"}
 
-meelt = {sprite = "meelt", color = [3, 0], tiling = "character"}
+meelt = {sprite = "meelt", color = [3, 0], tiling = "character", author = "baltdev"}
 
-folt = {sprite = "folt", color = [5, 1], tiling = "character"}
+folt = {sprite = "folt", color = [5, 1], tiling = "character", author = "baltdev"}
 
-jilt = {sprite = "jilt", color = [6, 1], tiling = "character"}
+jilt = {sprite = "jilt", color = [6, 1], tiling = "character", author = "baltdev"}
 
-ilt = {sprite = "ilt", color = [1, 3], tiling = "character"}
+ilt = {sprite = "ilt", color = [1, 3], tiling = "character", author = "baltdev"}
 
-text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none"}
+text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none", author = "baltdev"}
 
-text_ouch = {sprite = "text_ouch", color = [2, 3], tiling = "none"}
+text_ouch = {sprite = "text_ouch", color = [2, 3], tiling = "none", author = "baltdev"}
 
 cece = {sprite = "cece", color = [5, 2], tiling = "character"}
 
@@ -144,19 +144,18 @@ tbh = {sprite = "tbh", color = [0, 3], tiling = "none"}
 
 beba = {sprite = "beba", color = [0, 1], tiling = "character"}
 
-snombalt = {sprite = "snombalt", color = [0, 3], tiling = "directional"}
+snombalt = {sprite = "snombalt", color = [0, 3], tiling = "directional", author = "baltdev"}
 
-snombalt2 = {sprite = "snombalt2", color = [0, 3], tiling = "directional"}
+snombalt2 = {sprite = "snombalt2", color = [0, 3], tiling = "directional", author = "baltdev"}
 
-snombalt3 = {sprite = "snombalt3", color = [0, 1], tiling = "directional"}
+snombalt3 = {sprite = "snombalt3", color = [0, 1], tiling = "directional", author = "baltdev"}
 
 kobad = {sprite = "kobad", color = [0, 3], tiling = "character", tags = ["animal", "common"]}
 
-glider = {sprite = "glider", color = [0, 3], tiling = "animated"}
+glider = {sprite = "glider", color = [0, 3], tiling = "animated", author = "baltdev"}
 
-adotile = {sprite = "adotile", color = [6, 2], tiling = "tiling"}
+adotile = {sprite = "adotile", color = [6, 2], tiling = "tiling", author = "baltdev"}
 
-campfire = {sprite = "campfire", color = [3, 4], tiling = "none"}
+campfire = {sprite = "campfire", color = [3, 4], tiling = "none", author = "baltdev"}
 
-example = {sprite = "example", color = [0, 3], tiling = "character"}
-
+example = {sprite = "example", color = [0, 3], tiling = "character", author = "baltdev"}

@@ -151,3 +151,7 @@ text_dinner = {color = [3, 3], tiling = "none", sprite = "text_dinner", tags = [
 text_aiko = {color = [2, 4], tiling = "none", sprite = "text_aiko", tags = ["balt_texts"]}
 
 text_explosions = {color = [2, 3], tiling = "none", sprite = "text_explosions", tags = ["balt_texts"]}
+
+kanpe = {sprite = "kanpe", color = [4, 4], tiling = "character", tags = ["animal"], author = "baltdev"}
+
+text_kanpe = {sprite = "text_kanpe", color = [4, 4], tiling = "none", tags = ["animal"], author = "baltdev"}
