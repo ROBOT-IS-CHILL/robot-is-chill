@@ -59,6 +59,7 @@ sp_musi = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "musi"}
 sp_mute = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "mute"}
 sp_nanpa = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "nanpa"}
 sp_nasa = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "nasa"}
+sp_nasin = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "nasin"}
 sp_nena = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "nena"}
 sp_ni = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "ni"}
 sp_nimi = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "nimi"}
