@@ -440,6 +440,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 
         while True:
             await parse_row()
+            last_tile = None
             x = z = t = 0
             y += 1
             y_size = max(y, y_size)
