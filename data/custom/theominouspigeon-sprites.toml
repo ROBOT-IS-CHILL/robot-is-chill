@@ -7,3 +7,103 @@ text_yen = {sprite = "text_yen", color = [3, 1], tiling = "none"}
 text_euro = {sprite = "text_euro", color = [4, 3], active_color = [4, 4], tiling = "none"}
 
 text_cent = {sprite = "text_cent", color = [2, 4], tiling = "none"}
+
+ezu = {sprite = "ezu", color = [3, 4], tiling = "directional"}
+
+text_ezu = {sprite = "text_ezu", color = [6, 1], active_color = [3, 4], tiling = "none"}
+
+dede = {sprite = "dede", color = [1, 2], tiling = "directional"}
+
+text_dede = {sprite = "text_dede", color = [1, 2], tiling = "none"}
+
+nunu = {sprite = "nunu", color = [3, 1], tiling = "directional"}
+
+text_nunu = {sprite = "text_nunu", color = [3, 1], tiling = "none"}
+
+alty = {sprite = "alty", color = [5, 3], tiling = "directional"}
+
+text_alty = {sprite = "text_alty", color = [5, 2], active_color = [5, 3], tiling = "none"}
+
+tsetse = {sprite = "tsetse", color = [3, 3], tiling = "directional"}
+
+text_tsetse = {sprite = "text_tsetse", color = [3, 3], tiling = "none"}
+
+altpawn = {sprite = "altpawn", color = [4, 4], tiling = "directional"}
+
+text_altpawn = {sprite = "text_altpawn", color = [4, 4], tiling = "none"}
+
+altknight = {sprite = "altknight", color = [3, 3], tiling = "directional"}
+
+text_altknight = {sprite = "text_altknight", color = [3, 3], tiling = "none"}
+
+text_goop = {sprite = "text_goop", color = [1, 3], tiling = "none"}
+
+text_magma = {sprite = "text_magma", color = [2, 3], tiling = "none"}
+
+pigeon = {sprite = "pigeon", color = [0, 2], tiling = "character"}
+
+text_pigeon = {sprite = "text_pigeon", color = [0, 2], tiling = "none"}
+
+peak = {sprite = "peak", color = [0, 3], tiling = "none"}
+
+altdoor = {sprite = "altdoor", color = [0, 2], tiling = "none"}
+
+text_altdoor = {sprite = "text_altdoor", color = [0, 2], tiling = "none"}
+
+germ = {sprite = "germ", color = [4, 4], tiling = "none"}
+
+text_germ = {sprite = "text_germ", color = [3, 3], active_color = [4, 4], tiling = "none"}
+
+text_2let = {sprite = "text_2let", color = [1, 4], tiling = "none"}
+
+text_collapse = {sprite = "text_collapse", color = [1, 2], tiling = "none"}
+
+warp_warp_ = {sprite = "warp_warp_", color = [1, 2], tiling = "none"}
+
+# Is listed, but doesn't have the .png files?
+# warp_cnot = {sprite = "warp_cnot", color = [2, 3], tiling = "none"}
+
+# I put these in quotes, no idea if those are valid names otherwise.
+"warp_!not" = {sprite = "warp_!not", color = [0, 3], active_color = [0, 3], tiling = "none"}
+
+"warp_!prop" = {sprite = "warp_!prop", color = [0, 3], active_color = [0, 3], tiling = "none"}
+
+"warp_!verb" = {sprite = "warp_!verb", color = [0, 3], active_color = [0, 3], tiling = "none"}
+
+text_breezeup = {sprite = "text_beup", color = [1, 4], tiling = "none"}
+
+text_breezedown = {sprite = "text_bedown", color = [1, 4], tiling = "none"}
+
+text_breezeleft = {sprite = "text_beleft", color = [1, 4], tiling = "none"}
+
+text_breezeright = {sprite = "text_beright", color = [1, 4], tiling = "none"}
+
+# might not actually exist, no files for it
+# blown = {sprite = "blown", color = [3, 3], tiling = "none"}
+
+text_blown = {sprite = "text_blown", color = [3, 3], tiling = "none"}
+
+skirt = {sprite = "skirt", color = [3, 1], tiling = "none"}
+
+text_skirt = {sprite = "text_skirt", color = [3, 1], tiling = "none"}
+
+dapper = {sprite = "dapper", color = [4, 1], tiling = "none"}
+
+# ditto
+# text_dapper = {sprite = "text_dapper", color = [4, 1], tiling = "none"}
+
+orb_morb = {sprite = "orb_morb", color = [1, 3], tiling = "none"}
+
+orb_tsetse = {sprite = "orb_tsetse", color = [4, 1], tiling = "none"}
+
+orb_grass = {sprite = "orb_grass", color = [4, 1], tiling = "none"}
+
+orb_skull = {sprite = "orb_skull", color = [4, 1], tiling = "none"}
+
+orb_sun = {sprite = "orb_sun", color = [4, 1], tiling = "none"}
+
+prism_moon = {sprite = "prism_moon", color = [2, 4], tiling = "none"}
+
+prism_ezu = {sprite = "prism_ezu", color = [6, 1], active_color = [3, 4], tiling = "none"}
+
+prism_cloud = {sprite = "prism_cloud", color = [1, 3], active_color = [1, 4], tiling = "none"}
