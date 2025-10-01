@@ -128,8 +128,6 @@ class Renderer:
         durations = [ctx.speed for _ in range(animation_timestep * stime + len(ctx.before_images))]
         frames = np.repeat(ctx.frames, animation_wobble).tolist()
         frames = (frames * (math.ceil(len(durations) / animation_timestep)))
-        assert len(ctx.sign_texts) <= constants.MAX_SIGN_TEXTS or ctx.bypass_limits, \
-            f"Too many sign texts! The limit is `{constants.MAX_SIGN_TEXTS}`, while you have `{len(ctx.sign_texts)}`."
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
                 size = int(
