@@ -127,3 +127,4 @@ sp_tonsi = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "tonsi
 sp_linluwi = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "linluwi"}
 sp_meso = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "meso"}
 sp_lanpan = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "lanpan"}
+sp_pi = {color = [0, 3], author = "baltdev", tiling = "tiling", sprite = "pi"}
