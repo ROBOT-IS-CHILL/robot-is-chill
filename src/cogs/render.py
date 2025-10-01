@@ -130,14 +130,14 @@ class Renderer:
         frames = (frames * (math.ceil(len(durations) / animation_timestep)))
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
+                for var in sign_text.variants:
+                    if var.type == "sign":
+                        await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
                 size = int(
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
                 assert size <= constants.DEFAULT_SPRITE_SIZE * 2 or ctx.bypass_limits, f"Font size of `{size}` is too large! The maximum is `{constants.DEFAULT_SPRITE_SIZE * 2}`."
                 ctx.sign_texts[i].font = self.get_cached_font(sign_text.font, size)
-                for var in sign_text.variants:
-                    if var.type == "sign":
-                        await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
         left_offset = top_offset = right_offset = bottom_offset = 0
         left = top = right = bottom = 0
         actual_width = actual_height = 0
