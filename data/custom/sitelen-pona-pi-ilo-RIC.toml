@@ -128,3 +128,7 @@ sp_linluwi = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "lin
 sp_meso = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "meso"}
 sp_lanpan = {color = [0, 3], author = "baltdev", tiling = "none", sprite = "lanpan"}
 sp_pi = {color = [0, 3], author = "baltdev", tiling = "tiling", sprite = "pi"}
+
+
+sp_soweli = {color = [0, 3], tiling = "character", sprite = "soweli", source = "brick-sprites"}
+sp_kijetesantakalu = {color = [0, 3], tiling = "character", sprite = "kijetesantakalu", source = "3dg-sprites"}
