@@ -10,8 +10,6 @@ from quart import Quart, jsonify, globals, request
 from quart_rate_limiter import RateLimiter, rate_limit, rate_exempt
 import asqlite
 
-from src.types import TilingMode
-
 
 app = Quart(__name__, instance_relative_config=True)
 rate_limiter = RateLimiter(app)
