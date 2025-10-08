@@ -102,7 +102,7 @@ text_elira = {sprite = "text_elira", color = [2, 4], tiling = "none"}
 
 text_niko = {color = [2, 4], tiling = "none", sprite = "text_niko", tags = ["balt_texts"]}
 
-text_norvey = {color = [0, 3], tiling = "none", sprite = "text_norvey", tags = ["balt_texts"]}
+text_norvey = {color = [1, 4], tiling = "none", sprite = "text_norvey", tags = ["balt_texts"]}
 
 text_infinite = {color = [4, 1], tiling = "none", sprite = "text_infinite", tags = ["balt_texts"]}
 

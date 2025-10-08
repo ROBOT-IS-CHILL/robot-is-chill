@@ -172,7 +172,7 @@ text_metatext = {sprite = "text_metatext", color = [4, 1], tiling = "none"}
 
 text_inscribe = {sprite = "text_inscribe", color = [0, 2], tiling = "none"}
 
-text_become = {sprite = "text_become", color = [0, 3], tiling = "none"}
+text_become2 = {sprite = "text_become", color = [0, 3], tiling = "none"}
 
 glyph_inscribe = {sprite = "glyph_inscribe", color = [0, 2], tiling = "directional"}
 

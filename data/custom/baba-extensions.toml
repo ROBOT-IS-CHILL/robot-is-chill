@@ -196,6 +196,8 @@ leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
 
 ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
 
+ice_old_old = {sprite = "ice_old_old", color = [1, 2], tiling = "none"}
+
 text_happy = {sprite = "text_happy", color = [2, 4], tiling = "none"}
 
 text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
@@ -255,6 +257,20 @@ text_dec = {sprite = "text_dec", color = [6, 1], tiling = "none"}
 mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
 
 text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
+
+text_stick_old = {sprite = "text_stick", color = [2, 4], tiling = "none"}
+
+level_grid = {sprite = "level_grid", color = [1, 2], tiling = "none"}
+
+bug_old = {sprite = "bug_old", color = [6, 2], tiling = "directional"}
+
+nose_old = {sprite = "nose_old", color = [3, 1], tiling = "directional"}
+
+text_ok = {sprite = "text_ok", color = [0, 3], tiling = "none"}
+
+text_become = {sprite = "text_become", color = [0, 3], tiling = "none"}
+
+blossom3 = {sprite = "blossom3", color = [0, 3], tiling = "none"}
 
 # remove this once the patch is out
 text_bean = {sprite = "text_bean", color = [2, 1], tiling = "none"}
