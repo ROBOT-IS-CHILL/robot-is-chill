@@ -18,7 +18,7 @@ cube3 = {sprite = "cube", color = [3, 1], tiling = "none"}
 
 drop = {sprite = "drop", color = [1, 3], tiling = "none"}
 
-flake = {sprite = "flake", color = [0, 3], tiling = "none"}
+flake2 = {sprite = "flake", color = [0, 3], tiling = "none"}
 
 grave = {sprite = "grave", color = [0, 2], tiling = "none"}
 
@@ -26,7 +26,7 @@ heat = {sprite = "heat", color = [2, 2], tiling = "animated_directional"}
 
 leaves = {sprite = "leaves", color = [2, 4], tiling = "none"}
 
-log = {sprite = "log", color = [6, 1], tiling = "directional"}
+log2 = {sprite = "log", color = [6, 1], tiling = "directional"}
 
 pebble = {sprite = "pebble", color = [6, 1], tiling = "none"}
 

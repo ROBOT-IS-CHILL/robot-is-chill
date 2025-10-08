@@ -1,16 +1,17 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
 
+grid = {sprite = "grid", source = "baba", color = [4, 2], tiling = "none"}
 
 plus = {sprite = "plus", color = [0, 3], tiling = "none"}
 
 goose = {sprite = "goose", color = [0, 3], tiling = "animated_directional"}
 
-level = {sprite = "level", color = [1, 2], tiling = "none", tags = ["baba_special"], extra_frames = [1, 2]}
+level = {sprite = "level", color = [1, 2], tiling = "none", version = 0, extra_frames = [1, 2]}
 
 sale = {sprite = "sale", color = [4, 2], tiling = "none"}
 
-text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none", type = 0} # type??
+text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none"}
 
 spore = {sprite = "spore", color = [0, 3], tiling = "none"}
 

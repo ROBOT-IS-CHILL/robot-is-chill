@@ -31,7 +31,7 @@ import config
 import webhooks
 from src.types import SignText, RenderContext
 from src.utils import ButtonPages
-from ..tile import Tile, TileSkeleton, parse_variants
+from ..tile import Tile, TileSkeleton, parse_variant
 
 from .. import constants, errors
 from ..db import CustomLevelData, LevelData

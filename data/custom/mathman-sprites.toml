@@ -2,19 +2,19 @@
 
 
 
-text_beside = {sprite = "text_beside", color = [1, 2], active = [1, 4], tiling = "none"}
+text_beside = {sprite = "text_beside", color = [1, 2], active_color = [1, 4], tiling = "none"}
 
 text_cba = {sprite = "text_cba", color = [0, 3], tiling = "none"}
 
-text_de2 = {sprite = "text_de", color = [0, 1], active = [0, 3], tiling = "none"}
+text_de2 = {sprite = "text_de", color = [0, 1], active_color = [0, 3], tiling = "none"}
 
-text_debonus = {sprite = "text_debonus", color = [4, 0], active = [4, 1], tiling = "none"}
+text_debonus = {sprite = "text_debonus", color = [4, 0], active_color = [4, 1], tiling = "none"}
 
-text_ed = {sprite = "text_ed", color = [0, 1], active = [0, 3], tiling = "none"}
+text_ed = {sprite = "text_ed", color = [0, 1], active_color = [0, 3], tiling = "none"}
 
-text_next = {sprite = "text_next", color = [0, 1], active = [0, 3], tiling = "none"}
+text_next = {sprite = "text_next", color = [0, 1], active_color = [0, 3], tiling = "none"}
 
-text_nexttwo = {sprite = "text_nexttwo", color = [0, 1], active = [0, 3], tiling = "none"}
+text_nexttwo = {sprite = "text_nexttwo", color = [0, 1], active_color = [0, 3], tiling = "none"}
 
 fi2 = {sprite = "fi2", color = [0, 3], tiling = "none"}
 
@@ -24,7 +24,7 @@ fidir = {sprite = "fidir", color = [0, 3], tiling = "directional"}
 
 welcomeback = {sprite = "welcomeback", color = [0, 3], tiling = "none"}
 
-node_event = {sprite = "node_event", color = [5, 2], active = [5, 3], tiling = "directional"}
+node_event = {sprite = "node_event", color = [5, 2], active_color = [5, 3], tiling = "directional"}
 
 dice = {sprite = "dice", color = [0, 3], tiling = "none"}
 

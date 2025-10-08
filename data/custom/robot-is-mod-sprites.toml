@@ -22,5 +22,3 @@ text_binary = {sprite = "text_binary", color = [5, 3], tiling = "none"}
 
 binary = {sprite = "binary", color = [5, 3], tiling = "tiling"}
 
-cucu2 = {sprite = "cucu", color = [6, 1], tiling = "directional"}
-

@@ -87,6 +87,7 @@ class FlagPageSource(menus.ListPageSource):
 type_format = {
     "sprite": "sprite augmentation",
     "tile": "tile creation",
+    "skel": "tile parsing",
     "post": "compositing",
     "sign": "sign text parsing"
 }

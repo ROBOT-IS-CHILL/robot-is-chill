@@ -10,7 +10,7 @@ from discord import Member, User
 from discord.ext import commands, menus
 
 from .. import constants, errors
-from ..types import Bot, Context, Macro, BuiltinMacro
+from ..types import Bot, Context, Macro
 from ..utils import ButtonPages
 
 import re
@@ -22,15 +22,6 @@ async def coro_part(func, *args, **kwargs):
         return await result
 
     return wrapper
-
-
-async def start_timeout(fn, *args, **kwargs):
-    def handler(_signum, _frame):
-        raise errors.TimeoutError()
-
-    signal.signal(signal.SIGALRM, handler)
-    signal.alarm(int(constants.TIMEOUT_DURATION))
-    return fn(*args, **kwargs)
 
 
 class MacroQuerySource(menus.ListPageSource):
@@ -132,6 +123,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         self.bot.macros[name] = Macro(value, description, ctx.author.id)
         if from_file:
             value = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Successfully {msg_words[0]} `{name}` {msg_words[1]} the database, aliased to `{value}`!")
 
     @macro.command(aliases=["e"])
@@ -167,6 +159,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             setattr(self.bot.macros[name], attribute, new)
         if from_file:
             new = f"[{ctx.message.attachments[0].filename}: {ctx.message.attachments[0].size} bytes]"
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Edited `{name}`'s {attribute} to be `{new}`.")
 
     @macro.command(aliases=["rm", "remove", "del"])
@@ -180,6 +173,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
                 assert check is not None, "You can't delete a macro you don't own, silly."
             await cursor.execute(f"DELETE FROM macros WHERE name == ?", name)
         del self.bot.macros[name]
+        ctx.bot.macro_handler.update_macros()
         return await ctx.reply(f"Deleted `{name}`.")
 
     @macro.command(aliases=["?", "list", "query"])
@@ -228,60 +222,71 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         if author is None:
             for name in ctx.bot.macro_handler.builtins:
                 if re.search(pattern, name) is not None:
-                    names.append(f"**{name}**")
+                    if name == "":
+                        names.append("`\u200b`")  # ZWSP
+                    else:
+                        names.append(f"**{name}**")
         return await ButtonPages(MacroQuerySource(sorted(names))).start(ctx)
 
     @macro.command(aliases=["x", "run"])
     async def execute(self, ctx: Context, *, macro: str):
         """Executes some given code and outputs its return value."""
         try:
-            macros = ctx.bot.macros | {}
             debug = None
-            if match := re.match(r"^\s*--?d(?:ebug|bg)?", macro):
-                debug = ["== Debug Logs =="]
-                macro = macro[match.end():]
-            while match := re.match(r"^\s*--?mc=((?:(?!(?<!\\)\|).)*)\|((?:(?!(?<!\\)\s).)*)", macro):
-                macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)
-                macro = macro[match.end():]
+            error = None
+            if match := re.fullmatch(r"^(--debug|-d).*$", macro, re.DOTALL):
+                macro = macro[match.end(1):].strip()
+                debug = []
             macro = macro.strip()
             if match := re.fullmatch(r"^```\w*(.*)```$", macro, re.DOTALL):
                 macro = match.group(1).strip()
 
-            def parse():
-                nonlocal debug
-                return ctx.bot.macro_handler.parse_macros(macro.strip(), debug)
+            async def parse():
+                nonlocal debug, error
+                try:
+                    return await ctx.bot.macro_handler.parse_macros(macro.strip(), debug = debug)
+                except errors.MacroError as err:
+                    if debug is None:
+                        raise
+                    error = err
+                    return None
 
             start = time.perf_counter_ns()
 
-            try:
-                macro = await start_timeout(parse)
-            except errors.TimeoutError as err:
-                if not debug:
-                    raise err
-                macro = None
+            macro = await parse()
 
             delta = time.perf_counter_ns() - start
 
             message, files = "", []
 
-            if macro is not None:
-                if len(macro) > 1850:
-                    out = io.BytesIO()
-                    out.write(bytes(macro, 'utf-8'))
-                    out.seek(0)
-                    files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
-                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
-                else:
-                    message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
-            elif debug is not None:
-                message = "Error occurred while parsing macro. See debug info for details."
-
             if debug is not None:
-                debug_file = "\n".join(debug)
+                buf = io.StringIO()
+                buf.write("[Debug Log]\n")
+                for line in debug:
+                    buf.write(line)
+                    buf.write("\n")
+                buf.seek(0)
+                files.append(discord.File(buf, filename = f"debug-{datetime.now().isoformat()}.log"))
+
+            if macro is None:
+                buf = io.StringIO()
+                buf.write(f"[Error while executing macros!]\n{error.args[0]}\nTraceback:\n-----\n")
+                for traceback_frame in reversed(error.args[1]):
+                    buf.write(traceback_frame)
+                    buf.write("\n-----\n")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+                macro = buf.getvalue()
+            if len(macro) > 1850:
                 out = io.BytesIO()
-                out.write(bytes(debug_file, 'utf-8')[:8000000]) # cut to 8 MB
+                out.write(bytes(macro, 'utf-8'))
                 out.seek(0)
-                files.append(discord.File(out, filename=f'debug-{datetime.now().isoformat()}.txt'))
+                out.truncate(8 * 1000 * 1000)
+                files.append(discord.File(out, filename=f'output-{datetime.now().isoformat()}.txt'))
+                message = f'Took `{delta/1e6:0.3f}ms`\nOutput:'
+            else:
+                message = f'Took `{delta/1e6:0.3f}ms`\nOutput: ```\n{macro.replace("```", "``ˋ")}\n```'
+
             return await ctx.reply(message, files=files)
         finally:
             signal.alarm(0)
@@ -294,20 +299,17 @@ class MacroCommandCog(commands.Cog, name='Macros'):
     @macro.command(aliases=["i", "get"])
     async def info(self, ctx: Context, name: str):
         """Gets info about a specific macro."""
+        source = None
         if name in self.bot.macro_handler.builtins:
-            macro = self.bot.macro_handler.builtins[name]
-            source_function = macro.function
+            macro = None
+            desc = self.bot.macro_handler.builtins[name]
+            desc = "\n".join(line.strip() for line in desc.splitlines())
+            desc = re.sub(r"^# (.*)$", r"__\1__", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\. (.*)$", r"\1. \2", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\.\.\. (.*)$", r"\1. [Variadic] \2", desc, flags = re.MULTILINE)
+            desc = re.sub(r"^(\d+|n)\? (.*)$", r"\1. [Optional] \2", desc, flags = re.MULTILINE)
             author = ctx.bot.user.id
             name = f"{name} (builtin)"
-            if hasattr(source_function, "_source"):
-                source_function = source_function._source
-            try:
-                source = re.sub(r'r?""".*?"""\n\s+', '', inspect.getsource(source_function), 1, re.S)
-                raw_source = source
-                source = f"```py\n{source}\n```"
-            except OSError as err:
-                raw_source = f"<failed to get source code of builtin: {err}>"
-                source = f"```\n{raw_source}\n```"
         else:
             assert name in self.bot.macros, f"Macro `{name}` isn't in the database!"
             macro: TextMacro = self.bot.macros[name]
@@ -315,6 +317,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
             raw_source = macro.value.strip()
             sanitized_source = raw_source.replace('```', "'''")
             source = "``"
+            desc = macro.description
             if sanitized_source:
                 source = f"```wren\n{sanitized_source}\n```"
         emb = discord.Embed(
@@ -322,17 +325,18 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         )
         emb.add_field(
             name="",
-            value=macro.description
+            value=desc
         )
-        emb.add_field(
-            name="Source" if isinstance(macro, BuiltinMacro) else "Value",
-            value=source,
-            inline=False
-        )
+        if source is not None:
+            emb.add_field(
+                name="Value",
+                value=source,
+                inline=False
+            )
         user = await ctx.bot.fetch_user(author)
         emb.set_footer(text=f"{user.name}",
                        icon_url=user.avatar.url if user.avatar is not None else
-                       f"https://cdn.discordapp.com/embed/avatars/{int(user.discriminator) % 5}.png")
+                       f"https://cdn.discordapp.com/embed/avatars/{int(user.id) % 5}.png")
         try:
             await ctx.reply(embed=emb)
         except discord.errors.HTTPException:

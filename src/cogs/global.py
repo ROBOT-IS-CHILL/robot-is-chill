@@ -31,7 +31,8 @@ import config
 import webhooks
 from src.types import SignText, RenderContext
 from src.utils import ButtonPages
-from ..tile import Tile, TileSkeleton, parse_variants
+from src import utils
+from ..tile import Tile, TileSkeleton, parse_variant
 
 from .. import constants, errors
 from ..db import CustomLevelData, LevelData
@@ -249,54 +250,224 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             return await ctx.error(f"{msg}.")
 
     async def handle_grid(
-            self, ctx, grid, possible_variants, tile_borders=False):
+            self, ctx: Context, grid, possible_variants, shape, render_ctx: RenderContext
+        ):
         """Parses a TileSkeleton array into a Tile grid."""
         tile_data_cache = {
             data.name: data async for data in self.bot.db.tiles(
                 {
-                    tile.name for tile in grid.flatten()
+                    tile.name for tile in grid.values() if isinstance(tile, TileSkeleton)
                 }
             )
         }
-        return [
-            [
-                [
-                    [
-                        # grid gets passed by reference, as it is mutable
-                        await Tile.prepare(possible_variants, tile, tile_data_cache, grid, (w, z, y, x), tile_borders,
-                                           ctx)
-                        for x, tile in enumerate(row)
-                    ]
-                    for y, row in enumerate(layer)
-                ]
-                for z, layer in enumerate(timestep)
-            ]
-            for w, timestep in enumerate(grid)
-        ]
+        tilegrid = {
+            (y, x, z, t): (
+                (await Tile.prepare(
+                    possible_variants, tile, tile_data_cache,
+                    grid, shape[1], shape[0], (t, z, y, x), render_ctx.tileborder, ctx
+                ))
+                if isinstance(tile, TileSkeleton)
+                else tile
+            ) for (y, x, z, t), tile in grid.items()
+        }
+        new_items = {}
+        for (y, x, z, t), tile in tilegrid.items():
+            if (y, x, z, t + 1) in tilegrid:
+                continue
+            if tile is None:
+                continue
+            t += 1
+            while t < shape[3] and (y, x, z, t) not in tilegrid:
+                new_items[y, x, z, t] = tile.clone()
+                t += 1
+        tilegrid |= new_items
+        # Sort tilegrid
+        tgrid = {}
+        print(shape)
+        for t in range(shape[3]):
+            for z in range(shape[2]):
+                for y in range(shape[0]):
+                    for x in range(shape[1]):
+                        tile = tilegrid.get((y, x, z, t), None)
+                        if isinstance(tile, SignText):
+                            tile = tile.clone()
+                            tile.t = t
+                            render_ctx.sign_texts.append(tile)
+                        elif tile is not None:
+                            tgrid[y, x, z, t] = tile
+        return tgrid
+
+    async def parse_tile_grid(self, render_ctx: RenderContext, scenestr: str) -> dict[(int, int, int, int), TileSkeleton]:
+        scenestr = scenestr.strip()
+        initial_len = len(scenestr)
+        tiles = {}
+        y = x = z = t = 0
+        y_size = x_size = z_size = t_size = 1
+        comma_prefix = None
+        last_tile = None
+        do_comma = False
+        possible_variants = RegexDict(
+            [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type != "sign"])
+        font_variants = RegexDict(
+            [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type == "sign"])
+
+        """
+            scene := (row? "\n")* EOF;
+            row := (stack? ("," | " "))*;
+            stack := (timeline? "&")*;
+            timeline := (atom? ">")*;
+            atom := ("" | signtext | tile) vars;
+            vars := var*;
+            var := persistent | ephemeral;
+            persistent := ";" Variant.parse(UNTIL_NEXT_UNESCAPED_OR_EOF(break));
+            ephemeral := ":" Variant.parse(UNTIL_NEXT_UNESCAPED_OR_EOF(break));
+            signtext := "{" UNTIL_NEXT_UNESCAPED("}");
+            tile := UNTIL_NEXT_UNESCAPED_OR_EOF(break);
+            break := " " | "," | "\n" | ":" | ";" | "&" | ">";
+        """
+
+        EL_BREAK = (" ", ",", "\n", "&", ">")
+
+        async def parse_signtext() -> bool:
+            nonlocal scenestr, initial_len, font_variants, render_ctx, comma_prefix, do_comma, self, x, y, z, t
+            text_end = utils.find_unescaped(scenestr, "}")
+            assert text_end >= 0, f"Sign text started at index {initial_len - len(scenestr)} was never closed!"
+            string, scenestr = scenestr[1:text_end], scenestr[text_end + 1:]
+            el_end = utils.find_unescaped(scenestr, EL_BREAK)
+            if el_end < 0:
+                el_end = len(scenestr)
+            vars, scenestr = scenestr[:el_end], scenestr[el_end:]
+            el = await TileSkeleton.parse(
+                self.bot, font_variants, vars,
+                render_ctx.prefix, render_ctx.palette,
+                render_ctx.global_variant,
+                prefix = comma_prefix if do_comma else None
+            )
+            st = SignText(t, x, y, string)
+            st.variants = el.variants
+            return st
+
+        async def parse_tile() -> TileSkeleton | None:
+            nonlocal scenestr, possible_variants, render_ctx, comma_prefix, self
+            el_end = utils.find_unescaped(scenestr, EL_BREAK)
+            if el_end < 0:
+                el_end = len(scenestr)
+            tilestr, scenestr = scenestr[:el_end], scenestr[el_end:]
+            return await TileSkeleton.parse(
+                self.bot, possible_variants, tilestr,
+                render_ctx.prefix, render_ctx.palette,
+                render_ctx.global_variant,
+                prefix = comma_prefix if do_comma else None
+            )
+
+        async def parse_element() -> bool:
+            nonlocal scenestr, last_tile, x, y, z, t
+            element_str = None
+            is_signtext = False
+            if scenestr.startswith("{"):
+                tile = await parse_signtext()
+                tile.prefix = ""
+            else:
+                tile = await parse_tile()
+            if tile.name == "":
+                if last_tile is None:
+                    tile = None
+                else:
+                    ltile = last_tile.clone()
+                    ltile.variants = [var for var in tile.variants]
+                    tile = ltile
+                    if len(tile.variants):
+                        if any(var.persistent for var in tile.variants):
+                            last_tile = last_tile.clone()
+                            last_tile.variants = tile.variants
+                        else:
+                            tile.variants = [var for var in last_tile.variants if var.persistent] + tile.variants
+                    else:
+                        tile = "<EMPTY>"
+            elif tile.postfix in (".", "-"):
+                tile = last_tile = None
+            else:
+                last_tile = tile
+            if tile != "<EMPTY>":
+                tiles[y, x, z, t] = tile
+            return True
+
+        async def parse_timeline() -> bool:
+            nonlocal scenestr, initial_len, comma_prefix, last_tile, do_comma, x, y, z, t, t_size
+            cur = len(scenestr)
+            while True:
+                await parse_element()
+                t += 1
+                t_size = max(t, t_size)
+                comma_prefix = last_tile.prefix if last_tile is not None else None
+                if not scenestr.startswith(">"):
+                    return True
+                scenestr = scenestr.removeprefix(">")
+                do_comma = False
+                comma_prefix = None
+
+        async def parse_stack() -> bool:
+            nonlocal scenestr, do_comma, x, y, z, t, z_size
+            while True:
+                await parse_timeline()
+                last_tile = None
+                t = 0
+                z += 1
+                z_size = max(z, z_size)
+                if not scenestr.startswith("&"):
+                    return True
+                do_comma = False
+                scenestr = scenestr.removeprefix("&")
+
+        async def parse_row() -> bool:
+            nonlocal scenestr, comma_prefix, do_comma, x, y, z, t, x_size
+            while True:
+                await parse_stack()
+                z = t = 0
+                x += 1
+                x_size = max(x, x_size)
+                if scenestr.startswith(","):
+                    # Comma
+                    do_comma = True
+                    scenestr = scenestr.removeprefix(",")
+                elif scenestr.startswith(" "):
+                    do_comma = False
+                    comma_prefix = None
+                    scenestr = scenestr.lstrip(" ")
+                else:
+                    return True
+            return True
+
+        while True:
+            await parse_row()
+            last_tile = None
+            do_comma = False
+            x = z = t = 0
+            y += 1
+            y_size = max(y, y_size)
+            if not len(scenestr): break
+            assert scenestr.startswith("\n"), f"The scene parser erroneously failed at this part of the string:\n```\n{scenestr}\n```"
+            scenestr = scenestr.removeprefix("\n")
+
+        return tiles, (y_size, x_size, z_size, t_size)
+
 
     async def render_tiles(self, ctx: Context, *, objects: str, rule: bool):
         """Performs the bulk work for both `tile` and `rule` commands."""
         try:
             await ctx.typing()
             ctx.silent = ctx.message is not None and ctx.message.flags.silent
-            tiles = emoji.demojize(objects.strip(), language='alias').replace(":hearts:",
-                                                                              "♥")  # keep the heart, for the people
+            tiles = emoji.demojize(objects.strip(), language='alias')\
+                .replace(":hearts:", "♥")  # keep the heart, for the people
             tiles = re.sub(r'<a?(:.+?:)\d+?>', r'\1', tiles)
-            tiles = re.sub(r"\\(?=[:<])", "", tiles)
-            tiles = re.sub(r"(?<!\\)`", "", tiles)
+            tiles = tiles.removeprefix("`").removesuffix("`")
             # Replace some phrases
             replace_list = [
                 ['а', 'a'],
-                ['в', 'b'],
                 ['е', 'e'],
-                ['з', '3'],
-                ['к', 'k'],
-                ['м', 'm'],
-                ['н', 'h'],
                 ['о', 'o'],
                 ['р', 'p'],
                 ['с', 'c'],
-                ['т', 't'],
                 ['х', 'x'],
                 ['ⓜ', ':m:'],
                 [':thumbsdown:', ':-1:']
@@ -314,6 +485,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             parsing_overhead = time.perf_counter()
 
             render_ctx = RenderContext(ctx=ctx)
+            render_ctx.prefix = 'text' if rule else None
             while match := re.match(r"^\s*(--?((?:(?!=)\S)+)(?:=(?:(?!(?<!\\)\s).)+)?)", tiles):
                 potential_flag = match.group(1)
                 for flag in self.bot.flags.list:
@@ -327,150 +499,28 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             if render_ctx.bypass_limits:
                 signal.alarm(0)
 
-            offset = 0
-            for match in re.finditer(r"(?<!\\)\"(.*?)(?<!\\)\"", tiles, flags=re.RegexFlag.DOTALL):
-                a, b = match.span()
-                text = match.group(1)
-                prefix = "tile_" if rule else "text_"
-                sliced = re.split("([\n ]|$)", text)
-                zipped = zip(sliced[1::2], sliced[:-1:2])
-                text = "".join(f"{prefix}{t}{joiner}" if t != "-" else f"-{joiner}" for joiner, t in zipped)
-                tiles = tiles[:a - offset] + text + tiles[b - offset:]
-                offset += (b - a) - len(text)
+            if "[" in tiles:
+                tiles = await ctx.bot.macro_handler.parse_macros(tiles, "r" if rule else "t")
+            tiles = tiles.strip()
 
-            user_macros = ctx.bot.macros | render_ctx.macros
-            last_tiles = None
-            passes = 0
-            while last_tiles != tiles and passes < 50:
-                last_tiles = tiles
-                tiles = ctx.bot.macro_handler.parse_macros(tiles, False, user_macros, "r" if rule else "t")
-                tiles = tiles.strip()
-                passes += 1
+            tile_grid, shape = await self.parse_tile_grid(render_ctx, tiles)
 
-            # Check for empty input
-            if not tiles:
-                return await ctx.error("Input cannot have 0 tiles.")
+            possible_variants = RegexDict(
+                [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type != "sign"])
+            font_variants = RegexDict(
+                [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type == "sign"])
 
-            # Split input into lines
-            word_rows = tiles.splitlines()
-
-            # Split each row into words
-            word_grid = [re.split(r"(?<!\\) ", row) for row in word_rows]
-
-            word_grid = split_commas(word_grid, "char_")
-            try:
-                if rule:
-                    comma_grid = split_commas(word_grid, "tile_")
-                else:
-                    comma_grid = split_commas(word_grid, "text_")
-                comma_grid = split_commas(comma_grid, "$")
-            except errors.SplittingException as e:
-                cause = e.args[0]
-                return await ctx.error(f"I couldn't split the following input into separate objects: \"{cause}\".")
-
-            tilecount = 0
-            maxstack = 1
             maxdelta = 1
             try:
-                for row in comma_grid:
-                    for stack in row:
-                        maxstack = max(maxstack, len(re.split(r'(?<!\\)&', stack)))
-                        for timeline in re.split(r'(?<!\\)&', stack):
-                            maxdelta = max(maxdelta, len(re.split(r'(?<!\\)>', timeline)))
-                w, h, d, t = max([len(comma_grid[n]) for n in range(len(comma_grid))]), len(
-                    comma_grid), maxstack, maxdelta  # width, height, depth, time
-                layer_grid = np.full((t, d, h, w), TileSkeleton(), dtype=object)
-                if maxstack > constants.MAX_STACK and ctx.author.id != self.bot.owner_id:
-                    return await ctx.error(
-                        f"Stack too high ({maxstack}).\nYou may only stack up to {constants.MAX_STACK} tiles on one space.")
-
-                possible_variants = RegexDict(
-                    [(variant.pattern, variant) for variant in ctx.bot.variants._values if variant.type != "sign"])
-                font_variants = RegexDict(
-                    [(variant.pattern, variant) for variant in ctx.bot.variants._values if variant.type == "sign"])
-
-                possible_variant_names = [name for variant in ctx.bot.variants._values for name in variant.name if
-                                          len(name)]
-
-                def catch(f, *args, **kwargs):
-                    try:
-                        return f(*args, **kwargs)
-                    except:
-                        return None
-
-                for y, row in enumerate(comma_grid):
-                    for x, stack in enumerate(row):
-                        for l, timeline in enumerate(re.split(r'(?<!\\)&', stack)):
-                            for d, tile in enumerate(timeline_split := re.split(r'(?<!\\)>', timeline)):
-                                if len(tile):
-                                    if (match := re.fullmatch(r"\{(.*)}(.*)", tile)) is not None:
-                                        sign_text = SignText(text=match.group(1), x=x, y=y, time_start=d)
-                                        variants = [variant for variant in match.group(2).split(":") if len(variant)]
-                                        variants = parse_variants(
-                                            self.bot,
-                                            font_variants, variants,
-                                            macros=user_macros
-                                        ).get("sign", [])
-                                        for variant in variants:
-                                            await variant.apply(sign_text, bot=self.bot, ctx=render_ctx)
-                                        layer_grid[d:, l, y, x] = TileSkeleton()
-                                        for o in range(1, maxdelta - d):
-                                            try:
-                                                text = timeline_split[d + o]
-                                                if len(text):
-                                                    break
-                                            except IndexError:
-                                                continue
-                                        else:
-                                            o = maxdelta - d
-                                        sign_text.time_end = d + o
-                                        # Sign texts sadly cannot respect layers.
-                                        render_ctx.sign_texts.append(sign_text)
-                                        continue
-                                    tile = re.sub(r"\\(.)", r"\1", tile)
-                                    assert not len(tile.split(':', 1)) - 1 or not tile.split(':', 1)[1].count(
-                                        ';'), 'Error! Persistent variants (`;`) can\'t come after ephemeral ones (`:`).'
-                                    if catch(tile.index, ":") or catch(tile.index, ";") \
-                                            or ":" not in tile and ";" not in tile:
-                                        tilecount += 1
-                                        # This is done to prevent setting everything to one instance of an object.
-                                        layer_grid[d:, l, y, x] = [
-                                            await TileSkeleton.parse(
-                                                self.bot, possible_variants, tile, rule,
-                                                palette=render_ctx.palette,
-                                                global_variant=render_ctx.global_variant,
-                                                possible_variant_names=possible_variant_names,
-                                                macros=user_macros
-                                            )
-                                            for _ in range(layer_grid.shape[0] - d)
-                                        ]
-                                    else:
-                                        layer_grid[d:, l, y, x] = [
-                                            await TileSkeleton.parse(
-                                                self.bot,
-                                                possible_variants,
-                                                layer_grid[d - 1, l, y, x].raw_string.split(
-                                                    ";" if ";" in tile else ":", 1
-                                                )[0] + tile,
-                                                rule,
-                                                possible_variant_names=possible_variant_names,
-                                                macros=user_macros,
-                                                palette=render_ctx.palette
-                                            )
-                                            for _ in range(layer_grid.shape[0] - d)
-                                        ]
-                # Get the dimensions of the grid
-                grid_shape = layer_grid.shape
-                # Handles variants based on `:` affixes
                 render_ctx.out = BytesIO()
-                full_grid = await self.handle_grid(ctx, layer_grid, possible_variants, render_ctx.tileborder)
+                full_grid = await self.handle_grid(ctx, tile_grid, possible_variants, shape, render_ctx)
                 parsing_overhead = time.perf_counter() - parsing_overhead
                 full_tiles, unique_tiles, rendered_frames, render_overhead = await self.bot.renderer.render_full_tiles(
-                    full_grid,
+                    full_grid, shape,
                     ctx=render_ctx
                 )
                 composite_overhead, saving_overhead, im_size = await self.bot.renderer.render(
-                    full_tiles,
+                    full_tiles, shape,
                     render_ctx
                 )
             except errors.TileNotFound as e:
@@ -524,13 +574,12 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 
                 stats = f'''
 - Response time: {rendertime(parsing_overhead + render_overhead + composite_overhead + saving_overhead)} ms
-  - Parsing overhead: {rendertime(parsing_overhead)} ms
-  - Rendering overhead: {rendertime(render_overhead)} ms
-  - Compositing overhead: {rendertime(composite_overhead)} ms
-  - Saving overhead: {rendertime(saving_overhead)} ms
+- Parsing overhead: {rendertime(parsing_overhead)} ms
+- Rendering overhead: {rendertime(render_overhead)} ms
+- Compositing overhead: {rendertime(composite_overhead)} ms
+- Saving overhead: {rendertime(saving_overhead)} ms
 - Tiles rendered: {unique_tiles}
-  - Tile matrix shape: {'x'.join(str(n) for n in grid_shape)}
-  - Frames rendered: {rendered_frames}
+- Frames rendered: {rendered_frames}
 - Image size: {im_size}
     '''
 

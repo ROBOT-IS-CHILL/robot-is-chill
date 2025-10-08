@@ -20,6 +20,7 @@ import config
 import webhooks
 from src.types import Macro
 from src.db import Database
+import macrosia_glue
 
 from numpy import set_printoptions as numpy_set_printoptions
 
@@ -111,6 +112,8 @@ class Bot(commands.Bot):
 
     async def on_ready(self) -> None:
         await self.db.connect(self.db_path)
+        macrosia_glue.connect_to_db(self.db_path)
+        self.macro_handler.update_macros()
         print("Loading macros...")
         async with self.db.conn.cursor() as cur:
             await cur.execute("SELECT * from macros")
@@ -138,8 +141,11 @@ class Bot(commands.Bot):
 
 discord.utils.setup_logging()
 
-if Path("beta").exists():
-    config.prefixes = ['-']
+
+if Path("alpha").exists():
+    config.prefixes = ['[', '`[']
+elif Path("beta").exists():
+    config.prefixes = ['-', '`-']
 
 # Establishes the bot
 bot = Bot(
@@ -166,6 +172,13 @@ bot = Bot(
     prefixes=config.prefixes,
     db_path=config.db_path
 )
+
+if Path("alpha").exists():
+    bot.channel = "development"
+elif Path("beta").exists():
+    bot.channel = "staging"
+else:
+    bot.channel = "production"
 
 
 @bot.before_invoke

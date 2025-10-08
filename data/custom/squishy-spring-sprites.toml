@@ -28,7 +28,7 @@ text_stisti = {sprite = "text_stisti", color = [1, 3], tiling = "none", author =
 
 log = {sprite = "log", color = [6, 1], tiling = "none", author = "Springer29"}
 
-text_log = {sprite = "text_log", color = [6, 1], tiling = "none", author = "Springer29"}
+text_log2 = {sprite = "text_log", color = [6, 1], tiling = "none", author = "Springer29"}
 
 # onon = {sprite = "onon", color = [3, 0], tiling = "directional", author = "That1Squishy"}
 

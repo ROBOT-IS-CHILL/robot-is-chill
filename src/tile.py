@@ -13,143 +13,159 @@ from .db import TileData
 from .types import Variant, Context, RegexDict
 
 
-def parse_variants(bot, possible_variants: RegexDict[Variant], raw_variants: list[str],
-                   name=None, possible_variant_names=None, macros=None):
-    if macros is None:
-        macros = {}
-    if possible_variant_names is None:
-        possible_variant_names = []
-    out = {}
-    i = 0
-    while i < len(raw_variants):
-        raw_variant = raw_variants[i]
-        if raw_variant.startswith("m!"):
-            parsed = bot.macro_handler.parse_macros(f"[{raw_variant[2:]}]", False, macros)
-            macro = str(parsed)
-            del raw_variants[i]
-            raw_variants[i:i] = macro.split(":")  # Extend at index i
-            continue
-        try:
-            final_variant = possible_variants[raw_variant]
-            var_type = final_variant.type
-            variant_args = [g for g in re.fullmatch(final_variant.pattern, raw_variant).groups() if g is not None]
-            final_args = parse_signature(variant_args, final_variant.signature)
-            out[var_type] = out.get(var_type, [])
-            out[var_type].append(final_variant(*final_args))
-        except KeyError:
-            for variant_name in possible_variant_names:
-                if raw_variant.startswith(variant_name) and len(variant_name):
-                    raise errors.BadVariant(name, raw_variant, variant_name)
-            raise errors.UnknownVariant(name, raw_variant)
-        i += 1
-    return out
+async def parse_variant(bot, possible_variants: RegexDict[Variant], raw_variant: str):
+    name = utils.split_escaped(raw_variant, "/", True)[0]
+    try:
+        final_variant = possible_variants[raw_variant]
+        variant_args = [g for g in re.fullmatch(final_variant.pattern, raw_variant).groups() if g is not None]
+        final_args = parse_signature(variant_args, final_variant.signature)
+        return final_variant(*final_args)
+    except KeyError:
+        raise errors.UnknownVariant(name, raw_variant)
 
 
 @dataclass
 class TileSkeleton:
     """A tile that hasn't been assigned a sprite yet."""
     name: str = "<empty tile>"
+    prefix: str = None
+    postfix: str = ""
     raw_string: str = ""
-    variants: dict[str: Variant, str: Variant, str: Variant] = field(
-        default_factory=lambda: {"sprite": [], "tile": [], "post": []})
+    variants: list = field(default_factory = list)
     palette: tuple[str, str | None] = ("default", "vanilla")
-    empty: bool = True
-    easter_egg: bool = False
+    beta: bool = False
+    custom: bool = False
+
+    def clone(self):
+        clone = TileSkeleton(**self.__dict__)
+        clone.variants = [var for var in self.variants]
+        return clone
 
     @classmethod
-    async def parse(cls, bot, possible_variants, string: str, rule: bool = True,
+    async def parse(cls, bot, possible_variants, string: str, default_prefix: str | None = None,
                     palette: tuple[str, str | None] = ("default", "vanilla"),
-                    global_variant="", possible_variant_names=[], macros={}):
+                    global_variant="", *, prefix: str = None):
         out = cls()
-        explicitly_text = False
-        explicitly_tile = False
-        if rule:
-            if string[:5] == "tile_":
-                explicitly_tile = True
-                string = string[5:]
-            elif string[0] == "$":
-                explicitly_tile = True
-                string = string[1:]
-            else:
-                string = "text_" + string
-        elif string[0] == "$":
-            explicitly_text = True
-            string = "text_" + string[1:]
-        out.empty = False
-        out.raw_string = string
+        if not default_prefix:
+            default_prefix = None
+        if match := re.fullmatch(r"^(\$|\w+_)(.*)$", string):
+            out.prefix = match.group(1)
+            string = match.group(2)
+            if out.prefix != "$":
+                out.prefix = out.prefix[:-1]
+            if default_prefix is not None and out.prefix == "tile":
+                out.prefix = None
+            elif out.prefix == "$":
+                if default_prefix is not None:
+                    out.prefix = ""
+                else:
+                    out.prefix = "text"
+            elif prefix == "":
+                pass
+            elif default_prefix is not None:
+                out.prefix = default_prefix + "_" + out.prefix
+        elif prefix or (prefix == "" and default_prefix is not None):
+            out.prefix = prefix
+        elif default_prefix is not None:
+            out.prefix = default_prefix
+
+        out.postfix = string
+        out.raw_string = f"{out.prefix}_{string}" if out.prefix else string
         out.palette = palette
         last_escaped = False
 
-        raw_variants = utils.split_escaped(string, (":", ";"))
-        out.name = raw_variants.pop(0)
-        if not explicitly_text and (
-                ((explicitly_tile or not rule) and out.name in (".", "-", "empty")) or
-                (not explicitly_tile and rule and out.name.removeprefix("text_") in (".", "-"))
-        ):
-            return cls()
-        raw_variants[0:0] = utils.split_escaped(global_variant, (":", ))
+        is_persistent = []
+        variants = []
+        split_vars: list[(str, str)] = utils.split_escaped(string, (":", ';'), True, True)
+        out.name, split_vars = split_vars[0][0], split_vars[1:]
+        out.name = f"{out.prefix}_{out.name}" if out.prefix and out.name else out.name
         if out.name == "2":
-            # Easter egg!
-            out.easter_egg = True
             async with bot.db.conn.cursor() as cur:
-                await cur.execute("SELECT DISTINCT name FROM tiles WHERE tiling LIKE 2 AND name NOT LIKE"
-                                  "'text_anni' ORDER BY RANDOM() LIMIT 1")
-                # NOTE: text_anni should be tiling -1, but Hempuli messed it up I guess
+                await cur.execute("""
+                    SELECT DISTINCT name FROM tiles WHERE
+                        tiling = 'character' AND
+                        name NOT LIKE 'text_anni'
+                        ORDER BY RANDOM() LIMIT 1
+                    """)
                 out.name = (await cur.fetchall())[0][0]
-            raw_variants.insert(0, "m!2ify")
-        out.variants |= parse_variants(bot, possible_variants, raw_variants, name=out.name,
-                                       possible_variant_names=possible_variant_names, macros=macros)
+            split_vars = [("m!2ify", ":")] + split_vars
+        split_vars_ex = []
+        if global_variant:
+            split_global = utils.split_escaped(global_variant, (":", ';'), True, True)
+            split_vars_ex.extend(split_global)
+        for i, (raw_var, split) in enumerate(split_vars):
+            if raw_var.startswith("m!"):
+                mac = f"[{raw_var.removeprefix('m!')}]"
+                expanded = await bot.macro_handler.parse_macros(mac, "T")
+                split_ex = utils.split_escaped(expanded, (":", ';'), True, True)
+                for (raw, _) in split_ex:
+                    split_vars_ex.append((raw, split))
+            else:
+                split_vars_ex.append((raw_var, split))
+        for raw_var, split in split_vars_ex:
+            var = await parse_variant(bot, possible_variants, raw_var)
+            if split == ";":
+                var.persistent = True
+            out.variants.append(var)
+        vars = []
+        for variant in out.variants:
+            if variant.type == "skel":
+                await variant.apply(out)
+            else:
+                vars.append(variant)
+        out.variants = vars
         return out
 
 
-def is_adjacent(pos, tile, grid, tile_borders=False) -> bool:
+def is_adjacent(pos, tile, grid, width, height, tile_borders=False) -> bool:
     """Tile is next to a joining tile."""
     w, x, y, z = pos
     joining_tiles = (tile.name, "level", "edge")
     if x < 0 or y < 0 or \
-            y >= grid.shape[2] or x >= grid.shape[3]:
+            y >= height or x >= width:
         return tile_borders
-    return grid[w, z, y, x].name in joining_tiles
+    tile = grid.get((y, x, z, w))
+    return tile is not None and tile.name in joining_tiles
 
 
 def get_bitfield(*arr: bool):
     return sum(b << a for a, b in enumerate(list(arr)[::-1]))
 
 
-def handle_tiling(tile: Tile, grid, pos, tile_borders=False):
+def handle_tiling(tile: Tile, grid, width, height, pos, tile_borders=False):
     w, z, y, x = pos
-    adj_r = is_adjacent((w, x + 1, y, z), tile, grid, tile_borders)
-    adj_u = is_adjacent((w, x, y - 1, z), tile, grid, tile_borders)
-    adj_l = is_adjacent((w, x - 1, y, z), tile, grid, tile_borders)
-    adj_d = is_adjacent((w, x, y + 1, z), tile, grid, tile_borders)
+    adj_r = is_adjacent((w, x + 1, y, z), tile, grid, width, height, tile_borders)
+    adj_u = is_adjacent((w, x, y - 1, z), tile, grid, width, height, tile_borders)
+    adj_l = is_adjacent((w, x - 1, y, z), tile, grid, width, height, tile_borders)
+    adj_d = is_adjacent((w, x, y + 1, z), tile, grid, width, height, tile_borders)
     adj_ru = adj_lu = adj_ld = adj_rd = False
     if tile.tiling == TilingMode.DIAGONAL_TILING:
         adj_ru = adj_r and adj_u and is_adjacent(
-            (w, x + 1, y - 1, z), tile, grid, tile_borders)
+            (w, x + 1, y - 1, z), tile, grid, width, height, tile_borders)
         adj_lu = adj_u and adj_l and is_adjacent(
-            (w, x - 1, y - 1, z), tile, grid, tile_borders)
+            (w, x - 1, y - 1, z), tile, grid, width, height, tile_borders)
         adj_ld = adj_l and adj_d and is_adjacent(
-            (w, x - 1, y + 1, z), tile, grid, tile_borders)
+            (w, x - 1, y + 1, z), tile, grid, width, height, tile_borders)
         adj_rd = adj_d and adj_r and is_adjacent(
-            (w, x + 1, y + 1, z), tile, grid, tile_borders)
+            (w, x + 1, y + 1, z), tile, grid, width, height, tile_borders)
     tile.frame = constants.TILING_VARIANTS.get(get_bitfield(adj_r, adj_u, adj_l, adj_d, adj_ru, adj_lu, adj_ld, adj_rd))
 
 
 @dataclass
 class Tile:
     """A tile that's ready for processing."""
-    name: str = "Undefined (if this is showing, something's gone horribly wrong)"
-    sprite: tuple[str, str] | np.ndarray = ('vanilla', "error")
+    name: str = None
+    sprite: tuple[str, str] | np.ndarray | None = None
     tiling: TilingMode = TilingMode.NONE
     surrounding: int = 0b00000000  # RULDEQZC
     frame: int = 0
     wobble_frames: tuple[int] | None = None
     custom_color: bool = False
     color: tuple[int, int] = (0, 3)
-    empty: bool = True
     custom: bool = False
+    oneline: bool = False
     style: Literal["noun", "property", "letter"] = "noun"
-    palette: str = None
+    palette: tuple[str, str] = ("default", "vanilla")
     overlay: str | None = None
     hue: float = 1.0
     gamma: float = 1.0
@@ -157,74 +173,95 @@ class Tile:
     filterimage: str | None = None
     palette_snapping: bool = False
     normalize_gamma: bool = False
-    variants: dict[str, list] = field(default_factory=lambda: {
-        "sprite": [],
-        "tile": [],
-        "post": []
-    })
+    variants: list = field(default_factory = list)
     altered_frame: bool = False
+    text_squish_width: int = 24
+    undef: bool = False
 
     def __hash__(self):
         return hash((self.name, self.sprite if type(self.sprite) is tuple else 0, self.frame,
-                     self.empty, self.custom, self.color,
+                     self.custom, self.color,
                      self.style, self.palette, self.overlay, self.hue,
                      self.gamma, self.saturation, self.filterimage,
                      self.palette_snapping, self.normalize_gamma, self.altered_frame,
-                     hash(tuple(self.variants["sprite"])),
-                     hash(tuple(var for var in self.variants["tile"] if var.hashed)),
-                     self.custom_color, self.palette))
+                     hash(tuple(var for var in self.variants if var.hashed)),
+                     self.custom_color, self.palette, self.text_squish_width))
 
     @classmethod
-    async def prepare(cls, possible_variants, tile: TileSkeleton, tile_data_cache: dict[str, TileData], grid,
-                      position: tuple[int, int, int, int], tile_borders: bool = False, ctx: Context = None):
-        if tile.empty:
-            return cls(name="<empty>")
-        name = tile.name
-        metadata = None
-        try:
-            metadata = tile_data_cache[name]
-            style = constants.TEXT_TYPES[metadata.text_type]
-            value = cls(name=tile.name, sprite=(metadata.source, metadata.sprite), tiling=metadata.tiling,
-                        color=metadata.active_color, variants=tile.variants, empty=False, style=style,
-                        palette=tile.palette)
+    async def prepare(
+        cls, possible_variants, tile: TileSkeleton, tile_data_cache: dict[str, TileData], grid,
+        width: int, height: int,
+        position: tuple[int, int, int, int], tile_borders: bool = False, ctx: Context = None
+    ):
+        esc_name = name = utils.split_escaped(tile.name, [])[0]
+        value = cls(custom = tile.custom)
+        metadata = tile_data_cache.get(name)
+        if tile.beta:
+            value.style = "beta"
+        if metadata is not None:
+            value.name = tile.name
+            value.sprite = (metadata.source, metadata.sprite)
+            value.tiling = metadata.tiling
+            value.color = color=metadata.active_color
+            value.variants = variants=tile.variants
+            value.palette = palette=tile.palette
             if metadata.tiling == TilingMode.TILING or metadata.tiling == TilingMode.DIAGONAL_TILING:
-                handle_tiling(value, grid, position, tile_borders=tile_borders)
-        except KeyError:
+                handle_tiling(value, grid, width, height, position, tile_borders=tile_borders)
+        else:
+            name = tile.name
             if name[:5] == "text_":
-                value = cls(name=name, tiling=TilingMode.NONE, variants=tile.variants, empty=False, custom=True,
-                            palette=tile.palette)
+                value.name = name
+                value.tiling = TilingMode.NONE
+                value.variants = tile.variants
+                value.custom = True
+                value.palette = tile.palette
             elif name[:5] == "char_" and ctx is not None:  # allow external calling for potential future things?
                 seed = int(name[5:]) if re.fullmatch(r'-?\d+', name[5:]) else name[5:]
                 character = ctx.bot.generator.generate(seed=seed)
                 color = character[1]["color"]
-                value = cls(name=name, tiling=TilingMode.CHARACTER, variants=tile.variants, empty=False, custom=True,
-                            sprite=character[0], color=color, palette=tile.palette)
+                value.name=name
+                value.tiling=TilingMode.CHARACTER
+                value.variants=tile.variants
+                value.custom=True
+                value.sprite=character[0]
+                value.color=color
+                value.palette=tile.palette
             elif name[:6] == "cchar_" and ctx is not None:  # allow external calling for potential future things? again?
                 customid = int(name[6:]) if re.fullmatch(r'-?\d+', name[6:]) else name[6:]
                 character = ctx.bot.generator.generate(customid=customid)
                 color = character[1]["color"]
-                value = cls(name=name, tiling=TilingMode.CHARACTER, variants=tile.variants, empty=False, custom=True,
-                            sprite=character[0], color=color, palette=tile.palette)
+                value.name=name
+                value.tiling=TilingMode.CHARACTER
+                value.variants=tile.variants
+                value.custom=True
+                value.sprite=character[0]
+                value.color=color
+                value.palette=tile.palette
             else:
-                raise errors.TileNotFound(name)
-        for variant in value.variants["tile"]:
-            await variant.apply(value)
-            if value.surrounding != 0:
-                if metadata.tiling == TilingMode.TILING:
-                    value.surrounding &= 0b11110000
-                value.frame = constants.TILING_VARIANTS[value.surrounding]
+                raise errors.TileNotFound(esc_name)
+        for variant in value.variants:
+            if variant.type == "tile":
+                await variant.apply(value, tile_data_cache=tile_data_cache)
+                if value.surrounding != 0:
+                    if metadata.tiling == TilingMode.TILING:
+                        value.surrounding &= 0b11110000
+                    value.frame = constants.TILING_VARIANTS[value.surrounding]
         if not (metadata is None or value.frame in metadata.extra_frames or value.frame in metadata.tiling.expected()):
             value.frame = 0
-        value.variants["sprite"].append(
+        value.variants.append(
             possible_variants["0/3"](value.color, _default_color=True)
         )
         return value
+
+    def clone(self):
+        clone = Tile(**self.__dict__)
+        clone.variants = [var for var in self.variants]
+        return clone
 
 
 @dataclass
 class ProcessedTile:
     """A tile that's been processed, and is ready to render."""
-    empty: bool = True
     name: str = "?"
     wobble_frames: tuple[int] | None = None
     frames: list[Optional[np.ndarray], Optional[np.ndarray], Optional[np.ndarray]] = field(
