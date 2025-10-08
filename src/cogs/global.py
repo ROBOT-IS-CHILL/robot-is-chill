@@ -499,10 +499,8 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             if render_ctx.bypass_limits:
                 signal.alarm(0)
 
-            print(tiles)
-
-            tiles = await ctx.bot.macro_handler.parse_macros(tiles, "r" if rule else "t")
-            print(tiles)
+            if "[" in tiles:
+                tiles = await ctx.bot.macro_handler.parse_macros(tiles, "r" if rule else "t")
             tiles = tiles.strip()
 
             tile_grid, shape = await self.parse_tile_grid(render_ctx, tiles)
