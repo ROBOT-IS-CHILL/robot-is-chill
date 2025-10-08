@@ -253,12 +253,13 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             self, ctx: Context, grid, possible_variants, shape, render_ctx: RenderContext
         ):
         """Parses a TileSkeleton array into a Tile grid."""
+        tile_set = {
+            utils.split_escaped(tile.name, [])[0]
+            for tile in grid.values() if isinstance(tile, TileSkeleton)
+        }
+        print(tile_set)
         tile_data_cache = {
-            data.name: data async for data in self.bot.db.tiles(
-                {
-                    tile.name for tile in grid.values() if isinstance(tile, TileSkeleton)
-                }
-            )
+            data.name: data async for data in self.bot.db.tiles(tile_set)
         }
         tilegrid = {
             (y, x, z, t): (
