@@ -98,7 +98,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
         If `value` is set to `<file>`, the first attachment to the command message is used as the macro value.
         """
         assert len(name) <= 100, "Macro name cannot be larger than 100 characters!"
-        assert all([c not in name for c in "[]/ :;\"\'"]), "Name uses invalid characters (`[]/ :;\"\'`)!"
+        assert all([c not in name for c in "[]/"]), "Name uses invalid characters (`[]/`)!"
         assert name not in self.bot.macro_handler.builtins, f"Macro `{name}` already exists as a builtin!"
         from_file = False
         msg_words = ("added", "to")

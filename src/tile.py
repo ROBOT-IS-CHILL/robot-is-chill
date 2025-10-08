@@ -95,7 +95,7 @@ class TileSkeleton:
             split_vars_ex.extend(split_global)
         for i, (raw_var, split) in enumerate(split_vars):
             if raw_var.startswith("m!"):
-                mac = f"[{raw_var.removeprefix('m!')}]"
+                mac = f"[{utils.split_escaped(raw_var.removeprefix('m!'), [])[0]}]"
                 expanded = await bot.macro_handler.parse_macros(mac, "T")
                 split_ex = utils.split_escaped(expanded, (":", ';'), True, True)
                 for (raw, _) in split_ex:
