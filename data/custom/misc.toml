@@ -35,7 +35,7 @@ snomba = {sprite = "snomba", color = [0, 3], tiling = "directional", author = "l
 
 cactus2 = {sprite = "cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
-text_cactus = {sprite = "text_cactus", color = [5, 2], tiling = "none", author = "jayrite"}
+text_cactus3 = {sprite = "text_cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
 
 # silverhawke
@@ -440,7 +440,7 @@ tuft = {sprite = "grass_strand", color = [5, 0], tiling = "none"}
 
 support = {sprite = "support", color = [0, 1], tiling = "none"}
 
-tree3 = {sprite = "tree3", color = [4, 2], tiling = "none"}
+tree5 = {sprite = "tree3", color = [4, 2], tiling = "none"}
 
 trident = {sprite = "trident", color = [1, 4], tiling = "directional"}
 

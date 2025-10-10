@@ -14,7 +14,7 @@ text_pass2 = {sprite = "text_pass", color = [4, 4], tiling = "none"}
 
 text_ellipsis = {sprite = "text_ellipsis", color = [0, 3], tiling = "none"}
 
-fox = {sprite = "fox", color = [0, 3], tiling = "character"}
+fox2 = {sprite = "fox2", color = [0, 3], tiling = "character"}
 
 dog2 = {sprite = "dog", color = [0, 2], tiling = "character"}
 

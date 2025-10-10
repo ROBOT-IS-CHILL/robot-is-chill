@@ -90,8 +90,6 @@ fbufbu_old = {sprite = "oldfbufbu", color = [1, 4], tiling = "none"}
 
 beba2 = {sprite = "beba2", color = [0, 1], tiling = "none"}
 
-cactus = {sprite = "cactus", color = [0, 3], tiling = "tiling"}
-
 ouch = {sprite = "ouch", color = [2, 3], tiling = "character"}
 
 line2 = {sprite = "line2", color = [0, 3], tiling = "tiling"}

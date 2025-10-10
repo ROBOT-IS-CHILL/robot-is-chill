@@ -2,7 +2,7 @@
 
 
 
-bone = {sprite = "bone", color = [0, 3], tiling = "none"}
+bone2 = {sprite = "bone", color = [0, 3], tiling = "none"}
 
 coal = {sprite = "coal", color = [0, 1], tiling = "none"}
 
@@ -20,7 +20,7 @@ stones = {sprite = "stones", color = [0, 1], tiling = "none"}
 
 text_avenue = {sprite = "text_avenue", color = [2, 2], tiling = "none"}
 
-text_bone = {sprite = "text_bone", color = [0, 3], tiling = "none"}
+text_bone2 = {sprite = "text_bone", color = [0, 3], tiling = "none"}
 
 text_coal = {sprite = "text_coal", color = [0, 1], tiling = "none"}
 

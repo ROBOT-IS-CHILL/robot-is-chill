@@ -206,7 +206,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         await ctx.reply("Scraping tile metadata...")
         async with ctx.typing():
             for world in constants.VANILLA_PATHS:
-                print(f"Scraping from {world}...")
                 ld_files = (Path("data/levels") / world).glob("*.ld")
                 sprites = {}
                 for file in ld_files:
@@ -267,10 +266,11 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                             data["object"]
                         )
                         row = await res.fetchone()
+                        if row is None:
+                            continue
                         orig_color_x, orig_color_y, orig_tiling = row
                         data["colour"] = data.get("colour", [orig_color_x, orig_color_y])
-                        data["tiling"] = int(data.get("tiling", orig_tiling))
-                    data["tiling"] = str(TilingMode(data["tiling"]))
+                        data["tiling"] = TilingMode(data.get("tiling", 0))
                     final_data = {
                         "color": data["colour"],
                         "tiling": data["tiling"],
@@ -301,7 +301,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 doc.add(tomlkit.nl())
                 doc.add(tomlkit.nl())
                 for name, data in world_data.items():
-                    print("\t", name, "\t", data)
                     table = tomlkit.inline_table()
                     table.update(data)
                     doc.add(tomlkit.nl())
@@ -314,17 +313,11 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
 
     @commands.command()
     @commands.is_owner()
-    async def loaddata(self, ctx: Context, flag: bool = False):
+    async def loaddata(self, ctx: Context):
         """Reloads tile data from the world map, editor, and custom files.
-
-        The boolean flag deletes all tiles from the database before
-        updating with new tiles. [slow, do not do unless necessary]
         """
         self.bot.loading = True
-        if flag:
-            # Flush the tile database since it all gets reconstructed anyway
-            await self.bot.db.conn.execute('DELETE FROM tiles')
-        del self.bot.db.filter_cache  # Just to make absolutely sure that it gets flushed
+        await self.bot.db.conn.execute('DELETE FROM tiles')
         self.bot.db.filter_cache = {}
         await self.load_initial_tiles()
         await self.load_editor_tiles()
@@ -412,7 +405,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         objects: dict[str, dict[str, Any]] = {}
         for match in re.finditer(object_pattern, spanned):
             obj, name, sprite, tiling, type, c_x, c_y, a_x, a_y = match.groups()
-            print(f"Loading {name}")
             a_x = c_x if a_x is None else a_x
             a_y = c_y if a_y is None else a_y
             active_x = int(a_x)
@@ -439,7 +431,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            print("\t", name, "\t", data)
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -508,7 +499,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            print("\t", name, "\t", data)
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -521,7 +511,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
 
         def prepare(source: str, name: str, d: dict[str, Any]) -> dict[str, Any]:
             """From config format to db format."""
-            print(f"Loading {name}")
             db_dict = {key: value for key, value in d.items()}
             db_dict["name"] = name
             inactive = d.pop("color")
@@ -604,7 +593,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                         img_data = np.array(im.convert("LA"))[..., 1] > 0
                     _, width = img_data.shape
                     width //= 3
-                    print(path, width)
                     io = BytesIO()
                     np.save(io, [img_data[:, i * width : (i + 1) * width] for i in range(3)])
                     data.append((entry["value"], width, mode, io.getvalue()))
