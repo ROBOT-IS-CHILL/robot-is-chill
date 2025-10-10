@@ -8,21 +8,8 @@ import numpy as np
 
 from src.types import TilingMode
 from . import errors, constants, utils
-from .cogs.variants import parse_signature
 from .db import TileData
-from .types import Variant, Context, RegexDict
-
-
-async def parse_variant(bot, possible_variants: RegexDict[Variant], raw_variant: str):
-    name = utils.split_escaped(raw_variant, "/", True)[0]
-    try:
-        final_variant = possible_variants[raw_variant]
-        variant_args = [g for g in re.fullmatch(final_variant.pattern, raw_variant).groups() if g is not None]
-        final_args = parse_signature(variant_args, final_variant.signature)
-        return final_variant(*final_args)
-    except KeyError:
-        raise errors.UnknownVariant(name, raw_variant)
-
+from .types import Variant, Context
 
 @dataclass
 class TileSkeleton:

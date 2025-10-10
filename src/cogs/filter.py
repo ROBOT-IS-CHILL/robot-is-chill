@@ -31,11 +31,11 @@ import config
 import webhooks
 from src.types import SignText, RenderContext
 from src.utils import ButtonPages
-from ..tile import Tile, TileSkeleton, parse_variant
+from ..tile import Tile, TileSkeleton
 
 from .. import constants, errors
 from ..db import CustomLevelData, LevelData
-from ..types import Bot, Context, RegexDict
+from ..types import Bot, Context
 
 
 class FilterQuerySource(menus.ListPageSource):
