@@ -137,11 +137,17 @@ sp_kijetesantakalu = {color = [0, 3], tiling = "character", sprite = "kijetesant
 
 # extended glyphs
 
+sp_ante_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "ante_outer"}
+sp_kon_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "kon_outer"}
 sp_jan_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "jan_outer"}
 sp_sitelen_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "sitelen_outer"}
+sp_telo_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "telo_outer"}
 sp_toki_outer = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "toki_outer"}
 
+sp_ala_stack = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "ala_stack"}
 sp_pona_stack = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "pona_stack"}
+sp_tenpo_stack = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "tenpo_stack"}
 sp_nasin_stack = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "nasin_stack"}
 
+sp_ala_small = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "ala_small"}
 sp_pona_small = {color = [0, 3], author = "nataliemeow", tiling = "none", sprite = "pona_small"}
