@@ -630,6 +630,7 @@ class Renderer:
                 line_height = 6 if tile.style == "beta" else 12
                 sprite = Image.new("L", (int(max_line_width), int(max(line_height * 2, len(lines) * line_height))))
                 dy = (max(line_height * 2, len(lines) * line_height) - (len(lines) * line_height)) / 2
+                char_index = 0
                 for y, (line, line_width, char_spacing) in enumerate(zip(line_chars, line_widths, line_spacings)):
                     x = int((max_line_width - line_width) / 2)
                     for char, widths in line:
@@ -642,10 +643,11 @@ class Renderer:
                             char = char,
                             mode = mode,
                             width = int(width)
-                        ))[wobble]
+                        ))[(wobble + char_index) % 3]
                         oy = (line_height - letter_sprite.height) / 2 + dy
                         sprite.paste(letter_sprite, (int(x), int(y * line_height + oy)))
                         x += width + char_spacing
+                        char_index += 1
                 if sprite.height < line_height * 2:
                     spr = Image.new("L", (sprite.width, line_height))
                     spr.paste(sprite, (0, int((line_height - sprite.height) / 2)))
