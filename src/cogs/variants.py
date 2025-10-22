@@ -217,7 +217,7 @@ async def setup(bot):
     @add_variant("m!", no_function_name=True)
     async def macro(tile, name: str):
         """Applies a variant macro to the tile. Check the macros command for details."""
-        assert 0, f"Macro `{name}` not found in the database!"
+        assert 0, f"Failed to expand `m!{name}` within nested macro call.\n-# > i'll fix this soon i swear\n-# \\-baltdev"
 
     # --- SIGN TEXT ---
 
