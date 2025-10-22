@@ -566,7 +566,6 @@ class Renderer:
                         width = 12
                     ))[wobble]
                     sprite.paste(letter_sprite, (x, y))
-                    char_index += 1
         else:
             max_line_width = 0
             line_chars = []
