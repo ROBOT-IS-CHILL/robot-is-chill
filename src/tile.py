@@ -94,7 +94,7 @@ class TileSkeleton:
         vars = []
         for variant in out.variants:
             if variant.factory.type == "skel":
-                await variant.applicator(out, SkeletonVariantContext())
+                await variant.apply(out, SkeletonVariantContext())
             else:
                 vars.append(variant)
         out.variants = vars
@@ -227,7 +227,7 @@ class Tile:
                 raise errors.TileNotFound(esc_name)
         for variant in value.variants:
             if variant.factory.type == "tile":
-                await variant.applicator(
+                await variant.apply(
                     value, TileVariantContext(tile_data_cache)
                 )
                 if value.surrounding != 0:

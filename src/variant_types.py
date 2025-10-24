@@ -208,9 +208,9 @@ class AbstractVariantFactory(ABC):
                 if param[1].annotation is Parameter.empty:
                     raise AssertionError(f"Parameter `{param[0]}` of variant `{identifier}` has no type annotation.")
             # Sanity check the first two parameters
-            assert params[0][1].annotation == cls.target, \
+            assert params[0][1].annotation.__name__ == cls.target.__name__, \
                 f"Variant `{identifier}` has an incorrectly annotated target."
-            assert params[1][1].annotation == cls.context, \
+            assert params[1][1].annotation.__name__ == cls.context.__name__, \
                 f"Variant `{identifier}` has an incorrectly annotated context."
 
             params = params[2:]
@@ -248,10 +248,13 @@ class AbstractVariantFactory(ABC):
     ) -> Callable[[str], tuple[str, Union["Variant", None]]]:
 
         arg_parsers = []
+        required = 0
         for param in params:
             parser = get_parser(param[1].annotation)
             assert parser is not None, f"Type {param[1].annotation} does not have an implemented parser"
             arg_parsers.append(parser)
+            if not param[1].default:
+                required += 1
 
         def parser(string: str) -> tuple[str, Union["Variant", None]]:
             orig_str = string
@@ -274,9 +277,7 @@ class AbstractVariantFactory(ABC):
                     print(f"Argument {i} failed at {string}")
                     return orig_str, None
                 args.append(res)
-                if string == "":
-                    for _ in range(i + 1, len(arg_parsers)):
-                        args.append(None)
+                if string == "" and i >= required:
                     break
                 if i + 1 == len(arg_parsers):
                     if not string.startswith("/"):
