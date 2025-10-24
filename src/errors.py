@@ -16,6 +16,10 @@ class SplittingException(BabaError):
     """
 
 
+class Porp(MiscError):
+    """porp"""
+
+
 class NoPaletteError(MiscError):
     """No palette of the given name."""
 

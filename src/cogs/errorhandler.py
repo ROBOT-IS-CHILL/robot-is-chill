@@ -122,6 +122,9 @@ class CommandErrorHandler(commands.Cog):
             elif isinstance(error, ignored):
                 return
 
+            elif isinstance(error, errors.Porp):
+                return await ctx.error(f':porp', file=discord.File("data/misc/porp.jpg"))
+
             if isinstance(error, commands.CommandOnCooldown):
                 if ctx.author.id == self.bot.owner_id:
                     return await ctx.reinvoke()
