@@ -9,7 +9,8 @@ import numpy as np
 from src.types import TilingMode
 from . import errors, constants, utils
 from .db import TileData
-from .types import Variant, Context
+from .types import Variant, Context, Bot
+from .variant_types import SkeletonVariantContext, TileVariantContext
 
 @dataclass
 class TileSkeleton:
@@ -22,6 +23,7 @@ class TileSkeleton:
     palette: tuple[str, str | None] = ("default", "vanilla")
     beta: bool = False
     custom: bool = False
+    force_color: tuple[int, int] | None = None
 
     def clone(self):
         clone = TileSkeleton(**self.__dict__)
@@ -29,7 +31,7 @@ class TileSkeleton:
         return clone
 
     @classmethod
-    async def parse(cls, bot, possible_variants, string: str, default_prefix: str | None = None,
+    async def parse(cls, bot, string: str, default_prefix: str | None = None,
                     palette: tuple[str, str | None] = ("default", "vanilla"),
                     global_variant="", *, prefix: str = None):
         out = cls()
@@ -75,29 +77,24 @@ class TileSkeleton:
                         ORDER BY RANDOM() LIMIT 1
                     """)
                 out.name = (await cur.fetchall())[0][0]
-            split_vars = [("m!2ify", ":")] + split_vars
+            out.force_color = (4, 2)
         split_vars_ex = []
         if global_variant:
             split_global = utils.split_escaped(global_variant, (":", ';'), True, True)
             split_vars_ex.extend(split_global)
         for i, (raw_var, split) in enumerate(split_vars):
-            if raw_var.startswith("m!"):
-                mac = f"[{utils.split_escaped(raw_var.removeprefix('m!'), [])[0]}]"
-                expanded = await bot.macro_handler.parse_macros(mac, "T")
-                split_ex = utils.split_escaped(expanded, (":", ';'), True, True)
-                for (raw, _) in split_ex:
-                    split_vars_ex.append((raw, split))
-            else:
-                split_vars_ex.append((raw_var, split))
+            split_vars_ex.append((raw_var, split))
         for raw_var, split in split_vars_ex:
-            var = await parse_variant(bot, possible_variants, raw_var)
+            var = bot.parse_variant(raw_var)
+            if var is None:
+                raise errors.UnknownVariant(raw_var)
             if split == ";":
                 var.persistent = True
             out.variants.append(var)
         vars = []
         for variant in out.variants:
-            if variant.type == "skel":
-                await variant.apply(out)
+            if variant.factory.type == "skel":
+                await variant.applicator(out, SkeletonVariantContext())
             else:
                 vars.append(variant)
         out.variants = vars
@@ -171,18 +168,20 @@ class Tile:
                      self.style, self.palette, self.overlay, self.hue,
                      self.gamma, self.saturation, self.filterimage,
                      self.palette_snapping, self.normalize_gamma, self.altered_frame,
-                     hash(tuple(var for var in self.variants if var.hashed)),
+                     hash(tuple(var for var in self.variants)),
                      self.custom_color, self.palette, self.text_squish_width))
 
     @classmethod
     async def prepare(
-        cls, possible_variants, tile: TileSkeleton, tile_data_cache: dict[str, TileData], grid,
+        cls, bot: Bot, tile: TileSkeleton, tile_data_cache: dict[str, TileData], grid,
         width: int, height: int,
         position: tuple[int, int, int, int], tile_borders: bool = False, ctx: Context = None
     ):
         esc_name = name = utils.split_escaped(tile.name, [])[0]
         value = cls(custom = tile.custom)
         metadata = tile_data_cache.get(name)
+        if tile.force_color:
+            metadata.active_color = tile.force_color
         if tile.beta:
             value.style = "beta"
         if metadata is not None:
@@ -227,17 +226,16 @@ class Tile:
             else:
                 raise errors.TileNotFound(esc_name)
         for variant in value.variants:
-            if variant.type == "tile":
-                await variant.apply(value, tile_data_cache=tile_data_cache)
+            if variant.factory.type == "tile":
+                await variant.applicator(
+                    value, TileVariantContext(tile_data_cache)
+                )
                 if value.surrounding != 0:
                     if metadata.tiling == TilingMode.TILING:
                         value.surrounding &= 0b11110000
                     value.frame = constants.TILING_VARIANTS[value.surrounding]
         if not (metadata is None or value.frame in metadata.extra_frames or value.frame in metadata.tiling.expected()):
             value.frame = 0
-        value.variants.append(
-            possible_variants["0/3"](value.color, _default_color=True)
-        )
         return value
 
     def clone(self):

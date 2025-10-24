@@ -168,7 +168,7 @@ class CommandErrorHandler(commands.Cog):
 
             elif isinstance(error, errors.UnknownVariant):
                 return await ctx.error(
-                    f"The variant `{error.args[1]}` doesn't exist."
+                    f"The variant `{error.args[0]}` doesn't exist or is malformed."
                 )
 
             elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):

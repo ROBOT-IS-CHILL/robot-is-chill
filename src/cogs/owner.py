@@ -218,6 +218,18 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
 
     @commands.command()
     @commands.is_owner()
+    async def py(self, ctx: Context, *, command: str):
+        """Run some python."""
+        _loc = {}
+        lines = ["async def func(ctx, bot):", *("    " + line for line in command.splitlines())]
+        exec("\n".join(lines), locals = _loc)
+        result = str(await _loc["func"](ctx, self.bot))
+        if len(result) + 15 > 2000:
+            result = result[:1982] + '...'
+        await ctx.send(f'Output:\n```\n{result}```')
+
+    @commands.command()
+    @commands.is_owner()
     async def sql(self, ctx: Context, *, query: str):
         """Run some sql."""
         filemode = False

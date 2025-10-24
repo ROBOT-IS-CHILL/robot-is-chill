@@ -25,7 +25,6 @@ cogs = [
 	"src.cogs.macros",
 	"src.cogs.loading",
 	"src.cogs.filter",
-	"jishaku"
 ]
 danger_mode = False
 debug = False

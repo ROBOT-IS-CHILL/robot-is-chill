@@ -25,6 +25,7 @@ import PIL.ImageFont as ImageFont
 from src.tile import ProcessedTile, Tile
 from .. import constants, errors
 from ..types import Color, RenderContext, TilingMode
+from ..variant_types import SpriteVariantContext, PostVariantContext, SignVariantContext
 from src import utils
 
 try:
@@ -131,8 +132,10 @@ class Renderer:
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
                 for var in sign_text.variants:
-                    if var.type == "sign":
-                        await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
+                    if variant.factory.type == "sign":
+                        await variant.apply(
+                            sign_text, SpriteVariantContext(bot, ctx, self)
+                        )
                 size = int(
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
@@ -468,8 +471,10 @@ class Renderer:
             )
             rendered_frames += len(new_frames)
             for variant in tile.variants:
-                if variant.type == "post":
-                    await variant.apply(processed_tile, renderer=self, new_frames=new_frames)
+                if variant.factory.type == "post":
+                    await variant.apply(
+                        processed_tile, PostVariantContext(self, new_frames)
+                    )
             d[y, x, z, t] = processed_tile
         return d, len(ctx.tile_cache), rendered_frames, time.perf_counter() - render_overhead
 
@@ -686,8 +691,10 @@ class Renderer:
     ):
         random.seed(seed)
         for variant in tile.variants:
-            if variant.type == "sprite":
-                sprite = await variant.apply(sprite, tile=tile, wobble=wobble, renderer=self)
+            if variant.factory.type == "sprite":
+                sprite = await variant.apply(
+                    sprite, SpriteVariantContext(tile, wobble, self)
+                )
                 if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
                     raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
         return sprite

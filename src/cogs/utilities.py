@@ -27,8 +27,9 @@ from ..utils import ButtonPages
 
 
 class SearchPageSource(menus.ListPageSource):
-    def __init__(self, data: Sequence[Any], query: str):
+    def __init__(self, data: Sequence[Any], query: str, kind: str):
         self.query = query
+        self.kind = kind
         super().__init__(data, per_page=constants.SEARCH_RESULT_UNITS_PER_PAGE)
 
     async def format_page(self, menu: menus.Menu, entries: Sequence[Any]) -> discord.Embed:
@@ -37,12 +38,12 @@ class SearchPageSource(menus.ListPageSource):
             color=menu.bot.embed_color,
             title=f"Search results{target} (Page {menu.current_page + 1}/{self.get_max_pages()})"
         )
-        out.set_footer(text="Note: To search for things other than tiles, use command flags. See =help search.")
+        out.set_footer(text=f"Note: To search for things other than {self.kind}s, use command flags. See =help search.")
         lines = ["```"]
-        for (type, short), long in entries:
+        for (ty, short), long in entries:
             if isinstance(long, TileData):
                 lines.append(
-                    f"({type}) {short}\n    sprite: {long.sprite} source: {long.source}\n")
+                    f"({ty}) {short}\n    sprite: {long.sprite} source: {long.source}\n")
                 lines.append(
                     f"    color: {long.inactive_color} active color: {long.active_color}\n    tiling: {src.types.TilingMode(long.tiling)}")
                 if len(long.tags) > 0:
@@ -50,14 +51,16 @@ class SearchPageSource(menus.ListPageSource):
                 if len(long.extra_frames) > 0:
                     lines.append(f"\n    extra_frames: {', '.join(str(n) for n in long.extra_frames)}")
             elif isinstance(long, LevelData):
-                lines.append(f"({type}) {short} {long.display()}")
+                lines.append(f"({ty}) {short} {long.display()}")
             elif isinstance(long, CustomLevelData):
                 lines.append(
-                    f"({type}) {short} {long.name} (by {long.author})")
+                    f"({ty}) {short} {long.name} (by {long.author})")
             elif long is None:
                 continue
+            elif type(long) is str:
+                lines.append(f"({ty}) {short}\n{long}")
             else:
-                lines.append(f"({type}) {short}")
+                lines.append(f"({ty}) {short}")
             lines.append("\n")
 
         if len(lines) > 1:
@@ -146,7 +149,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             ),
         ).start(ctx)
 
-    @commands.command()
+    @commands.command(aliases=["?"])
     @commands.cooldown(4, 8, type=commands.BucketType.channel)
     async def search(self, ctx: Context, *, query: str = ""):
         """Searches through bot data based on a query.
@@ -338,29 +341,28 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             for a, b in out:
                 results[a] = b
 
+        if flags.get("type") == "variant":
+            for variant in ctx.bot.variants.values():
+                if plain_query not in variant.identifier: continue
+                padded_desc = "".join("    " + line for line in variant.description.splitlines())
+                padded_syn_desc = "".join("    " + line for line in variant.syntax_description.splitlines())
+                ty = variant.type
+                results["variant", variant.identifier] = \
+                    f"  description:\n{padded_desc}\n  syntax:\n{padded_syn_desc}\n  type: {ty}"
+
         await ButtonPages(
             source=SearchPageSource(
                 list(results.items()),
-                plain_query
+                plain_query,
+                flags.get("type", "tile")
             ),
         ).start(ctx)
 
-    @commands.command(name="variants", aliases=["var", "vars", "variant"])
-    @commands.cooldown(4, 8, type=commands.BucketType.channel)
-    async def variants(self, ctx: Context, query: Optional[str] = None):
-        """Shows all the bot's variants."""
-        def sort(variant):
-            return variant.__name__
-        variants = ctx.bot.variants._values
-        if query is not None:
-            variants = [var for var in variants if (query in var.__name__.lower() or query in var.__doc__) and not var.hidden]
-        assert len(variants) > 0, f"No variants were found with the query `{query}`!"
-        await ButtonPages(
-            source=VariantSource(
-                sorted(variants, key=sort)  # Sort alphabetically
-            ),
-        ).start(ctx)
-
+    @commands.cooldown(5, 8, type=commands.BucketType.channel)
+    @commands.command(name="variants", aliases=['vars'])
+    async def variants(self, ctx: Context, *, query: str = ""):
+        """Lists all available variants."""
+        return await ctx.invoke(ctx.bot.get_command("search"), query = "--type=variant " + query)
 
     @commands.command()
     @commands.cooldown(4, 8, type=commands.BucketType.channel)
