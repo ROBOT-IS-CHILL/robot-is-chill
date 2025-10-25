@@ -205,7 +205,7 @@ async def setup(bot):
 
     @add_variant()
     async def porp(tile):
-        """Does nothing. Useful for resetting persistent variants."""
+        """Does nothing. Nothing useful, that is."""
         raise errors.Porp()
 
     @add_variant("", "noop")
@@ -458,7 +458,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
 
     # --- TEXT MANIPULATION ---
 
-    @add_variant("noun", "prop")
+    @add_variant("noun", "prop", "quality")
     async def property(sprite,
                        plate: Optional[Literal["blank", "left", "up", "right", "down", "turn", "deturn", "soft"]] = None, *,
                        tile, wobble, renderer):
@@ -509,7 +509,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
 
     # --- FILTERS ---
 
-    @add_variant()
+    @add_variant("-")
     async def hide(sprite):
         """Hides the tile."""
         sprite[..., 3] = 0

@@ -25,7 +25,7 @@ The entry's values are as follows:
   - `icon`: `0`, gets sprites from from `<tilename>_<wobble>.png` instead of `<tilename>_<frame>_<wobble>.png`
   - `custom`: No frames, all must be specified in `extra_frames`
   - `none`: `0`
-  - `direcctional`: `0, 8, 16, 24`
+  - `directional`: `0, 8, 16, 24`
   - `tiling`: `0-15`
   - `character`: `0-3, 7-11, 15-19, 23-27, 31`
   - `animated_directional`: `0-3, 8-11, 16-19, 24-27`
