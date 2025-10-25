@@ -22,6 +22,7 @@ The entry's values are as follows:
 - `sprite`: Required. Must be a `string`. Specifies the filename that the sprites have, sans the animation and wobble frames, in the `sprites` directory.
 - `color`: Required. Must be a `list` of exactly two `integer`s. Specifies the palette index color that this sprite has.
 - `tiling`: Required. Specifies which frames the tile has by default. Must be a string of value:
+  - `icon`: `0`, gets sprites from from `<tilename>_<wobble>.png` instead of `<tilename>_<frame>_<wobble>.png`
   - `custom`: No frames, all must be specified in `extra_frames`
   - `none`: `0`
   - `directional`: `0, 8, 16, 24`

@@ -67,6 +67,7 @@ class Bot(commands.Bot):
 
 
 class Variant:
+    persistent: bool = False
     args: list = None
     type: str = None
     pattern: str = None
@@ -228,10 +229,10 @@ class Color(tuple):
                 return super(Color, cls).__new__(cls, (int(x), int(y)))
             except ValueError:
                 traceback.print_exc()
-                raise AssertionError("Failed to parse seemingly valid color! This should never happen.")
+                raise AssertionError(f"Failed to parse color `{value.replace('`', '')[:32]}`.")
 
     @staticmethod
-    def parse(tile, palette_cache, color=None):
+    def parse(tile, db, color=None):
         if color is None:
             color = tile.color
         if type(color) == str:
@@ -240,7 +241,8 @@ class Color(tuple):
             return color
         else:
             try:
-                pal = palette_cache[tile.palette].convert("RGBA")
+                pal = db.palette(*tile.palette)
+                assert pal is not None, f"Palette for parsed color is none?? `{tile}`"
                 return pal.getpixel(color)
             except IndexError:
                 raise AssertionError(f"The palette index `{color}` is outside of the palette.")
@@ -257,11 +259,13 @@ class Macro:
     description: str
     author: int
 
+@dataclass
+class ExternalMacro:
+    description: str
 
 @dataclass
 class SignText:
-    time_start: int = 0
-    time_end: int = 0
+    t: int = 0
     x: int = 0
     y: int = 0
     text: str = "null"
@@ -274,17 +278,27 @@ class SignText:
     anchor: str = "md"
     stroke: tuple[tuple[int, int, int, int], int] = (0, 0, 0, 0), 0
 
+    name: str = "<st>"
+    prefix: str = ""
+    postfix: str = "<st>"
+    variants: list = field(default_factory=list)
+
+    def clone(self):
+        clone = SignText(**self.__dict__)
+        clone.variants = [var for var in self.variants]
+        return clone
+
 @dataclass
 class RenderContext:
     """A holder class for all the attributes of a render."""
     ctx: Context = None
+    prefix: str | None = None
     before_images: list[Image] = field(default_factory=lambda: [])
-    palette: str = "default"
+    palette: tuple[str, str | None] = ("default", "vanilla")
     background_images: list[str] | list[Image] | None = None
-    out: str | BinaryIO = "target/renders/render.gif"
+    out: str | BinaryIO = "target/renders/render.webp"
     background: tuple[int, int] | None = None
     upscale: int = 2
-    extra_out: str | BinaryIO | None = None
     extra_name: str | None = None
     frames: list[int] = (1, 2, 3)
     animation: tuple[int, int] = None
@@ -292,16 +306,13 @@ class RenderContext:
     speed: int = 200
     crop: tuple[int, int, int, int] = (0, 0, 0, 0)
     pad: tuple[int, int, int, int] = (0, 0, 0, 0)
-    image_format: str = 'gif'
+    image_format: str = 'webp'
     loop: bool = True
     spacing: int = constants.DEFAULT_SPRITE_SIZE
     boomerang: bool = False
     random_animations: bool = True
     expand: bool = False
     sign_texts: list = field(default_factory=lambda: [])
-    _disable_limit: bool = False
-    _no_sign_limit: bool = False
-    raw_output: bool = False
     do_embed: bool = False
     global_variant: str = ""
     macros: dict = field(default_factory=lambda: {})
@@ -310,22 +321,14 @@ class RenderContext:
     sprite_cache: dict = field(default_factory=lambda: {})
     tile_cache: dict = field(default_factory=lambda: {})
     letters: bool = False
+    limited_palette: bool = False
+    bypass_limits: bool = False
+    custom_filename: str | None = None
 
-
-
-
-@define
-class BuiltinMacro:
-    """A built-in macro."""
-
-    description: str
-    """A description of what the macro does."""
-
-    function: Callable
-    """The function to call to run the macro."""
 
 
 class TilingMode(IntEnum):
+    ICON = -3
     CUSTOM = -2
     NONE = -1
     DIRECTIONAL = 0
@@ -337,6 +340,7 @@ class TilingMode(IntEnum):
     DIAGONAL_TILING = 6
 
     def __str__(self) -> str:
+        if self == TilingMode.ICON: return "icon"
         if self == TilingMode.CUSTOM: return "custom"
         if self == TilingMode.NONE: return "none"
         if self == TilingMode.DIRECTIONAL: return "directional"
@@ -349,6 +353,7 @@ class TilingMode(IntEnum):
 
     def parse(string: str) -> TilingMode | None:
         return {
+            "icon": TilingMode.ICON,
             "custom": TilingMode.CUSTOM,
             "none": TilingMode.NONE,
             "directional": TilingMode.DIRECTIONAL,
@@ -365,6 +370,8 @@ class TilingMode(IntEnum):
             return set()
         if self == TilingMode.DIAGONAL_TILING:
             return set(range(47))
+        if self == TilingMode.ICON:
+            return {0}
         if self == TilingMode.NONE:
             return {0}
         if self == TilingMode.DIRECTIONAL:

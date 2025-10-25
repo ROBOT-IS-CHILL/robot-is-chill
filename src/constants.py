@@ -8,6 +8,9 @@ MAX_META_SIZE = 10
 MAX_TILES = 2584
 MAX_TEXT_LENGTH = 32
 
+MAX_MACRO_SIZE = 65536
+MACRO_STEP_LIMIT = 2 * 1024 * 1024
+
 # variants
 DIRECTION_TILINGS = {
     0, 2, 3
@@ -235,7 +238,7 @@ PALETTE_PIXEL_SIZE = 32
 SEARCH_RESULT_UNITS_PER_PAGE = 20  # roughtly half the number of lines
 OTHER_LEVELS_CUTOFF = 20
 
-VANILLA_WORLDS = ("baba", "vanilla", "new_adv", "museum")
+VANILLA_WORLDS = ("baba", "vanilla", "new_adv", "museum", "baba-extensions")
 VANILLA_PATHS = ("baba", "new_adv", "museum")
 
 COMBINE_MAX_FILESIZE = 5242880  # in bytes
@@ -247,7 +250,7 @@ MAX_IMAGE_SIZE = (33 * DEFAULT_SPRITE_SIZE * 2, 18 * DEFAULT_SPRITE_SIZE * 2)
 
 NEWLINE = "\n"
 
-VAR_POSITIONAL_MAX = 64
+VAR_POSITIONAL_MAX = 256
 
 BLENDING_MODES = (
     "normal",
@@ -270,7 +273,7 @@ BLENDING_MODES = (
     "xora"
 )
 
-FILTER_MAX_SIZE = 524288
+FILTER_MAX_SIZE = 65536
 
 MAX_SIGN_TEXTS = 128
 MAX_SIGN_TEXT_LENGTH = 256
@@ -285,10 +288,6 @@ MESSAGE_LIMIT = 10
 
 CHARACTER_SHAPES = "long", "tall", "curved", "round", "segmented"
 CHARACTER_VARIANTS = "smooth", "fluffy", "fuzzy", "polygonal", "skinny", "belt-like"
-
-
-MACRO_LIMIT = 5000
-MACRO_ARG_LIMIT = 100
 
 LETTER_IGNORE = [
     "text_you2",

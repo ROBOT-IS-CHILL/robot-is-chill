@@ -4,10 +4,11 @@ import random
 import re
 from os import listdir
 from typing import TYPE_CHECKING
-import discord
 
+import discord
 import requests
 from PIL import Image
+import pathvalidate
 
 from .. import constants
 from ..errors import InvalidFlagError
@@ -115,40 +116,60 @@ async def setup(bot: Bot):
         m = match.group(1)
         if m is None:
             m = 0, 4
-        ctx.background = Color.parse(Tile(palette=ctx.palette), bot.renderer.palette_cache, m)
+        ctx.background = Color.parse(Tile(palette=ctx.palette), bot.db, m)
 
-    @flags.register(match=r"(?:--palette|-p)=(\w+)",
+    @flags.register(match=r"(?:--palette|-p)=(?:(\w+)\.)?(\w+)",
                     syntax="(-p | --palette)=<palette: str>")
     async def palette(match, ctx):
         """Sets the palette to use for the render. For a list of palettes, try `search type:palette`."""
-        palette = match.group(1)
-        if palette == "random":
-            palette = random.choice(listdir("data/palettes"))[:-4]
-        elif palette + ".png" not in listdir("data/palettes"):
-            raise InvalidFlagError(
-                f"Could not find a palette with name \"{palette}\".")
-        ctx.palette = palette
+        palette_source = match.group(1)
+        palette = match.group(2)
+        ctx.palette = (palette, palette_source)
 
-    @flags.register(match=r"--raw|-r(?:=(.+))?",
+    @flags.register(match=r"(?:--raw|-r)=(.+)",
                     syntax="(-r | --raw)=<name: str>")
     async def raw(match, ctx):
-        """Outputs a zip file with the render as PNG frames.
-        Also makes the default color white for everything, and sets the render scale to 1."""
-        ctx.raw_output = True
-        ctx.upscale = 1
-        ctx.extra_name = match.group(1) if match.group(1) else None
+        """Alias for -F=<name> -f=zip -m=1."""
+        filename = match.group(1)
+        assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
+        ctx.custom_filename = filename
+        ctx.image_format = "zip"
+        ctx.upscale = 1.0
 
-    @flags.register(match=r"--comment=(.*)",
-                    syntax="--comment=<comment: str>")
-    async def comment(match, ctx):
-        """Just a comment, does nothing."""
-        pass
+    @flags.register(match=r"(?:--filename|-F)=(.+)",
+                    syntax="(-F | --filename)=<name: str>")
+    async def filename(match, ctx):
+        """
+        Sets the filename of the render.
+        When used in conjunction with `--format=zip`, each frame in the zip will be named `<filename>_<frame // 3>_<frame % 3>.png`.
+        The filename must be at most 64 characters long, and must be valid.
+        """
+        filename = match.group(1)
+        assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
+        ctx.custom_filename = filename
+
+    @flags.register(match=r"(?:--prefix|-P)=(.+)",
+                syntax="(-P | --prefix)=<name: str>")
+    async def prefix(match, ctx):
+        """
+        Sets the default prefix of the render.
+        For example, `-p=text` is the same as rendering using `=rule`.
+        """
+        prefix = match.group(1)
+        ctx.prefix = prefix
 
     @flags.register(match=r"--letter",
                     syntax="--letter")
     async def letters(match, ctx):
         """Makes text default to letters."""
         ctx.letters = True
+
+    @flags.register(match=r"--bypass-limits",
+                    syntax="--bypass-limits")
+    async def bypass_limits(match, ctx):
+        """Bypasses time limits. Owner only."""
+        assert await ctx.ctx.bot.is_owner(ctx.ctx.message.author), "Sorry, only bot admins can bypass time limits."
+        ctx.bypass_limits = True
 
     @flags.register(
         match=r"(?:--frames|-frames|-f)=([123]+)",
@@ -212,6 +233,15 @@ Use % to set a percentage of the default render speed."""
     async def autocrop(match, ctx):
         """Clips tiles extending off the border of the render. Overrides --expand."""
         ctx.cropped = True
+
+    @flags.register(match=r"--limited_palette|-lp",
+                syntax="--limited_palette|-lp",
+                )
+    async def limited_palette(match, ctx):
+        """Only uses colors used within tiles in the render.
+        Vastly speeds up GIF encoding at the cost of breaking effects like blending modes and transparency.
+        Does nothing with -b enabled."""
+        ctx.limited_palette = True
 
     @flags.register(match=r"(?:--crop)=(\d+)/(\d+)/(\d+)/(\d+)",
                     syntax="--crop=<left: int>/<top: int>/<right: int>/<bottom: int>",
@@ -277,12 +307,11 @@ The first number is how many frames are in a wobble frame, and the second is how
         assert (2 ** 0) <= int(match.group(2)), f"An animation timestep of 0 is impossible."
         ctx.animation = (int(match.group(1))), (int(match.group(2)))
 
-    @flags.register(match=r'(?:--format|-f)=(gif|png)',
-                    syntax="--format|-f=<format: gif | png>",
+    @flags.register(match=r'(?:--format|-f)=(gif|png|pdf|zip|tiff|webp)',
+                    syntax="--format|-f=<format: gif | png | pdf | zip | tiff | webp>",
                     )
     async def format(match, ctx):
-        """Set the format of the render.
-Note that PNG formats won't animate inside of Discord, you'll have to open them in the browser."""
+        """Set the format of the render."""
         ctx.image_format = match.group(1)
 
     @flags.register(match=r"(?:--spacing|-sp)=-?(\d+)",
@@ -306,9 +335,3 @@ Note that PNG formats won't animate inside of Discord, you'll have to open them 
         """Make the render reverse at the end."""
         ctx.boomerang = True
 
-    @flags.register(match=r"(?:--macro|-mc)=(.+?)\|(.+)",
-                    syntax="--macro|-mc=<name: str>|<variants: Variant[]>",
-                    )
-    async def macro(match, ctx):
-        """Define macros for variants."""
-        ctx.macros[match.group(1)] = Macro(value=match.group(2), description="<internal>", author=-1)

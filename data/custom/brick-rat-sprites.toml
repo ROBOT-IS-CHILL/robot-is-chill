@@ -2,7 +2,7 @@
 
 
 
-brickwall = {sprite = bw", color = [6, 1], tiling = "character"}
+brickwall = {sprite = "bw", color = [6, 1], tiling = "character"}
 
 text_brickwall = {sprite = "text_bw", color = [6, 1], tiling = "none"}
 

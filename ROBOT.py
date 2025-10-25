@@ -20,9 +20,12 @@ import config
 import webhooks
 from src.types import Macro
 from src.db import Database
+import macrosia_glue
 
 from numpy import set_printoptions as numpy_set_printoptions
 
+import pyximport
+pyximport.install()
 
 class Context(commands.Context):
     silent: bool = False
@@ -86,12 +89,8 @@ class Bot(commands.Bot):
         self.renderer = None
         self.flags = None
         self.variants = None
-        self.palette_cache = {}
         self.macros = {}
         self.baba_loaded = True
-        for path in glob.glob("data/palettes/*.png"):
-            with Image.open(path) as im:
-                self.palette_cache[Path(path).stem] = im.convert("RGBA").copy()
         numpy_set_printoptions(
             threshold=sys.maxsize,
             linewidth=sys.maxsize
@@ -113,6 +112,8 @@ class Bot(commands.Bot):
 
     async def on_ready(self) -> None:
         await self.db.connect(self.db_path)
+        macrosia_glue.connect_to_db(self.db_path)
+        self.macro_handler.update_macros()
         print("Loading macros...")
         async with self.db.conn.cursor() as cur:
             await cur.execute("SELECT * from macros")
@@ -140,6 +141,12 @@ class Bot(commands.Bot):
 
 discord.utils.setup_logging()
 
+
+if Path("alpha").exists():
+    config.prefixes = ['[', '`[']
+elif Path("beta").exists():
+    config.prefixes = ['-', '`-']
+
 # Establishes the bot
 bot = Bot(
     # Prefixes
@@ -165,6 +172,23 @@ bot = Bot(
     prefixes=config.prefixes,
     db_path=config.db_path
 )
+
+if Path("alpha").exists():
+    bot.channel = "development"
+elif Path("beta").exists():
+    bot.channel = "staging"
+else:
+    bot.channel = "production"
+
+
+@bot.before_invoke
+async def before_invoke(ctx: Context):
+    await ctx.message.add_reaction("⚙️")
+
+
+@bot.after_invoke
+async def after_invoke(ctx: Context):
+    await ctx.message.remove_reaction("⚙️", bot.user)
 
 
 @bot.event

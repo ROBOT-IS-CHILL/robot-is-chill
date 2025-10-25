@@ -1,16 +1,21 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
 
+grid = {sprite = "grid", source = "baba", color = [4, 2], tiling = "none"}
 
 plus = {sprite = "plus", color = [0, 3], tiling = "none"}
 
+text_become = {sprite = "text_become", color = [0, 3], tiling = "none", source = "vanilla"}
+
+text_rook = {sprite = "text_rook", color = [0, 1], tiling = "none", source = "vanilla"}
+
 goose = {sprite = "goose", color = [0, 3], tiling = "animated_directional"}
 
-level = {sprite = "level", color = [0, 3], tiling = "none", tags = ["baba_special"], extra_frames = [1, 2]}
+level = {sprite = "level", color = [1, 2], tiling = "none", version = 0, extra_frames = [1, 2]}
 
 sale = {sprite = "sale", color = [4, 2], tiling = "none"}
 
-text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none", type = 0}
+text_sale = {sprite = "text_sale", color = [4, 2], tiling = "none"}
 
 spore = {sprite = "spore", color = [0, 3], tiling = "none"}
 
@@ -20,7 +25,7 @@ plate = {sprite = "plate", color = [0, 3], tiling = "none"}
 
 text_locked = {sprite = "text_locked", color = [4, 2], tiling = "none"}
 
-text_fall = {sprite = "text_fall", color = [5, 4], tiling = "none"}
+text_fall = {sprite = "text_fall", color = [5, 3], tiling = "none"}
 
 greg = {sprite = "greg", color = [2, 3], tiling = "none"}
 
@@ -64,8 +69,6 @@ text_plush = {sprite = "text_plush", color = [6, 1], tiling = "none"}
 
 text_yoink = {sprite = "text_yoink", color = [2, 4], tiling = "none"}
 
-tag = {sprite = "tag", color = [0, 3], tiling = "none"}
-
 game = {sprite = "game", color = [0, 3], tiling = "none"}
 
 text_game = {sprite = "text_game", color = [0, 3], tiling = "none"}
@@ -86,7 +89,7 @@ text_alone2 = {sprite = "text_alone2", color = [2, 2], tiling = "none"}
 
 text_hold_old = {sprite = "text_hold_old", color = [2, 4], tiling = "none"}
 
-text_hold = {sprite = "text_hold", color = [2, 2], tiling = "none"}
+text_hold2 = {sprite = "text_hold", color = [2, 2], tiling = "none"}
 
 text_kill = {sprite = "text_kill", color = [2, 1], tiling = "none"}
 
@@ -98,11 +101,7 @@ text_isin = {sprite = "text_isin", color = [0, 3], tiling = "none"}
 
 text_isnot = {sprite = "text_isnot", color = [2, 2], tiling = "none"}
 
-no = {sprite = "no", color = [2, 2], tiling = "none"}
-
 text_no = {sprite = "text_no", color = [2, 2], tiling = "none"}
-
-yes = {sprite = "yes", color = [5, 3], tiling = "none"}
 
 text_yes = {sprite = "text_yes", color = [5, 3], tiling = "none"}
 
@@ -140,33 +139,33 @@ never = {sprite = "never", color = [2, 2], tiling = "none"}
 
 edge_old = {sprite = "edge_old", color = [0, 1], tiling = "diagonal_tiling"}
 
-icon_abc = {sprite = "icon_abc", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_abc = {sprite = "icon_abc", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_abstract = {sprite = "icon_abstract", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_abstract = {sprite = "icon_abstract", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_cave = {sprite = "icon_cave", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_cave = {sprite = "icon_cave", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_dust = {sprite = "icon_dust", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_dust = {sprite = "icon_dust", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_fall = {sprite = "icon_fall", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_fall = {sprite = "icon_fall", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_forest = {sprite = "icon_forest", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_forest = {sprite = "icon_forest", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_garden = {sprite = "icon_garden", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_garden = {sprite = "icon_garden", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_island = {sprite = "icon_island", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_island = {sprite = "icon_island", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_lake = {sprite = "icon_lake", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_lake = {sprite = "icon_lake", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_level = {sprite = "icon_level", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_level = {sprite = "icon_level", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_meta = {sprite = "icon_meta", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_meta = {sprite = "icon_meta", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_mountain = {sprite = "icon_mountain", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_mountain = {sprite = "icon_mountain", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_ruins = {sprite = "icon_ruins", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_ruins = {sprite = "icon_ruins", color = [0, 3], tiling = "none", source = "baba"}
 
-icon_space = {sprite = "icon_space", color = [0, 3], tiling = "none", source = "vanilla"}
+icon_space = {sprite = "icon_space", color = [0, 3], tiling = "none", source = "baba"}
 
 error = {sprite = "error", color = [0, 3], tiling = "none", source = "vanilla"}
 
@@ -197,3 +196,61 @@ text_back_old = {sprite = "text_back_old", color = [2, 2], tiling = "none"}
 leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
 
 ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
+
+text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
+
+tuto = {sprite = "tuto", color = [0, 3], tiling = "none"}
+
+text_tuto = {sprite = "text_tuto", color = [0, 3], tiling = "none"}
+
+hbaba = {sprite = "hbaba", color = [0, 3], tiling = "character"}
+
+what_old = {sprite = "what_old", color = [0, 3], tiling = "none"}
+
+jony = {sprite = "jony", color = [0, 3], tiling = "none"}
+
+text_hd = {sprite = "text_hd", color = [5, 4], tiling = "none"}
+
+nook = {sprite = "nook", color = [0, 3], tiling = "none"}
+
+text_debt = {sprite = "text_debt", color = [5, 3], tiling = "none"}
+
+bird_old = {sprite = "bird_old", color = [2, 3], tiling = "animated_directional"}
+
+text_defeat_old = {sprite = "text_defeat_old", color = [2, 1], tiling = "none"}
+
+text_end_old = {sprite = "text_end_old", color = [0, 3], tiling = "none"}
+
+text_link4 = {sprite = "text_link4", color = [1, 4], tiling = "none"}
+
+text_pride = {sprite = "text_pride", color = [4, 1], tiling = "none"}
+
+text_ampersand = {sprite = "text_ampersand", color = [0, 3], tiling = "none"}
+
+text_jan = {sprite = "text_jan", color = [2, 2], tiling = "none"}
+
+text_feb = {sprite = "text_feb", color = [2, 3], tiling = "none"}
+
+text_mar = {sprite = "text_mar", color = [2, 4], tiling = "none"}
+
+text_apr = {sprite = "text_apr", color = [5, 3], tiling = "none"}
+
+text_may = {sprite = "text_may", color = [5, 2], tiling = "none"}
+
+text_jun = {sprite = "text_jun", color = [1, 4], tiling = "none"}
+
+text_jul = {sprite = "text_jul", color = [3, 3], tiling = "none"}
+
+text_aug = {sprite = "text_aug", color = [3, 0], tiling = "none"}
+
+text_sep = {sprite = "text_sep", color = [4, 1], tiling = "none"}
+
+text_oct = {sprite = "text_oct", color = [4, 2], tiling = "none"}
+
+text_nov = {sprite = "text_nov", color = [0, 1], tiling = "none"}
+
+text_dec = {sprite = "text_dec", color = [6, 1], tiling = "none"}
+
+mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
+
+text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}

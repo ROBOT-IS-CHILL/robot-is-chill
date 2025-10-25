@@ -15,22 +15,17 @@ from ..utils import recolor, composite
 from .. import constants, errors
 from ..types import Variant, RegexDict, VaryingArgs, Color, Slice
 
-CARD_KERNEL = np.array(((0, 1, 0), (1, 0, 1), (0, 1, 0)))
-OBLQ_KERNEL = np.array(((1, 0, 1), (0, 0, 0), (1, 0, 1)))
-META_KERNELS = {
-    "full": np.array([[1, 1, 1],
-                      [1, -8, 1],
-                      [1, 1, 1]]),
-    "edge": np.array([[0, 1, 0],
-                      [1, -4, 1],
-                      [0, 1, 0]])
-}
-
 
 def class_init(self, *args, **kwargs):
     self.args = args
     self.kwargs = kwargs
 
+
+def sanitize(string):
+    return string.replace('`', '').replace('\n', '')[:32]
+
+CARD_KERNEL = np.array(((0, 1, 0), (1, 0, 1), (0, 1, 0)))
+OBLQ_KERNEL = np.array(((1, 0, 1), (0, 0, 0), (1, 0, 1)))
 
 def parse_signature(v: list[str], t: list[type | types.GenericAlias]) -> list[Any]:
     out = []
@@ -156,6 +151,7 @@ async def setup(bot):
                 tree.append(p.annotation)
         return tree
 
+    # not a day goes by i don't regret writing this code. what the fuck even  is this.
     def create_variant(func: Callable, aliases: Iterable[str], no_function_name=False, hashed=True, hidden=False) -> \
     type[Variant]:
         assert func.__doc__ is not None, f"Variant `{func.__name__}` is missing a docstring!"
@@ -207,6 +203,11 @@ async def setup(bot):
 
     # --- SPECIAL ---
 
+    @add_variant()
+    async def porp(tile):
+        """Does nothing. Useful for resetting persistent variants."""
+        raise errors.Porp()
+
     @add_variant("", "noop")
     async def nothing(tile):
         """Does nothing. Useful for resetting persistent variants."""
@@ -221,7 +222,7 @@ async def setup(bot):
     @add_variant("m!", no_function_name=True)
     async def macro(tile, name: str):
         """Applies a variant macro to the tile. Check the macros command for details."""
-        assert 0, f"Macro `{name}` not found in the database!"
+        assert 0, f"Failed to expand `m!{name}` within nested macro call.\n-# > i'll fix this soon i swear\n-# \\-baltdev"
 
     # --- SIGN TEXT ---
 
@@ -242,13 +243,16 @@ async def setup(bot):
         sign.yo += y
 
     @add_variant(no_function_name=True)
-    async def sign_color(sign, color: Color, inactive: Optional[Literal["inactive", "in"]] = None, *, bot, ctx):
+    async def sign_color(sign, color: Color, inactive: Optional[Literal["inactive", "in"]] = None, *, bot, ctx, renderer):
         """Sets the sign text's color. See the sprite counterpart for details."""
         if len(color) < 4:
             if inactive is not None:
                 color = constants.INACTIVE_COLORS[color]
             try:
-                color = bot.renderer.palette_cache[ctx.palette].getpixel(color)
+                palette = renderer.bot.db.palette(ctx.palette)
+                if palette is None:
+                    raise errors.NoPaletteError(ctx.palette)
+                color = palette.getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(sign.text, color)
         sign.color = color
@@ -269,11 +273,11 @@ async def setup(bot):
         sign.anchor = anchor
 
     @add_variant()
-    async def stroke(sign, color: Color, size: int, *, bot, ctx):
+    async def stroke(sign, color: Color, size: int, *, bot, ctx, renderer):
         """Sets the sign text's stroke."""
         if len(color) < 4:
             try:
-                color = bot.renderer.palette_cache[ctx.palette].getpixel(color)
+                color = bot.renderer.bot.db[ctx.palette].getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(sign.text, color)
         sign.stroke = color, size
@@ -311,6 +315,11 @@ async def setup(bot):
         tile.altered_frame = True
         tile.frame = (tile.frame - 1) % 32
 
+    @add_variant("tw", "textwidth")
+    async def textwidth(tile, width: int):
+        """Sets the width of the custom text the text generator tries to expand to."""
+        tile.text_squish_width = width
+
     @add_variant("f", hashed=False)
     async def frames(tile, *frame: int):
         """Sets the wobble of the tile to the specified frame(s). 1 or 3 can be specified."""
@@ -320,19 +329,22 @@ async def setup(bot):
 
     # --- COLORING ---
 
-    palette_names = tuple([Path(p).stem for p in glob.glob("data/palettes/*.png")])
-
     @add_variant("palette/", "p!", no_function_name=True)
     async def palette(tile, palette: str):
         """Sets the tile's palette. For a list of palettes, try `search type:palette`."""
-        assert palette in palette_names, f"Palette `{palette}` was not found!"
-        tile.palette = palette
+        if "." in palette:
+            tile.palette = (*palette.split(".", 1)[::-1],)
+        else:
+            tile.palette = (palette, None)
 
     @add_variant("ac", "~")
     async def apply(sprite, *, tile, wobble, renderer):
         """Immediately applies the sprite's default color."""
         tile.custom_color = True
-        rgba = renderer.palette_cache[tile.palette].getpixel(tile.color)
+        palette = renderer.bot.db.palette(tile.palette)
+        if palette is None:
+            raise errors.NoPaletteError(tile.palette)
+        rgba = palette.getpixel(tile.color)
         sprite = recolor(sprite, rgba)
         return sprite
 
@@ -364,7 +376,10 @@ If [0;36minactive[0m is set and the color isn't hexadecimal, the color will sw
             if inactive is not None:
                 color = constants.INACTIVE_COLORS[color]
             try:
-                rgba = renderer.palette_cache[tile.palette].getpixel(color)
+                palette = renderer.bot.db.palette(tile.palette)
+                if palette is None:
+                    raise errors.NoPaletteError(tile.palette)
+                rgba = palette.getpixel(color)
             except IndexError:
                 raise errors.BadPaletteIndex(tile.name, color)
         return recolor(sprite, rgba)
@@ -395,8 +410,8 @@ Interpolates color through CIELUV color space by default. This can be toggled wi
 If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrapolated, as opposed to clamping from 0% to 100%.
 [0;36mDither[0ming does nothing with [0;36msteps[0m set to 0."""
         tile.custom_color = True
-        src = Color.parse(tile, renderer.palette_cache)
-        dst = Color.parse(tile, renderer.palette_cache, color=color)
+        src = Color.parse(tile, renderer.bot.db)
+        dst = Color.parse(tile, renderer.bot.db, color=color)
         if not raw:
             src = np.hstack((cv2.cvtColor(np.array([[src[:3]]], dtype=np.uint8), cv2.COLOR_RGB2Luv)[0, 0], src[3]))
             dst = np.hstack((cv2.cvtColor(np.array([[dst[:3]]], dtype=np.uint8), cv2.COLOR_RGB2Luv)[0, 0], dst[3]))
@@ -481,8 +496,16 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("1line", "1l")
     async def oneline(tile):
         """Makes custom words appear in one line."""
-        tile.style = "oneline"
+        tile.oneline = True
 
+    @add_variant()
+    async def beta(skel):
+        """Makes custom words appear as beta text."""
+        nonlocal bot
+        if (await bot.db.tile(skel.name + "beta")) is not None:
+            skel.name += "beta"
+        skel.custom = True
+        skel.beta = True
 
     # --- FILTERS ---
 
@@ -585,7 +608,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         return sprite.astype(np.uint8)
 
     @add_variant("m")
-    async def meta(sprite, level: Optional[int] = 1, kernel: Optional[Literal["full", "edge"]] = "full", size: Optional[int] = 1):
+    async def meta(sprite, level: Optional[int] = 1, kernel: Optional[Literal["full", "edge", "unit"]] = "full", size: Optional[int] = 1):
         """Applies a meta filter to an image."""
         if level is None: level = 1
         if size is None: size = 1
@@ -609,6 +632,10 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
             ker[0,ksize-1] = 0
             ker[ksize-1,ksize-1] = 0
             ker[ksize-1,0] = 0
+        elif kernel == 'unit':
+            ker[size, size] = - ksize**2 + 5
+            ker[0,0] = 0
+            ker[0,ksize-1] = 0
         for _ in range(abs(level)):
             base = cv2.filter2D(src=base, ddepth=-1, kernel=ker)
         base = np.dstack((base, base, base, base))
@@ -618,7 +645,7 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         else:
             base[mask ^ (level < 0), ...] = 0
         return base
-    
+
     @add_variant(no_function_name=True)
     async def omni(sprite, type: Optional[Literal["pivot", "branching"]] = "branching", *, tile, wobble, renderer):
         """Gives the tile an overlay, like the omni text."""
@@ -798,8 +825,8 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         cols = np.any(sprite[:, :, 3], axis=0)
         if not len(row_check := np.where(rows)[0]) or not len(col_check := np.where(cols)[0]):
             return sprite
-        left, right = row_check[[0, -1]]
-        top, bottom = col_check[[0, -1]]
+        left, right = col_check[[0, -1]]
+        top, bottom = row_check[[0, -1]]
         sprite_center = sprite.shape[0] // 2 - 1, sprite.shape[1] // 2 - 1
         center = int((top + bottom) // 2), int((left + right) // 2)
         displacement = np.array((sprite_center[0] - center[0], sprite_center[1] - center[1]))
@@ -808,13 +835,13 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("disp")
     async def displace(post, x: int, y: int):
         """Displaces the tile by the specified coordinates."""
-        post.displacement = [post.displacement[0] - x, post.displacement[1] - y]
+        post.displacement = [post.displacement[0] + x, post.displacement[1] + y]
 
     # Original code by Charlotte (CenTdemeern1)
     @add_variant("flood")
     async def floodfill(sprite, color: Color, inside: Optional[bool] = True, *, tile, wobble, renderer):
         """Floodfills either inside or outside a sprite with a given brightness value."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         sprite[sprite[:, :, 3] == 0] = 0  # Optimal
         sprite_alpha = sprite[:, :, 3]  # Stores the alpha channel separately
         sprite_alpha[sprite_alpha > 0] = -1  # Sets all nonzero numbers to a number that's neither 0 nor 255.
@@ -836,11 +863,11 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
         sprite[:, :, 3][mask] = sprite_flooded[1:-1, 1:-1][mask].astype(np.uint8)
         sprite[(sprite[:, :] == [0, 0, 0, 255]).all(2)] = color
         return sprite
-    
+
     @add_variant("pf")
     async def pointfill(sprite, color: Color, x: int, y: int, *, tile, wobble, renderer):
         """Floodfills a sprite starting at a given point."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         assert x >= 0 and y >= 0 and y < sprite.shape[0] and x < sprite.shape[1], f"Target point `{x},{y}` must be inside the sprite!"
         target_color = sprite[y,x]
         sprite[sprite[:, :, 3] == 0] = 0  # Optimal
@@ -863,18 +890,18 @@ If [0;36mextrapolate[0m is on, then colors outside the gradient will be extrap
     @add_variant("rm")
     async def remove(sprite, color: Color, invert: Optional[bool] = False, *, tile, wobble, renderer):
         """Removes a certain color from the sprite. If [36minvert[0m is on, then it removes all but that color."""
-        color = Color.parse(tile, renderer.palette_cache, color)
+        color = Color.parse(tile, renderer.bot.db, color)
         if invert:
             sprite[(sprite[:, :, 0] != color[0]) | (sprite[:, :, 1] != color[1]) | (sprite[:, :, 2] != color[2])] = 0
         else:
             sprite[(sprite[:, :, 0] == color[0]) & (sprite[:, :, 1] == color[1]) & (sprite[:, :, 2] == color[2])] = 0
         return sprite
-    
+
     @add_variant("rp")
     async def replace(sprite, color1: Color, color2: Color, invert: Optional[bool] = False, *, tile, wobble, renderer):
         """Replaces a certain color with a different color. If [36minvert[0m is on, then it replaces all but that color."""
-        color1 = Color.parse(tile, renderer.palette_cache, color1)
-        color2 = Color.parse(tile, renderer.palette_cache, color2)
+        color1 = Color.parse(tile, renderer.bot.db, color1)
+        color2 = Color.parse(tile, renderer.bot.db, color2)
         if invert:
             sprite[(sprite[:, :, 0] != color1[0]) | (sprite[:, :, 1] != color1[1]) | (sprite[:, :, 2] != color1[2])] = color2
         else:
@@ -1038,7 +1065,10 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
     @add_variant("ps")
     async def palette_snap(sprite, *, tile, wobble, renderer):
         """Snaps all the colors in the tile to the specified palette."""
-        palette_colors = np.array(renderer.palette_cache[tile.palette].convert("RGB")).reshape(-1, 3)
+        pal = renderer.bot.db(tile.palette)
+        if pal is None:
+            raise errors.NoPaletteError(tile.palette)
+        palette_colors = np.array(pal.convert("RGB")).reshape(-1, 3)
         sprite_lab = cv2.cvtColor(sprite.astype(np.float32) / 255, cv2.COLOR_RGB2Lab)
         diff_matrix = np.full((palette_colors.shape[0], *sprite.shape[:-1]), 999)
         for i, color in enumerate(palette_colors):
@@ -1090,11 +1120,6 @@ Slices are notated as [30m([36mstart[30m/[36mstop[30m/[36mstep[30m)[0m, 
         arr_hls[:, :, 1] *= (255 / max_l)
         sprite[:, :, :3] = cv2.cvtColor(arr_hls.astype(np.uint8), cv2.COLOR_HLS2RGB)  # my question still stands
         return sprite
-
-    @add_variant("3oo", "skul", hidden=True)
-    async def threeoo(sprite, scale: float):
-        """Content-aware scales the sprite downwards."""
-        assert 0, "Due to both extremely little use and extreme difficulty to program, 3oo isn't in the bot anymore. Sorry!"
 
     @add_variant()
     async def crop(sprite, x_y: list[int, int], u_v: list[int, int], change_bbox: Optional[bool] = False):
@@ -1209,17 +1234,13 @@ If a value is negative, it removes pixels above the threshold instead."""
         return np.uint8(mapped)
 
     @add_variant("filter", "fi!")
-    async def filterimage(sprite, filter_url: str, absolute: Optional[bool] = None, *, tile, wobble, renderer):
+    async def filterimage(sprite, name: str, *, tile, wobble, renderer):
         """Applies a filter image to a sprite. For information about filter images, look at the filterimage command."""
-        frames, abs_db = await renderer.bot.db.get_filter(filter_url)
-        try:
-            filter = frames[wobble]
-        except IndexError:
-            filter = frames[0]
+        res = await renderer.bot.db.get_filter(name)
+        assert res is not None, f"Filter `{sanitize(name)}` does not exist!"
+        absolute, _, _, filter = res
         filt = np.array(filter.convert("RGBA"))
         check_size(*filt.shape[:2])
-        absolute = absolute if absolute is not None else \
-            abs_db if abs_db is not None else False
         filt = np.float32(filt)
         filt[..., :2] -= 0x80
         if not absolute:

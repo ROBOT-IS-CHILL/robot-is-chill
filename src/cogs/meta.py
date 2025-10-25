@@ -176,17 +176,18 @@ This help page should be able to guide you to everything you need to know.
         minutes, seconds = divmod(remainder, 60)
         embed.add_field(
             name="Statistics",
-            value=f"""Guilds: {len(self.bot.guilds)}/100
+            value=f"""Guilds: {len(self.bot.guilds)}
 Channels: {sum(len(g.channels) for g in self.bot.guilds)}
 Uptime: {days}:{hours:02}:{minutes:02}:{seconds:02}
 Tiles: {tile_amount}""",
             inline=True
         )
         embed.add_field(
-            name="Developers",
+            name="Credits",
             value="""_@baltdev_ - Current lead
 _@centdemeern1_ - Co-lead
 _@rocketrace_ - Original lead
+_@roccowolf, @justwhy_ - Text generator sprites
 _@theopold, @dizzyandy, and many others_ - Major and minor contributions to the bot
 """,
             inline=True

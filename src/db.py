@@ -24,9 +24,11 @@ class Database:
     conn: asqlite.Connection
     bot: None
     filter_cache: dict[str, (Image.Image, bool)]
+    palette_store: dict[(str, str), Image.Image]
 
     def __init__(self, bot):
         self.filter_cache = {}
+        self.palette_store = {}
         self.bot = bot
 
     async def connect(self, db: str) -> None:
@@ -42,6 +44,26 @@ class Database:
         print("Initialized database connection.")
         await self.create_tables()
         print("Verified database tables.")
+        await self.store_palettes()
+        print("Stored palettes.")
+
+    async def store_palettes(self):
+        async with self.conn.cursor() as cur:
+            res = await cur.execute("""
+                SELECT name, source, data FROM palettes
+            """)
+            res = [(*row, ) for row in await res.fetchall()]
+        vanilla_palettes = []
+        for (name, source, data) in res:
+            im = Image.open(BytesIO(data))
+            im.load()
+            self.palette_store[(name, None)] = im.copy()
+            self.palette_store[(name, source)] = im.copy()
+            if source == "vanilla":
+                vanilla_palettes.append((name, im.copy()))
+        # Hack to prioritize vanilla
+        for name, pal in vanilla_palettes:
+            self.palette_store[(name, None)] = pal
 
     async def close(self) -> None:
         """Teardown."""
@@ -54,132 +76,69 @@ class Database:
         (Useful for documentation.)
         """
         async with self.conn.cursor() as cur:
-            await cur.execute(
-                # `name` is not specified to be a unique field.
-                # We allow multiple "versions" of a tile to exist,
-                # to account for differences between "world" and "editor" tiles.
-                # One example of this is with `belt` -- its color inside levels
-                # (which use "world" tiles) is different from its editor color.
-                # These versions are differentiated by `version`.
-                #
-                # For tiles where the active/inactive distinction doesn't apply
-                # (i.e. all non-text tiles), only `active_color` fields are
-                # guaranteed to hold a meaningful, non-null value.
-                #
-                # `text_direction` defines whether a property text tile is
-                # "pointed towards" any direction. It is null otherwise.
-                # The directions are right: 0, up: 8, left: 16, down: 24.
-                #
-                # `tags` is a tab-delimited sequence of strings. The empty
-                # string denotes no tags.
+            await cur.executescript(
                 '''
-				CREATE TABLE IF NOT EXISTS tiles (
-					name TEXT NOT NULL,
-					sprite TEXT NOT NULL,
-					source TEXT NOT NULL,
-					version INTEGER NOT NULL,
-					inactive_color_x INTEGER DEFAULT 3,
-					inactive_color_y INTEGER DEFAULT 0,
-					active_color_x INTEGER NOT NULL DEFAULT 0,
-					active_color_y INTEGER NOT NULL DEFAULT 3,
-					tiling INTEGER NOT NULL DEFAULT -1,
-					text_type INTEGER NOT NULL DEFAULT 0,
-					text_direction INTEGER,
-					tags TEXT NOT NULL DEFAULT "",
+                CREATE TABLE IF NOT EXISTS tiles (
+                    name TEXT NOT NULL,
+                    sprite TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    version INTEGER NOT NULL,
+                    active_color_x INTEGER NOT NULL DEFAULT 0,
+                    active_color_y INTEGER NOT NULL DEFAULT 3,
+                    inactive_color_x INTEGER DEFAULT 0,
+                    inactive_color_y INTEGER DEFAULT 1,
+                    tiling TEXT NOT NULL DEFAULT "none",
+                    -- It would be better to store these in a separate table but idrc
+                    tags TEXT NOT NULL DEFAULT "",
                     extra_frames TEXT,
                     object_id TEXT,
-					UNIQUE(name, version)
-				);
-				'''
-            )
-            await cur.execute(
-                '''
-                CREATE TABLE IF NOT EXISTS ServerActivity (
-					id INTEGER NOT NULL,
-					timestamp INTEGER NOT NULL
-				);
-				'''
-            )
-            await cur.execute(
-                '''
-                CREATE TABLE IF NOT EXISTS blacklistedusers (
-					id INTEGER NOT NULL
-				);
-                '''
-            )
-            # We create different tables for levelpacks and custom levels.
-            # While both share some fields, there are mutually exclusive
-            # fields which are more sensible in separate tables.
-            #
-            # The world/id combination is unique across levels. However,
-            # a world can have multiple levels and multiple worlds can share
-            # a level id. Thus neither is unique alone.
-            await cur.execute(
-                '''
-				CREATE TABLE IF NOT EXISTS levels (
-					id TEXT NOT NULL,
-					world TEXT NOT NULL,
-					name TEXT NOT NULL,
-					subtitle TEXT,
-					number INTEGER,
-					style INTEGER,
-					parent TEXT,
-					map_id TEXT,
-					UNIQUE(id, world)
-				);
-				'''
-            )
-            await cur.execute(
-                # There have been multiple valid formats of level
-                # codes, so we don't assume a constant-width format.
-                '''
-				CREATE TABLE IF NOT EXISTS custom_levels (
-					code TEXT UNIQUE NOT NULL,
-					name TEXT NOT NULL,
-					subtitle TEXT,
-					author TEXT NOT NULL
-				);
-				'''
-            )
-            await cur.execute(
-                '''
-				CREATE TABLE IF NOT EXISTS letters (
-					mode TEXT NOT NULL,
-					char TEXT NOT NULL,
-					width INTEGER NOT NULL,
-					sprite_0 BLOB,
-					sprite_1 BLOB,
-					sprite_2 BLOB
-				);
-				'''
-            )
-            await cur.execute(
-                '''
-				CREATE TABLE IF NOT EXISTS users (
-					user_id INTEGER PRIMARY KEY,
-					blacklisted INTEGER,
-					silent_commands INTEGER,
-					render_background INTEGER
-				);
-				'''
-            )
-            await cur.execute(
-                '''
-				CREATE TABLE IF NOT EXISTS filterimages (
-					name TEXT UNIQUE PRIMARY KEY,
-					absolute BOOL,
-					url TEXT,
-					creator INT
-				);
-				'''
-            )
-            await cur.execute(
-                '''
+                    UNIQUE(name, version)
+                );
+                CREATE TABLE IF NOT EXISTS levels (
+                    id TEXT NOT NULL,
+                    world TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    subtitle TEXT,
+                    number INTEGER,
+                    style INTEGER,
+                    parent TEXT,
+                    map_id TEXT,
+                    UNIQUE(id, world)
+                );
+                CREATE TABLE IF NOT EXISTS custom_levels (
+                    code TEXT UNIQUE NOT NULL,
+                    name TEXT NOT NULL,
+                    subtitle TEXT,
+                    author TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS letters (
+                    char TEXT NOT NULL,
+                    width INTEGER NOT NULL,
+                    mode TEXT NOT NULL,
+                    frames BLOB NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id INTEGER UNIQUE PRIMARY KEY,
+                    blacklisted BOOLEAN NOT NULL DEFAULT false
+                );
+                CREATE TABLE IF NOT EXISTS filters (
+                    name STRING NOT NULL,
+                    absolute BOOLEAN NOT NULL,
+                    author INT NOT NULL,
+                    upload_time INT,
+                    data BLOB NOT NULL
+                );
                 CREATE TABLE IF NOT EXISTS macros (
                     name TEXT UNIQUE PRIMARY KEY,
-                    value TEXT,
-                    description TEXT,
-                    creator INT
+                    value TEXT NOT NULL,
+                    description TEXT NOT NULL,
+                    creator INT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS palettes (
+                    name TEXT NOT NULL,
+                    source TEXT NOT NULL,
+                    data BLOB NOT NULL,
+                    hash INT UNIQUE NOT NULL
                 );
                 '''
             )
@@ -191,15 +150,29 @@ class Database:
         """
         row = await self.conn.fetchone(
             '''
-			SELECT * FROM tiles
-			WHERE name == ? AND version <= ?
-			ORDER BY version DESC;
-			''',
+            SELECT * FROM tiles
+            WHERE name == ? AND version <= ?
+            ORDER BY version DESC;
+            ''',
             name, maximum_version
         )
         if row is None:
             return None
         return TileData.from_row(row)
+
+    def palette(self, name: str, source: str = None, strict: bool = False) -> Image.Image | None:
+        """Convenience method to fetch a palette from the database.
+
+        Returns None on failure.
+        """
+        if type(name) is tuple:
+            name, source = name
+        res = self.palette_store.get((name, source))
+        if not strict and res is None and source is not None and source != "vanilla":
+            res = self.palette_store.get((name, "vanilla"))
+        if not strict and res is None and source is not None:
+            res = self.palette_store.get((name, None))
+        return res
 
     async def tiles(self, names: Iterable[str], *, maximum_version: int = 1000) -> AsyncGenerator[TileData, None]:
         """Convenience method to fetch a single thing of tile data.
@@ -210,10 +183,10 @@ class Database:
             for name in names:
                 await cur.execute(
                     '''
-					SELECT * FROM tiles
-					WHERE name == ? AND version < ?
-					ORDER BY version DESC;
-					''',
+                    SELECT * FROM tiles
+                    WHERE name == ? AND version < ?
+                    ORDER BY version DESC;
+                    ''',
                     name, maximum_version
                 )
                 row = await cur.fetchone()
@@ -241,44 +214,20 @@ class Database:
             (3, 3)
         )
 
-    async def get_filter(self, url: str):
+    async def get_filter(self, name: str):
         """Get a filter from the database."""
-        if url not in self.filter_cache:
+        if name not in self.filter_cache:
             async with (self.conn.cursor() as cur):
-                await cur.execute("SELECT url, absolute FROM filterimages WHERE name == ?;", url)
-                result = await cur.fetchone()
-                if result is None:
-                    assert "catbox.moe/" in url, f"Filter `{url}` wasn't found in the database!"
-                    extracted = tldextract.extract(url)
-                    print(extracted)
-                    assert extracted.domain == "catbox" \
-                           and extracted.suffix == "moe", \
-                           "Please only use catbox.moe for filters."
-                    result = f"https://{url}"
-                    absolute = None
-                else:
-                    result, absolute = result
-                try:
-                    filter_headers = requests.head(result, timeout=3).headers
-                except requests.exceptions.ConnectionError:
-                    raise AssertionError(f"Filter `{url}` isn't a valid URL (or didn't respond in time)!")
-                assert int(
-                    filter_headers.get("content-length", 0)) < constants.FILTER_MAX_SIZE, f"Filter `{url}` is too big!"
-                buffer = requests.get(result, stream=True).raw.read()
-                try:
-                    with Image.open(BytesIO(buffer)) as im:
-                        frames = []
-                        frame_count = getattr(im, "n_frames", 1)
-                        assert frame_count <= 3, "Too many frames in the filter (max is 3)!"
-                        for i in range(0, frame_count):
-                            im.seek(i)
-                            frames.append(im.copy().convert("RGBA"))
-                        final = frames, absolute
-                        self.filter_cache[url] = final
-                        return final
-                except IOError:
-                    raise AssertionError(f"Filter `{url}` couldn't be parsed as an image!")
-        return self.filter_cache[url]
+                await cur.execute("SELECT absolute, author, upload_time, data FROM filters WHERE name == ?;", name)
+                res = await cur.fetchone()
+                if res is None: return None
+                absolute, author, upload_time, data = res
+                im = Image.open(BytesIO(data))
+                im.load()          
+                final = absolute, author, None if upload_time is None else upload_time / 1000, im
+                self.filter_cache[name] = final
+                return final
+        return self.filter_cache[name]
 
 
 @dataclass
@@ -289,8 +238,6 @@ class TileData:
     inactive_color: tuple[int, int]
     active_color: tuple[int, int]
     tiling: TilingMode
-    text_type: int
-    text_direction: int | None
     tags: list[str]
     extra_frames: list[int]
 
@@ -315,9 +262,7 @@ class TileData:
             row["source"],
             (row["inactive_color_x"], row["inactive_color_y"]),
             (row["active_color_x"], row["active_color_y"]),
-            TilingMode(row["tiling"]),
-            row["text_type"],
-            row["text_direction"],
+            TilingMode.parse(row["tiling"]),
             tags.split("\t") if tags is not None else [],
             [int(frame) for frame in (extra_frames).split("\t")] if extra_frames is not None else []
         )
@@ -355,7 +300,7 @@ class LevelData:
                 return f"{self.parent}-{letter}: {self.name}"
             if self.style == 2:
                 # extra dots
-                return f"{self.parent}-extra {self.number + 1}: {self.name}"
+                return f"{self.parent}-extra {self.number}: {self.name}"
         return self.name  # raise RuntimeError("Level is in a bad state")
 
     def unique(self) -> str:

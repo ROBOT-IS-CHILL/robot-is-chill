@@ -1,0 +1,39 @@
+Nimi's Garden Deluxe v3
+
+Changes:
+
+New Secret!!!
+Updated totals: 8 new puffs, 1 new orb
+
+New music by DogeisCut
+- Yang Is Less, used in Castle Grounds
+
+Removed the gate in Magic Show
+Decreased required puffs to clear Magic Show
+Moved Spring Loaded from Magic Show to Castle Grounds
+Moved Up and Over from Magic Show to Wistful Plains
+Reordered Castle Grounds & Frigid Summit levels
+
+False Advertising - Complete rework
+Overwhelming Regret - Removed SKULL IS SKULL
+Separate - Larger level
+
+Fixed several visual mistakes
+Changed the sign in Journey's End to be more vague
+Updated done credits (tells totals)
+
+Cheese fixes:
+
+Early Bird
+Prepared Flight
+Build-a-Ladder
+Up and Over
+Return of... Dominoes?
+Sharing is Caring
+Off and On Again
+Protective Bunny
+Hourglass
+Rainbow
+Build-a-Bridge
+Jump the Gutter
+Le Chateau

@@ -144,3 +144,5 @@ event_refers = {sprite = "event_refers", color = [0, 3], tiling = "none"}
 
 event_glyph = {sprite = "event_glyph", color = [3, 2], tiling = "none"}
 
+goat = {sprite = "goat", color = [6, 2], tiling = "character"}
+

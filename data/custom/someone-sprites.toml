@@ -12,7 +12,7 @@ dtplaceholder = {sprite = "placeholder", color = [0, 3], tiling = "diagonal_tili
 
 dtwall = {sprite = "wall", color = [1, 1], tiling = "diagonal_tiling"}
 
-fi = {sprite = "fi", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3]}
+fi = {sprite = "fi", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3, 4]}
 
 fichar = {sprite = "fichar", color = [0, 3], tiling = "character"}
 
@@ -25,6 +25,10 @@ gtfo = {sprite = "greaterthanfofo", color = [5, 2], tiling = "none"}
 
 ibib = {sprite = "ibib", color = [0, 3], tiling = "character"}
 
+landscaping = {sprite = "landscaping", color = [2, 4], tiling = "none"}
+
 me2 = {sprite = "me2", color = [4, 1], tiling = "character"}
 
-tileedge2 = {sprite = "tileedge", tiling = "tiling", color = [0, 3]}
+tileedge2 = {sprite = "tileedge", color = [0, 3], tiling = "tiling"}
+
+balalt = {sprite = "balalt", color = [0, 1], tiling = "tiling"}

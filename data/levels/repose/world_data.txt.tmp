@@ -1,12 +1,12 @@
 [general]
 bonus_max=8
-clear_max=8
-prize_max=162
-firstlevel=16level
-themecount=40
-name=Repose
-author=Regal
 start=14level
+clear_max=8
+author=Marlowe
+name=Repose
+prize_max=162
+themecount=40
+firstlevel=16level
 
 [levels]
 levelid=268

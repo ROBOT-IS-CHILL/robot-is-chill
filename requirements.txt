@@ -1,4 +1,4 @@
-Pillow~=9.2.0
+Pillow
 opencv-python>=4.0.0.0
 requests>=2.25.1
 emoji==2.2.0
@@ -20,3 +20,8 @@ attrs~=22.2.0
 cpmpy
 
 tomlkit
+cython
+
+pathvalidate
+pyo3_runtime
+git+https://github.com/ROBOT-IS-CHILL/macrosia-glue

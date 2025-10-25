@@ -2,21 +2,21 @@
 
 
 
-belbel = {sprite = "belbel", tiling = "character", color = [2, 4]}
+belbel = {sprite = "belbel", color = [2, 4], tiling = "character"}
 
-text_belbel = {sprite = "text_belbel", tiling = "none", color = [6, 1], active = [2, 4]}
+text_belbel = {sprite = "text_belbel", color = [2, 4], tiling = "none"}
 
-flushed = {sprite = "flushed", tiling = "none", color = [0, 3]}
+flushed = {sprite = "flushed", color = [0, 3], tiling = "none"}
 
-text_flushed = {sprite = "text_flushed", tiling = "none", color = [6, 1], active = [2, 4]}
+text_flushed = {sprite = "text_flushed", color = [2, 4], tiling = "none"}
 
-pensive = {sprite = "pensive", tiling = "none", color = [0, 3]}
+pensive = {sprite = "pensive", color = [0, 3], tiling = "none"}
 
-text_pensive = {sprite = "text_pensive", tiling = "none", color = [6, 1], active = [2, 4]}
+text_pensive = {sprite = "text_pensive", color = [2, 4], tiling = "none"}
 
-islandc = {sprite = "islandc", tiling = "directional", color = [6, 1]}
+islandc = {sprite = "islandc", color = [6, 1], tiling = "directional"}
 
-text_island = {sprite = "text_island", tiling = "none", color = [6, 0], active = [6, 1]}
+text_island = {sprite = "text_island", color = [6, 1], tiling = "none"}
 
 cheese2 = {sprite = "cheese", color = [3, 4], tiling = "none"}
 
@@ -26,3 +26,12 @@ josh = {sprite = "josh", color = [0, 1], tiling = "none"}
 
 image = {sprite = "painting", color = [0, 3], tiling = "none"}
 
+blocker = {sprite = "blocker", color = [0, 3], tiling = "tiling"}
+
+link = {sprite = "link", color = [0, 3], tiling = "tiling"}
+
+text_meta = {sprite = "meta", color = [1, 4], tiling = "none"}
+
+f0f0 = {sprite = "f0f0", color = [5, 2], tiling = "character"}
+
+chadchad = {sprite = "jidjid", color = [0, 3], tiling = "character"}

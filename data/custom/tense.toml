@@ -58,11 +58,11 @@ text_typed = {sprite = "text_typed", color = [0, 3], tiling = "none"}
 
 text_willact = {sprite = "text_willact", color = [4, 4], tiling = "none"}
 
-text_willperform = {sprite = "text_willperform", color = [3, 1], tiling = "none"}
+# text_willperform = {sprite = "text_willperform", color = [3, 1], tiling = "none"}
 
 text_willdraw = {sprite = "text_willdraw", color = [0, 3], tiling = "none"}
 
-text_willjot = {sprite = "text_willjot", color = [0, 3], tiling = "none"}
+# text_willjot = {sprite = "text_willjot", color = [0, 3], tiling = "none"}
 
-text_willtype = {sprite = "text_willtype", color = [0, 3], tiling = "none"}
+# text_willtype = {sprite = "text_willtype", color = [0, 3], tiling = "none"}
 

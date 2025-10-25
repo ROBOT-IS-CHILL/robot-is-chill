@@ -2,7 +2,5 @@
 
 
 
-text_reset = {sprite = "text_reset", tiling = "none", color = [3, 1]}
-
 text_with = {sprite = "text_with", tiling = "none", color = [0, 3]}
 

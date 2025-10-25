@@ -2,25 +2,23 @@
 
 
 
-josh2 = {sprite = "josh2", tiling = "none", color = [0, 3]}
+josh2 = {sprite = "josh2", color = [0, 3], tiling = "none"}
 
-babacup = {sprite = "babacup", tiling = "none", color = [0, 3]}
+babacup = {sprite = "babacup", color = [0, 3], tiling = "none"}
 
-them = {sprite = "them", tiling = "character", color = [5, 3]}
+them = {sprite = "them", color = [5, 3], tiling = "character"}
 
-text_them = {sprite = "text_them", tiling = "none", color = [5, 3]}
+text_them = {sprite = "text_them", color = [5, 3], tiling = "none"}
 
-him = {sprite = "him", tiling = "character", color = [1, 4]}
+him = {sprite = "him", color = [1, 4], tiling = "character"}
 
-text_him = {sprite = "text_him", tiling = "none", color = [1, 4]}
+text_him = {sprite = "text_him", color = [1, 4], tiling = "none"}
 
-text_chunke = {sprite = "text_chunke", tiling = "none", color = [2, 4]}
+text_chunke = {sprite = "text_chunke", color = [2, 4], tiling = "none"}
 
-chunke = {sprite = "chunke", tiling = "character", color = [2, 4]}
+chunke = {sprite = "chunke", color = [2, 4], tiling = "character"}
 
-text_binary = {sprite = "text_binary", tiling = "none", color = [5, 3]}
+text_binary = {sprite = "text_binary", color = [5, 3], tiling = "none"}
 
-binary = {sprite = "binary", tiling = "tiling", color = [5, 3]}
-
-cucu2 = {sprite = "cucu", tiling = "directional", color = [6, 1]}
+binary = {sprite = "binary", color = [5, 3], tiling = "tiling"}
 

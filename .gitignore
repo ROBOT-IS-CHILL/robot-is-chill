@@ -35,3 +35,8 @@ data/images/**/*
 target/renders/
 *.gif
 .DS_Store
+
+alpha
+beta
+profile
+alpha

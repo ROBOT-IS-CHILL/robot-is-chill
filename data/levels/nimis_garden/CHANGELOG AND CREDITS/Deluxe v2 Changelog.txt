@@ -1,0 +1,24 @@
+Nimi's Garden Deluxe v2
+
+Changes:
+
+Fixed a single pixel on a map screen.
+Fixed main map object palette.
+
+Echolocation - Added PILLAR IS DEFEAT
+Savestate - Added cliffs to prevent very bad thing
+Sharing is Caring - Made STOPRIGHT more visible
+Pointer Playground - Simplification
+Expand, Excess, Extraction, Sunday Newspaper - Fixed object palettes
+
+Cheese fixes:
+
+Ground Control
+Death Passage
+Industrial Cove
+Handy Platform
+Off and On Again
+Forever Leak
+Disco Divertimento Duo
+And One Back Down
+

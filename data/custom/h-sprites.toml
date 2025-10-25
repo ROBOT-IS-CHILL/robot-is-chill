@@ -12,7 +12,7 @@ event_naun = {sprite = "event_naun", color = [2, 2], tiling = "none"}
 
 node_naun = {sprite = "node_naun", color = [2, 2], tiling = "directional"}
 
-logic_naun = {sprite = "logic_naun", color = [2, 2], tiling = "none"}
+# logic_naun = {sprite = "logic_naun", color = [2, 2], tiling = "none"}
 
 obj_naun = {sprite = "obj_naun", color = [2, 1], tiling = "directional"}
 

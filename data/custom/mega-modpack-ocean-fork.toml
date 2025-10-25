@@ -1,0 +1,23 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+glyph_event_ = {sprite = "glyph_eventpre", color = [5, 3], tiling = "none"}
+
+glyph_glyph_ = {sprite = "glyph_glyphpre", color = [3, 3], tiling = "none"}
+
+glyph_logic_ = {sprite = "glyph_logicpre", color = [3, 1], tiling = "none"}
+
+glyph_node_ = {sprite = "glyph_nodepre", color = [2, 4], tiling = "none"}
+
+glyph_text_ = {sprite = "glyph_textpre", color = [4, 1], tiling = "none"}
+
+text_event_ = {sprite = "text_eventpre", color = [5, 3], tiling = "none"}
+
+text_glyph_ = {sprite = "text_glyphpre", color = [3, 3], tiling = "none"}
+
+text_logic_ = {sprite = "text_logicpre", color = [3, 1], tiling = "none"}
+
+text_node_ = {sprite = "text_nodepre", color = [2, 4], tiling = "none"}
+
+text_text_ = {sprite = "text_textpre", color = [4, 1], tiling = "none"}

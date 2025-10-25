@@ -7,8 +7,12 @@ import signal
 import sqlite3
 import sys
 import traceback
-import numpy
+from random import random
+import io
+from datetime import datetime
 
+import pyo3_runtime
+import numpy
 import discord
 from discord.ext import commands
 import requests
@@ -16,7 +20,7 @@ import requests
 import webhooks
 from ..types import Bot, Context
 from .. import errors, constants
-
+import macrosia_glue
 
 class DummyLogger:
     async def send(self, *args, **kwargs): pass
@@ -41,6 +45,7 @@ class CommandErrorHandler(commands.Cog):
         ctx   : Context
         error : Exception
         """
+        self.bot.loading = False
         try:
             if self.logger is None:
                 self.logger = await self.setup_logger(webhooks.error_id)
@@ -117,6 +122,9 @@ class CommandErrorHandler(commands.Cog):
             elif isinstance(error, ignored):
                 return
 
+            elif isinstance(error, errors.Porp):
+                return await ctx.error(f':porp', file=discord.File("data/misc/porp.jpg"))
+
             if isinstance(error, commands.CommandOnCooldown):
                 if ctx.author.id == self.bot.owner_id:
                     return await ctx.reinvoke()
@@ -152,17 +160,37 @@ class CommandErrorHandler(commands.Cog):
 
             elif isinstance(error, AssertionError) or isinstance(error, NotImplementedError):
                 await self.logger.send(embed=emb)
-                if len(error.args) == 0:
+                if len(error.args) == 0 or len(error.args[0]) == 0:
                     raise error
+                if len(error.args[0]) == 0:
+                    raise
                 return await ctx.error(error.args[0])
 
-            elif isinstance(error, ZeroDivisionError):
-                traceback.print_exception(error)
-                return await ctx.error('Encountered a division by zero somewhere. Why?')
+            elif isinstance(error, errors.UnknownVariant):
+                return await ctx.error(
+                    f"The variant `{error.args[1]}` doesn't exist."
+                )
 
-            elif isinstance(error, ArithmeticError):
-                await self.logger.send(embed=emb)
-                return await ctx.error(f'An error occurred while calcuating something!\n> {error.args[0]}')
+            elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):
+                buf = io.StringIO()
+                buf.write("Error occurred at {}\n".format(datetime.utcnow().strftime(f"%Y-%m-%d %H:%M:%S UTC")))
+                buf.write("Message content:\n")
+                buf.write(ctx.message.content)
+                buf.write("\n\nBacktrace:\n")
+                buf.write(f"{error}")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+
+                await ctx.error(
+                    "PyO3 binding panicked!\n"\
+                    "This is a __critical bug__, and should be reported to the developers as soon as possible.\n"\
+                    "Attached is a backtrace of the panic.\n"\
+                    "Please send this file to the developers.\n"\
+                    "The bot will be restarted to prevent data corruption.",
+                    file=discord.File(buf, filename = "traceback.log")
+                )
+                self.bot.exit_code = 1
+                return await self.bot.close()
 
             elif isinstance(error, commands.BadArgument):
                 await self.logger.send(embed=emb)
@@ -192,15 +220,38 @@ class CommandErrorHandler(commands.Cog):
                 return await ctx.error('A given link for the filterimage was invalid.')
             elif isinstance(error, errors.OverlayNotFound):
                 return await ctx.error(f'The overlay `{error}` does not exist.')
-            elif isinstance(error, asyncio.exceptions.TimeoutError):
-                return await ctx.error(f'The render took too long, so it was cancelled.')
             elif isinstance(error, errors.InvalidFlagError):
                 return await ctx.error(f'A flag failed to parse:\n> `{error}`')
-            elif isinstance(error, errors.FailedBuiltinMacro):
-                if error.custom:
-                    return await ctx.error(f'A macro created a custom error:\n> {error.message}')
-                else:
-                    return await ctx.error(f'A builtin macro failed to compute in `{error.raw}`:\n> {error.message}')
+            elif isinstance(error, errors.TimeoutError):
+                if random() < 0.01:
+                    return await ctx.error("The command was `       TAKING TOO LONG` and was timed out.")
+                return await ctx.error("The command took too long and was timed out.")
+            elif isinstance(error, errors.MacroError):
+                if error.args[1] is None:
+                    return await ctx.error(f'Macro execution failed: {error.args[0]}')
+                buf = io.StringIO()
+                buf.write("-----\n")
+                for traceback_frame in reversed(error.args[1]):
+                    buf.write(traceback_frame)
+                    buf.write("\n-----\n")
+                buf.seek(0)
+                buf.truncate(8 * 1000 * 1000)
+                if len(buf.getvalue()) < 1024:
+                    val = buf.getvalue().replace('`', '\'')
+                    return await ctx.error(
+                        f'Macro execution failed: {error.args[0]}\n'\
+                        f"Traceback: ```\n{val}\n```"
+                    )
+                return await ctx.error(
+                    f'Macro execution failed: {error.args[0]}\n'\
+                    'Traceback:',
+                    file=discord.File(buf, filename=datetime.utcnow().strftime(f"%Y-%m-%d-%H.%M.%S-macro-tb.log"))
+                )
+            elif isinstance(error, errors.NoPaletteError):
+                palette = error.args[0]
+                if palette[1] is None:
+                    return await ctx.error(f"Palette `{palette[0].replace('`', '')[:32]}` does not exist!")
+                return await ctx.error(f"Palette `{palette[1].replace('`', '')[:32]}/{palette[0].replace('`', '')[:32]}` does not exist!")
             elif isinstance(error, commands.BadLiteralArgument):
                 return await ctx.error(f"An argument for the command wasn't in the allowed values of `{', '.join(repr(o) for o in error.literals)}`.")
             elif isinstance(error, re.error):
@@ -244,7 +295,7 @@ class CommandErrorHandler(commands.Cog):
                 file=sys.stderr)
         except Exception as err:
             try:
-                title = f'**Unhandled exception in fallback handler!!!**'
+                title = f'**Error in error handler!!!**'
                 if len(title) > 32:
                     title = title[:32]
                 if os.name == "nt":
@@ -263,9 +314,12 @@ class CommandErrorHandler(commands.Cog):
                         os.path.curdir)
                 if len(trace) > 1000:
                     trace = trace[:500] + "\n\n...\n\n" + trace[-500:] 
+                err_desc = str(error)
+                if len(err_desc) > 500:
+                    err_desc = err_desc[:250] + "..." + err_desc[-250:]
                 emb = discord.Embed(
                     title=title,
-                    description=(f"## {type(err).__name__}\n```\n{trace}\n```"),
+                    description=(f"## {type(error).__name__}\n{err_desc}\n```\n{trace}\n```"),
                     color=0xFF0000
                 )
                 await ctx.error(msg='', embed=emb)
