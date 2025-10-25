@@ -35,7 +35,7 @@ snomba = {sprite = "snomba", color = [0, 3], tiling = "directional", author = "l
 
 cactus2 = {sprite = "cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
-text_cactus = {sprite = "text_cactus", color = [5, 2], tiling = "none", author = "jayrite"}
+text_cactus3 = {sprite = "text_cactus", color = [5, 2], tiling = "none", author = "jayrite"}
 
 
 # silverhawke
@@ -272,9 +272,6 @@ text_border = {sprite = "text_border", color = [1, 0], tiling = "none"}
 text_badbad_old = {sprite = "text_badbad", color = [1, 4], tiling = "none"}
 
 #These two are to be removed?
-mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
-
-text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
 
 baljeet = {sprite = "baljeet", color = [6, 1], tiling = "none"}
 
@@ -443,7 +440,7 @@ tuft = {sprite = "grass_strand", color = [5, 0], tiling = "none"}
 
 support = {sprite = "support", color = [0, 1], tiling = "none"}
 
-tree3 = {sprite = "tree3", color = [4, 2], tiling = "none"}
+tree5 = {sprite = "tree3", color = [4, 2], tiling = "none"}
 
 trident = {sprite = "trident", color = [1, 4], tiling = "directional"}
 

@@ -16,7 +16,7 @@ dede = {sprite = "dede", color = [1, 2], tiling = "directional"}
 
 text_dede = {sprite = "text_dede", color = [1, 2], tiling = "none"}
 
-nunu = {sprite = "nunu", color = [3, 1], tiling = "directional"}
+nunu2 = {sprite = "nunu", color = [3, 1], tiling = "directional"}
 
 text_nunu = {sprite = "text_nunu", color = [3, 1], tiling = "none"}
 
@@ -58,7 +58,7 @@ text_2let = {sprite = "text_2let", color = [1, 4], tiling = "none"}
 
 warp_2let = {sprite = "warp_2let", color = [1, 4], tiling = "none"}
 
-text_collapse = {sprite = "text_collapse", color = [1, 2], tiling = "none"}
+text_collapse2 = {sprite = "text_collapse", color = [1, 2], tiling = "none"}
 
 # I put these in quotes, no idea if those are valid names otherwise.
 "warp_!not" = {sprite = "warp_!not", color = [0, 3], active_color = [0, 3], tiling = "none"}

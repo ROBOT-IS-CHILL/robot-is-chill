@@ -558,7 +558,7 @@ text_risfa = {sprite = "text_risfa", color = [0, 2], tiling = "none"}
 
 deer = {sprite = "deer", color = [0, 3], tiling = "character"}
 
-text_swim = {sprite = "text_swim", color = [5, 4], tiling = "none"}
+text_swim2 = {sprite = "text_swim", color = [5, 4], tiling = "none"}
 
 text_reason = {sprite = "text_reason", color = [0, 3], tiling = "none"}
 

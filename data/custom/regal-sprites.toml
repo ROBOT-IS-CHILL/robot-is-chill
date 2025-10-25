@@ -126,8 +126,6 @@ faucet = {sprite = "faucet", color = [3, 1], tiling = "none"}
 
 icon_castle = {sprite = "icon_castle", color = [0, 3], tiling = "none"}
 
-icon_cave = {sprite = "icon_cave", color = [0, 3], tiling = "none"}
-
 icon_desert = {sprite = "icon_desert", color = [0, 3], tiling = "none"}
 
 icon_digital = {sprite = "icon_digital", color = [0, 3], tiling = "none"}

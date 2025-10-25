@@ -26,9 +26,9 @@ dots = {sprite = "dots", color = [2, 3], tiling = "none"}
 
 text_dots = {sprite = "text_dots", color = [2, 3], tiling = "none"}
 
-palm = {sprite = "palm", color = [5, 3], tiling = "none"}
+palm2 = {sprite = "palm", color = [5, 3], tiling = "none"}
 
-text_palm = {sprite = "text_palm", color = [5, 3], tiling = "none"}
+text_palm2 = {sprite = "text_palm", color = [5, 3], tiling = "none"}
 
 coral = {sprite = "coral", color = [5, 3], tiling = "none"}
 

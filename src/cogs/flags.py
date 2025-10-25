@@ -126,15 +126,15 @@ async def setup(bot: Bot):
         palette = match.group(2)
         ctx.palette = (palette, palette_source)
 
-    @flags.register(match=r"--raw|-r(?:=(.+))?",
+    @flags.register(match=r"(?:--raw|-r)=(.+)",
                     syntax="(-r | --raw)=<name: str>")
     async def raw(match, ctx):
-        """Deprecated."""
-        raise AssertionError("\n".join(line.strip() for line in """
-            The `--raw` flag has been removed.
-            To get the same behavior, you can use `-F=<filename> -f=zip -m=1`.
-            Additionally, if you're making a tile, it might be a good idea to use `-co` as well.
-        """.splitlines()))
+        """Alias for -F=<name> -f=zip -m=1."""
+        filename = match.group(1)
+        assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
+        ctx.custom_filename = filename
+        ctx.image_format = "zip"
+        ctx.upscale = 1.0
 
     @flags.register(match=r"(?:--filename|-F)=(.+)",
                     syntax="(-F | --filename)=<name: str>")
@@ -147,6 +147,16 @@ async def setup(bot: Bot):
         filename = match.group(1)
         assert pathvalidate.is_valid_filename(filename, platform = "universal", max_len = 64), "The given filename is invalid."
         ctx.custom_filename = filename
+
+    @flags.register(match=r"(?:--prefix|-P)=(.+)",
+                syntax="(-P | --prefix)=<name: str>")
+    async def prefix(match, ctx):
+        """
+        Sets the default prefix of the render.
+        For example, `-p=text` is the same as rendering using `=rule`.
+        """
+        prefix = match.group(1)
+        ctx.prefix = prefix
 
     @flags.register(match=r"--letter",
                     syntax="--letter")

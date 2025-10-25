@@ -122,6 +122,9 @@ class CommandErrorHandler(commands.Cog):
             elif isinstance(error, ignored):
                 return
 
+            elif isinstance(error, errors.Porp):
+                return await ctx.error(f':porp', file=discord.File("data/misc/porp.jpg"))
+
             if isinstance(error, commands.CommandOnCooldown):
                 if ctx.author.id == self.bot.owner_id:
                     return await ctx.reinvoke()
@@ -163,13 +166,10 @@ class CommandErrorHandler(commands.Cog):
                     raise
                 return await ctx.error(error.args[0])
 
-            elif isinstance(error, ZeroDivisionError):
-                traceback.print_exception(error)
-                return await ctx.error('Encountered a division by zero somewhere. Why?')
-
-            elif isinstance(error, ArithmeticError):
-                await self.logger.send(embed=emb)
-                return await ctx.error(f'An error occurred while calcuating something!\n> {error.args[0]}')
+            elif isinstance(error, errors.UnknownVariant):
+                return await ctx.error(
+                    f"The variant `{error.args[1]}` doesn't exist."
+                )
 
             elif isinstance(error, macrosia_glue.PanicException) or isinstance(error, macrosia_glue.RustPanic):
                 buf = io.StringIO()

@@ -104,7 +104,8 @@ class Grid:
                         return cached_open(
                             path.format(maybe_world),
                             cache=cache,
-                            fn=Image.open).convert("RGBA")
+                            fn=Image.open
+                        ).convert("RGBA")
                     except FileNotFoundError:
                         continue
             else:
@@ -189,7 +190,7 @@ class Grid:
                                     cache=sprite_cache),
                                 color)),
                         )
-                        layer_grid[i][y][x] = ProcessedTile(empty=False, frames=frames)
+                        layer_grid[i][y][x] = ProcessedTile(frames=frames)
                     # except BaseException:
                     #     pass
         return layer_grid
@@ -242,6 +243,17 @@ class Item:
         sprite = re.sub(r"(?:_\d+)+$", r"", sprite)
         return cls(id=-3, obj="icon", sprite=sprite, layer=30)
 
+def convert_to_dict(objs: list[list[list[ProcessedTile]]]) -> (dict[(int, int, int, int), ProcessedTile], (int, int, int, int)):
+    objdict = {}
+    y_size = x_size = z_size = 1
+    for z, layer in enumerate(objs):
+        z_size = max(z, z_size)
+        for y, row in enumerate(layer):
+            y_size = max(y, y_size)
+            for x, tile in enumerate(row):
+                x_size = max(x, x_size)
+                objdict[y, x, z, 0] = tile
+    return objdict, (y_size, x_size, z_size, 1)
 
 class Reader(commands.Cog, command_attrs=dict(hidden=True)):
     """A class for parsing the contents of level files."""
@@ -295,7 +307,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 row.pop(0)
         out = f"target/renders/levels/{code.lower()}.gif"
         await self.bot.renderer.render(
-            [objects],
+            *convert_to_dict(objects),
             RenderContext(
                 limited_palette=True,
                 palette=(grid.palette, grid.world),
@@ -374,7 +386,7 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 frames.append(img)
         # Render the level
         await self.bot.renderer.render(
-            [objects],
+            *convert_to_dict(objects),
             RenderContext(
                 limited_palette=True,
                 palette=(grid.palette, grid.world),
@@ -672,9 +684,9 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 icon = Item.icon(f"icon_dot{number}_1" if number in range(1, 10) else "icon")
                 grid.cells[pos].append(icon)
             elif style == 1:
-                sign_texts.append(SignText(0, 1, x - 1, y - 1, chr(number + 65), font="icon", anchor="mm"))
+                sign_texts.append(SignText(0, x - 1, y - 1, chr(number + 65), font="icon", anchor="mm"))
             else:
-                sign_texts.append(SignText(0, 1, x-1, y-1, f"{number:02}", font="icon", anchor="mm"))
+                sign_texts.append(SignText(0, x-1, y-1, f"{number:02}", font="icon", anchor="mm"))
             if initialize_level_tree and grid.map_id is not None:
                 level_file = config.get("levels", f"{i}file")
                 # Each level within

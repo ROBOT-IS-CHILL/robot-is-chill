@@ -6,6 +6,6 @@ shield = {sprite = "shield", color = [0, 2], tiling = "directional"}
 
 text_shield = {sprite = "text_shield", color = [0, 2], tiling = "none"}
 
-keyboard = {sprite = "keyboard", color = [0, 2], tiling = "none"}
+keyboard2 = {sprite = "keyboard", color = [0, 2], tiling = "none"}
 
-text_keyboard = {sprite = "text_keyboard", color = [0, 2], tiling = "none"}
+text_keyboard2 = {sprite = "text_keyboard", color = [0, 2], tiling = "none"}

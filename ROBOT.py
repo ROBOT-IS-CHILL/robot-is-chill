@@ -141,10 +141,11 @@ class Bot(commands.Bot):
 
 discord.utils.setup_logging()
 
+
 if Path("alpha").exists():
-    config.prefixes = ['[']
+    config.prefixes = ['[', '`[']
 elif Path("beta").exists():
-    config.prefixes = ['-']
+    config.prefixes = ['-', '`-']
 
 # Establishes the bot
 bot = Bot(
@@ -171,6 +172,13 @@ bot = Bot(
     prefixes=config.prefixes,
     db_path=config.db_path
 )
+
+if Path("alpha").exists():
+    bot.channel = "development"
+elif Path("beta").exists():
+    bot.channel = "staging"
+else:
+    bot.channel = "production"
 
 
 @bot.before_invoke

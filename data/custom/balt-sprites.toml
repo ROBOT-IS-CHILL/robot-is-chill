@@ -48,25 +48,25 @@ tplate = {sprite = "tplate", color = [0, 3], tiling = "tiling"}
 
 knife = {sprite = "knife", color = [0, 2], tiling = "none"}
 
-text_rw_ascension = {sprite = "ascension", color = [2, 4], tiling = "none"}
+rw_ascension = {sprite = "ascension", color = [2, 4], tiling = "none"}
 
-text_rw_assistance = {sprite = "assistance", color = [3, 1], tiling = "none"}
+rw_assistance = {sprite = "assistance", color = [3, 1], tiling = "none"}
 
-text_rw_friendship = {sprite = "friendship", color = [4, 2], tiling = "none"}
+rw_friendship = {sprite = "friendship", color = [4, 2], tiling = "none"}
 
-text_rw_gluttony = {sprite = "gluttony", color = [6, 2], tiling = "none"}
+rw_gluttony = {sprite = "gluttony", color = [6, 2], tiling = "none"}
 
-text_rw_lust = {sprite = "lust", color = [1, 2], tiling = "none"}
+rw_lust = {sprite = "lust", color = [1, 2], tiling = "none"}
 
-text_rw_monk = {sprite = "monk", color = [2, 4], tiling = "none"}
+rw_monk = {sprite = "monk", color = [2, 4], tiling = "none"}
 
-text_rw_survival = {sprite = "survival", color = [0, 3], tiling = "none"}
+rw_survival = {sprite = "survival", color = [0, 3], tiling = "none"}
 
-text_rw_travel = {sprite = "travel", color = [4, 4], tiling = "none"}
+rw_travel = {sprite = "travel", color = [4, 4], tiling = "none"}
 
-text_rw_violence = {sprite = "violence", color = [2, 1], tiling = "none"}
+rw_violence = {sprite = "violence", color = [2, 1], tiling = "none"}
 
-text_rw_wanderer = {sprite = "wanderer", color = [1, 1], tiling = "none"}
+rw_wanderer = {sprite = "wanderer", color = [1, 1], tiling = "none"}
 
 debugc = {sprite = "debugc", color = [0, 3], tiling = "character"}
 
@@ -151,3 +151,13 @@ text_dinner = {color = [3, 3], tiling = "none", sprite = "text_dinner", tags = [
 text_aiko = {color = [2, 4], tiling = "none", sprite = "text_aiko", tags = ["balt_texts"]}
 
 text_explosions = {color = [2, 3], tiling = "none", sprite = "text_explosions", tags = ["balt_texts"]}
+
+kanpe = {sprite = "kanpe", color = [4, 4], tiling = "character", tags = ["animal"], author = "baltdev"}
+
+text_kanpe = {sprite = "text_kanpe", color = [4, 4], tiling = "none", tags = ["animal"], author = "baltdev"}
+
+text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none", author = "baltdev"}
+
+fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "baltdev"}
+
+cactus5 = {sprite = "cactus", color = [0, 3], tiling = "tiling"}

@@ -67,6 +67,7 @@ class Bot(commands.Bot):
 
 
 class Variant:
+    persistent: bool = False
     args: list = None
     type: str = None
     pattern: str = None
@@ -264,8 +265,7 @@ class ExternalMacro:
 
 @dataclass
 class SignText:
-    time_start: int = 0
-    time_end: int = 0
+    t: int = 0
     x: int = 0
     y: int = 0
     text: str = "null"
@@ -278,10 +278,21 @@ class SignText:
     anchor: str = "md"
     stroke: tuple[tuple[int, int, int, int], int] = (0, 0, 0, 0), 0
 
+    name: str = "<st>"
+    prefix: str = ""
+    postfix: str = "<st>"
+    variants: list = field(default_factory=list)
+
+    def clone(self):
+        clone = SignText(**self.__dict__)
+        clone.variants = [var for var in self.variants]
+        return clone
+
 @dataclass
 class RenderContext:
     """A holder class for all the attributes of a render."""
     ctx: Context = None
+    prefix: str | None = None
     before_images: list[Image] = field(default_factory=lambda: [])
     palette: tuple[str, str | None] = ("default", "vanilla")
     background_images: list[str] | list[Image] | None = None
