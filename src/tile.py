@@ -180,15 +180,13 @@ class Tile:
         esc_name = name = utils.split_escaped(tile.name, [])[0]
         value = cls(custom = tile.custom)
         metadata = tile_data_cache.get(name)
-        if tile.force_color:
-            metadata.active_color = tile.force_color
         if tile.beta:
             value.style = "beta"
         if metadata is not None:
             value.name = tile.name
             value.sprite = (metadata.source, metadata.sprite)
             value.tiling = metadata.tiling
-            value.color = color=metadata.active_color
+            value.color = color = metadata.active_color
             value.variants = variants=tile.variants
             value.palette = palette=tile.palette
             if metadata.tiling == TilingMode.TILING or metadata.tiling == TilingMode.DIAGONAL_TILING:
@@ -225,6 +223,8 @@ class Tile:
                 value.palette=tile.palette
             else:
                 raise errors.TileNotFound(esc_name)
+        if tile.force_color is not None:
+            value.color = tile.force_color
         for variant in value.variants:
             if variant.factory.type == "tile":
                 await variant.apply(

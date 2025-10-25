@@ -683,13 +683,18 @@ class Renderer:
             raise errors.BadTileProperty(tile.name, size)
 
     async def apply_options(
-            self,
-            tile: Tile,
-            sprite: np.ndarray,
-            wobble: int,
-            seed: int | None = None
+        self,
+        tile: Tile,
+        sprite: np.ndarray,
+        wobble: int,
+        seed: int | None = None
     ):
         random.seed(seed)
+        # HACK: At least it's better than the other solution.
+        for variant in tile.variants:
+            if variant.factory.identifier == "color":
+                tile.custom_color = True
+
         for variant in tile.variants:
             if variant.factory.type == "sprite":
                 sprite = await variant.apply(
@@ -697,6 +702,11 @@ class Renderer:
                 )
                 if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
                     raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
+
+        if not tile.custom_color:
+            color = Color.parse(tile, self.bot.db, tile.color)
+            sprite = utils.recolor(sprite, color)
+
         return sprite
 
     def save_frames(

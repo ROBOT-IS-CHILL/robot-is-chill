@@ -299,10 +299,48 @@ class TilingMode(IntEnum):
             return {0, 1, 2, 3, 31}
 
 
-@dataclass
-class Color:
-    pass
+class Color(tuple):
+    """Helper class for colors in variants."""
 
+    def __new__(cls, value: str):
+        try:
+            assert value[0] == "#"
+            value = value[1:]
+            if len(value) < 6:
+                value = ''.join(c * 2 for c in value)
+            color_int = int(value, base=16)
+            if len(value) < 8:
+                color_int <<= 8
+                color_int |= 0xFF
+            return super(Color, cls).__new__(cls, ((color_int & 0xFF000000) >> 24, (color_int & 0xFF0000) >> 16,
+                                                   (color_int & 0xFF00) >> 8, color_int & 0xFF))
+        except (ValueError, AssertionError):
+            if value in constants.COLOR_NAMES:
+                return super(Color, cls).__new__(cls, constants.COLOR_NAMES[value])
+            try:
+                x, y = value.split("/")
+                x = x.lstrip("(")
+                y = y.rstrip(")")
+                return super(Color, cls).__new__(cls, (int(x), int(y)))
+            except ValueError:
+                traceback.print_exc()
+                raise AssertionError(f"Failed to parse color `{value.replace('`', '')[:32]}`.")
+
+    @staticmethod
+    def parse(tile, db, color=None):
+        if color is None:
+            color = tile.color
+        if type(color) == str:
+            color = tuple(Color(color))
+        if len(color) == 4:
+            return color
+        else:
+            try:
+                pal = db.palette(*tile.palette)
+                assert pal is not None, f"Palette for parsed color is none?? `{tile}`"
+                return pal.getpixel(color)
+            except IndexError:
+                raise AssertionError(f"The palette index `{color}` is outside of the palette.")
 class Renderer:
     pass
 
