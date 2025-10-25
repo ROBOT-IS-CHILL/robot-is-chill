@@ -34,6 +34,13 @@ async def setup(bot: Bot):
 
 #region Variants
 
+    @SkeletonVariantFactory.define_variant(names="porp")
+    async def direction(
+        skel: TileSkeleton, ctx: SkeletonVariantContext
+    ):
+        """Does nothing. Nothing useful, anyways."""
+        raise errors.Porp()
+
     @TileVariantFactory.define_variant(names=None)
     async def direction(
         tile: Tile, ctx: TileVariantContext,
