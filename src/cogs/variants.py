@@ -205,7 +205,7 @@ async def setup(bot):
 
     @add_variant()
     async def porp(tile):
-        """Does nothing. Useful for resetting persistent variants."""
+        """Does nothing. Nothing useful, that is."""
         raise errors.Porp()
 
     @add_variant("", "noop")
