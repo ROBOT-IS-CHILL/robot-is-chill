@@ -85,19 +85,14 @@ class TileSkeleton:
         for i, (raw_var, split) in enumerate(split_vars):
             split_vars_ex.append((raw_var, split))
         for raw_var, split in split_vars_ex:
-            var = bot.parse_variant(raw_var)
+            var = bot.parse_variant(raw_var, out.palette)
             if var is None:
                 raise errors.UnknownVariant(raw_var)
             if split == ";":
                 var.persistent = True
             out.variants.append(var)
-        vars = []
-        for variant in out.variants:
-            if variant.factory.type == "skel":
-                await variant.apply(out, SkeletonVariantContext())
-            else:
-                vars.append(variant)
-        out.variants = vars
+            if var.factory.type == "skel":
+                await var.apply(out, SkeletonVariantContext(bot))
         return out
 
 

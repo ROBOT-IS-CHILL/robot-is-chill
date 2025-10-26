@@ -704,7 +704,7 @@ class Renderer:
                     raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
 
         if not tile.custom_color:
-            color = Color.parse(tile, self.bot.db, tile.color)
+            color = Color.from_index(tile.color, tile.palette, self.bot.db)
             sprite = utils.recolor(sprite, color)
 
         return sprite

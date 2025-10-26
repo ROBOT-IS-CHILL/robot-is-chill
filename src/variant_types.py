@@ -10,13 +10,16 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 import re
+from PIL import Image
+from os.path import commonprefix # why is it *THERE*
+import textwrap
 
 import cv2
 import numpy as np
 import visual_center
 
-from . import constants, errors
-from .types import Bot, RenderContext, Renderer, SignText, NumpySprite
+from . import constants, errors, utils
+from .types import Bot, RenderContext, Renderer, SignText, NumpySprite, Color
 
 if TYPE_CHECKING:
     from .tile import Tile, TileSkeleton, TileData, ProcessedTile
@@ -36,7 +39,7 @@ class AbstractVariantContext(ABC):
 
 @dataclass
 class SkeletonVariantContext(AbstractVariantContext):
-    pass
+    bot: Bot
 
 
 @dataclass
@@ -74,7 +77,7 @@ type ParseError = type("ParseError", (), {})
 PARSE_ERROR = type("ParseError", (), {})()  # Unique singleton
 
 
-def parse_int(string: str) -> tuple[str, int | ParseError]:
+def parse_int(string: str, **_) -> tuple[str, int | ParseError]:
     match = INT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -90,7 +93,7 @@ FLOAT_REGEX = re.compile(
 )
 
 
-def parse_float(string: str) -> tuple[str, float | ParseError]:
+def parse_float(string: str, **_) -> tuple[str, float | ParseError]:
     match = FLOAT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -100,7 +103,7 @@ def parse_float(string: str) -> tuple[str, float | ParseError]:
         return string, PARSE_ERROR
 
 
-def parse_bool(string: str) -> tuple[str, bool | ParseError]:
+def parse_bool(string: str, **_) -> tuple[str, bool | ParseError]:
     if string.startswith("true") or string.startswith("True"):
         return string[4:], True
     elif string.startswith("false") or string.startswith("False"):
@@ -112,7 +115,7 @@ def parse_bool(string: str) -> tuple[str, bool | ParseError]:
 def parse_literal(ty) -> Callable[[str], tuple[str, str | ParseError]]:
     valid_values = ty.__args__
 
-    def parse(string: str) -> tuple[str, str | ParseError]:
+    def parse(string: str, **_) -> tuple[str, str | ParseError]:
         for value in valid_values:
             if string.startswith(value):
                 return string.removeprefix(value), value
@@ -121,11 +124,25 @@ def parse_literal(ty) -> Callable[[str], tuple[str, str | ParseError]]:
     return parse
 
 
+def parse_color(string: str, *, bot: Bot, palette: tuple[str, str], **_) -> tuple[str, Color | ParseError]:
+    pstring, res = Color.parse(string, palette, bot.db)
+    if res is None:
+        return string, PARSE_ERROR
+    return pstring, res
+
+
+def parse_str(string: str, **_) -> tuple[str, str | ParseError]:
+    splits = string.split("/", 1)
+    end = ("/" + "/".join(splits[1:])) if len(splits[1:]) else ""
+    return end, splits[0]
+
+
 PRIMITIVE_PARSERS = {
     int: parse_int,
     float: parse_float,
     bool: parse_bool,
-    typing._LiteralGenericAlias: parse_literal,
+    str: parse_str,
+    Color: parse_color
 }
 
 
@@ -193,11 +210,15 @@ class AbstractVariantFactory(ABC):
 
             identifier = func.__name__
             description = func.__doc__
+
             ty = cls.type
             assert description is not None, \
                 f"Variant `{identifier}` is missing a docstring."
             if type(names) == str:
                 names = [names]
+
+            # Clean up description
+            description = textwrap.dedent("\n".join(line for line in description.splitlines() if len(line.strip()) > 0))
 
             signature = inspect.signature(func)
             params: tuple[tuple[str, Parameter], ...] = tuple((name, value) for name, value in signature.parameters.items())
@@ -231,7 +252,7 @@ class AbstractVariantFactory(ABC):
             )
 
             variant.applicator = func
-            variant.parser = variant.generate_parser(names, params)
+            variant.parser = variant.generate_parser(variant, names, params)
             variant.syntax_description = variant.generate_syntax_description(names, params)
 
             ALL_VARIANTS[identifier] = variant
@@ -242,7 +263,7 @@ class AbstractVariantFactory(ABC):
 
     @classmethod
     def generate_parser(
-        cls,
+        cls, slf,
         names: tuple[str] | None,
         params: tuple[tuple[str, Parameter], ...]
     ) -> Callable[[str], tuple[str, Union["Variant", None]]]:
@@ -253,10 +274,11 @@ class AbstractVariantFactory(ABC):
             parser = get_parser(param[1].annotation)
             assert parser is not None, f"Type {param[1].annotation} does not have an implemented parser"
             arg_parsers.append(parser)
-            if not param[1].default:
+            if param[1].default is Parameter.empty:
                 required += 1
 
-        def parser(string: str) -> tuple[str, Union["Variant", None]]:
+        def parser(string: str, **kwargs) -> tuple[str, Union["Variant", None]]:
+            print(f"Trying to parse {slf.identifier}...")
             orig_str = string
             # Check for names first
             if names is not None:
@@ -265,24 +287,29 @@ class AbstractVariantFactory(ABC):
                         string = string.removeprefix(name)
                         break
                 else:
-                    print("No names found")
+                    print(f"No names found for variant {slf.identifier}")
                     return orig_str, None
                 if string.startswith("/"):
                     string = string.removeprefix("/")
 
             args = []
             for i, parser in enumerate(arg_parsers):
-                string, res = parser(string)
+                string, res = parser(string, **kwargs)
                 if res is PARSE_ERROR:
-                    print(f"Argument {i} failed at {string}")
+                    print(f"Argument {i} failed at {string} for variant {slf.identifier}")
                     return orig_str, None
                 args.append(res)
-                if string == "" and i >= required:
+                if string == "" and i + 1 >= required:
                     break
-                if i + 1 == len(arg_parsers):
+                if i + 1 < required:
                     if not string.startswith("/"):
+                        print(f"Incomplete for {slf.identifier} ({i + 1} / {required})")
                         return orig_str, None
                     string = string.removeprefix("/")
+                elif i + 1 == len(arg_parsers) and string != "":
+                    print(f"Too many arguments for {slf.identifier}")
+                    return orig_str, None
+            print("Parsed!")
 
             return string, Variant(tuple(args), cls, False, orig_str[:len(orig_str) - len(string)])
 

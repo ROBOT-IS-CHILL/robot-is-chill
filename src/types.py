@@ -13,6 +13,7 @@ from attr import define
 
 from . import errors, constants
 import re
+import numpy as np
 
 import discord
 from discord.ext import commands
@@ -20,6 +21,10 @@ from PIL import Image
 
 if TYPE_CHECKING:
     from .cogs.render import Renderer
+    from .db import Database
+else:
+    class Database:
+        ...
 
 
 class Context(commands.Context):
@@ -31,10 +36,6 @@ class Context(commands.Context):
                    **kwargs) -> discord.Message: ...
 
     async def warn(self, msg: str, **kwargs) -> discord.Message: ...
-
-
-class Database:
-    ...
 
 
 class Bot(commands.Bot):
@@ -298,49 +299,67 @@ class TilingMode(IntEnum):
         if self == TilingMode.STATIC_CHARACTER:
             return {0, 1, 2, 3, 31}
 
+COLOR_PAL_REGEX = re.compile(
+    r'([1-9][0-9]*|0)/([1-9][0-9]*|0)',
+    re.IGNORECASE
+)
+COLOR_HEX_REGEX = re.compile(
+    r'#([0-9A-F]+)',
+    re.IGNORECASE
+)
 
-class Color(tuple):
+@dataclass
+class Color:
     """Helper class for colors in variants."""
+    r: int
+    g: int
+    b: int
+    a: int
 
-    def __new__(cls, value: str):
-        try:
-            assert value[0] == "#"
-            value = value[1:]
-            if len(value) < 6:
-                value = ''.join(c * 2 for c in value)
-            color_int = int(value, base=16)
-            if len(value) < 8:
-                color_int <<= 8
-                color_int |= 0xFF
-            return super(Color, cls).__new__(cls, ((color_int & 0xFF000000) >> 24, (color_int & 0xFF0000) >> 16,
-                                                   (color_int & 0xFF00) >> 8, color_int & 0xFF))
-        except (ValueError, AssertionError):
-            if value in constants.COLOR_NAMES:
-                return super(Color, cls).__new__(cls, constants.COLOR_NAMES[value])
-            try:
-                x, y = value.split("/")
-                x = x.lstrip("(")
-                y = y.rstrip(")")
-                return super(Color, cls).__new__(cls, (int(x), int(y)))
-            except ValueError:
-                traceback.print_exc()
-                raise AssertionError(f"Failed to parse color `{value.replace('`', '')[:32]}`.")
+    def __hash__(self):
+        return hash((self.r, self.g, self.b, self.a))
 
     @staticmethod
-    def parse(tile, db, color=None):
-        if color is None:
-            color = tile.color
-        if type(color) == str:
-            color = tuple(Color(color))
-        if len(color) == 4:
-            return color
-        else:
-            try:
-                pal = db.palette(*tile.palette)
-                assert pal is not None, f"Palette for parsed color is none?? `{tile}`"
-                return pal.getpixel(color)
-            except IndexError:
-                raise AssertionError(f"The palette index `{color}` is outside of the palette.")
+    def parse(string: str, palette: tuple[str, str], db: Database) -> tuple[str, Self | None]:
+        for name, color in constants.COLOR_NAMES.items():
+            if string.startswith(name):
+                return string.removeprefix(name), Color.from_index(color, palette, db)
+        if (match := COLOR_PAL_REGEX.match(string)):
+            return string[match.end():], \
+                Color.from_index(
+                    (int(match.group(1)), int(match.group(2))),
+                    palette, db
+                )
+        if (match := COLOR_HEX_REGEX.match(string)):
+            value = match.group(1)
+            assert len(value) in (3, 4, 6, 8), f"Invalid color `#{value}`! Length must be 3, 4, 6, or 8."
+            if len(value) < 6:
+                value = ''.join(c * 2 for c in value)
+            if len(value) != 8:
+                value = value + "FF"
+            return string[match.end():], \
+                Color(
+                    int(value[0:2], base=16),
+                    int(value[2:4], base=16),
+                    int(value[4:6], base=16),
+                    int(value[6:8], base=16)
+                )
+        return string, None
+
+    @staticmethod
+    def from_index(index: tuple[int, int], palette: tuple[str, str], db: Database) -> Self:
+        pal = db.palette(*palette)
+        assert pal is not None, f"Palette `{palette[0]}.{palette[1]}` doesn't seem to exist."
+        pal: Image.Image = pal
+        try:
+            col = pal.getpixel(index)
+            return Color(*col)
+        except IndexError:
+            raise AssertionError(f"The palette index `{color}` is outside of the palette `{palette[0]}.{palette[1]}`.")
+
+    def as_array(self) -> tuple[int, int, int, int]:
+        return (self.r, self.g, self.b, self.a)
+
 class Renderer:
     pass
 

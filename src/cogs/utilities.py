@@ -344,8 +344,8 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
         if flags.get("type") == "variant":
             for variant in ctx.bot.variants.values():
                 if plain_query not in variant.identifier: continue
-                padded_desc = "".join("    " + line for line in variant.description.splitlines())
-                padded_syn_desc = "".join("    " + line for line in variant.syntax_description.splitlines())
+                padded_desc = "\n".join("    " + line for line in variant.description.splitlines())
+                padded_syn_desc = "\n".join("    " + line for line in variant.syntax_description.splitlines())
                 ty = variant.type
                 results["variant", variant.identifier] = \
                     f"  description:\n{padded_desc}\n  syntax:\n{padded_syn_desc}\n  type: {ty}"
@@ -445,7 +445,8 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             palette = (palette, None)
 
         if color is not None:
-            r, g, b, _ = Color.parse(Tile(name="<palette command>", palette=palette), self.bot.db, color)
+            color = Color.from_index(color, palette, self.bot.db)
+            r, g, b = color.r, color.g, color.b
             d = discord.Embed(
                 color=discord.Color.from_rgb(r, g, b),
                 title=f"Color: #{hex((r << 16) | (g << 8) | b)[2:].zfill(6)}"

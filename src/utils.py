@@ -5,12 +5,16 @@ from discord.ext import menus
 from discord.ext.menus.views import ViewMenuPages
 
 
-from typing import Callable, List, Optional, Tuple, TypeVar
+from typing import Callable, List, Optional, Tuple, TypeVar, TYPE_CHECKING
 from PIL import Image
 import numpy as np
 
-def recolor(sprite: Image.Image | np.ndarray, rgba: tuple[int, int, int, int]) -> Image.Image:
+from .types import Color
+
+def recolor(sprite: Image.Image | np.ndarray, rgba: tuple[int, int, int, int] | Color) -> Image.Image:
     """Apply rgba color multiplication (0-255)"""
+    if isinstance(rgba, Color):
+        rgba = rgba.r, rgba.g, rgba.b, rgba.a
     arr = np.multiply(sprite, np.array(rgba) / 255, casting="unsafe").astype(np.uint8)
     if isinstance(sprite, np.ndarray):
         return arr

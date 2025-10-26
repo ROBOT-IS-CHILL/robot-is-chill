@@ -116,7 +116,7 @@ async def setup(bot: Bot):
         m = match.group(1)
         if m is None:
             m = 0, 4
-        ctx.background = Color.parse(Tile(palette=ctx.palette), bot.db, m)
+        ctx.background = Color.from_index(m, ctx.palette, bot.db)
 
     @flags.register(match=r"(?:--palette|-p)=(?:(\w+)\.)?(\w+)",
                     syntax="(-p | --palette)=<palette: str>")
