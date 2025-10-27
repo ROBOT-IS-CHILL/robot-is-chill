@@ -257,7 +257,7 @@ class AbstractVariantFactory(ABC):
 
             ALL_VARIANTS[identifier] = variant
 
-            return variant
+            return func
 
         return decorator
 
@@ -305,10 +305,10 @@ class AbstractVariantFactory(ABC):
                     if not string.startswith("/"):
                         print(f"Incomplete for {slf.identifier} ({i + 1} / {required})")
                         return orig_str, None
-                    string = string.removeprefix("/")
                 elif i + 1 == len(arg_parsers) and string != "":
                     print(f"Too many arguments for {slf.identifier}")
                     return orig_str, None
+                string = string.removeprefix("/")
             print("Parsed!")
 
             return string, Variant(tuple(args), cls, False, orig_str[:len(orig_str) - len(string)])

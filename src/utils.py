@@ -11,6 +11,8 @@ import numpy as np
 
 from .types import Color
 
+from . import constants
+
 def recolor(sprite: Image.Image | np.ndarray, rgba: tuple[int, int, int, int] | Color) -> Image.Image:
     """Apply rgba color multiplication (0-255)"""
     if isinstance(rgba, Color):
@@ -126,3 +128,12 @@ def find_unescaped(string: str, target: tuple[str]) -> int:
         if c in target:
             return i
     return -1
+
+
+def sanitize(string: str):
+    return string.replace('`', '').replace('\n', '')[:32]
+
+
+def check_size(*dst_size):
+    if dst_size[0] > constants.MAX_TILE_SIZE or dst_size[1] > constants.MAX_TILE_SIZE:
+        raise errors.TooLargeTile(dst_size)

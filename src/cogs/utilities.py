@@ -87,35 +87,6 @@ class FlagPageSource(menus.ListPageSource):
         return embed
 
 
-type_format = {
-    "sprite": "sprite augmentation",
-    "tile": "tile creation",
-    "skel": "tile parsing",
-    "post": "compositing",
-    "sign": "sign text parsing"
-}
-
-class VariantSource(menus.ListPageSource):
-    def __init__(
-            self, data: list[Variant]):
-        super().__init__(data, per_page=3)
-
-    async def format_page(self, menu: menus.Menu, entries: list[Variant]) -> discord.Embed:
-        embed = discord.Embed(
-            title=f"{menu.current_page+1}/{self.get_max_pages()}",
-            color=menu.bot.embed_color
-        )
-        embed.description = "```ansi"
-        for entry in entries:
-            embed.description += f"""
-\u001b[1;4;37m{entry.__name__.removesuffix("Variant")}\u001b[0;30m - \u001b[0;37m{entry.__doc__}\u001b[0m
-\u001b[0;30m- \u001b[0;34mSyntax: {entry.syntax}
-\u001b[0;30m- \u001b[0;34mApplied during \u001b[1;36m{type_format[entry.type]}\u001b[0m
-"""
-        embed.description += "```"
-        return embed
-
-
 class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
     def __init__(self, bot: Bot):
         self.bot = bot
