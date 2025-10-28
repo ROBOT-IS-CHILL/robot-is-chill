@@ -91,8 +91,7 @@ class TileSkeleton:
             if split == ";":
                 var.persistent = True
             out.variants.append(var)
-            if var.factory.type == "skel":
-                await var.apply(out, SkeletonVariantContext(bot))
+            await var.apply(out, SkeletonVariantContext(bot))
         return out
 
 
@@ -163,7 +162,7 @@ class Tile:
                      self.style, self.palette, self.overlay, self.hue,
                      self.gamma, self.saturation, self.filterimage,
                      self.palette_snapping, self.normalize_gamma, self.altered_frame,
-                     hash(tuple(var for var in self.variants)),
+                     hash(tuple(var for var in self.variants if var.factory.hashed)),
                      self.custom_color, self.palette, self.text_squish_width))
 
     @classmethod
@@ -221,14 +220,13 @@ class Tile:
         if tile.force_color is not None:
             value.color = tile.force_color
         for variant in value.variants:
-            if variant.factory.type == "tile":
-                await variant.apply(
-                    value, TileVariantContext(tile_data_cache)
-                )
-                if value.surrounding != 0:
-                    if metadata.tiling == TilingMode.TILING:
-                        value.surrounding &= 0b11110000
-                    value.frame = constants.TILING_VARIANTS[value.surrounding]
+            await variant.apply(
+                value, TileVariantContext(tile_data_cache)
+            )
+            if value.surrounding != 0:
+                if metadata.tiling == TilingMode.TILING:
+                    value.surrounding &= 0b11110000
+                value.frame = constants.TILING_VARIANTS[value.surrounding]
         if not (metadata is None or value.frame in metadata.extra_frames or value.frame in metadata.tiling.expected()):
             value.frame = 0
         return value

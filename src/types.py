@@ -364,4 +364,4 @@ class Renderer:
     pass
 
 
-type NumpySprite = np.ndarray[tuple, np.dtype[np.uint8]]
+NumpySprite = np.ndarray[tuple, np.dtype[np.uint8]]

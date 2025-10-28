@@ -27,10 +27,10 @@ from ..utils import ButtonPages
 
 
 class SearchPageSource(menus.ListPageSource):
-    def __init__(self, data: Sequence[Any], query: str, kind: str):
+    def __init__(self, data: Sequence[Any], query: str, kind: str, per_page: int):
         self.query = query
         self.kind = kind
-        super().__init__(data, per_page=constants.SEARCH_RESULT_UNITS_PER_PAGE)
+        super().__init__(data, per_page=per_page)
 
     async def format_page(self, menu: menus.Menu, entries: Sequence[Any]) -> discord.Embed:
         target = f" for `{self.query}`" if self.query else ""
@@ -145,6 +145,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
         You can also filter by the result type:
         * `type`: What results to return. This can be `tile`, `level`, `palette`, `variant`, `world`, or `mod`.
         """
+        per_page = 15
         # Pattern to match flags in the format (flag)=(value)
         flag_pattern = r"--([\d\w_/]+)=([\d\w\-_/]+)"
         match = re.search(flag_pattern, query)
@@ -313,19 +314,20 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                 results[a] = b
 
         if flags.get("type") == "variant":
+            per_page = 5
             for variant in ctx.bot.variants.values():
                 if plain_query not in variant.identifier: continue
                 padded_desc = "\n".join("    " + line for line in variant.description.splitlines())
                 padded_syn_desc = "\n".join("    " + line for line in variant.syntax_description.splitlines())
-                ty = variant.type
                 results["variant", variant.identifier] = \
-                    f"  description:\n{padded_desc}\n  syntax:\n{padded_syn_desc}\n  type: {ty}"
+                    f"  description:\n{padded_desc}\n  syntax:\n{padded_syn_desc}\n  applied: {variant.ty}"
 
         await ButtonPages(
             source=SearchPageSource(
                 list(results.items()),
                 plain_query,
-                flags.get("type", "tile")
+                flags.get("type", "tile"),
+                per_page=per_page
             ),
         ).start(ctx)
 

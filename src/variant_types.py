@@ -59,6 +59,7 @@ class SpriteVariantContext(AbstractVariantContext):
     tile: Tile
     wobble: int
     renderer: Renderer
+    color: Color
 
 
 @dataclass
@@ -146,9 +147,31 @@ PRIMITIVE_PARSERS = {
 }
 
 
+def parse_list(ty) -> Callable[[str], tuple[str, list | ParseError]]:
+    list_type = ty.__args__[0]
+    parser = get_parser(list_type)
+
+    def parse(string: str, **_) -> tuple[str, list | ParseError]:
+        args = []
+        while True:
+            string, res = parser(string)
+            if res is PARSE_ERROR:
+                return string, PARSE_ERROR
+            args.append(res)
+            if not len(string):
+                break
+            if not string.startswith("/"):
+                return string, PARSE_ERROR
+            string = string.removeprefix("/")
+        return string, tuple(args)
+
+    return parse
+
 def get_parser(ty) -> Callable[[Type, str], tuple[str, Any | ParseError]] | None:
     if type(ty) is typing._LiteralGenericAlias:
         return parse_literal(ty)
+    if type(ty) is types.GenericAlias and typing.get_origin(ty) is list:
+        return parse_list(ty)
     return PRIMITIVE_PARSERS.get(ty, None)
 
 
@@ -172,7 +195,15 @@ class Variant:
         return self.factory.type
 
     async def apply(self, target: Any, context: "AbstractVariantContext"):
-        return await self.factory.applicator(target, context, *self.args)
+        if type(target).__name__ == "SignText" and self.factory.sign_alt:
+            print(f"Side-applying to text")
+            return await self.factory.sign_alt(target, *self.args)
+        #if isinstance(target, self.factory.target):
+        # HACK: For some reason, only this works. Don't know why.
+        print(type(target).__name__, self.factory.target.__name__)
+        if type(target).__name__ == self.factory.target.__name__:
+            print(f"Applying to {type(target).__name__}")
+            return await self.factory.applicator(target, context, *self.args)
 
 
 @dataclass
@@ -181,22 +212,21 @@ class AbstractVariantFactory(ABC):
     description: str
     syntax_description: str
     parser: Callable[[str], tuple[str, Union["Variant", None]]]
-    target: Type
-    context: Type
     applicator: Callable[[Any, Any, ...], None]
+    target: Type = type(None)
+    context: Type = type(None)
     hashable: bool = True
+    hashed: bool = True
     nameless: bool = False
-
-    @property
-    @abstractmethod
-    def type(self):
-        raise NotImplementedError("cannot get type of abstract variant factory")
+    sign_alt: Callable | None = None
+    ty: str = "None"
 
     @classmethod
     def define_variant(
         cls, *,
         names: tuple[str] | None = (),
-        hashable: bool = True
+        hashable: bool = True, hashed: bool = False,
+        sign_alt: Callable | None = None
     ):
         """Dynamically defines a Variant subclass based on an annotated function definition."""
         def decorator(func: Callable):
@@ -211,7 +241,6 @@ class AbstractVariantFactory(ABC):
             identifier = func.__name__
             description = func.__doc__
 
-            ty = cls.type
             assert description is not None, \
                 f"Variant `{identifier}` is missing a docstring."
             if type(names) == str:
@@ -237,7 +266,7 @@ class AbstractVariantFactory(ABC):
             params = params[2:]
 
             # Generate the subclass
-            variant = type(
+            variant_factory = type(
                 identifier,
                 (cls, ),
                 dict(
@@ -246,16 +275,17 @@ class AbstractVariantFactory(ABC):
                     applicator = None,
                     syntax_description = None,
                     parser = None,
-                    hashable = hashable,
-                    nameless = names is None
+                    hashable = hashable, hashed = hashed,
+                    nameless = names is None,
+                    sign_alt = sign_alt
                 )
             )
 
-            variant.applicator = func
-            variant.parser = variant.generate_parser(variant, names, params)
-            variant.syntax_description = variant.generate_syntax_description(names, params)
+            variant_factory.applicator = func
+            variant_factory.parser = variant_factory.generate_parser(variant_factory, names, params)
+            variant_factory.syntax_description = variant_factory.generate_syntax_description(names, params)
 
-            ALL_VARIANTS[identifier] = variant
+            ALL_VARIANTS[identifier] = variant_factory
 
             return func
 
@@ -294,13 +324,14 @@ class AbstractVariantFactory(ABC):
 
             args = []
             for i, parser in enumerate(arg_parsers):
+                if string == "" and i >= required:
+                    break
                 string, res = parser(string, **kwargs)
+                print(f"Argument {i}: {string}, {res}")
                 if res is PARSE_ERROR:
                     print(f"Argument {i} failed at {string} for variant {slf.identifier}")
                     return orig_str, None
                 args.append(res)
-                if string == "" and i + 1 >= required:
-                    break
                 if i + 1 < required:
                     if not string.startswith("/"):
                         print(f"Incomplete for {slf.identifier} ({i + 1} / {required})")
@@ -319,7 +350,15 @@ class AbstractVariantFactory(ABC):
         names: tuple[str] | None,
         params: tuple[tuple[str, Parameter], ...]
     ) -> str:
-        return "<todo>"
+        s = [("<" + "|".join(names) + ">") if names is not None else ""]
+        for name, param in params:
+            if param.default is not Parameter.empty:
+                s.append(f"[{param}]")
+            else:
+                s.append(f"<{param}>")
+            s.append("/")
+        del s[-1]
+        return "".join(s)
 
 
 @dataclass
@@ -327,7 +366,7 @@ class SkeletonVariantFactory(AbstractVariantFactory):
     applicator: Callable[[TileSkeleton, Any, ...], None] = lambda *_: None
     target: Type = TileSkeleton
     context: Type = SkeletonVariantContext
-    type: str = "skel"
+    ty: str = "While parsing"
 
 
 @dataclass
@@ -335,7 +374,7 @@ class SignVariantFactory(AbstractVariantFactory):
     applicator: Callable[[SignText, Any, ...], None] = lambda *_: None
     target: Type = SignText
     context: Type = SignVariantContext
-    type: str = "sign"
+    ty: str = "While placing sign texts"
 
 
 @dataclass
@@ -343,15 +382,14 @@ class TileVariantFactory(AbstractVariantFactory):
     applicator: Callable[[Tile, Any, ...], None] = lambda *_: None
     target: Type = Tile
     context: Type = TileVariantContext
-    type: str = "tile"
-
+    ty: str = "While deciding sprite"
 
 @dataclass
 class SpriteVariantFactory(AbstractVariantFactory):
     applicator: Callable[[NumpySprite, Any, ...], None] = lambda *_: None
     target: Type = NumpySprite
     context: Type = SpriteVariantContext
-    type: str = "sprite"
+    ty: str = "While applying effects to sprite image"
 
 
 @dataclass
@@ -359,4 +397,4 @@ class PostVariantFactory(AbstractVariantFactory):
     applicator: Callable[[ProcessedTile, Any, ...], None] = lambda *_: None
     target: Type = ProcessedTile
     context: Type = PostVariantContext
-    type: str = "post"
+    ty: str = "While placing sprite onto image"

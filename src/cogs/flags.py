@@ -115,8 +115,8 @@ async def setup(bot: Bot):
         """Sets the background of a render to a color."""
         m = match.group(1)
         if m is None:
-            m = 0, 4
-        ctx.background = Color.from_index(m, ctx.palette, bot.db)
+            m = "0/4"
+        _, ctx.background = Color.parse(m, ctx.palette, bot.db)
 
     @flags.register(match=r"(?:--palette|-p)=(?:(\w+)\.)?(\w+)",
                     syntax="(-p | --palette)=<palette: str>")

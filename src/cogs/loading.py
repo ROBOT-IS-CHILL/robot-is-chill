@@ -270,7 +270,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                             continue
                         orig_color_x, orig_color_y, orig_tiling = row
                         data["colour"] = data.get("colour", [orig_color_x, orig_color_y])
-                        data["tiling"] = TilingMode(data.get("tiling", 0))
+                        data["tiling"] = str(TilingMode(int(data.get("tiling", 0))))
                     final_data = {
                         "color": data["colour"],
                         "tiling": data["tiling"],

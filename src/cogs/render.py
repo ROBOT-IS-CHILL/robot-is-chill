@@ -132,10 +132,9 @@ class Renderer:
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
                 for var in sign_text.variants:
-                    if variant.factory.type == "sign":
-                        await variant.apply(
-                            sign_text, SpriteVariantContext(bot, ctx, self)
-                        )
+                    await var.apply(
+                        sign_text, SignVariantContext(self.bot, ctx, self)
+                    )
                 size = int(
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
@@ -245,12 +244,13 @@ class Renderer:
         r = r
         d = d
         wobble_range = np.arange(steps.shape[0]) // animation_timestep
+        if ctx.background is not None:
+            ctx.background = np.array(ctx.background.as_array()).astype(np.float32)
         for i, step in enumerate(steps):
+            # NOTE: 3-ish years later. REALLY wishing I commented this.
+            #       This is just cropping the step, and then applying the background if the render has one.
             step = step[u:-d if d > 0 else None, l:-r if r > 0 else None]
             if ctx.background is not None:
-                if len(ctx.background) < 4:
-                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.bot.db, ctx.background)
-                ctx.background = np.array(ctx.background).astype(np.float32)
                 step_f = step.astype(np.float32) / 255
                 step_f[..., :3] = step_f[..., 3, np.newaxis]
                 c = ((1 - step_f) * ctx.background + step_f * step.astype(np.float32))
@@ -414,6 +414,7 @@ class Renderer:
                 raise AssertionError(f'The tile `{tile.name}:{tile.frame}` was found, but the files '
                                          f'don\'t exist for it.\nThis is a bug - please notify the author of the tile.\nSearched path: `{path}`')
             sprite = np.array(sprite)
+        sprite[..., :3][sprite[..., 3] == 0] = 0
         sprite = cv2.resize(sprite, (int(sprite.shape[1] * ctx.gscale), int(sprite.shape[0] * ctx.gscale)),
                             interpolation=cv2.INTER_NEAREST)
         return await self.apply_options_name(
@@ -471,10 +472,9 @@ class Renderer:
             )
             rendered_frames += len(new_frames)
             for variant in tile.variants:
-                if variant.factory.type == "post":
-                    await variant.apply(
-                        processed_tile, PostVariantContext(self, new_frames)
-                    )
+                await variant.apply(
+                    processed_tile, PostVariantContext()
+                )
             d[y, x, z, t] = processed_tile
         return d, len(ctx.tile_cache), rendered_frames, time.perf_counter() - render_overhead
 
@@ -690,22 +690,21 @@ class Renderer:
         seed: int | None = None
     ):
         random.seed(seed)
-        # HACK: At least it's better than the other solution.
-        for variant in tile.variants:
-            if variant.factory.identifier == "color":
-                tile.custom_color = True
+        ctx = SpriteVariantContext(
+            tile, wobble, self,
+            Color.from_index(
+                tile.color, tile.palette, self.bot.db
+            )
+        )
 
         for variant in tile.variants:
-            if variant.factory.type == "sprite":
-                sprite = await variant.apply(
-                    sprite, SpriteVariantContext(tile, wobble, self)
-                )
-                if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
-                    raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
+            res = await variant.apply(sprite, ctx)
+            if res is not None:
+                sprite = res
+            if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
+                raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
 
-        if not tile.custom_color:
-            color = Color.from_index(tile.color, tile.palette, self.bot.db)
-            sprite = utils.recolor(sprite, color)
+        sprite = utils.recolor(sprite, ctx.color)
 
         return sprite
 

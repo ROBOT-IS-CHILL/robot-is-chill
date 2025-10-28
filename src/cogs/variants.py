@@ -14,7 +14,7 @@ import cv2
 import numpy as np
 import visual_center
 
-from . import liquify
+from . import liquify as lq
 from .. import constants, errors, utils
 from ..tile import Tile, TileSkeleton, TileData, ProcessedTile
 from ..types import Bot, RenderContext, Renderer, SignText, NumpySprite, Color
@@ -33,10 +33,8 @@ async def setup(bot: Bot):
 
 # region Variants
 
-    @SkeletonVariantFactory.define_variant(names=None)
-    async def noop(
-        skel: TileSkeleton, ctx: SkeletonVariantContext
-    ):
+    @AbstractVariantFactory.define_variant(names=None)
+    async def noop(_target: type(None), _ctx: type(None)):
         """Does nothing. Useful for resetting persistent variants."""
 
     @SkeletonVariantFactory.define_variant(names="porp")
@@ -64,6 +62,54 @@ async def setup(bot: Bot):
         """Makes custom words appear as beta text."""
         skel.custom = True
         skel.beta = True
+
+    async def sign_color(
+        sign: SignText,
+        color: Color
+    ):
+        sign.color = color.as_array()
+
+    async def sign_displace(
+        sign: SignText,
+        x: int, y: int
+    ):
+        sign.xo += x
+        sign.yo += y
+
+    async def sign_scale(
+        sign: SignText,
+        scale: float, _unused = None
+    ):
+        sign.size *= scale
+
+
+    @SignVariantFactory.define_variant(names=["anchor!", "a!"])
+    async def anchor(
+        sign: SignText, ctx: SignVariantContext,
+    ):
+        """Sets the anchor of a sign text. https://pillow.readthedocs.io/en/stable/handbook/text-anchors.html"""
+        assert (
+            len(anchor) == 2 and
+            anchor[0] in ('l', 'm', 'r') and
+            anchor[1] in ('a', 'm', 's', 'd')
+        ), f"Anchor of `{anchor}` is invalid!"
+        sign.anchor = anchor
+
+    @SignVariantFactory.define_variant(names=["stroke", ])
+    async def stroke(
+        sign: SignText, ctx: SignVariantContext,
+        color: Color, size: int,
+    ):
+        """Sets the sign text's stroke."""
+        sign.stroke = color.as_array(), size
+
+    @SignVariantFactory.define_variant(names=["f!", "font!"])
+    async def font(
+        sign: SignText, ctx: SignVariantContext,
+        name: Literal[*tuple(Path(f).stem for f in glob.glob('data/fonts/*.ttf'))]
+    ):
+        """Applies a font to a sign text object."""
+        sign.font = name
 
     @TileVariantFactory.define_variant(names=None)
     async def direction(
@@ -147,26 +193,71 @@ async def setup(bot: Bot):
         """Makes custom words appear in one line."""
         tile.oneline = True
 
+    @TileVariantFactory.define_variant(names=["frames", "f"])
+    async def frames(
+        tile: Tile, ctx: TileVariantContext,
+        frame: list[int]
+    ):
+        """Sets the wobble of the tile to the specified frame(s). 1 or 3 can be specified."""
+        assert all(f in range(1, 4) for f in frame), f"One or more wobble frames is outside of the supported range of [1, 3]!"
+        assert len(frame) <= 3 and len(frame) != 2, "Only 1 or 3 frames can be specified."
+        tile.wobble_frames = [f - 1 for f in frame]
+
+
+    @SignVariantFactory.define_variant(names=["anchor!", "a!"])
+    async def anchor(
+        sign: SignText, ctx: SignVariantContext,
+    ):
+        """Sets the anchor of a sign text. https://pillow.readthedocs.io/en/stable/handbook/text-anchors.html"""
+        assert (
+            len(anchor) == 2 and
+            anchor[0] in ('l', 'm', 'r') and
+            anchor[1] in ('a', 'm', 's', 'd')
+        ), f"Anchor of `{anchor}` is invalid!"
+        sign.anchor = anchor
+
+    @SignVariantFactory.define_variant(names=["stroke", ])
+    async def stroke(
+        sign: SignText, ctx: SignVariantContext,
+        color: Color, size: int,
+    ):
+        """Sets the sign text's stroke."""
+        sign.stroke = color.as_array(), size
+
+    @SignVariantFactory.define_variant(names=["f!", "font!"])
+    async def font(
+        sign: SignText, ctx: SignVariantContext,
+        name: Literal[*tuple(Path(f).stem for f in glob.glob('data/fonts/*.ttf'))]
+    ):
+        """Applies a font to a sign text object."""
+        sign.font = name
+
+    @SpriteVariantFactory.define_variant(names=["%", "dcol"])
+    async def default_color(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        color: Color
+    ):
+        """Sets the default color of a sprite."""
+        ctx.color = color
+        return sprite
+
     @SpriteVariantFactory.define_variant(names=["apply", "ac", "~"])
     async def apply(
         sprite: NumpySprite, ctx: SpriteVariantContext,
     ):
-        """Immediately applies the sprite's default color."""
-        ctx.tile.custom_color = True
-        palette = ctx.renderer.bot.db.palette(ctx.tile.palette)
-        if palette is None:
-            raise errors.NoPaletteError(ctx.tile.palette)
-        rgba = palette.getpixel(ctx.tile.color)
-        sprite = utils.recolor(sprite, rgba)
+        """Immediately applies a sprite's default color."""
+        col = ctx.color
+        ctx.color = Color(255, 255, 255, 255)
+        sprite = utils.recolor(sprite, col)
         return sprite
 
-    @SpriteVariantFactory.define_variant(names=None)
+    @SpriteVariantFactory.define_variant(names=None, sign_alt = sign_color)
     async def color(
-        sprite: NumpySprite, ctx: SpriteVariantContext
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        color: Color
     ):
         """Sets a sprite's color."""
-        ctx.tile.custom_color = True
-        ctx.tile.color = color
+        ctx.color = Color(255, 255, 255, 255)
         return utils.recolor(sprite, color)
 
     @SpriteVariantFactory.define_variant(names=["posterize"])
@@ -195,9 +286,8 @@ async def setup(bot: Bot):
         If `extrapolate` is enabled, then colors outside the gradient will be extrapolated, as opposed to clamping from 0% to 100%.
         Enabling `dither` does nothing with `steps` set to 0.
         """
-        ctx.tile.custom_color = True
-        src = Color.from_index(
-            ctx.tile.color, ctx.tile.palette, ctx.renderer.bot.db).as_array()
+        src = ctx.color.as_array()
+        ctx.color = Color(255, 255, 255, 255)
         dst = color.as_array()
         if not raw:
             src = np.hstack((cv2.cvtColor(
@@ -246,7 +336,7 @@ async def setup(bot: Bot):
         overlay: str, x: int = 0, y: int = 0,
     ):
         """Applies an overlay to a sprite. X and Y can be given to offset the overlay."""
-        ctx.tile.custom_color = True
+        ctx.color = Color(255, 255, 255, 255)
         assert overlay in ctx.renderer.overlay_cache, f"`{utils.sanitize(overlay)}` isn't a valid overlay!"
         overlay_image = ctx.renderer.overlay_cache[overlay]
         tile_amount = np.ceil(
@@ -349,7 +439,7 @@ async def setup(bot: Bot):
         final_matrix = np.dot(proj_32, np.dot(trans_mat, np.dot(rot_mat, proj_23)))
         return cv2.warpPerspective(sprite, final_matrix, sprite.shape[1::-1], flags=cv2.INTER_NEAREST)
 
-    @SpriteVariantFactory.define_variant(names=["scale", "s"])
+    @SpriteVariantFactory.define_variant(names=["scale", "s"], sign_alt = sign_scale)
     async def scale(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         w: float, h: float = None,
@@ -374,7 +464,7 @@ async def setup(bot: Bot):
         }[interpolation])[:, ::-1]
 
     @SpriteVariantFactory.define_variant(names=["pad", "p"])
-    async def scale(
+    async def pad(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         left: int, top: int, right: int, bottom: int
     ):
@@ -392,25 +482,8 @@ async def setup(bot: Bot):
             y = x
         return sprite[y - 1::y, x - 1::x].repeat(y, axis=0).repeat(x, axis=1)
 
-    @SpriteVariantFactory.define_variant(names=["meta", "m"])
-    async def meta(
-        sprite: NumpySprite, ctx: SpriteVariantContext,
-        level: int = 1, kernel: Literal["full", "edge", "unit"] = "full", size: int = 1
-    ):
-        """Applies a meta filter to an image."""
-        if level is None: level = 1
-        if size is None: size = 1
-        assert size > 0, f"The given meta size of {size} is too small!"
-        assert size <= constants.MAX_META_SIZE, f"The given meta size of {size} is too large! Try something lower than `{constants.MAX_META_SIZE}`."
-        assert abs(level) <= constants.MAX_META_DEPTH, f"Meta depth of {level} too large! Try something lower than `{constants.MAX_META_DEPTH}`."
-        # Not padding at negative values is intentional
-        padding = max(level*size, 0)
-        orig = np.pad(sprite, ((padding, padding), (padding, padding), (0, 0)))
-        utils.check_size(*orig.shape[size::-1])
-        base = orig[..., 3]
-        if level < 0:
-            base = 255 - base
-        ksize = 2*size + 1
+    def get_kernel(size: int, kernel: Literal["full", "edge", "unit"]):
+        ksize = 2*size+1
         ker = np.ones((ksize, ksize))
         if kernel == 'full':
             ker[size, size] = - ksize**2 + 1
@@ -424,6 +497,27 @@ async def setup(bot: Bot):
             ker[size, size] = - ksize**2 + 5
             ker[0,0] = 0
             ker[0,ksize-1] = 0
+        return ker
+
+    @SpriteVariantFactory.define_variant(names=["meta", "m"])
+    async def meta(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        level: int = 1, kernel: Literal["full", "edge", "unit"] = "full", size: int = 1
+    ):
+        """Applies a meta filter to an sprite."""
+        if level is None: level = 1
+        if size is None: size = 1
+        assert size > 0, f"The given meta size of {size} is too small!"
+        assert size <= constants.MAX_META_SIZE, f"The given meta size of {size} is too large! Try something lower than `{constants.MAX_META_SIZE}`."
+        assert abs(level) <= constants.MAX_META_DEPTH, f"Meta depth of {level} too large! Try something lower than `{constants.MAX_META_DEPTH}`."
+        # Not padding at negative values is intentional
+        padding = max(level*size, 0)
+        orig = np.pad(sprite, ((padding, padding), (padding, padding), (0, 0)))
+        utils.check_size(*orig.shape[size::-1])
+        base = orig[..., 3]
+        if level < 0:
+            base = 255 - base
+        ker = get_kernel(size, kernel)
         for _ in range(abs(level)):
             base = cv2.filter2D(src=base, ddepth=-1, kernel=ker)
         base = np.dstack((base, base, base, base))
@@ -433,6 +527,29 @@ async def setup(bot: Bot):
         else:
             base[mask ^ (level < 0), ...] = 0
         return base
+
+    @SpriteVariantFactory.define_variant(names=["outline", "o"])
+    async def outline(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        color: Color = None, size: int = 1, kernel: Literal["full", "edge", "unit"] = "full"
+    ):
+        """Applies an outline to a sprite."""
+        assert size > 0, f"The given outline size of {size} is too small!"
+        assert size <= constants.MAX_META_SIZE, f"The given outline size of {size} is too large! Try something lower than `{constants.MAX_META_SIZE}`."
+        col = ctx.color
+        ctx.color = Color(255, 255, 255, 255)
+        sprite = utils.recolor(sprite, col)
+        if color is None:
+            color = Color.from_index((0, 4), ctx.tile.palette, ctx.renderer.bot.db)
+        orig = np.pad(sprite, ((size, size), (size, size), (0, 0)))
+        utils.check_size(*orig.shape[size::-1])
+        base = (orig[..., 3] > 0).astype(np.uint8) * 255
+        ksize = 2*size + 1
+        ker = get_kernel(size, kernel)
+        outline = cv2.filter2D(src=base, ddepth=-1, kernel=ker)
+        outline = np.dstack((outline, outline, outline, outline))
+        outline = utils.recolor(outline, color)
+        return orig + outline
 
     @SpriteVariantFactory.define_variant(names=None)
     async def omni(
@@ -576,6 +693,19 @@ async def setup(bot: Bot):
         immul = (np.clip(immul, 0.0, 1.0) * 255).astype(np.uint8)
         return immul.reshape(img.shape)
 
+    @SpriteVariantFactory.define_variant(names=["clip", ])
+    async def clip(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+    ):
+        """Crops the sprite to within its grid space."""
+        width = sprite.shape[1]
+        height = sprite.shape[0]
+        left = (width - 24) // 2
+        up = (height - 24) // 2
+        right = (width + 24) // 2
+        down = (height + 24) // 2
+        return await crop(sprite, ctx, left, up, right, down, True)
+
     @SpriteVariantFactory.define_variant(names=["neon", ])
     async def neon(
         sprite: NumpySprite, ctx: SpriteVariantContext,
@@ -583,7 +713,7 @@ async def setup(bot: Bot):
     ):
         """Darkens the inside of each region of color."""
         # This is approximately 2.14x faster than Charlotte's neon, profiling at strength 0.5 with 2500 iterations on baba/frog_0_1.png.
-        unique_colors = liquify.get_colors(sprite)
+        unique_colors = lq.get_colors(sprite)
         final_mask = np.ones(sprite.shape[:2], dtype=np.float64)
         for color in unique_colors:
             mask = (sprite == color).all(axis=2)
@@ -717,7 +847,7 @@ async def setup(bot: Bot):
         sprite: NumpySprite, ctx: SpriteVariantContext,
         color: Color, invert: bool = False,
     ):
-        """Removes a certain color from the sprite. If [36minvert[0m is on, then it removes all but that color."""
+        """Removes a certain color from the sprite. If `invert` is on, then it removes all but that color."""
         color = color.as_array()
         if invert:
             sprite[(sprite[:, :, 0] != color[0]) | (sprite[:, :, 1] != color[1]) | (sprite[:, :, 2] != color[2])] = 0
@@ -730,7 +860,7 @@ async def setup(bot: Bot):
         sprite: NumpySprite, ctx: SpriteVariantContext,
         color1: Color, color2: Color, invert: bool = False,
     ):
-        """Replaces a certain color with a different color. If [36minvert[0m is on, then it replaces all but that color."""
+        """Replaces a certain color with a different color. If `invert` is on, then it replaces all but that color."""
         color1 = color1.as_array()
         color2 = color2.as_array()
         if invert:
@@ -749,11 +879,11 @@ async def setup(bot: Bot):
         return np.pad(sprite, ((top, bottom), (left, right), (0, 0)))
 
     def slice_image(sprite, color_slice: slice):
-        colors = liquify.get_colors(sprite)
+        colors = lq.get_colors(sprite)
         if len(colors) > 1:
             colors = list(sorted(
                 colors,
-                key=lambda color: liquify.count_instances_of_color(sprite, color),
+                key=lambda color: lq.count_instances_of_color(sprite, color),
                 reverse=True
             ))
             try:
@@ -769,40 +899,68 @@ async def setup(bot: Bot):
             # Remove most used color
             for color_index, color in enumerate(colors):
                 if color_index not in positivevalue:
-                    sprite = liquify.remove_instances_of_color(sprite, color)
+                    sprite = lq.remove_instances_of_color(sprite, color)
         return sprite
 
-    # @SpriteVariantFactory.define_variant(names=["color_select", "csel", "c"])
-    # async def color_select(
-    #     sprite: NumpySprite, ctx: SpriteVariantContext,
-    #     index: list[int]
-    # ):
-    #     """Keeps only the selected colors, indexed by their occurrence. This changes per-frame, not per-tile."""
-    #     return slice_image(sprite, index)
+    @SpriteVariantFactory.define_variant(names=["color_select", "csel", "c"])
+    async def color_select(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        index: list[int]
+    ):
+        """Keeps only the selected colors, indexed by their occurrence. This changes per-frame, not per-tile."""
+        return slice_image(sprite, index)
 
-    # @SpriteVariantFactory.define_variant(names=["color_slice", "cslice", "cs"])
-    # async def color_slice(
-    #     sprite: NumpySprite, ctx: SpriteVariantContext,
-    #     s: Slice
-    # ):
-    #     """Keeps only the slice of colors, indexed by their occurrence. This changes per-frame, not per-tile."""
-    #     return slice_image(sprite, s.slice)
+    @SpriteVariantFactory.define_variant(names=["color_slice", "cslice", "cs"])
+    async def color_slice(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        s: list[int]
+    ):
+        """Keeps only the slice of colors, indexed by their occurrence. This changes per-frame, not per-tile."""
+        slc = slice(s[0] if len(s) > 0 else None, s[1] if len(s) > 1 else None, s[2] if len(s) > 2 else None)
+        return slice_image(sprite, slc)
 
-    # @SpriteVariantFactory.define_variant(names=["color_shift", "cshift", "csh"])
-    # async def color_shift(
-    #     sprite: NumpySprite, ctx: SpriteVariantContext,
-    #     s: Slice
-    # ):
-    #     """Shifts the colors of a sprite around, by index of occurence."""
-    #     unique_colors = liquify.get_colors(sprite)
-    #     unique_colors = np.array(
-    #         sorted(unique_colors, key=lambda color: liquify.count_instances_of_color(sprite, color), reverse=True))
-    #     final_sprite = np.tile(sprite, (len(unique_colors), 1, 1, 1))
-    #     mask = np.equal(final_sprite[:, :, :, :], unique_colors.reshape((-1, 1, 1, 4))).all(axis=3)
-    #     out = np.zeros(sprite.shape)
-    #     for i, color in enumerate(unique_colors[s.slice]):
-    #         out += np.tile(mask[i].T, (4, 1, 1)).T * color
-    #     return out.astype(np.uint8)
+    @SpriteVariantFactory.define_variant(names=["color_shift", "cshift", "csh"])
+    async def color_shift(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        s: list[int]
+    ):
+        """Shifts the colors of a sprite around, by index of occurence."""
+        slc = slice(s[0] if len(s) > 0 else None, s[1] if len(s) > 1 else None, s[2] if len(s) > 2 else None)
+        unique_colors = lq.get_colors(sprite)
+        unique_colors = np.array(
+            sorted(unique_colors, key=lambda color: lq.count_instances_of_color(sprite, color), reverse=True))
+        final_sprite = np.tile(sprite, (len(unique_colors), 1, 1, 1))
+        mask = np.equal(final_sprite[:, :, :, :], unique_colors.reshape((-1, 1, 1, 4))).all(axis=3)
+        out = np.zeros(sprite.shape)
+        for i, color in enumerate(unique_colors[slc]):
+            out += np.tile(mask[i].T, (4, 1, 1)).T * color
+        return out.astype(np.uint8)
+
+    @SpriteVariantFactory.define_variant(names=["croppoly", ])
+    async def croppoly(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        point_coords: list[int]
+    ):
+        """Crops the sprite to the specified polygon."""
+        assert len(point_coords) % 2 == 0, "Must have an even number of numbers for a point list!"
+        assert len(point_coords) >= 6, "Must have at least 3 points to define a polygon!"
+        pts = np.array(point_coords, dtype=np.int32).reshape((1, -1, 2))[:, :, ::-1]
+        clip_poly = cv2.fillPoly(np.zeros(sprite.shape[1::-1], dtype=np.float32), pts, 1)
+        clip_poly = np.tile(clip_poly, (4, 1, 1)).T
+        return np.multiply(sprite, clip_poly, casting="unsafe").astype(np.uint8)
+
+    @SpriteVariantFactory.define_variant(names=["croppoly", ])
+    async def snippoly(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        point_coords: list[int]
+    ):
+        """Snips the sprite to the specified polygon."""
+        assert len(point_coords) % 2 == 0, "Must have an even number of numbers for a point list!"
+        assert len(point_coords) >= 6, "Must have at least 3 points to define a polygon!"
+        pts = np.array(point_coords, dtype=np.int32).reshape((1, -1, 2))[:, :, ::-1]
+        clip_poly = cv2.fillPoly(np.zeros(sprite.shape[1::-1], dtype=np.float32), pts, 1)
+        clip_poly = np.tile(clip_poly, (4, 1, 1)).T
+        return np.multiply(sprite, 1 - clip_poly, casting="unsafe").astype(np.uint8)
 
     @SpriteVariantFactory.define_variant(names=["aberrate", "abberate"])
     async def aberrate(
@@ -977,7 +1135,7 @@ async def setup(bot: Bot):
 
     ):
         """"Liquifies" the tile by melting every color except the main color and distributing the main color downwards."""
-        return liquify.liquify(sprite)
+        return lq.liquify(sprite)
 
     @SpriteVariantFactory.define_variant(names=["planet", ])
     async def planet(
@@ -985,7 +1143,7 @@ async def setup(bot: Bot):
 
     ):
         """Turns the tile into a planet by melting every color except the main color and distributing the main color in a circle."""
-        return liquify.planet(sprite)
+        return lq.planet(sprite)
 
     @SpriteVariantFactory.define_variant(names=["normalize_lightness", "nl"])
     async def normalize_lightness(
@@ -1146,7 +1304,15 @@ If a value is negative, it removes pixels above the threshold instead."""
                          interpolation=cv2.INTER_NEAREST,
                          borderMode=cv2.BORDER_WRAP)
 
-
+    @SpriteVariantFactory.define_variant(names=["convolve", "cv"])
+    async def convolve(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        width: int, height: int, cell: list[float]
+    ):
+        """Convolves the sprite with the given 2D convolution matrix. Information on these can be found at https://en.wikipedia.org/wiki/Kernel_(image_processing)"""
+        assert width * height == len(cell), f"Can't fit {len(cell)} values into a matrix that's {width}x{height}!"
+        kernel = np.array(cell).reshape((height, width))
+        return cv2.filter2D(src=sprite, ddepth=-1, kernel=kernel)
 
     @PostVariantFactory.define_variant(names=None)
     async def blending(
@@ -1158,7 +1324,7 @@ If a value is negative, it removes pixels above the threshold instead."""
         post.blending = mode
         post.keep_alpha = keep_alpha and mode != "mask"
 
-    @PostVariantFactory.define_variant(names=["displace", "disp", "d"])
+    @PostVariantFactory.define_variant(names=["displace", "disp", "d"], sign_alt = sign_displace)
     async def displace(
         post: ProcessedTile, ctx: PostVariantContext,
         x: int, y: int
@@ -1183,8 +1349,12 @@ If a value is negative, it removes pixels above the threshold instead."""
     def parse_variant(string: str, palette: tuple[str, str]) -> tuple[str, Variant | None]:
         for var in ALL_VARIANTS.values():
             string, parsed = var.parser(string, bot = bot, palette = palette)
-            if parsed is not None and string == "":
-                return parsed
+            if parsed is not None:
+                if string == "":
+                    return parsed
+                else:
+                    print(f"Not accepted due to remaining string: `{string}`")
+
         return None
 
     bot.variants = ALL_VARIANTS
