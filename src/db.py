@@ -36,6 +36,8 @@ class Database:
         # not checking for same thread probably is a terrible idea but
         # whateverrr
         self.conn = await asqlite.connect(db, check_same_thread=False)
+        async with self.conn.cursor() as cur:
+            await cur.execute("VACUUM;")
 
         def regexp(x, y):
             return bool(re.search(x, y))

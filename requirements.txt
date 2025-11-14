@@ -3,8 +3,8 @@ opencv-python>=4.0.0.0
 requests>=2.25.1
 emoji==2.2.0
 jishaku
-git+https://github.com/Rapptz/asqlite
-git+https://github.com/Rapptz/discord.py
+asqlite
+discord.py
 git+https://github.com/Rapptz/discord-ext-menus
 git+https://github.com/oliver-ni/discord-ext-menus-views
 charset-normalizer
@@ -24,4 +24,4 @@ cython
 
 pathvalidate
 pyo3_runtime
-git+https://github.com/ROBOT-IS-CHILL/macrosia-glue
+git+https://github.com/ROBOT-IS-CHILL/macrosia-glue.git

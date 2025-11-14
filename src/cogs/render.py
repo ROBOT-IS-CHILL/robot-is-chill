@@ -435,6 +435,7 @@ class Renderer:
 
         rendered_frames = []
         tile_hash = hash(tile)
+        print(tile, tile_hash)
         cached = tile_hash in ctx.tile_cache.keys()
         if cached:
             final_tile.frames = ctx.tile_cache[tile_hash]

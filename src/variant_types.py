@@ -74,8 +74,8 @@ INT_REGEX = re.compile(
     re.IGNORECASE
 )
 
-type ParseError = type("ParseError", (), {})
-PARSE_ERROR = type("ParseError", (), {})()  # Unique singleton
+ParseError = type("ParseError", (), {})
+PARSE_ERROR = ParseError()  # Unique singleton
 
 
 def parse_int(string: str, **_) -> tuple[str, int | ParseError]:
@@ -188,6 +188,7 @@ class Variant:
     def __hash__(self):
         if not self.factory.hashable:
             return id(self)
+        print("Hashing:", self.args)
         return hash((self.factory.identifier, *self.args))
 
     @property
@@ -225,7 +226,7 @@ class AbstractVariantFactory(ABC):
     def define_variant(
         cls, *,
         names: tuple[str] | None = (),
-        hashable: bool = True, hashed: bool = False,
+        hashable: bool = True, hashed: bool = True,
         sign_alt: Callable | None = None
     ):
         """Dynamically defines a Variant subclass based on an annotated function definition."""

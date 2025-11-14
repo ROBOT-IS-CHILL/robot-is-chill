@@ -157,6 +157,7 @@ class Tile:
     undef: bool = False
 
     def __hash__(self):
+        print("hashing tile")
         return hash((self.name, self.sprite if type(self.sprite) is tuple else 0, self.frame,
                      self.custom, self.color,
                      self.style, self.palette, self.overlay, self.hue,
