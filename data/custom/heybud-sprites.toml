@@ -4,9 +4,10 @@
 
 figal = {sprite = "figal", color = [0, 3], tiling = "directional"}
 
-ghka = {sprite = "ghka", color = [3, 4], tiling = "animated"}
+ghka_old = {sprite = "ghka_old", color = [3, 4], tiling = "animated"}
 
 ofof = {sprite = "ofof", color = [0, 1], tiling = "character"}
 
 text_ofof = {sprite = "text_ofof", color = [0, 1], tiling = "none"}
 
+ghka = {sprite = "ghka", color = [3, 4], tiling = "character"}
