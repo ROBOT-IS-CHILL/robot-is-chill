@@ -469,3 +469,6 @@ text_goomy = {sprite = "text_goomy", color = [3, 1], tiling = "none"}
 # Should be credited to dizzyandy as well, who came up with the idea independently way before this.
 snipchar = {sprite = "snipchar", color = [0, 3], tiling = "character", author = "DogeIsCut"}
 
+# "goes in misc" https://discord.com/channels/842220825226379265/1437815721097822279/1437815721097822279
+hide = {sprite = "hide", color = [0, 3], tiling = "none"}
+
