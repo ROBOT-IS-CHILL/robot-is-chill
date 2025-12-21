@@ -11,7 +11,7 @@ import numpy as np
 
 from .types import Color
 
-from . import constants
+from . import constants, errors
 
 def recolor(sprite: Image.Image | np.ndarray, rgba: tuple[int, int, int, int] | Color) -> Image.Image:
     """Apply rgba color multiplication (0-255)"""
