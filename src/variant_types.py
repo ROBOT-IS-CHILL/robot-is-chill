@@ -75,9 +75,10 @@ INT_REGEX = re.compile(
 )
 
 PARSE_ERROR = type("ParseError", (), {})()  # Unique singleton
+ParseError = type(PARSE_ERROR)
 
 
-def parse_int(string: str, **_) -> tuple[str, int | "ParseError"]:
+def parse_int(string: str, **_) -> tuple[str, int | ParseError]:
     match = INT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -93,7 +94,7 @@ FLOAT_REGEX = re.compile(
 )
 
 
-def parse_float(string: str, **_) -> tuple[str, float | "ParseError"]:
+def parse_float(string: str, **_) -> tuple[str, float | ParseError]:
     match = FLOAT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -103,7 +104,7 @@ def parse_float(string: str, **_) -> tuple[str, float | "ParseError"]:
         return string, PARSE_ERROR
 
 
-def parse_bool(string: str, **_) -> tuple[str, bool | "ParseError"]:
+def parse_bool(string: str, **_) -> tuple[str, bool | ParseError]:
     if string.startswith("true") or string.startswith("True"):
         return string[4:], True
     elif string.startswith("false") or string.startswith("False"):
@@ -112,10 +113,10 @@ def parse_bool(string: str, **_) -> tuple[str, bool | "ParseError"]:
         return string, PARSE_ERROR
 
 
-def parse_literal(ty) -> Callable[[str], tuple[str, str | "ParseError"]]:
+def parse_literal(ty) -> Callable[[str], tuple[str, str | ParseError]]:
     valid_values = ty.__args__
 
-    def parse(string: str, **_) -> tuple[str, str | "ParseError"]:
+    def parse(string: str, **_) -> tuple[str, str | ParseError]:
         for value in valid_values:
             if string.startswith(value):
                 return string.removeprefix(value), value
@@ -124,14 +125,14 @@ def parse_literal(ty) -> Callable[[str], tuple[str, str | "ParseError"]]:
     return parse
 
 
-def parse_color(string: str, *, bot: Bot, palette: tuple[str, str], **_) -> tuple[str, Color | "ParseError"]:
+def parse_color(string: str, *, bot: Bot, palette: tuple[str, str], **_) -> tuple[str, Color | ParseError]:
     pstring, res = Color.parse(string, palette, bot.db)
     if res is None:
         return string, PARSE_ERROR
     return pstring, res
 
 
-def parse_str(string: str, **_) -> tuple[str, str | "ParseError"]:
+def parse_str(string: str, **_) -> tuple[str, str | ParseError]:
     splits = string.split("/", 1)
     end = ("/" + "/".join(splits[1:])) if len(splits[1:]) else ""
     return end, splits[0]
@@ -146,11 +147,11 @@ PRIMITIVE_PARSERS = {
 }
 
 
-def parse_list(ty) -> Callable[[str], tuple[str, list | "ParseError"]]:
+def parse_list(ty) -> Callable[[str], tuple[str, list | ParseError]]:
     list_type = ty.__args__[0]
     parser = get_parser(list_type)
 
-    def parse(string: str, **_) -> tuple[str, list | "ParseError"]:
+    def parse(string: str, **_) -> tuple[str, list | ParseError]:
         args = []
         while True:
             string, res = parser(string)
@@ -166,7 +167,7 @@ def parse_list(ty) -> Callable[[str], tuple[str, list | "ParseError"]]:
 
     return parse
 
-def get_parser(ty) -> Callable[[Type, str], tuple[str, Any | "ParseError"]] | None:
+def get_parser(ty) -> Callable[[Type, str], tuple[str, Any | ParseError]] | None:
     if type(ty) is typing._LiteralGenericAlias:
         return parse_literal(ty)
     if type(ty) is types.GenericAlias and typing.get_origin(ty) is list:
