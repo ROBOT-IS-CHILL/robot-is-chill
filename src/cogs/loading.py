@@ -321,7 +321,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         self.bot.db.filter_cache = {}
         await self.load_initial_tiles()
         await self.load_editor_tiles()
-        await self.load_custom_tiles()
+        await self.load_custom_tiles(msg)
         self.bot.loading = False
         return await ctx.send("Done. Loaded all tile data.")
 
@@ -333,7 +333,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         await self.bot.db.conn.execute('DELETE FROM palettes')
         self.bot.db.palette_cache = {}
 
-        async with self.bot.db.conn.cursor() as cur:
+        async with self.bot.db.conn.transaction():
             pals = []
             for path in pathlib.Path("data/palettes/").glob(f"*/*.png"):
                 source = path.parts[-2]
@@ -345,7 +345,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                     im.save(buf, format = "PNG")
                 buf.seek(0)
                 pals.append({"name": name, "source": source, "data": buf.getvalue(), "hash": hashed_im})
-            await cur.executemany(
+            await self.bot.db.conn.executemany(
                 '''
                 INSERT INTO palettes
                 VALUES (
@@ -431,6 +431,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
+            print(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -499,6 +500,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
+            print(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -506,7 +508,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         with open("data/custom/editor.toml", "w+") as f:
             tomlkit.dump(doc, f)
 
-    async def load_custom_tiles(self, file='*'):
+    async def load_custom_tiles(self, msg, file='*'):
         """Loads custom tile data from `data/custom/*.toml`"""
 
         def prepare(source: str, name: str, d: dict[str, Any]) -> dict[str, Any]:
@@ -532,46 +534,47 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             db_dict["object_id"] = d.get("object_id")
             return db_dict
 
-        async with self.bot.db.conn.cursor() as cur:
+        async with self.bot.db.conn.transaction():
+            total_objects = []
             for path in pathlib.Path("data/custom").glob(f"{file}.toml"):
                 source = path.parts[-1].split(".")[0]
                 with open(path) as fp:
                     try:
-                        objects = [prepare(source, name, obj) for name, obj in tomlkit.load(fp).items()]
+                        total_objects.extend(prepare(source, name, obj) for name, obj in tomlkit.load(fp).items())
                     except Exception as err:
                         raise AssertionError(f"Failed to load `{path}`!\n```\n{err}\n```")
-                await cur.executemany(
-                    '''
-                    INSERT INTO tiles
-                    VALUES (
-                        :name,
-                        :sprite,
-                        :source,
-                        :version,
-                        :inactive_color_x,
-                        :inactive_color_y,
-                        :active_color_x,
-                        :active_color_y,
-                        :tiling,
-                        :tags,
-                        :extra_frames,
-                        :object_id
-                    )
-                    ON CONFLICT(name, version)
-                    DO UPDATE SET
-                        sprite=excluded.sprite,
-                        source=excluded.source,
-                        inactive_color_x=excluded.inactive_color_x,
-                        inactive_color_y=excluded.inactive_color_y,
-                        active_color_x=excluded.active_color_x,
-                        active_color_y=excluded.active_color_y,
-                        tiling=excluded.tiling,
-                        tags=excluded.tags,
-                        extra_frames=excluded.extra_frames,
-                        object_id=excluded.object_id;
-                    ''',
-                    objects
+            await self.bot.db.conn.executemany(
+                '''
+                INSERT INTO tiles
+                VALUES (
+                    :name,
+                    :sprite,
+                    :source,
+                    :version,
+                    :inactive_color_x,
+                    :inactive_color_y,
+                    :active_color_x,
+                    :active_color_y,
+                    :tiling,
+                    :tags,
+                    :extra_frames,
+                    :object_id
                 )
+                ON CONFLICT(name, version)
+                DO UPDATE SET
+                    sprite=excluded.sprite,
+                    source=excluded.source,
+                    inactive_color_x=excluded.inactive_color_x,
+                    inactive_color_y=excluded.inactive_color_y,
+                    active_color_x=excluded.active_color_x,
+                    active_color_y=excluded.active_color_y,
+                    tiling=excluded.tiling,
+                    tags=excluded.tags,
+                    extra_frames=excluded.extra_frames,
+                    object_id=excluded.object_id;
+                ''',
+                total_objects
+            )
 
     @commands.command()
     @commands.is_owner()
@@ -596,14 +599,14 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                     io = BytesIO()
                     np.save(io, [img_data[:, i * width : (i + 1) * width] for i in range(3)])
                     data.append((entry["value"], width, mode, io.getvalue()))
-
-        await self.bot.db.conn.executemany(
-            '''
-            INSERT INTO letters
-            VALUES (?, ?, ?, ?)
-            ''',
-            data
-        )
+        async with self.bot.db.conn.transaction():
+            await self.bot.db.conn.executemany(
+                '''
+                INSERT INTO letters
+                VALUES (?, ?, ?, ?)
+                ''',
+                data
+            )
         return await ctx.send("Letters loaded.")
 
 

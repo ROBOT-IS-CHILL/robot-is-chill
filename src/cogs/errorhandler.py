@@ -212,7 +212,7 @@ class CommandErrorHandler(commands.Cog):
                     return await ctx.error("This action cannot be performed.")
                 if error.status == 503:
                     return await ctx.error("HTTP server unavailable.")
-                return await ctx.error("There was an error while processing this action.")
+                return await ctx.error(f"There was an error while processing this action.\n> {error}")
 
             elif isinstance(error, numpy.linalg.LinAlgError):
                 return await ctx.error("The given warp points are unsolvable.")

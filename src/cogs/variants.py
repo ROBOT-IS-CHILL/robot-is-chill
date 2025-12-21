@@ -31,6 +31,7 @@ from ..variant_types import \
 async def setup(bot: Bot):
     ALL_VARIANTS.clear()
 
+#this is a C# thing but my ide supports it in python so why not
 # region Variants
 
     @AbstractVariantFactory.define_variant(names=None)
@@ -1070,7 +1071,7 @@ async def setup(bot: Bot):
         sprite: NumpySprite, ctx: SpriteVariantContext,
     ):
         """Snaps all the colors in the tile to the specified palette."""
-        pal = ctx.renderer.bot.db(ctx.tile.palette)
+        pal = ctx.renderer.bot.db.palette(ctx.tile.palette)
         if pal is None:
             raise errors.NoPaletteError(ctx.tile.palette)
         palette_colors = np.array(pal.convert("RGB")).reshape(-1, 3)
@@ -1293,9 +1294,9 @@ If a value is negative, it removes pixels above the threshold instead."""
     ):
         """Randomly displaces a sprite's pixels. An RNG seed is created using the tile's attributes if not specified."""
         if seed is None:
-            seed = abs(hash(tile))
+            seed = abs(hash(ctx.tile))
         dst = np.indices(sprite.shape[:2], dtype=np.float32)
-        rng = np.random.default_rng(seed * 3 + wobble)
+        rng = np.random.default_rng(seed * 3 + ctx.wobble)
         displacement = rng.uniform(-distance, distance, dst.shape)
         mask = rng.uniform(0, 1, dst.shape)
         displacement[mask > chance] = 0

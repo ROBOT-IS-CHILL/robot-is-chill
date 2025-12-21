@@ -177,9 +177,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             macros = []
             for name, data in data.items():
                 macros.append({"name": name} | data)
-            async with ctx.bot.db.conn.cursor() as cur:
-                await cur.execute("DELETE FROM macros;")
-                await cur.executemany(
+            async with ctx.bot.db.conn.transaction():
+                await ctx.bot.db.conn.execute("DELETE FROM macros;")
+                await ctx.bot.db.conn.executemany(
                     '''
                     INSERT INTO macros
                     VALUES (

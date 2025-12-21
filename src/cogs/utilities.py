@@ -181,8 +181,6 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                     f_color_x = int(match.group(1))
                     f_color_y = int(match.group(2))
             tiling = flags.get("tiling")
-            if tiling is not None:
-                tiling = +src.types.TilingMode.parse(tiling)
             rows = await self.bot.db.conn.fetchall(
                 f'''
                 SELECT * FROM tiles
@@ -213,7 +211,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                         )
                     )
                 ) AND (
-                    :f_tiling IS NULL OR CAST(tiling AS TEXT) == :f_tiling
+                    :f_tiling IS NULL OR tiling == :f_tiling
                 ) AND (
                     :f_tag IS NULL OR INSTR(tags, :f_tag)
                 )

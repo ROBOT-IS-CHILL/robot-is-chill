@@ -72,9 +72,9 @@ crab = {sprite = "crab", tiling = "directional", color = [2, 2], author = "Hempu
 
 text_crab = {sprite = "text_crab", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1}
 
-cup = {sprite = "cup", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+cup = {sprite = "cup", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_cup = {sprite = "text_cup", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_cup = {sprite = "text_cup", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
 door = {sprite = "door", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1}
 
@@ -816,9 +816,9 @@ sword = {sprite = "sword", tiling = "directional", color = [1, 4], author = "Hem
 
 text_sword = {sprite = "text_sword", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "danger"], version = 1}
 
-clock = {sprite = "clock", tiling = "animated", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+clock = {sprite = "clock", tiling = "animated", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_clock = {sprite = "text_clock", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_clock = {sprite = "text_clock", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
 bed = {sprite = "bed", tiling = "directional", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
@@ -852,9 +852,9 @@ dog = {sprite = "dog", tiling = "character", color = [0, 2], author = "Hempuli",
 
 text_dog = {sprite = "text_dog", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
 
-mirror = {sprite = "mirror", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
+mirror = {sprite = "mirror", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
 
-text_mirror = {sprite = "text_mirror", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
+text_mirror = {sprite = "text_mirror", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
 
 lily = {sprite = "lily", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["water", "decorative", "plant"], version = 1}
 
@@ -926,9 +926,9 @@ paper = {sprite = "paper", tiling = "none", color = [0, 3], author = "Hempuli", 
 
 text_paper = {sprite = "text_paper", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-scissors = {sprite = "scissors", tiling = "animated_directional", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
+scissors = {sprite = "scissors", tiling = "animated_directional", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
 
-text_scissors = {sprite = "text_scissors", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
+text_scissors = {sprite = "text_scissors", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
 
 arm = {sprite = "arm", tiling = "animated_directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
