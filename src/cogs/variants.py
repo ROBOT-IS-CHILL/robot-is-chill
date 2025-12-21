@@ -1364,7 +1364,7 @@ If a value is negative, it removes pixels above the threshold instead."""
                 if string == "":
                     return parsed
                 else:
-                    LOG.trace(f"Not accepted due to remaining string: `{string}`")
+                    LOG.debug(f"Not accepted due to remaining string: `{string}`")
             string = orig_str
 
         return None

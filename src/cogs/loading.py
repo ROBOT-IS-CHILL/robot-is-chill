@@ -432,7 +432,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            LOG.trace(f"Adding {name}")
+            LOG.debug(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -501,7 +501,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            LOG.trace(f"Adding {name}")
+            LOG.debug(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())

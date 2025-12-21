@@ -319,11 +319,11 @@ class AbstractVariantFactory(ABC):
             if names is not None:
                 for name in names:
                     string = orig_str
-                    LOG.trace("Testing", name, "against", orig_str)
+                    LOG.debug("Testing", name, "against", orig_str)
                     if string.startswith(name):
                         string = string.removeprefix(name)
                         string, args = cls.parse_args(string, orig_str, arg_parsers, required, **kwargs)
-                        LOG.trace("Parsed args", args)
+                        LOG.debug("Parsed args", args)
                         if args is None:
                             continue
                         break
