@@ -479,7 +479,7 @@ async def setup(bot: Bot):
         w: float, h: float = 0, left: int = 4, top: int = 4, right: int = None, bottom: int = None,
         kind: Literal["stretch", "repeat"] = "repeat"
     ):
-        """Stretches the sprite to the given width and height using the 9-Slices algorithm."""
+        """Stretches the sprite to the given width and height multiplier using the 9-Slices algorithm."""
         if h == 0:
             h = w
         if right is None:
