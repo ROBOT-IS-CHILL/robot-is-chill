@@ -112,6 +112,14 @@ async def setup(bot: Bot):
         """Applies a font to a sign text object."""
         sign.font = name
 
+    @SignVariantFactory.define_variant(names=["align!"])
+    async def align(
+        sign: SignText, ctx: SignVariantContext,
+        name: Literal['left', 'center', 'right']
+    ):
+        """Applies a font to a sign text object."""
+        sign.alignment = name
+
     @TileVariantFactory.define_variant(names=None)
     async def direction(
         tile: Tile, ctx: TileVariantContext,
