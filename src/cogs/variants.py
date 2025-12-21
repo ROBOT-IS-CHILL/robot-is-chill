@@ -473,6 +473,56 @@ async def setup(bot: Bot):
             "lanczos": cv2.INTER_LANCZOS4
         }[interpolation])[:, ::-1]
 
+    @SpriteVariantFactory.define_variant(names=["9s", "nineslice"])
+    async def nineslice(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        w: float, h: float = 0, left: int = 4, top: int = 4, right: int = None, bottom: int = None,
+        kind: Literal["stretch", "repeat"] = "repeat"
+    ):
+        """Stretches the sprite to the given width and height using the 9-Slices algorithm."""
+        if h == 0:
+            h = w
+        if right is None:
+            right = left
+        if bottom is None:
+            bottom = top
+        dst_size = (int(w * sprite.shape[1]), int(h * sprite.shape[0]))
+        if dst_size[0] <= 0 or dst_size[1] <= 0:
+            raise AssertionError(
+                f"Can't scale a tile to `{int(w * sprite.shape[0])}x{int(h * sprite.shape[1])}`, as it has a non-positive target area.")
+        utils.check_size(*dst_size)
+        if left < 0 or top < 0 or right < 0 or bottom < 0:
+            raise AssertionError(
+                f"Can't scale a tile using nine slices, as it has non-positive margins ({left}, {top}, {right}, {bottom}).")
+        if left > dst_size[0] or top > dst_size[1] or right > dst_size[0] or bottom > dst_size[1]:
+            raise AssertionError(
+                f"Can't scale a tile using nine slices, as its margins are too large ({left}, {top}, {right}, {bottom}).")
+        inner_horz = dst_size[0] - left - right
+        inner_vert = dst_size[1] - top - bottom
+        if inner_horz < 0 or inner_vert < 0:
+            raise AssertionError(
+                f"Can't scale a tile using nine slices, as its margins cause negative area in the middle of the sprite ({left}, {top}, {right}, {bottom}).")
+        target = np.zeros((*dst_size[::-1], 4), dtype=np.uint8)
+        end_y = -bottom if bottom > 0 else None
+        end_x = -right if right > 0 else None
+        target[:top, :left] = sprite[:top, :left]
+        if bottom > 0: target[end_y:, :left] = sprite[end_y:, :left]
+        if right > 0: target[:top, end_x:] = sprite[:top, end_x:]
+        if right > 0 and bottom > 0: target[end_y:, end_x:] = sprite[end_y:, end_x:]
+        if inner_horz > 0 and inner_vert > 0:
+            if kind == "stretch":
+                resize = lambda sprite, size: cv2.resize(sprite, size, interpolation=cv2.INTER_NEAREST)
+            else:
+                def resize(sprite, size):
+                    tile_amount = np.ceil(np.array((size[1], size[0])) / sprite.shape[:2]).astype(int)
+                    return np.tile(sprite, (*tile_amount, 1))[:size[1], :size[0]]
+            if top > 0: target[:top, left:end_x] = resize(sprite[:top, left:end_x], (inner_horz, top))
+            if bottom > 0: target[end_y:, left:end_x] = resize(sprite[end_y:, left:end_x], (inner_horz, bottom))
+            if left > 0: target[top:end_y, :left] = resize(sprite[top:end_y, :left], (left, inner_vert))
+            if right > 0: target[top:end_y, end_x:] = resize(sprite[top:end_y, end_x:], (right, inner_vert))
+            target[top:end_y, left:end_x] = resize(sprite[top:end_y, left:end_x], (inner_horz, inner_vert))
+        return target
+
     @SpriteVariantFactory.define_variant(names=["pad", "p"])
     async def pad(
         sprite: NumpySprite, ctx: SpriteVariantContext,
