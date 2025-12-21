@@ -175,8 +175,8 @@ class Renderer:
             right = max(0, actual_width - expected_width)
             bottom = max(0, actual_height - expected_height)
 
-        top = top - ctx.pad[0]
-        left = left - ctx.pad[1]
+        top = top + ctx.pad[0]
+        left = left + ctx.pad[1]
         bottom = bottom + ctx.pad[2]
         right = right + ctx.pad[3]
         final_size = np.array((int(height * ctx.spacing + top + bottom),
