@@ -74,11 +74,10 @@ INT_REGEX = re.compile(
     re.IGNORECASE
 )
 
-ParseError = type("ParseError", (), {})
-PARSE_ERROR = ParseError()  # Unique singleton
+PARSE_ERROR = type("ParseError", (), {})()  # Unique singleton
 
 
-def parse_int(string: str, **_) -> tuple[str, int | ParseError]:
+def parse_int(string: str, **_) -> tuple[str, int | "ParseError"]:
     match = INT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -94,7 +93,7 @@ FLOAT_REGEX = re.compile(
 )
 
 
-def parse_float(string: str, **_) -> tuple[str, float | ParseError]:
+def parse_float(string: str, **_) -> tuple[str, float | "ParseError"]:
     match = FLOAT_REGEX.match(string)
     if match is None:
         return string, PARSE_ERROR
@@ -104,7 +103,7 @@ def parse_float(string: str, **_) -> tuple[str, float | ParseError]:
         return string, PARSE_ERROR
 
 
-def parse_bool(string: str, **_) -> tuple[str, bool | ParseError]:
+def parse_bool(string: str, **_) -> tuple[str, bool | "ParseError"]:
     if string.startswith("true") or string.startswith("True"):
         return string[4:], True
     elif string.startswith("false") or string.startswith("False"):
@@ -113,10 +112,10 @@ def parse_bool(string: str, **_) -> tuple[str, bool | ParseError]:
         return string, PARSE_ERROR
 
 
-def parse_literal(ty) -> Callable[[str], tuple[str, str | ParseError]]:
+def parse_literal(ty) -> Callable[[str], tuple[str, str | "ParseError"]]:
     valid_values = ty.__args__
 
-    def parse(string: str, **_) -> tuple[str, str | ParseError]:
+    def parse(string: str, **_) -> tuple[str, str | "ParseError"]:
         for value in valid_values:
             if string.startswith(value):
                 return string.removeprefix(value), value
@@ -125,14 +124,14 @@ def parse_literal(ty) -> Callable[[str], tuple[str, str | ParseError]]:
     return parse
 
 
-def parse_color(string: str, *, bot: Bot, palette: tuple[str, str], **_) -> tuple[str, Color | ParseError]:
+def parse_color(string: str, *, bot: Bot, palette: tuple[str, str], **_) -> tuple[str, Color | "ParseError"]:
     pstring, res = Color.parse(string, palette, bot.db)
     if res is None:
         return string, PARSE_ERROR
     return pstring, res
 
 
-def parse_str(string: str, **_) -> tuple[str, str | ParseError]:
+def parse_str(string: str, **_) -> tuple[str, str | "ParseError"]:
     splits = string.split("/", 1)
     end = ("/" + "/".join(splits[1:])) if len(splits[1:]) else ""
     return end, splits[0]
@@ -147,11 +146,11 @@ PRIMITIVE_PARSERS = {
 }
 
 
-def parse_list(ty) -> Callable[[str], tuple[str, list | ParseError]]:
+def parse_list(ty) -> Callable[[str], tuple[str, list | "ParseError"]]:
     list_type = ty.__args__[0]
     parser = get_parser(list_type)
 
-    def parse(string: str, **_) -> tuple[str, list | ParseError]:
+    def parse(string: str, **_) -> tuple[str, list | "ParseError"]:
         args = []
         while True:
             string, res = parser(string)
@@ -167,7 +166,7 @@ def parse_list(ty) -> Callable[[str], tuple[str, list | ParseError]]:
 
     return parse
 
-def get_parser(ty) -> Callable[[Type, str], tuple[str, Any | ParseError]] | None:
+def get_parser(ty) -> Callable[[Type, str], tuple[str, Any | "ParseError"]] | None:
     if type(ty) is typing._LiteralGenericAlias:
         return parse_literal(ty)
     if type(ty) is types.GenericAlias and typing.get_origin(ty) is list:
@@ -188,7 +187,6 @@ class Variant:
     def __hash__(self):
         if not self.factory.hashable:
             return id(self)
-        print("Hashing:", self.args)
         return hash((self.factory.identifier, *self.args))
 
     @property
@@ -197,13 +195,10 @@ class Variant:
 
     async def apply(self, target: Any, context: "AbstractVariantContext"):
         if type(target).__name__ == "SignText" and self.factory.sign_alt:
-            print(f"Side-applying to text")
             return await self.factory.sign_alt(target, *self.args)
         #if isinstance(target, self.factory.target):
-        # HACK: For some reason, only this works. Don't know why.
-        print(type(target).__name__, self.factory.target.__name__)
+        # HACK: We need to do this instead of isinstance because of type stubbing for IDE type checking. :P
         if type(target).__name__ == self.factory.target.__name__:
-            print(f"Applying to {type(target).__name__}")
             return await self.factory.applicator(target, context, *self.args)
 
 
@@ -234,11 +229,6 @@ class AbstractVariantFactory(ABC):
             global ALL_VARIANTS
             nonlocal cls, names, hashable
 
-            # This code is kind of weird.
-            # Basically, we create an opaque subclass of the
-            # class that we're calling this from only when
-            # this module is loaded.
-
             identifier = func.__name__
             description = func.__doc__
 
@@ -266,27 +256,22 @@ class AbstractVariantFactory(ABC):
 
             params = params[2:]
 
-            # Generate the subclass
-            variant_factory = type(
-                identifier,
-                (cls, ),
-                dict(
-                    identifier = identifier,
-                    description = description,
-                    applicator = None,
-                    syntax_description = None,
-                    parser = None,
-                    hashable = hashable, hashed = hashed,
-                    nameless = names is None,
-                    sign_alt = sign_alt
-                )
+            variant = cls(
+                identifier = identifier,
+                description = description,
+                applicator = None,
+                syntax_description = None,
+                parser = None,
+                hashable = hashable, hashed = hashed,
+                nameless = names is None,
+                sign_alt = sign_alt
             )
 
-            variant_factory.applicator = func
-            variant_factory.parser = variant_factory.generate_parser(variant_factory, names, params)
-            variant_factory.syntax_description = variant_factory.generate_syntax_description(names, params)
+            variant.applicator = func
+            variant.parser = cls.generate_parser(variant, names, params)
+            variant.syntax_description = cls.generate_syntax_description(names, params)
 
-            ALL_VARIANTS[identifier] = variant_factory
+            ALL_VARIANTS[identifier] = variant
 
             return func
 
@@ -294,7 +279,7 @@ class AbstractVariantFactory(ABC):
 
     @classmethod
     def generate_parser(
-        cls, slf,
+        cls, variant,
         names: tuple[str] | None,
         params: tuple[tuple[str, Parameter], ...]
     ) -> Callable[[str], tuple[str, Union["Variant", None]]]:
@@ -309,7 +294,6 @@ class AbstractVariantFactory(ABC):
                 required += 1
 
         def parser(string: str, **kwargs) -> tuple[str, Union["Variant", None]]:
-            print(f"Trying to parse {slf.identifier}...")
             orig_str = string
             # Check for names first
             if names is not None:
@@ -318,7 +302,6 @@ class AbstractVariantFactory(ABC):
                         string = string.removeprefix(name)
                         break
                 else:
-                    print(f"No names found for variant {slf.identifier}")
                     return orig_str, None
                 if string.startswith("/"):
                     string = string.removeprefix("/")
@@ -328,22 +311,17 @@ class AbstractVariantFactory(ABC):
                 if string == "" and i >= required:
                     break
                 string, res = parser(string, **kwargs)
-                print(f"Argument {i}: {string}, {res}")
                 if res is PARSE_ERROR:
-                    print(f"Argument {i} failed at {string} for variant {slf.identifier}")
                     return orig_str, None
                 args.append(res)
                 if i + 1 < required:
                     if not string.startswith("/"):
-                        print(f"Incomplete for {slf.identifier} ({i + 1} / {required})")
                         return orig_str, None
                 elif i + 1 == len(arg_parsers) and string != "":
-                    print(f"Too many arguments for {slf.identifier}")
                     return orig_str, None
                 string = string.removeprefix("/")
-            print("Parsed!")
 
-            return string, Variant(tuple(args), cls, False, orig_str[:len(orig_str) - len(string)])
+            return string, Variant(tuple(args), variant, False, orig_str[:len(orig_str) - len(string)])
 
         return parser
 
