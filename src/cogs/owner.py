@@ -34,6 +34,7 @@ import discord
 from discord.ext import commands
 from PIL import Image, ImageChops, ImageDraw
 
+from src.log import LOG
 from ..db import TileData
 from ..types import Bot, Context
 
@@ -119,7 +120,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 if endsentence == "robot":  # Check if the argument is *actually* robot, making robot is not robot
                     await ctx.send("Poofing bot process...")
                     await self.bot.close()  # Trigger close before returning
-            print("Almost killed")
+            LOG.debug("Almost killed")
             return  # Doesn't close the bot if any of these logic statements is false
         elif ctx.invoked_with == "not":
             return  # Catch "robot is not"

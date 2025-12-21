@@ -14,6 +14,7 @@ import cv2
 import numpy as np
 import visual_center
 
+from src.log import LOG
 from . import liquify as lq
 from .. import constants, errors, utils
 from ..tile import Tile, TileSkeleton, TileData, ProcessedTile
@@ -79,7 +80,7 @@ async def setup(bot: Bot):
 
     async def sign_scale(
         sign: SignText,
-        scale: float, _unused = None
+        scale: float, _unused: float = None
     ):
         sign.size *= scale
 
@@ -157,7 +158,7 @@ async def setup(bot: Bot):
         tile.altered_frame = True
         tile.frame += a_frame
 
-    @TileVariantFactory.define_variant(names=["s", "sleep"])
+    @TileVariantFactory.define_variant(names=["sleep", "s"])
     async def sleep(
         tile: Tile, ctx: TileVariantContext,
     ):
@@ -188,7 +189,7 @@ async def setup(bot: Bot):
         tile.custom = True
         tile.style = "noun"
 
-    @TileVariantFactory.define_variant(names=["let", "letter"])
+    @TileVariantFactory.define_variant(names=["letter", "let"])
     async def letter(
         tile: Tile, ctx: TileVariantContext,
     ):
@@ -448,14 +449,14 @@ async def setup(bot: Bot):
         final_matrix = np.dot(proj_32, np.dot(trans_mat, np.dot(rot_mat, proj_23)))
         return cv2.warpPerspective(sprite, final_matrix, sprite.shape[1::-1], flags=cv2.INTER_NEAREST)
 
-    @SpriteVariantFactory.define_variant(names=["scale", "s"], sign_alt = sign_scale)
+    @SpriteVariantFactory.define_variant(names=["sc", "scale"], sign_alt = sign_scale)
     async def scale(
         sprite: NumpySprite, ctx: SpriteVariantContext,
-        w: float, h: float = None,
+        w: float, h: float = 0,
         interpolation: Literal["nearest", "linear", "cubic", "area", "lanczos"] = "nearest"
     ):
         """Scales a sprite by the given multipliers."""
-        if h is None:
+        if h == 0:
             h = w
         dst_size = (int(w * sprite.shape[0]), int(h * sprite.shape[1]))
         if dst_size[0] <= 0 or dst_size[1] <= 0:
@@ -1356,13 +1357,15 @@ If a value is negative, it removes pixels above the threshold instead."""
         ALL_VARIANTS[key] = val
 
     def parse_variant(string: str, palette: tuple[str, str]) -> tuple[str, Variant | None]:
+        orig_str = string
         for var in ALL_VARIANTS.values():
             string, parsed = var.parser(string, bot = bot, palette = palette)
             if parsed is not None:
                 if string == "":
                     return parsed
                 else:
-                    print(f"Not accepted due to remaining string: `{string}`")
+                    LOG.trace(f"Not accepted due to remaining string: `{string}`")
+            string = orig_str
 
         return None
 

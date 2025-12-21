@@ -23,6 +23,7 @@ from PIL.ImageDraw import ImageDraw
 import PIL.ImageFont as ImageFont
 
 from src.tile import ProcessedTile, Tile
+from src.log import LOG
 from .. import constants, errors
 from ..types import Color, RenderContext, TilingMode
 from ..variant_types import SpriteVariantContext, PostVariantContext, SignVariantContext
@@ -176,7 +177,7 @@ class Renderer:
 
         final_size = np.array((int(height * ctx.spacing + top + bottom),
                                  int(width * ctx.spacing + left + right)))
-        print(final_size)
+        LOG.trace(final_size)
         true_size = final_size * ctx.upscale
         if not ctx.bypass_limits:
             assert all(
@@ -197,7 +198,7 @@ class Renderer:
                     q = i + animation_wobble * f
                     steps[q] = np.array(img)
         for (y, x, z, t), tile in grid.items():
-            print(y, x, z, t, tile.name)
+            LOG.trace(y, x, z, t, tile.name)
             if tile is None:
                 continue
             await asyncio.sleep(0)
@@ -435,7 +436,7 @@ class Renderer:
 
         rendered_frames = []
         tile_hash = hash(tile)
-        print(tile, tile_hash)
+        LOG.trace(tile, tile_hash)
         cached = tile_hash in ctx.tile_cache.keys()
         if cached:
             final_tile.frames = ctx.tile_cache[tile_hash]
@@ -628,7 +629,7 @@ class Renderer:
                 line_widths.append(char_width)
                 line_spacings.append(char_space)
             max_line_width = max(line_widths)
-            print("Max line width: ", max_line_width)
+            LOG.trace("Max line width: ", max_line_width)
             if max_line_width == 0:
                 sprite = Image.new("L", (24, 24))
             else:

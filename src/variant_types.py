@@ -18,6 +18,7 @@ import cv2
 import numpy as np
 import visual_center
 
+from src.log import LOG
 from . import constants, errors, utils
 from .types import Bot, RenderContext, Renderer, SignText, NumpySprite, Color
 
@@ -278,6 +279,24 @@ class AbstractVariantFactory(ABC):
 
         return decorator
 
+    @staticmethod
+    def parse_args(string, orig_str, arg_parsers, required, **kwargs):
+        args = []
+        for i, parser in enumerate(arg_parsers):
+            if string == "" and i >= required:
+                break
+            string, res = parser(string, **kwargs)
+            if res is PARSE_ERROR:
+                return orig_str, None
+            args.append(res)
+            if i + 1 < required:
+                if not string.startswith("/"):
+                    return orig_str, None
+            elif i + 1 == len(arg_parsers) and string != "":
+                return orig_str, None
+            string = string.removeprefix("/")
+        return string, args
+
     @classmethod
     def generate_parser(
         cls, variant,
@@ -299,28 +318,23 @@ class AbstractVariantFactory(ABC):
             # Check for names first
             if names is not None:
                 for name in names:
+                    string = orig_str
+                    LOG.trace("Testing", name, "against", orig_str)
                     if string.startswith(name):
                         string = string.removeprefix(name)
+                        string, args = cls.parse_args(string, orig_str, arg_parsers, required, **kwargs)
+                        LOG.trace("Parsed args", args)
+                        if args is None:
+                            continue
                         break
                 else:
                     return orig_str, None
                 if string.startswith("/"):
                     string = string.removeprefix("/")
-
-            args = []
-            for i, parser in enumerate(arg_parsers):
-                if string == "" and i >= required:
-                    break
-                string, res = parser(string, **kwargs)
-                if res is PARSE_ERROR:
+            else:
+                string, args = cls.parse_args(string, orig_str, arg_parsers, required, **kwargs)
+                if args is None:
                     return orig_str, None
-                args.append(res)
-                if i + 1 < required:
-                    if not string.startswith("/"):
-                        return orig_str, None
-                elif i + 1 == len(arg_parsers) and string != "":
-                    return orig_str, None
-                string = string.removeprefix("/")
 
             return string, Variant(tuple(args), variant, False, orig_str[:len(orig_str) - len(string)])
 

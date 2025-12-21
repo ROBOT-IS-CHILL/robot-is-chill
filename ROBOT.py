@@ -9,6 +9,7 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 from typing import Coroutine
+import logging
 
 import discord
 from PIL import Image
@@ -20,6 +21,7 @@ import config
 import webhooks
 from src.types import Macro
 from src.db import Database
+from src.log import LOG
 import macrosia_glue
 
 from numpy import set_printoptions as numpy_set_printoptions
@@ -114,12 +116,12 @@ class Bot(commands.Bot):
         await self.db.connect(self.db_path)
         macrosia_glue.connect_to_db(self.db_path)
         self.macro_handler.update_macros()
-        print("Loading macros...")
+        LOG.debug("Loading macros...")
         async with self.db.conn.cursor() as cur:
             await cur.execute("SELECT * from macros")
             for (name, value, description, author) in await cur.fetchall():
                 self.macros[name] = Macro(value, description, author)
-        print(f"Logged in as {self.user}!")
+        LOG.info(f"Logged in as {self.user}!")
         if bot.baba_loaded:
             await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="commands..."))
         else:
@@ -138,8 +140,7 @@ class Bot(commands.Bot):
         # Else fall back to the original
         return await super().is_owner(user)
 
-
-discord.utils.setup_logging()
+discord.utils.setup_logging(level=config.logging_level)
 
 
 if Path("alpha").exists():

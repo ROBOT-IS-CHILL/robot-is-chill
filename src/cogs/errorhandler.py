@@ -18,6 +18,7 @@ from discord.ext import commands
 import requests
 
 import webhooks
+from src.log import LOG
 from ..types import Bot, Context
 from .. import errors, constants
 import macrosia_glue
@@ -285,14 +286,8 @@ class CommandErrorHandler(commands.Cog):
             )
             await self.logger.send(embed=emb)
             await ctx.error(msg='', embed=emb)
-            print(
-                f'Ignoring exception in command {ctx.command}:',
-                file=sys.stderr)
-            traceback.print_exception(
-                type(error),
-                error,
-                error.__traceback__,
-                file=sys.stderr)
+            LOG.error(f'Ignoring exception in command {ctx.command}:')
+            LOG.error('\n'.join(traceback.format_exception(type(error), error, error.__traceback__)))
         except Exception as err:
             try:
                 title = f'**Error in error handler!!!**'
@@ -319,23 +314,15 @@ class CommandErrorHandler(commands.Cog):
                     err_desc = err_desc[:250] + "..." + err_desc[-250:]
                 emb = discord.Embed(
                     title=title,
-                    description=(f"## {type(error).__name__}\n{err_desc}\n```\n{trace}\n```"),
+                    description=(f"## {type(err).__name__}\n{err_desc}\n```\n{trace}\n```"),
                     color=0xFF0000
                 )
                 await ctx.error(msg='', embed=emb)
-                print("--- ERROR HANDLER ERROR ---")
-                traceback.print_exception(
-                    type(error),
-                    error,
-                    error.__traceback__,
-                    file=sys.stderr)
-                print("--- ERROR HANDLER ERROR CRASH ---")
-                traceback.print_exception(
-                    type(err),
-                    err,
-                    err.__traceback__,
-                    file=sys.stderr)
-                print("-------------")
+                LOG.error("--- ERROR HANDLER ERROR ---")
+                LOG.error('\n'.join(traceback.format_exception(type(error), error, error.__traceback__)))
+                LOG.error("--- ERROR HANDLER ERROR CRASH ---")
+                LOG.error('\n'.join(traceback.format_exception(type(err), err, err.__traceback__)))
+                LOG.error("-------------")
                 return
             except:
                 await ctx.error(msg="Error handler fatally errored. Contact the bot owner as soon as possible.")

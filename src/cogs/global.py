@@ -29,6 +29,7 @@ from discord.ext import commands, menus
 
 import config
 import webhooks
+from src.log import LOG
 from src.types import SignText, RenderContext
 from src.utils import ButtonPages
 from src import utils
@@ -257,7 +258,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             utils.split_escaped(tile.name, [])[0]
             for tile in grid.values() if isinstance(tile, TileSkeleton)
         }
-        print(tile_set)
+        LOG.trace(tile_set)
         tile_data_cache = {
             data.name: data async for data in self.bot.db.tiles(tile_set)
         }
@@ -284,7 +285,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         tilegrid |= new_items
         # Sort tilegrid
         tgrid = {}
-        print(shape)
+        LOG.trace(shape)
         for t in range(shape[3]):
             for z in range(shape[2]):
                 for y in range(shape[0]):

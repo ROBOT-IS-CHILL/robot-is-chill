@@ -34,6 +34,7 @@ import discord
 from discord.ext import commands
 from PIL import Image, ImageChops, ImageDraw
 
+from src.log import LOG
 from ..db import TileData
 from ..types import Bot, Context
 
@@ -431,7 +432,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            print(f"Adding {name}")
+            LOG.trace(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())
@@ -500,7 +501,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         doc.add(tomlkit.nl())
         doc.add(tomlkit.nl())
         for name, data in objects.items():
-            print(f"Adding {name}")
+            LOG.trace(f"Adding {name}")
             table = tomlkit.inline_table()
             table.update(data)
             doc.add(tomlkit.nl())

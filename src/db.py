@@ -13,6 +13,7 @@ import requests
 import tldextract as tldextract
 from PIL import Image
 
+from src.log import LOG
 from .types import TilingMode
 
 from . import constants
@@ -43,11 +44,11 @@ class Database:
             return bool(re.search(x, y))
 
         self.conn.get_connection().create_function('regexp', 2, regexp)
-        print("Initialized database connection.")
+        LOG.info("Initialized database connection.")
         await self.create_tables()
-        print("Verified database tables.")
+        LOG.debug("Verified database tables.")
         await self.store_palettes()
-        print("Stored palettes.")
+        LOG.debug("Stored palettes.")
 
     async def store_palettes(self):
         async with self.conn.cursor() as cur:
