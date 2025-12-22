@@ -39,7 +39,7 @@ async def setup(bot: Bot):
     async def noop(_target: type(None), _ctx: type(None)):
         """Does nothing. Useful for resetting persistent variants."""
 
-    @AbstractVariantFactory.define_variant(names["m!"])
+    @AbstractVariantFactory.define_variant(names=["m!"])
     async def m_syntax_shim(_target: type(None), _ctx: type(None)):
         """Shim to handle erroring for removed syntax."""
         raise AssertionError("The m! syntax has been removed. Use brackets instead.\nFor example, replace `baba:m!face` with `baba:[face]`.")
