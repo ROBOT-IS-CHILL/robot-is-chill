@@ -330,7 +330,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
         ).start(ctx)
 
     @commands.cooldown(5, 8, type=commands.BucketType.channel)
-    @commands.command(name="variants", aliases=['vars'])
+    @commands.command(name="variants", aliases=['vars', 'var'])
     async def variants(self, ctx: Context, *, query: str = ""):
         """Lists all available variants."""
         return await ctx.invoke(ctx.bot.get_command("search"), query = "--type=variant " + query)
