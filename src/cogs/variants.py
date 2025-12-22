@@ -164,7 +164,7 @@ async def setup(bot: Bot):
     ):
         """Sets the animation frame of a tile."""
         tile.altered_frame = True
-        tile.frame += a_frame
+        tile.frame += frame
 
     @TileVariantFactory.define_variant(names=["sleep", "s"])
     async def sleep(
