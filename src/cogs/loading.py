@@ -322,7 +322,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         self.bot.db.filter_cache = {}
         await self.load_initial_tiles()
         await self.load_editor_tiles()
-        await self.load_custom_tiles(msg)
+        await self.load_custom_tiles()
         self.bot.loading = False
         return await ctx.send("Done. Loaded all tile data.")
 
@@ -509,7 +509,7 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         with open("data/custom/editor.toml", "w+") as f:
             tomlkit.dump(doc, f)
 
-    async def load_custom_tiles(self, msg, file='*'):
+    async def load_custom_tiles(self, file='*'):
         """Loads custom tile data from `data/custom/*.toml`"""
 
         def prepare(source: str, name: str, d: dict[str, Any]) -> dict[str, Any]:
