@@ -440,20 +440,21 @@ class Reader(commands.Cog, command_attrs=dict(hidden=True)):
                 metadata[child_id].style = style
 
         self.parent_levels.clear()
-        await self.bot.db.conn.executemany(
-            '''
-			INSERT INTO levels VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-			ON CONFLICT(id, world) DO UPDATE SET
-				name=excluded.name,
-				subtitle=excluded.subtitle,
-				number=excluded.number,
-				style=excluded.style,
-				parent=excluded.parent,
-				map_id=excluded.map_id;
-			''',
-            [(l.id, l.world, l.name, l.subtitle, l.number, l.style,
-              l.parent, l.map_id) for l in metadata.values()]
-        )
+        async with self.bot.db.conn.transaction():
+            await self.bot.db.conn.executemany(
+                '''
+                INSERT INTO levels VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(id, world) DO UPDATE SET
+                    name=excluded.name,
+                    subtitle=excluded.subtitle,
+                    number=excluded.number,
+                    style=excluded.style,
+                    parent=excluded.parent,
+                    map_id=excluded.map_id;
+                ''',
+                [(l.id, l.world, l.name, l.subtitle, l.number, l.style,
+                l.parent, l.map_id) for l in metadata.values()]
+            )
 
     @commands.command(name="loadworld")
     @commands.is_owner()

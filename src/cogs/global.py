@@ -29,14 +29,15 @@ from discord.ext import commands, menus
 
 import config
 import webhooks
+from src.log import LOG
 from src.types import SignText, RenderContext
 from src.utils import ButtonPages
 from src import utils
-from ..tile import Tile, TileSkeleton, parse_variant
+from ..tile import Tile, TileSkeleton
 
 from .. import constants, errors
 from ..db import CustomLevelData, LevelData
-from ..types import Bot, Context, RegexDict
+from ..types import Bot, Context
 
 
 def try_index(string: str, value: str) -> int:
@@ -250,21 +251,21 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             return await ctx.error(f"{msg}.")
 
     async def handle_grid(
-            self, ctx: Context, grid, possible_variants, shape, render_ctx: RenderContext
+            self, ctx: Context, grid, shape, render_ctx: RenderContext
         ):
         """Parses a TileSkeleton array into a Tile grid."""
         tile_set = {
             utils.split_escaped(tile.name, [])[0]
             for tile in grid.values() if isinstance(tile, TileSkeleton)
         }
-        print(tile_set)
+        LOG.debug(tile_set)
         tile_data_cache = {
             data.name: data async for data in self.bot.db.tiles(tile_set)
         }
         tilegrid = {
             (y, x, z, t): (
                 (await Tile.prepare(
-                    possible_variants, tile, tile_data_cache,
+                    self.bot, tile, tile_data_cache,
                     grid, shape[1], shape[0], (t, z, y, x), render_ctx.tileborder, ctx
                 ))
                 if isinstance(tile, TileSkeleton)
@@ -284,7 +285,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         tilegrid |= new_items
         # Sort tilegrid
         tgrid = {}
-        print(shape)
+        LOG.debug(shape)
         for t in range(shape[3]):
             for z in range(shape[2]):
                 for y in range(shape[0]):
@@ -307,11 +308,6 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         comma_prefix = None
         last_tile = None
         do_comma = False
-        possible_variants = RegexDict(
-            [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type != "sign"])
-        font_variants = RegexDict(
-            [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type == "sign"])
-
         """
             scene := (row? "\n")* EOF;
             row := (stack? ("," | " "))*;
@@ -330,7 +326,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
         EL_BREAK = (" ", ",", "\n", "&", ">")
 
         async def parse_signtext() -> bool:
-            nonlocal scenestr, initial_len, font_variants, render_ctx, comma_prefix, do_comma, self, x, y, z, t
+            nonlocal scenestr, initial_len, render_ctx, comma_prefix, do_comma, self, x, y, z, t
             text_end = utils.find_unescaped(scenestr, "}")
             assert text_end >= 0, f"Sign text started at index {initial_len - len(scenestr)} was never closed!"
             string, scenestr = scenestr[1:text_end], scenestr[text_end + 1:]
@@ -339,7 +335,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 el_end = len(scenestr)
             vars, scenestr = scenestr[:el_end], scenestr[el_end:]
             el = await TileSkeleton.parse(
-                self.bot, font_variants, vars,
+                self.bot, vars,
                 render_ctx.prefix, render_ctx.palette,
                 render_ctx.global_variant,
                 prefix = comma_prefix if do_comma else None
@@ -349,13 +345,13 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
             return st
 
         async def parse_tile() -> TileSkeleton | None:
-            nonlocal scenestr, possible_variants, render_ctx, comma_prefix, self
+            nonlocal scenestr, render_ctx, comma_prefix, self
             el_end = utils.find_unescaped(scenestr, EL_BREAK)
             if el_end < 0:
                 el_end = len(scenestr)
             tilestr, scenestr = scenestr[:el_end], scenestr[el_end:]
             return await TileSkeleton.parse(
-                self.bot, possible_variants, tilestr,
+                self.bot, tilestr,
                 render_ctx.prefix, render_ctx.palette,
                 render_ctx.global_variant,
                 prefix = comma_prefix if do_comma else None
@@ -506,15 +502,10 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
 
             tile_grid, shape = await self.parse_tile_grid(render_ctx, tiles)
 
-            possible_variants = RegexDict(
-                [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type != "sign"])
-            font_variants = RegexDict(
-                [(variant.pattern, variant) for variant in self.bot.variants._values if variant.type == "sign"])
-
             maxdelta = 1
             try:
                 render_ctx.out = BytesIO()
-                full_grid = await self.handle_grid(ctx, tile_grid, possible_variants, shape, render_ctx)
+                full_grid = await self.handle_grid(ctx, tile_grid, shape, render_ctx)
                 parsing_overhead = time.perf_counter() - parsing_overhead
                 full_tiles, unique_tiles, rendered_frames, render_overhead = await self.bot.renderer.render_full_tiles(
                     full_grid, shape,
@@ -542,7 +533,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 )
             except errors.TooLargeTile as e:
                 return await ctx.error(
-                    f"A tile of size `{e.args[0]}` (`{e.args[1]}`) is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
+                    f"A tile of size `{e.args[0]}` is larger than the maximum allowed size of `{constants.MAX_TILE_SIZE}`.")
             except errors.VariantError as e:
                 return await self.handle_variant_errors(ctx, e)
             except errors.TextGenerationError as e:

@@ -23,8 +23,10 @@ from PIL.ImageDraw import ImageDraw
 import PIL.ImageFont as ImageFont
 
 from src.tile import ProcessedTile, Tile
+from src.log import LOG
 from .. import constants, errors
 from ..types import Color, RenderContext, TilingMode
+from ..variant_types import SpriteVariantContext, PostVariantContext, SignVariantContext
 from src import utils
 
 try:
@@ -131,8 +133,9 @@ class Renderer:
         if len(ctx.sign_texts):
             for i, sign_text in enumerate(ctx.sign_texts):
                 for var in sign_text.variants:
-                    if var.type == "sign":
-                        await var.apply(sign_text, bot=self.bot, ctx=ctx, renderer=self)
+                    await var.apply(
+                        sign_text, SignVariantContext(self.bot, ctx, self)
+                    )
                 size = int(
                     ctx.spacing * (ctx.upscale / 2) * sign_text.size * constants.FONT_MULTIPLIERS.get(sign_text.font,
                                                                                                       1))
@@ -172,9 +175,13 @@ class Renderer:
             right = max(0, actual_width - expected_width)
             bottom = max(0, actual_height - expected_height)
 
+        top = top + ctx.pad[0]
+        left = left + ctx.pad[1]
+        bottom = bottom + ctx.pad[2]
+        right = right + ctx.pad[3]
         final_size = np.array((int(height * ctx.spacing + top + bottom),
                                  int(width * ctx.spacing + left + right)))
-        print(final_size)
+        LOG.debug(final_size)
         true_size = final_size * ctx.upscale
         if not ctx.bypass_limits:
             assert all(
@@ -195,7 +202,7 @@ class Renderer:
                     q = i + animation_wobble * f
                     steps[q] = np.array(img)
         for (y, x, z, t), tile in grid.items():
-            print(y, x, z, t, tile.name)
+            LOG.debug(y, x, z, t, tile.name)
             if tile is None:
                 continue
             await asyncio.sleep(0)
@@ -242,12 +249,13 @@ class Renderer:
         r = r
         d = d
         wobble_range = np.arange(steps.shape[0]) // animation_timestep
+        if ctx.background is not None:
+            ctx.background = np.array(ctx.background.as_array()).astype(np.float32)
         for i, step in enumerate(steps):
+            # NOTE: 3-ish years later. REALLY wishing I commented this.
+            #       This is just cropping the step, and then applying the background if the render has one.
             step = step[u:-d if d > 0 else None, l:-r if r > 0 else None]
             if ctx.background is not None:
-                if len(ctx.background) < 4:
-                    ctx.background = Color.parse(Tile(palette=ctx.palette), self.bot.db, ctx.background)
-                ctx.background = np.array(ctx.background).astype(np.float32)
                 step_f = step.astype(np.float32) / 255
                 step_f[..., :3] = step_f[..., 3, np.newaxis]
                 c = ((1 - step_f) * ctx.background + step_f * step.astype(np.float32))
@@ -411,6 +419,7 @@ class Renderer:
                 raise AssertionError(f'The tile `{tile.name}:{tile.frame}` was found, but the files '
                                          f'don\'t exist for it.\nThis is a bug - please notify the author of the tile.\nSearched path: `{path}`')
             sprite = np.array(sprite)
+        sprite[..., :3][sprite[..., 3] == 0] = 0
         sprite = cv2.resize(sprite, (int(sprite.shape[1] * ctx.gscale), int(sprite.shape[0] * ctx.gscale)),
                             interpolation=cv2.INTER_NEAREST)
         return await self.apply_options_name(
@@ -431,6 +440,7 @@ class Renderer:
 
         rendered_frames = []
         tile_hash = hash(tile)
+        LOG.debug(tile, tile_hash)
         cached = tile_hash in ctx.tile_cache.keys()
         if cached:
             final_tile.frames = ctx.tile_cache[tile_hash]
@@ -468,8 +478,9 @@ class Renderer:
             )
             rendered_frames += len(new_frames)
             for variant in tile.variants:
-                if variant.type == "post":
-                    await variant.apply(processed_tile, renderer=self, new_frames=new_frames)
+                await variant.apply(
+                    processed_tile, PostVariantContext()
+                )
             d[y, x, z, t] = processed_tile
         return d, len(ctx.tile_cache), rendered_frames, time.perf_counter() - render_overhead
 
@@ -622,7 +633,7 @@ class Renderer:
                 line_widths.append(char_width)
                 line_spacings.append(char_space)
             max_line_width = max(line_widths)
-            print("Max line width: ", max_line_width)
+            LOG.debug("Max line width: ", max_line_width)
             if max_line_width == 0:
                 sprite = Image.new("L", (24, 24))
             else:
@@ -678,18 +689,29 @@ class Renderer:
             raise errors.BadTileProperty(tile.name, size)
 
     async def apply_options(
-            self,
-            tile: Tile,
-            sprite: np.ndarray,
-            wobble: int,
-            seed: int | None = None
+        self,
+        tile: Tile,
+        sprite: np.ndarray,
+        wobble: int,
+        seed: int | None = None
     ):
         random.seed(seed)
+        ctx = SpriteVariantContext(
+            tile, wobble, self,
+            Color.from_index(
+                tile.color, tile.palette, self.bot.db
+            )
+        )
+
         for variant in tile.variants:
-            if variant.type == "sprite":
-                sprite = await variant.apply(sprite, tile=tile, wobble=wobble, renderer=self)
-                if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
-                    raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
+            res = await variant.apply(sprite, ctx)
+            if res is not None:
+                sprite = res
+            if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):
+                raise errors.TooLargeTile(sprite.shape[1::-1], tile.name)
+
+        sprite = utils.recolor(sprite, ctx.color)
+
         return sprite
 
     def save_frames(
