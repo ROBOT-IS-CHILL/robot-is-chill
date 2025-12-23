@@ -817,7 +817,7 @@ async def setup(bot: Bot):
         axis: Literal["x", "y"]
     ):
         """Flips the sprite along the specified axis."""
-        if a == "x":
+        if axis == "x":
             return sprite[:, ::-1, :]
         else:
             return sprite[::-1, :, :]
