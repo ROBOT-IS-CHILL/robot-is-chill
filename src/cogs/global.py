@@ -396,12 +396,11 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 await parse_element()
                 t += 1
                 t_size = max(t, t_size)
-                comma_prefix = last_tile.prefix if last_tile is not None else None
+                comma_prefix = last_tile.prefix if last_tile is not None else comma_prefix
                 if not scenestr.startswith(">"):
                     return True
                 scenestr = scenestr.removeprefix(">")
                 do_comma = False
-                comma_prefix = None
 
         async def parse_stack() -> bool:
             nonlocal scenestr, do_comma, x, y, z, t, z_size
