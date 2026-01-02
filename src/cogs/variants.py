@@ -484,7 +484,7 @@ async def setup(bot: Bot):
     @SpriteVariantFactory.define_variant(names=["9s", "nineslice"])
     async def nineslice(
         sprite: NumpySprite, ctx: SpriteVariantContext,
-        w: float, h: float = 0, left: int = 4, top: int = 4, right: int = None, bottom: int = None,
+        w: int, h: int = 0, left: int = 4, top: int = 4, right: int = None, bottom: int = None,
         kind: Literal["stretch", "repeat"] = "repeat"
     ):
         """Stretches the sprite to the given width and height multiplier using the 9-Slices algorithm."""
@@ -494,7 +494,7 @@ async def setup(bot: Bot):
             right = left
         if bottom is None:
             bottom = top
-        dst_size = (int(w * sprite.shape[1]), int(h * sprite.shape[0]))
+        dst_size = (w, h)
         if dst_size[0] <= 0 or dst_size[1] <= 0:
             raise AssertionError(
                 f"Can't scale a tile to `{int(w * sprite.shape[0])}x{int(h * sprite.shape[1])}`, as it has a non-positive target area.")
