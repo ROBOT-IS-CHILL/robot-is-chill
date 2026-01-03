@@ -43,13 +43,14 @@ class SearchPageSource(menus.ListPageSource):
         for (ty, short), long in entries:
             if isinstance(long, TileData):
                 lines.append(
-                    f"({ty}) {short}\n    sprite: {long.sprite} source: {long.source}\n")
-                lines.append(
-                    f"    color: {long.inactive_color} active color: {long.active_color}\n    tiling: {src.types.TilingMode(long.tiling)}")
+                    f"({ty}) {short}\n  sprite: {long.sprite}\n  source: {long.source}\n")
+                lines.append(f"  color: {long.active_color}")
+                if long.inactive_color is not None:
+                    lines.append(f"\n  inactive color: {long.inactive_color}")
                 if len(long.tags) > 0:
-                    lines.append(f"\n    tags: {', '.join(long.tags)}")
+                    lines.append(f"\n  tags: {', '.join(long.tags)}")
                 if len(long.extra_frames) > 0:
-                    lines.append(f"\n    extra_frames: {', '.join(str(n) for n in long.extra_frames)}")
+                    lines.append(f"\n  extra_frames: {', '.join(str(n) for n in long.extra_frames)}")
             elif isinstance(long, LevelData):
                 lines.append(f"({ty}) {short} {long.display()}")
             elif isinstance(long, CustomLevelData):

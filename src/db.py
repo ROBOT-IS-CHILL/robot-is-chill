@@ -88,8 +88,8 @@ class Database:
                     version INTEGER NOT NULL,
                     active_color_x INTEGER NOT NULL DEFAULT 0,
                     active_color_y INTEGER NOT NULL DEFAULT 3,
-                    inactive_color_x INTEGER DEFAULT 0,
-                    inactive_color_y INTEGER DEFAULT 1,
+                    inactive_color_x INTEGER,
+                    inactive_color_y INTEGER,
                     tiling TEXT NOT NULL DEFAULT "none",
                     -- It would be better to store these in a separate table but idrc
                     tags TEXT NOT NULL DEFAULT "",
@@ -238,7 +238,7 @@ class TileData:
     name: str
     sprite: str
     source: str
-    inactive_color: tuple[int, int]
+    inactive_color: tuple[int, int] | None
     active_color: tuple[int, int]
     tiling: TilingMode
     tags: list[str]
@@ -263,7 +263,7 @@ class TileData:
             row["name"],
             row["sprite"],
             row["source"],
-            (row["inactive_color_x"], row["inactive_color_y"]),
+            (row["inactive_color_x"], row["inactive_color_y"]) if row["inactive_color_x"] is not None else None,
             (row["active_color_x"], row["active_color_y"]),
             TilingMode.parse(row["tiling"]),
             tags.split("\t") if tags is not None else [],

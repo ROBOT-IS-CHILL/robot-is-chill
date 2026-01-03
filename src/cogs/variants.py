@@ -494,10 +494,10 @@ async def setup(bot: Bot):
             right = left
         if bottom is None:
             bottom = top
-        dst_size = (w, h)
+        dst_size = (w*sprite.shape[1], h*sprite.shape[0])
         if dst_size[0] <= 0 or dst_size[1] <= 0:
             raise AssertionError(
-                f"Can't scale a tile to `{int(w * sprite.shape[0])}x{int(h * sprite.shape[1])}`, as it has a non-positive target area.")
+                f"Can't scale a tile to `{int(w * sprite.shape[1])}x{int(h * sprite.shape[0])}`, as it has a non-positive target area.")
         utils.check_size(*dst_size)
         if left < 0 or top < 0 or right < 0 or bottom < 0:
             raise AssertionError(
