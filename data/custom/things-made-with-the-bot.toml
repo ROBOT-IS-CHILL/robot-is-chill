@@ -37,4 +37,3 @@ we2 = {sprite = "we", color = [3, 0], tiling = "character"}
 hkeke = {sprite = "hkeke", color = [0, 3], tiling = "character"}
 
 text_bababa = {sprite = "text_bababa", color = [0, 3], tiling = "none", author = "baltdev"}
-

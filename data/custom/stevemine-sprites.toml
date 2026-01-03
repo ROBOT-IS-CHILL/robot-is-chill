@@ -9,3 +9,5 @@ text_shield = {sprite = "text_shield", color = [0, 2], tiling = "none"}
 keyboard2 = {sprite = "keyboard", color = [0, 2], tiling = "none"}
 
 text_keyboard2 = {sprite = "text_keyboard", color = [0, 2], tiling = "none"}
+
+"text_yesn't" = {sprite = "text_yesn't", color = [2, 3], tiling = "none"}

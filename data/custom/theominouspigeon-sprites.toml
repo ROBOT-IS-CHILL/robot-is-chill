@@ -34,8 +34,6 @@ text_altpawn = {sprite = "text_altpawn", color = [4, 4], tiling = "none"}
 
 altknight = {sprite = "altknight", color = [3, 3], tiling = "directional"}
 
-text_altknight = {sprite = "text_altknight", color = [3, 3], tiling = "none"}
-
 text_goop = {sprite = "text_goop", color = [1, 3], tiling = "none"}
 
 text_magma = {sprite = "text_magma", color = [2, 3], tiling = "none"}
