@@ -14,7 +14,7 @@ crystalball = {sprite = "crystalball", color = [3, 0], tiling = "none"}
 
 fu = {sprite = "fu", color = [3, 2], tiling = "character"}
 
-text_fu = {sprite = "text_fu", color = [3, 1], active_color = [3, 2], tiling = "none"}
+text_fu = {sprite = "text_fu", color = [3, 2], inactive_color = [3, 1], tiling = "none"}
 
 jeje = {sprite = "jeje", color = [2, 3], tiling = "character"}
 
@@ -102,7 +102,7 @@ text_elira = {sprite = "text_elira", color = [2, 4], tiling = "none"}
 
 text_niko = {color = [2, 4], tiling = "none", sprite = "text_niko", tags = ["balt_texts"]}
 
-text_norvey = {color = [0, 3], tiling = "none", sprite = "text_norvey", tags = ["balt_texts"]}
+text_norvey = {color = [1, 4], tiling = "none", sprite = "text_norvey", tags = ["balt_texts"]}
 
 text_infinite = {color = [4, 1], tiling = "none", sprite = "text_infinite", tags = ["balt_texts"]}
 

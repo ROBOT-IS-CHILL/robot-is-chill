@@ -38,7 +38,7 @@ Step by step:
    | `loaddata`| Loads tile metadata from the files. |
    | `loadworld *`| Loads all maps. |
    | `loadletters`| Slices letters from text objects for custom text. |
-   | `loadpalettes`| Loads all palettes1. |
+   | `loadpalettes`| Loads all palettes. |
 
 9. Restart the bot
 

@@ -30,7 +30,7 @@ class CommandPageSource(menus.ListPageSource):
         data = copy(data)  # Just to be safe
         new_data = list(data)
         for i, command in enumerate(data):
-            if isinstance(command, commands.Group) and not command.hidden and command.name != "jishaku":
+            if isinstance(command, commands.Group) and not command.hidden:
                 children = []
                 for child in command.commands:
                     child = child.copy()

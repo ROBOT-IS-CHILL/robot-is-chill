@@ -4,990 +4,990 @@
 
 algae = {sprite = "algae", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["water", "plant", "decorative"], version = 1}
 
-text_algae = {sprite = "text_algae", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["water", "plant", "decorative"], version = 1}
+text_algae = {sprite = "text_algae", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["water", "plant", "decorative"], version = 1, inactive_color = [5, 0]}
 
 baba = {sprite = "baba", tiling = "character", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
 
-text_baba = {sprite = "text_baba", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
+text_baba = {sprite = "text_baba", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1, inactive_color = [4, 0]}
 
 bat = {sprite = "bat", tiling = "animated", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["cave", "animal"], version = 1}
 
-text_bat = {sprite = "text_bat", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["cave", "animal"], version = 1}
+text_bat = {sprite = "text_bat", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["cave", "animal"], version = 1, inactive_color = [3, 0]}
 
 belt = {sprite = "belt", tiling = "animated_directional", color = [1, 1], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "movement"], version = 1}
 
-text_belt = {sprite = "text_belt", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "movement"], version = 1}
+text_belt = {sprite = "text_belt", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "movement"], version = 1, inactive_color = [1, 2]}
 
 bird = {sprite = "bird", tiling = "directional", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["mountain", "animal", "sky"], version = 1}
 
-text_bird = {sprite = "text_bird", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["mountain", "animal", "sky"], version = 1}
+text_bird = {sprite = "text_bird", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["mountain", "animal", "sky"], version = 1, inactive_color = [2, 2]}
 
-text_w = {sprite = "text_w", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_w = {sprite = "text_w", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
 bog = {sprite = "water", tiling = "tiling", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["obstacle", "forest"], version = 1}
 
-text_bog = {sprite = "text_bog", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "forest"], version = 1}
+text_bog = {sprite = "text_bog", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "forest"], version = 1, inactive_color = [5, 1]}
 
 bolt = {sprite = "bolt", tiling = "directional", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["machine", "sky", "danger"], version = 1}
 
-text_bolt = {sprite = "text_bolt", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["machine", "sky", "danger"], version = 1}
+text_bolt = {sprite = "text_bolt", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["machine", "sky", "danger"], version = 1, inactive_color = [2, 3]}
 
 box = {sprite = "box", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "item", "town"], version = 1}
 
-text_box = {sprite = "text_box", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "item", "town"], version = 1}
+text_box = {sprite = "text_box", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["common", "machine", "item", "town"], version = 1, inactive_color = [6, 0]}
 
 brick = {sprite = "brick", tiling = "tiling", color = [6, 3], author = "Hempuli", source = "vanilla", tags = ["ruins", "floor", "decorative", "town"], version = 1}
 
-text_brick = {sprite = "text_brick", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "floor", "decorative", "town"], version = 1}
+text_brick = {sprite = "text_brick", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "floor", "decorative", "town"], version = 1, inactive_color = [6, 0]}
 
 bubble = {sprite = "bubble", tiling = "animated", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "decorative"], version = 1}
 
-text_bubble = {sprite = "text_bubble", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "decorative"], version = 1}
+text_bubble = {sprite = "text_bubble", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "decorative"], version = 1, inactive_color = [1, 3]}
 
 bug = {sprite = "bug", tiling = "directional", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1}
 
-text_bug = {sprite = "text_bug", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1}
+text_bug = {sprite = "text_bug", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1, inactive_color = [6, 0]}
 
 cake = {sprite = "cake", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_cake = {sprite = "text_cake", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_cake = {sprite = "text_cake", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [4, 1]}
 
 cash = {sprite = "cash", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["item", "danger", "decorative", "town"], version = 1}
 
-text_cash = {sprite = "text_cash", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["item", "danger", "decorative", "town"], version = 1}
+text_cash = {sprite = "text_cash", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["item", "danger", "decorative", "town"], version = 1, inactive_color = [5, 1]}
 
 cliff = {sprite = "cliff", tiling = "diagonal_tiling", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle"], version = 1}
 
-text_cliff = {sprite = "text_cliff", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle"], version = 1}
+text_cliff = {sprite = "text_cliff", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle"], version = 1, inactive_color = [6, 0]}
 
 cloud = {sprite = "cloud", tiling = "tiling", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "obstacle"], version = 1}
 
-text_cloud = {sprite = "text_cloud", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "obstacle"], version = 1}
+text_cloud = {sprite = "text_cloud", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "obstacle"], version = 1, inactive_color = [1, 3]}
 
 cog = {sprite = "cog", tiling = "animated", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative"], version = 1}
 
-text_cog = {sprite = "text_cog", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative"], version = 1}
+text_cog = {sprite = "text_cog", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative"], version = 1, inactive_color = [0, 1]}
 
 crab = {sprite = "crab", tiling = "directional", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1}
 
-text_crab = {sprite = "text_crab", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1}
+text_crab = {sprite = "text_crab", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1, inactive_color = [2, 1]}
 
-cup = {sprite = "cup", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+cup = {sprite = "cup", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_cup = {sprite = "text_cup", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_cup = {sprite = "text_cup", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [3, 2]}
 
 door = {sprite = "door", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1}
 
-text_door = {sprite = "text_door", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1}
+text_door = {sprite = "text_door", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1, inactive_color = [2, 1]}
 
 dot = {sprite = "dot", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1}
 
-text_dot = {sprite = "text_dot", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1}
+text_dot = {sprite = "text_dot", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1, inactive_color = [0, 1]}
 
 dust = {sprite = "dust", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
 
-text_dust = {sprite = "text_dust", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
+text_dust = {sprite = "text_dust", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1, inactive_color = [6, 2]}
 
 fence = {sprite = "fence", tiling = "tiling", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["autumn", "obstacle", "town"], version = 1}
 
-text_fence = {sprite = "text_fence", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["autumn", "obstacle", "town"], version = 1}
+text_fence = {sprite = "text_fence", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["autumn", "obstacle", "town"], version = 1, inactive_color = [6, 0]}
 
 fire = {sprite = "fire", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["cave", "decorative", "danger"], version = 1}
 
-text_fire = {sprite = "text_fire", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "decorative", "danger"], version = 1}
+text_fire = {sprite = "text_fire", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "decorative", "danger"], version = 1, inactive_color = [2, 0]}
 
 flag = {sprite = "flag", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1}
 
-text_flag = {sprite = "text_flag", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1}
+text_flag = {sprite = "text_flag", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1, inactive_color = [6, 1]}
 
 flower = {sprite = "flower", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_flower = {sprite = "text_flower", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_flower = {sprite = "text_flower", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [3, 2]}
 
 foliage = {sprite = "foliage", tiling = "none", color = [6, 0], author = "Hempuli", source = "vanilla", tags = ["autumn", "plant", "decorative", "floor"], version = 1}
 
-text_foliage = {sprite = "text_foliage", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["autumn", "plant", "decorative", "floor"], version = 1}
+text_foliage = {sprite = "text_foliage", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["autumn", "plant", "decorative", "floor"], version = 1, inactive_color = [2, 2]}
 
 fruit = {sprite = "fruit", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_fruit = {sprite = "text_fruit", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_fruit = {sprite = "text_fruit", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [2, 1]}
 
 fungi = {sprite = "fungi", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
 
-text_fungi = {sprite = "text_fungi", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
+text_fungi = {sprite = "text_fungi", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1, inactive_color = [6, 0]}
 
 fungus = {sprite = "fungus", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "item", "decorative"], version = 1}
 
-text_fungus = {sprite = "text_fungus", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "item", "decorative"], version = 1}
+text_fungus = {sprite = "text_fungus", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "item", "decorative"], version = 1, inactive_color = [6, 0]}
 
 ghost = {sprite = "ghost", tiling = "directional", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["autumn", "animal"], version = 1}
 
-text_ghost = {sprite = "text_ghost", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["autumn", "animal"], version = 1}
+text_ghost = {sprite = "text_ghost", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["autumn", "animal"], version = 1, inactive_color = [4, 1]}
 
 grass = {sprite = "grass", tiling = "tiling", color = [5, 0], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "floor"], version = 1}
 
-text_grass = {sprite = "text_grass", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "floor"], version = 1}
+text_grass = {sprite = "text_grass", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "floor"], version = 1, inactive_color = [5, 1]}
 
 hand = {sprite = "hand", tiling = "directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_hand = {sprite = "text_hand", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_hand = {sprite = "text_hand", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 hedge = {sprite = "hedge", tiling = "tiling", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle"], version = 1}
 
-text_hedge = {sprite = "text_hedge", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle"], version = 1}
+text_hedge = {sprite = "text_hedge", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle"], version = 1, inactive_color = [5, 0]}
 
 husk = {sprite = "husk", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle", "autumn"], version = 1}
 
-text_husk = {sprite = "text_husk", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle", "autumn"], version = 1}
+text_husk = {sprite = "text_husk", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "obstacle", "autumn"], version = 1, inactive_color = [5, 1]}
 
 ice = {sprite = "ice", tiling = "tiling", color = [1, 2], author = "Hempuli", source = "vanilla", tags = ["mountain", "floor", "common"], version = 1}
 
-text_ice = {sprite = "text_ice", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["mountain", "floor", "common"], version = 1}
+text_ice = {sprite = "text_ice", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["mountain", "floor", "common"], version = 1, inactive_color = [1, 2]}
 
 jelly = {sprite = "jelly", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "danger"], version = 1}
 
-text_jelly = {sprite = "text_jelly", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "danger"], version = 1}
+text_jelly = {sprite = "text_jelly", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "danger"], version = 1, inactive_color = [1, 3]}
 
 keke = {sprite = "keke", tiling = "character", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
 
-text_keke = {sprite = "text_keke", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
+text_keke = {sprite = "text_keke", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1, inactive_color = [2, 1]}
 
 key = {sprite = "key", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1}
 
-text_key = {sprite = "text_key", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1}
+text_key = {sprite = "text_key", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1, inactive_color = [6, 1]}
 
 ladder = {sprite = "ladder", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "machine", "town"], version = 1}
 
-text_ladder = {sprite = "text_ladder", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "machine", "town"], version = 1}
+text_ladder = {sprite = "text_ladder", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "machine", "town"], version = 1, inactive_color = [2, 2]}
 
 lava = {sprite = "water", tiling = "tiling", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "cave", "danger"], version = 1}
 
-text_lava = {sprite = "text_lava", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "cave", "danger"], version = 1}
+text_lava = {sprite = "text_lava", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "cave", "danger"], version = 1, inactive_color = [2, 2]}
 
 leaf = {sprite = "leaf", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
 
-text_leaf = {sprite = "text_leaf", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
+text_leaf = {sprite = "text_leaf", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1, inactive_color = [6, 1]}
 
 line = {sprite = "line", tiling = "tiling", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "common"], version = 1}
 
-text_line = {sprite = "text_line", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "common"], version = 1}
+text_line = {sprite = "text_line", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "common"], version = 1, inactive_color = [0, 2]}
 
 love = {sprite = "love", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["common", "abstract", "decorative"], version = 1}
 
-text_love = {sprite = "text_love", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["common", "abstract", "decorative"], version = 1}
+text_love = {sprite = "text_love", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["common", "abstract", "decorative"], version = 1, inactive_color = [4, 1]}
 
 me = {sprite = "me", tiling = "character", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
 
-text_me = {sprite = "text_me", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
+text_me = {sprite = "text_me", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1, inactive_color = [3, 0]}
 
 moon = {sprite = "moon", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
 
-text_moon = {sprite = "text_moon", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
+text_moon = {sprite = "text_moon", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1, inactive_color = [6, 1]}
 
 orb = {sprite = "orb", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1}
 
-text_orb = {sprite = "text_orb", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1}
+text_orb = {sprite = "text_orb", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item"], version = 1, inactive_color = [4, 0]}
 
 pillar = {sprite = "pillar", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle"], version = 1}
 
-text_pillar = {sprite = "text_pillar", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle"], version = 1}
+text_pillar = {sprite = "text_pillar", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle"], version = 1, inactive_color = [1, 1]}
 
 pipe = {sprite = "pipe", tiling = "tiling", color = [1, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "obstacle"], version = 1}
 
-text_pipe = {sprite = "text_pipe", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "obstacle"], version = 1}
+text_pipe = {sprite = "text_pipe", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "obstacle"], version = 1, inactive_color = [1, 1]}
 
 reed = {sprite = "reed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1}
 
-text_reed = {sprite = "text_reed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1}
+text_reed = {sprite = "text_reed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1, inactive_color = [6, 1]}
 
 robot = {sprite = "robot", tiling = "character", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine"], version = 1}
 
-text_robot = {sprite = "text_robot", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine"], version = 1}
+text_robot = {sprite = "text_robot", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine"], version = 1, inactive_color = [1, 1]}
 
 rocket = {sprite = "rocket", tiling = "directional", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "sky"], version = 1}
 
-text_rocket = {sprite = "text_rocket", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "sky"], version = 1}
+text_rocket = {sprite = "text_rocket", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "sky"], version = 1, inactive_color = [1, 1]}
 
 rock = {sprite = "rock", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["common", "item", "cave"], version = 1}
 
-text_rock = {sprite = "text_rock", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item", "cave"], version = 1}
+text_rock = {sprite = "text_rock", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item", "cave"], version = 1, inactive_color = [6, 0]}
 
 rose = {sprite = "rose", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "decorative", "forest"], version = 1}
 
-text_rose = {sprite = "text_rose", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "decorative", "forest"], version = 1}
+text_rose = {sprite = "text_rose", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "decorative", "forest"], version = 1, inactive_color = [2, 1]}
 
 rubble = {sprite = "rubble", tiling = "tiling", color = [6, 0], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "floor"], version = 1}
 
-text_rubble = {sprite = "text_rubble", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "floor"], version = 1}
+text_rubble = {sprite = "text_rubble", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "floor"], version = 1, inactive_color = [6, 0]}
 
-text_x = {sprite = "text_x", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_x = {sprite = "text_x", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
 shirt = {sprite = "shirt", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1}
 
-text_shirt = {sprite = "text_shirt", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1}
+text_shirt = {sprite = "text_shirt", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1, inactive_color = [1, 1]}
 
 skull = {sprite = "skull", tiling = "directional", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["common", "danger"], version = 1}
 
-text_skull = {sprite = "text_skull", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["common", "danger"], version = 1}
+text_skull = {sprite = "text_skull", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["common", "danger"], version = 1, inactive_color = [2, 0]}
 
 spike = {sprite = "spike", tiling = "none", color = [1, 1], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "danger"], version = 1}
 
-text_spike = {sprite = "text_spike", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "danger"], version = 1}
+text_spike = {sprite = "text_spike", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "danger"], version = 1, inactive_color = [1, 1]}
 
 star = {sprite = "star", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative", "item"], version = 1}
 
-text_star = {sprite = "text_star", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative", "item"], version = 1}
+text_star = {sprite = "text_star", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative", "item"], version = 1, inactive_color = [6, 1]}
 
 statue = {sprite = "statue", tiling = "directional", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "decorative"], version = 1}
 
-text_statue = {sprite = "text_statue", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["ruins", "decorative"], version = 1}
+text_statue = {sprite = "text_statue", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["ruins", "decorative"], version = 1, inactive_color = [0, 1]}
 
 stump = {sprite = "stump", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "forest", "plant", "decorative", "obstacle"], version = 1}
 
-text_stump = {sprite = "text_stump", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["ruins", "forest", "plant", "decorative", "obstacle"], version = 1}
+text_stump = {sprite = "text_stump", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["ruins", "forest", "plant", "decorative", "obstacle"], version = 1, inactive_color = [6, 0]}
 
 sun = {sprite = "sun", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "sky"], version = 1}
 
-text_sun = {sprite = "text_sun", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "sky"], version = 1}
+text_sun = {sprite = "text_sun", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["mountain", "decorative", "sky"], version = 1, inactive_color = [2, 3]}
 
-text_right = {sprite = "text_right", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_right = {sprite = "text_right", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 3]}
 
-text_up = {sprite = "text_up", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_up = {sprite = "text_up", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 3]}
 
-text_left = {sprite = "text_left", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_left = {sprite = "text_left", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 3]}
 
-text_down = {sprite = "text_down", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_down = {sprite = "text_down", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 3]}
 
-text_and = {sprite = "text_and", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1}
+text_and = {sprite = "text_and", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1, inactive_color = [0, 1]}
 
-text_best = {sprite = "text_best", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_best = {sprite = "text_best", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [2, 3]}
 
-text_red = {sprite = "text_red", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_red = {sprite = "text_red", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [2, 1]}
 
-text_blue = {sprite = "text_blue", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_blue = {sprite = "text_blue", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [3, 2]}
 
-text_green = {sprite = "text_green", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_green = {sprite = "text_green", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [5, 1]}
 
-text_yellow = {sprite = "text_yellow", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_yellow = {sprite = "text_yellow", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [6, 1]}
 
-text_purple = {sprite = "text_purple", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_purple = {sprite = "text_purple", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [3, 0]}
 
-text_pink = {sprite = "text_pink", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_pink = {sprite = "text_pink", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [4, 0]}
 
-text_grey = {sprite = "text_grey", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_grey = {sprite = "text_grey", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [1, 1]}
 
-text_black = {sprite = "text_black", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_black = {sprite = "text_black", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [1, 1]}
 
-text_white = {sprite = "text_white", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_white = {sprite = "text_white", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [0, 1]}
 
-text_brown = {sprite = "text_brown", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_brown = {sprite = "text_brown", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [2, 1]}
 
-text_orange = {sprite = "text_orange", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_orange = {sprite = "text_orange", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [2, 2]}
 
-text_bonus = {sprite = "text_bonus", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["common", "text_quality", "text_special"], version = 1}
+text_bonus = {sprite = "text_bonus", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["common", "text_quality", "text_special"], version = 1, inactive_color = [4, 0]}
 
-text_chill = {sprite = "text_chill", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement"], version = 1}
+text_chill = {sprite = "text_chill", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement"], version = 1, inactive_color = [3, 2]}
 
-text_cursor = {sprite = "text_cursor", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1}
+text_cursor = {sprite = "text_cursor", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1, inactive_color = [2, 3]}
 
-text_defeat = {sprite = "text_defeat", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger", "common"], version = 1}
+text_defeat = {sprite = "text_defeat", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger", "common"], version = 1, inactive_color = [2, 0]}
 
-text_eat = {sprite = "text_eat", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb"], version = 1}
+text_eat = {sprite = "text_eat", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb"], version = 1, inactive_color = [2, 1]}
 
-text_empty = {sprite = "text_empty", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["common", "abstract"], version = 1}
+text_empty = {sprite = "text_empty", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["common", "abstract"], version = 1, inactive_color = [0, 1]}
 
-text_end = {sprite = "text_end", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1}
+text_end = {sprite = "text_end", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1, inactive_color = [0, 1]}
 
-text_facing = {sprite = "text_facing", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1}
+text_facing = {sprite = "text_facing", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1, inactive_color = [0, 1]}
 
-text_back = {sprite = "text_back", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "text_special", "movement"], version = 1}
+text_back = {sprite = "text_back", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "text_special", "movement"], version = 1, inactive_color = [4, 0]}
 
-text_fall = {sprite = "text_falldown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1}
+text_fall = {sprite = "text_falldown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_fallright = {sprite = "text_fallright", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1}
+text_fallright = {sprite = "text_fallright", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_fallup = {sprite = "text_fallup", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1}
+text_fallup = {sprite = "text_fallup", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_fallleft = {sprite = "text_fallleft", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1}
+text_fallleft = {sprite = "text_fallleft", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_fear = {sprite = "text_fear", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb", "danger", "movement"], version = 1}
+text_fear = {sprite = "text_fear", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb", "danger", "movement"], version = 1, inactive_color = [2, 1]}
 
-text_float = {sprite = "text_float", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "water"], version = 1}
+text_float = {sprite = "text_float", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "water"], version = 1, inactive_color = [1, 2]}
 
-text_follow = {sprite = "text_follow", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "movement"], version = 1}
+text_follow = {sprite = "text_follow", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_group = {sprite = "text_group", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1}
+text_group = {sprite = "text_group", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1, inactive_color = [3, 2]}
 
-text_has = {sprite = "text_has", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1}
+text_has = {sprite = "text_has", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1, inactive_color = [0, 1]}
 
-text_hide = {sprite = "text_hide", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "abstract"], version = 1}
+text_hide = {sprite = "text_hide", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "abstract"], version = 1, inactive_color = [3, 2]}
 
-text_hot = {sprite = "text_hot", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "cave", "danger", "common"], version = 1}
+text_hot = {sprite = "text_hot", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "cave", "danger", "common"], version = 1, inactive_color = [2, 2]}
 
-text_idle = {sprite = "text_idle", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix"], version = 1}
+text_idle = {sprite = "text_idle", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix"], version = 1, inactive_color = [2, 2]}
 
-text_is = {sprite = "text_is", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1}
+text_is = {sprite = "text_is", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1, inactive_color = [0, 1]}
 
-text_level = {sprite = "text_level", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1}
+text_level = {sprite = "text_level", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1, inactive_color = [4, 0]}
 
-text_lonely = {sprite = "text_lonely", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "mountain"], version = 1}
+text_lonely = {sprite = "text_lonely", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "mountain"], version = 1, inactive_color = [2, 1]}
 
-text_often = {sprite = "text_often", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "abstract", "common"], version = 1}
+text_often = {sprite = "text_often", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "abstract", "common"], version = 1, inactive_color = [5, 2]}
 
-text_seldom = {sprite = "text_seldom", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "abstract", "common"], version = 1}
+text_seldom = {sprite = "text_seldom", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "abstract", "common"], version = 1, inactive_color = [3, 2]}
 
-text_make = {sprite = "text_make", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1}
+text_make = {sprite = "text_make", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common"], version = 1, inactive_color = [0, 1]}
 
-text_melt = {sprite = "text_melt", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "cave", "danger", "common"], version = 1}
+text_melt = {sprite = "text_melt", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "cave", "danger", "common"], version = 1, inactive_color = [1, 2]}
 
-text_more = {sprite = "text_more", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "common"], version = 1}
+text_more = {sprite = "text_more", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "common"], version = 1, inactive_color = [4, 0]}
 
-text_move = {sprite = "text_move", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_move = {sprite = "text_move", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_near = {sprite = "text_near", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_near = {sprite = "text_near", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [0, 1]}
 
-text_not = {sprite = "text_not", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1}
+text_not = {sprite = "text_not", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_special", "common"], version = 1, inactive_color = [2, 1]}
 
-text_on = {sprite = "text_on", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_on = {sprite = "text_on", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [0, 1]}
 
-text_open = {sprite = "text_open", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle"], version = 1}
+text_open = {sprite = "text_open", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle"], version = 1, inactive_color = [6, 1]}
 
-text_you2 = {sprite = "text_you2", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "common", "movement"], version = 1}
+text_you2 = {sprite = "text_you2", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "common", "movement"], version = 1, inactive_color = [4, 0]}
 
-text_play = {sprite = "text_play", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common", "music"], version = 1}
+text_play = {sprite = "text_play", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "common", "music"], version = 1, inactive_color = [5, 1]}
 
-text_powered = {sprite = "text_powered", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1}
+text_powered = {sprite = "text_powered", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1, inactive_color = [6, 1]}
 
-text_power = {sprite = "text_power", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1}
+text_power = {sprite = "text_power", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1, inactive_color = [6, 1]}
 
-text_pull = {sprite = "text_pull", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "movement"], version = 1}
+text_pull = {sprite = "text_pull", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "movement"], version = 1, inactive_color = [6, 1]}
 
-text_push = {sprite = "text_push", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "movement"], version = 1}
+text_push = {sprite = "text_push", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "movement"], version = 1, inactive_color = [6, 0]}
 
-text_sad = {sprite = "text_sad", tiling = "none", color = [3, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_sad = {sprite = "text_sad", tiling = "none", color = [3, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [1, 1]}
 
-text_safe = {sprite = "text_safe", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common"], version = 1}
+text_safe = {sprite = "text_safe", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common"], version = 1, inactive_color = [0, 1]}
 
-text_shift = {sprite = "text_shift", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "machine", "movement"], version = 1}
+text_shift = {sprite = "text_shift", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "machine", "movement"], version = 1, inactive_color = [1, 2]}
 
-text_shut = {sprite = "text_shut", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle"], version = 1}
+text_shut = {sprite = "text_shut", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle"], version = 1, inactive_color = [2, 1]}
 
-text_sink = {sprite = "text_sink", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "water", "danger"], version = 1}
+text_sink = {sprite = "text_sink", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "obstacle", "water", "danger"], version = 1, inactive_color = [1, 2]}
 
-text_sleep = {sprite = "text_sleep", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "common", "movement"], version = 1}
+text_sleep = {sprite = "text_sleep", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "common", "movement"], version = 1, inactive_color = [1, 3]}
 
-text_stop = {sprite = "text_stop", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement", "obstacle"], version = 1}
+text_stop = {sprite = "text_stop", tiling = "none", color = [5, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement", "obstacle"], version = 1, inactive_color = [5, 0]}
 
-text_swap = {sprite = "text_swap", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "common", "movement"], version = 1}
+text_swap = {sprite = "text_swap", tiling = "none", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "common", "movement"], version = 1, inactive_color = [3, 0]}
 
-text_tele = {sprite = "text_tele", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "machine", "movement"], version = 1}
+text_tele = {sprite = "text_tele", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "machine", "movement"], version = 1, inactive_color = [1, 2]}
 
-text_text = {sprite = "text_text", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_special", "common", "abstract"], version = 1}
+text_text = {sprite = "text_text", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_special", "common", "abstract"], version = 1, inactive_color = [4, 0]}
 
 tile = {sprite = "tile", tiling = "none", color = [0, 0], author = "Hempuli", source = "vanilla", tags = ["common", "floor", "decorative", "town"], version = 1}
 
-text_tile = {sprite = "text_tile", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["common", "floor", "decorative", "town"], version = 1}
+text_tile = {sprite = "text_tile", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["common", "floor", "decorative", "town"], version = 1, inactive_color = [1, 1]}
 
 tree = {sprite = "tree", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1}
 
-text_tree = {sprite = "text_tree", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1}
+text_tree = {sprite = "text_tree", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1, inactive_color = [5, 1]}
 
 ufo = {sprite = "ufo", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["sky", "machine"], version = 1}
 
-text_ufo = {sprite = "text_ufo", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["sky", "machine"], version = 1}
+text_ufo = {sprite = "text_ufo", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["sky", "machine"], version = 1, inactive_color = [4, 0]}
 
 wall = {sprite = "wall", tiling = "tiling", color = [1, 1], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1}
 
-text_wall = {sprite = "text_wall", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1}
+text_wall = {sprite = "text_wall", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "town"], version = 1, inactive_color = [1, 1]}
 
 water = {sprite = "water", tiling = "tiling", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["water", "obstacle", "danger"], version = 1}
 
-text_water = {sprite = "text_water", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["water", "obstacle", "danger"], version = 1}
+text_water = {sprite = "text_water", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["water", "obstacle", "danger"], version = 1, inactive_color = [1, 2]}
 
-text_weak = {sprite = "text_weak", tiling = "none", color = [1, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger"], version = 1}
+text_weak = {sprite = "text_weak", tiling = "none", color = [1, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger"], version = 1, inactive_color = [1, 1]}
 
-text_win = {sprite = "text_win", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common"], version = 1}
+text_win = {sprite = "text_win", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common"], version = 1, inactive_color = [6, 1]}
 
-text_without = {sprite = "text_without", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_without = {sprite = "text_without", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [0, 1]}
 
-text_wonder = {sprite = "text_wonder", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_wonder = {sprite = "text_wonder", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [0, 1]}
 
-text_word = {sprite = "text_word", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1}
+text_word = {sprite = "text_word", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1, inactive_color = [0, 2]}
 
-text_you = {sprite = "text_you", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_you = {sprite = "text_you", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [4, 0]}
 
 husks = {sprite = "husks", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
 
 trees = {sprite = "trees", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1}
 
-text_a = {sprite = "text_a", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_a = {sprite = "text_a", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_b = {sprite = "text_b", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_b = {sprite = "text_b", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_c = {sprite = "text_c", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_c = {sprite = "text_c", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_d = {sprite = "text_d", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_d = {sprite = "text_d", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_e = {sprite = "text_e", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_e = {sprite = "text_e", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_f = {sprite = "text_f", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_f = {sprite = "text_f", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_g = {sprite = "text_g", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_g = {sprite = "text_g", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_h = {sprite = "text_h", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_h = {sprite = "text_h", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_i = {sprite = "text_i", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_i = {sprite = "text_i", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_l = {sprite = "text_l", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_l = {sprite = "text_l", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_m = {sprite = "text_m", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_m = {sprite = "text_m", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_n = {sprite = "text_n", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_n = {sprite = "text_n", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_o = {sprite = "text_o", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_o = {sprite = "text_o", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_r = {sprite = "text_r", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_r = {sprite = "text_r", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_s = {sprite = "text_s", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_s = {sprite = "text_s", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_t = {sprite = "text_t", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_t = {sprite = "text_t", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_u = {sprite = "text_u", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_u = {sprite = "text_u", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_v = {sprite = "text_v", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_v = {sprite = "text_v", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_j = {sprite = "text_j", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_j = {sprite = "text_j", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_k = {sprite = "text_k", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_k = {sprite = "text_k", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_p = {sprite = "text_p", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_p = {sprite = "text_p", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_q = {sprite = "text_q", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_q = {sprite = "text_q", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_y = {sprite = "text_y", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_y = {sprite = "text_y", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_z = {sprite = "text_z", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_z = {sprite = "text_z", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_broken = {sprite = "text_broken", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract"], version = 1}
+text_broken = {sprite = "text_broken", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract"], version = 1, inactive_color = [4, 0]}
 
-text_nudgeright = {sprite = "text_nudgeright", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_nudgeright = {sprite = "text_nudgeright", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_nudgeup = {sprite = "text_nudgeup", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_nudgeup = {sprite = "text_nudgeup", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_nudgeleft = {sprite = "text_nudgeleft", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_nudgeleft = {sprite = "text_nudgeleft", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_nudgedown = {sprite = "text_nudgedown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_nudgedown = {sprite = "text_nudgedown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 1]}
 
-text_turn = {sprite = "text_turn", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_turn = {sprite = "text_turn", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 2]}
 
-text_deturn = {sprite = "text_deturn", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_deturn = {sprite = "text_deturn", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [1, 2]}
 
-text_done = {sprite = "text_done", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1}
+text_done = {sprite = "text_done", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1, inactive_color = [0, 1]}
 
-text_mimic = {sprite = "text_mimic", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb", "abstract"], version = 1}
+text_mimic = {sprite = "text_mimic", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_verb", "abstract"], version = 1, inactive_color = [2, 1]}
 
 sign = {sprite = "sign", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1}
 
-text_sign = {sprite = "text_sign", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1}
+text_sign = {sprite = "text_sign", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["common", "item", "town"], version = 1, inactive_color = [6, 1]}
 
-text_still = {sprite = "text_still", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1}
+text_still = {sprite = "text_still", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1, inactive_color = [2, 1]}
 
 circle = {sprite = "circle", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
 
-text_circle = {sprite = "text_circle", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
+text_circle = {sprite = "text_circle", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1, inactive_color = [5, 1]}
 
 square = {sprite = "square", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
 
-text_square = {sprite = "text_square", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
+text_square = {sprite = "text_square", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1, inactive_color = [4, 0]}
 
 triangle = {sprite = "triangle", tiling = "none", color = [3, 2], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
 
-text_triangle = {sprite = "text_triangle", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1}
+text_triangle = {sprite = "text_triangle", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "abstract"], version = 1, inactive_color = [3, 2]}
 
 crystal = {sprite = "crystal", tiling = "directional", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle", "item"], version = 1}
 
-text_crystal = {sprite = "text_crystal", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle", "item"], version = 1}
+text_crystal = {sprite = "text_crystal", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["cave", "obstacle", "item"], version = 1, inactive_color = [4, 1]}
 
 foot = {sprite = "foot", tiling = "directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_foot = {sprite = "text_foot", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_foot = {sprite = "text_foot", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 eye = {sprite = "eye", tiling = "character", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_eye = {sprite = "text_eye", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_eye = {sprite = "text_eye", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 worm = {sprite = "worm", tiling = "character", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1}
 
-text_worm = {sprite = "text_worm", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1}
+text_worm = {sprite = "text_worm", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "animal"], version = 1, inactive_color = [0, 1]}
 
-text_above = {sprite = "text_above", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_above = {sprite = "text_above", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [1, 2]}
 
-text_below = {sprite = "text_below", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_below = {sprite = "text_below", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [1, 2]}
 
-text_select = {sprite = "text_select", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "common"], version = 1}
+text_select = {sprite = "text_select", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special", "common"], version = 1, inactive_color = [2, 3]}
 
 gem = {sprite = "gem", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "cave", "decorative"], version = 1}
 
-text_gem = {sprite = "text_gem", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "cave", "decorative"], version = 1}
+text_gem = {sprite = "text_gem", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "cave", "decorative"], version = 1, inactive_color = [4, 1]}
 
-text_husks = {sprite = "text_husks", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
+text_husks = {sprite = "text_husks", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1, inactive_color = [5, 1]}
 
-text_trees = {sprite = "text_trees", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1}
+text_trees = {sprite = "text_trees", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "decorative"], version = 1, inactive_color = [5, 1]}
 
-text_feeling = {sprite = "text_feeling", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1}
+text_feeling = {sprite = "text_feeling", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1, inactive_color = [0, 1]}
 
-text_cyan = {sprite = "text_cyan", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_cyan = {sprite = "text_cyan", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [1, 2]}
 
 track = {sprite = "track", tiling = "tiling", color = [6, 0], author = "Hempuli", source = "vanilla", tags = ["machine", "floor", "town"], version = 1}
 
-text_track = {sprite = "text_track", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "floor", "town"], version = 1}
+text_track = {sprite = "text_track", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "floor", "town"], version = 1, inactive_color = [6, 0]}
 
 train = {sprite = "train", tiling = "directional", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1}
 
-text_train = {sprite = "text_train", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1}
+text_train = {sprite = "text_train", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1, inactive_color = [5, 1]}
 
-text_rosy = {sprite = "text_rosy", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_rosy = {sprite = "text_rosy", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [4, 1]}
 
-text_lime = {sprite = "text_lime", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_lime = {sprite = "text_lime", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [5, 1]}
 
-text_silver = {sprite = "text_silver", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1}
+text_silver = {sprite = "text_silver", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative", "colour"], version = 1, inactive_color = [0, 1]}
 
 ring = {sprite = "ring", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_ring = {sprite = "text_ring", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_ring = {sprite = "text_ring", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [2, 3]}
 
 arrow = {sprite = "arrow", tiling = "directional", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement"], version = 1}
 
-text_arrow = {sprite = "text_arrow", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement"], version = 1}
+text_arrow = {sprite = "text_arrow", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement"], version = 1, inactive_color = [5, 1]}
 
 cart = {sprite = "cart", tiling = "directional", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1}
 
-text_cart = {sprite = "text_cart", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1}
+text_cart = {sprite = "text_cart", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "danger", "town"], version = 1, inactive_color = [5, 1]}
 
 book = {sprite = "book", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "ruins", "decorative", "town"], version = 1}
 
-text_book = {sprite = "text_book", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "ruins", "decorative", "town"], version = 1}
+text_book = {sprite = "text_book", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "ruins", "decorative", "town"], version = 1, inactive_color = [6, 1]}
 
 tower = {sprite = "tower", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle", "town"], version = 1}
 
-text_tower = {sprite = "text_tower", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle", "town"], version = 1}
+text_tower = {sprite = "text_tower", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "obstacle", "town"], version = 1, inactive_color = [1, 1]}
 
 seed = {sprite = "seed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1}
 
-text_seed = {sprite = "text_seed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1}
+text_seed = {sprite = "text_seed", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1, inactive_color = [6, 1]}
 
 sprout = {sprite = "sprout", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1}
 
-text_sprout = {sprite = "text_sprout", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1}
+text_sprout = {sprite = "text_sprout", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "item"], version = 1, inactive_color = [5, 1]}
 
 jiji = {sprite = "jiji", tiling = "character", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
 
-text_jiji = {sprite = "text_jiji", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
+text_jiji = {sprite = "text_jiji", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1, inactive_color = [2, 2]}
 
 fofo = {sprite = "fofo", tiling = "character", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
 
-text_fofo = {sprite = "text_fofo", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
+text_fofo = {sprite = "text_fofo", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1, inactive_color = [5, 1]}
 
 vine = {sprite = "vine", tiling = "tiling", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "forest", "plant"], version = 1}
 
-text_vine = {sprite = "text_vine", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "forest", "plant"], version = 1}
+text_vine = {sprite = "text_vine", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "forest", "plant"], version = 1, inactive_color = [5, 1]}
 
 wind = {sprite = "wind", tiling = "directional", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement", "mountain", "sky"], version = 1}
 
-text_wind = {sprite = "text_wind", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement", "mountain", "sky"], version = 1}
+text_wind = {sprite = "text_wind", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["abstract", "movement", "mountain", "sky"], version = 1, inactive_color = [1, 3]}
 
 fort = {sprite = "fort", tiling = "tiling", color = [1, 1], author = "Hempuli", source = "vanilla", tags = ["obstacle", "ruins", "town"], version = 1}
 
-text_fort = {sprite = "text_fort", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["obstacle", "ruins", "town"], version = 1}
+text_fort = {sprite = "text_fort", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["obstacle", "ruins", "town"], version = 1, inactive_color = [1, 1]}
 
-text_auto = {sprite = "text_auto", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement", "text_special"], version = 1}
+text_auto = {sprite = "text_auto", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement", "text_special"], version = 1, inactive_color = [4, 0]}
 
 bee = {sprite = "bee", tiling = "directional", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
 
-text_bee = {sprite = "text_bee", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
+text_bee = {sprite = "text_bee", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1, inactive_color = [6, 1]}
 
 pants = {sprite = "pants", tiling = "none", color = [3, 2], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1}
 
-text_pants = {sprite = "text_pants", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1}
+text_pants = {sprite = "text_pants", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "town"], version = 1, inactive_color = [3, 2]}
 
-text_0 = {sprite = "text_0", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_0 = {sprite = "text_0", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_1 = {sprite = "text_1", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_1 = {sprite = "text_1", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_2 = {sprite = "text_2", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_2 = {sprite = "text_2", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_3 = {sprite = "text_3", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_3 = {sprite = "text_3", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_4 = {sprite = "text_4", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_4 = {sprite = "text_4", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_5 = {sprite = "text_5", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_5 = {sprite = "text_5", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_6 = {sprite = "text_6", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_6 = {sprite = "text_6", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_7 = {sprite = "text_7", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_7 = {sprite = "text_7", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_8 = {sprite = "text_8", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_8 = {sprite = "text_8", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_9 = {sprite = "text_9", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1}
+text_9 = {sprite = "text_9", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter"], version = 1, inactive_color = [0, 1]}
 
-text_sharp = {sprite = "text_sharp", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_sharp = {sprite = "text_sharp", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_flat = {sprite = "text_flat", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1}
+text_flat = {sprite = "text_flat", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_letter", "music"], version = 1, inactive_color = [0, 1]}
 
-text_revert = {sprite = "text_revert", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1}
+text_revert = {sprite = "text_revert", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "text_special"], version = 1, inactive_color = [2, 2]}
 
 lizard = {sprite = "lizard", tiling = "character", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "cave"], version = 1}
 
-text_lizard = {sprite = "text_lizard", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "cave"], version = 1}
+text_lizard = {sprite = "text_lizard", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "cave"], version = 1, inactive_color = [2, 1]}
 
 shell = {sprite = "shell", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "item"], version = 1}
 
-text_shell = {sprite = "text_shell", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "item"], version = 1}
+text_shell = {sprite = "text_shell", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "item"], version = 1, inactive_color = [4, 1]}
 
 fish = {sprite = "fish", tiling = "directional", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "movement"], version = 1}
 
-text_fish = {sprite = "text_fish", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "movement"], version = 1}
+text_fish = {sprite = "text_fish", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "water", "movement"], version = 1, inactive_color = [1, 2]}
 
 house = {sprite = "house", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "town"], version = 1}
 
-text_house = {sprite = "text_house", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "town"], version = 1}
+text_house = {sprite = "text_house", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "town"], version = 1, inactive_color = [6, 1]}
 
 gate = {sprite = "gate", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "ruins"], version = 1}
 
-text_gate = {sprite = "text_gate", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "ruins"], version = 1}
+text_gate = {sprite = "text_gate", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "decorative", "ruins"], version = 1, inactive_color = [2, 1]}
 
 boat = {sprite = "boat", tiling = "directional", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["water", "movement", "machine", "decorative"], version = 1}
 
-text_boat = {sprite = "text_boat", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["water", "movement", "machine", "decorative"], version = 1}
+text_boat = {sprite = "text_boat", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["water", "movement", "machine", "decorative"], version = 1, inactive_color = [6, 1]}
 
 pumpkin = {sprite = "pumpkin", tiling = "directional", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
 
-text_pumpkin = {sprite = "text_pumpkin", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1}
+text_pumpkin = {sprite = "text_pumpkin", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["plant", "autumn", "decorative"], version = 1, inactive_color = [6, 1]}
 
 lamp = {sprite = "lamp", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "autumn", "decorative", "town"], version = 1}
 
-text_lamp = {sprite = "text_lamp", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "autumn", "decorative", "town"], version = 1}
+text_lamp = {sprite = "text_lamp", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "autumn", "decorative", "town"], version = 1, inactive_color = [6, 2]}
 
 lift = {sprite = "lift", tiling = "directional", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "movement", "town"], version = 1}
 
-text_lift = {sprite = "text_lift", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "movement", "town"], version = 1}
+text_lift = {sprite = "text_lift", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "movement", "town"], version = 1, inactive_color = [0, 1]}
 
 ear = {sprite = "ear", tiling = "directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_ear = {sprite = "text_ear", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_ear = {sprite = "text_ear", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 nose = {sprite = "nose", tiling = "directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_nose = {sprite = "text_nose", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_nose = {sprite = "text_nose", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 monitor = {sprite = "monitor", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative", "town"], version = 1}
 
-text_monitor = {sprite = "text_monitor", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative", "town"], version = 1}
+text_monitor = {sprite = "text_monitor", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "item", "decorative", "town"], version = 1, inactive_color = [0, 1]}
 
 stick = {sprite = "stick", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "forest"], version = 1}
 
-text_stick = {sprite = "text_stick", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "forest"], version = 1}
+text_stick = {sprite = "text_stick", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "forest"], version = 1, inactive_color = [6, 1]}
 
 bucket = {sprite = "bucket", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1}
 
-text_bucket = {sprite = "text_bucket", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1}
+text_bucket = {sprite = "text_bucket", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1, inactive_color = [2, 1]}
 
 shovel = {sprite = "shovel", tiling = "directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1}
 
-text_shovel = {sprite = "text_shovel", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1}
+text_shovel = {sprite = "text_shovel", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "cave"], version = 1, inactive_color = [3, 1]}
 
 it = {sprite = "it", tiling = "character", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
 
-text_it = {sprite = "text_it", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1}
+text_it = {sprite = "text_it", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["common", "animal"], version = 1, inactive_color = [1, 2]}
 
 plane = {sprite = "plane", tiling = "directional", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["sky", "movement", "machine"], version = 1}
 
-text_plane = {sprite = "text_plane", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["sky", "movement", "machine"], version = 1}
+text_plane = {sprite = "text_plane", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["sky", "movement", "machine"], version = 1, inactive_color = [2, 1]}
 
-text_lockeddown = {sprite = "text_lockeddown", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1}
+text_lockeddown = {sprite = "text_lockeddown", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1, inactive_color = [4, 1]}
 
-text_lockedright = {sprite = "text_lockedright", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1}
+text_lockedright = {sprite = "text_lockedright", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1, inactive_color = [4, 1]}
 
-text_lockedup = {sprite = "text_lockedup", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1}
+text_lockedup = {sprite = "text_lockedup", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1, inactive_color = [4, 1]}
 
-text_lockedleft = {sprite = "text_lockedleft", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1}
+text_lockedleft = {sprite = "text_lockedleft", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement"], version = 1, inactive_color = [4, 1]}
 
-text_phantom = {sprite = "text_phantom", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement", "obstacle"], version = 1}
+text_phantom = {sprite = "text_phantom", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "movement", "obstacle"], version = 1, inactive_color = [1, 1]}
 
 planet = {sprite = "planet", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
 
-text_planet = {sprite = "text_planet", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1}
+text_planet = {sprite = "text_planet", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["sky", "decorative"], version = 1, inactive_color = [2, 2]}
 
 road = {sprite = "road", tiling = "tiling", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["floor", "decorative", "town"], version = 1}
 
-text_road = {sprite = "text_road", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["floor", "decorative", "town"], version = 1}
+text_road = {sprite = "text_road", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["floor", "decorative", "town"], version = 1, inactive_color = [0, 1]}
 
 banana = {sprite = "banana", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_banana = {sprite = "text_banana", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_banana = {sprite = "text_banana", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [6, 2]}
 
 burger = {sprite = "burger", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1}
 
-text_burger = {sprite = "text_burger", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1}
+text_burger = {sprite = "text_burger", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1, inactive_color = [6, 1]}
 
 drink = {sprite = "drink", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative", "water"], version = 1}
 
-text_drink = {sprite = "text_drink", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative", "water"], version = 1}
+text_drink = {sprite = "text_drink", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative", "water"], version = 1, inactive_color = [3, 2]}
 
 turnip = {sprite = "turnip", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_turnip = {sprite = "text_turnip", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_turnip = {sprite = "text_turnip", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [6, 1]}
 
 pixel = {sprite = "pixel", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "abstract"], version = 1}
 
-text_pixel = {sprite = "text_pixel", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "abstract"], version = 1}
+text_pixel = {sprite = "text_pixel", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["obstacle", "abstract"], version = 1, inactive_color = [0, 1]}
 
 guitar = {sprite = "guitar", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_guitar = {sprite = "text_guitar", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_guitar = {sprite = "text_guitar", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [6, 1]}
 
 piano = {sprite = "piano", tiling = "directional", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_piano = {sprite = "text_piano", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_piano = {sprite = "text_piano", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [1, 2]}
 
 sax = {sprite = "sax", tiling = "directional", color = [3, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_sax = {sprite = "text_sax", tiling = "none", color = [3, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_sax = {sprite = "text_sax", tiling = "none", color = [3, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [6, 1]}
 
 blob = {sprite = "blob", tiling = "tiling", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "danger"], version = 1}
 
-text_blob = {sprite = "text_blob", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "danger"], version = 1}
+text_blob = {sprite = "text_blob", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["obstacle", "danger"], version = 1, inactive_color = [5, 1]}
 
 drum = {sprite = "drum", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_drum = {sprite = "text_drum", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_drum = {sprite = "text_drum", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [2, 2]}
 
 hihat = {sprite = "hihat", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_hihat = {sprite = "text_hihat", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_hihat = {sprite = "text_hihat", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [6, 1]}
 
-text_group2 = {sprite = "text_group2", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1}
+text_group2 = {sprite = "text_group2", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1, inactive_color = [2, 1]}
 
-text_group3 = {sprite = "text_group3", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1}
+text_group3 = {sprite = "text_group3", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["common", "text_special"], version = 1, inactive_color = [5, 2]}
 
-text_party = {sprite = "text_party", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_party = {sprite = "text_party", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [2, 2]}
 
 potato = {sprite = "potato", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_potato = {sprite = "text_potato", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_potato = {sprite = "text_potato", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [6, 1]}
 
-text_pet = {sprite = "text_pet", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_pet = {sprite = "text_pet", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [3, 1]}
 
 donut = {sprite = "donut", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_donut = {sprite = "text_donut", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_donut = {sprite = "text_donut", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [4, 1]}
 
-text_reverse = {sprite = "text_reverse", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1}
+text_reverse = {sprite = "text_reverse", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "common", "movement"], version = 1, inactive_color = [5, 2]}
 
-text_besideleft = {sprite = "text_besideleft", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_besideleft = {sprite = "text_besideleft", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [1, 2]}
 
-text_besideright = {sprite = "text_besideright", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_besideright = {sprite = "text_besideright", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [1, 2]}
 
 frog = {sprite = "frog", tiling = "character", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1}
 
-text_frog = {sprite = "text_frog", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1}
+text_frog = {sprite = "text_frog", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["water", "animal"], version = 1, inactive_color = [5, 1]}
 
 trumpet = {sprite = "trumpet", tiling = "directional", color = [3, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
 
-text_trumpet = {sprite = "text_trumpet", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1}
+text_trumpet = {sprite = "text_trumpet", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "music"], version = 1, inactive_color = [2, 3]}
 
 pawn = {sprite = "pawn", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
 
-text_pawn = {sprite = "text_pawn", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
+text_pawn = {sprite = "text_pawn", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1, inactive_color = [2, 1]}
 
 knight = {sprite = "knight", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
 
-text_knight = {sprite = "text_knight", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
+text_knight = {sprite = "text_knight", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1, inactive_color = [2, 1]}
 
 turtle = {sprite = "turtle", tiling = "character", color = [5, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "forest"], version = 1}
 
-text_turtle = {sprite = "text_turtle", tiling = "none", color = [5, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "forest"], version = 1}
+text_turtle = {sprite = "text_turtle", tiling = "none", color = [5, 4], author = "Hempuli", source = "vanilla", tags = ["water", "animal", "forest"], version = 1, inactive_color = [5, 2]}
 
 cat = {sprite = "cat", tiling = "character", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
 
-text_cat = {sprite = "text_cat", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
+text_cat = {sprite = "text_cat", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1, inactive_color = [6, 1]}
 
 sword = {sprite = "sword", tiling = "directional", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "danger"], version = 1}
 
-text_sword = {sprite = "text_sword", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "danger"], version = 1}
+text_sword = {sprite = "text_sword", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "danger"], version = 1, inactive_color = [1, 2]}
 
-clock = {sprite = "clock", tiling = "animated", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+clock = {sprite = "clock", tiling = "animated", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_clock = {sprite = "text_clock", tiling = "none", color = [1, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_clock = {sprite = "text_clock", tiling = "none", color = [3, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [3, 2]}
 
 bed = {sprite = "bed", tiling = "directional", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_bed = {sprite = "text_bed", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_bed = {sprite = "text_bed", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [0, 1]}
 
 pizza = {sprite = "pizza", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
 
-text_pizza = {sprite = "text_pizza", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
+text_pizza = {sprite = "text_pizza", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1, inactive_color = [2, 2]}
 
 vase = {sprite = "vase", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
 
-text_vase = {sprite = "text_vase", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
+text_vase = {sprite = "text_vase", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1, inactive_color = [0, 1]}
 
 bottle = {sprite = "bottle", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
 
-text_bottle = {sprite = "text_bottle", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1}
+text_bottle = {sprite = "text_bottle", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative"], version = 1, inactive_color = [1, 2]}
 
 car = {sprite = "car", tiling = "directional", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "town"], version = 1}
 
-text_car = {sprite = "text_car", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "town"], version = 1}
+text_car = {sprite = "text_car", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "town"], version = 1, inactive_color = [2, 1]}
 
 egg = {sprite = "egg", tiling = "directional", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "animal", "forest"], version = 1}
 
-text_egg = {sprite = "text_egg", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "animal", "forest"], version = 1}
+text_egg = {sprite = "text_egg", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "animal", "forest"], version = 1, inactive_color = [0, 1]}
 
 plank = {sprite = "plank", tiling = "tiling", color = [6, 0], author = "Hempuli", source = "vanilla", tags = ["floor", "town"], version = 1}
 
-text_plank = {sprite = "text_plank", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["floor", "town"], version = 1}
+text_plank = {sprite = "text_plank", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["floor", "town"], version = 1, inactive_color = [6, 1]}
 
 dog = {sprite = "dog", tiling = "character", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
 
-text_dog = {sprite = "text_dog", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
+text_dog = {sprite = "text_dog", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1, inactive_color = [0, 1]}
 
-mirror = {sprite = "mirror", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
+mirror = {sprite = "mirror", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
 
-text_mirror = {sprite = "text_mirror", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1}
+text_mirror = {sprite = "text_mirror", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "ruins"], version = 1, inactive_color = [3, 2]}
 
 lily = {sprite = "lily", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["water", "decorative", "plant"], version = 1}
 
-text_lily = {sprite = "text_lily", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["water", "decorative", "plant"], version = 1}
+text_lily = {sprite = "text_lily", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["water", "decorative", "plant"], version = 1, inactive_color = [5, 1]}
 
-text_3d = {sprite = "text_3d", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["abstract", "text_special", "text_quality"], version = 1}
+text_3d = {sprite = "text_3d", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["abstract", "text_special", "text_quality"], version = 1, inactive_color = [4, 0]}
 
 lock = {sprite = "lock", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "item"], version = 1}
 
-text_lock = {sprite = "text_lock", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "item"], version = 1}
+text_lock = {sprite = "text_lock", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["common", "obstacle", "item"], version = 1, inactive_color = [0, 1]}
 
 boba = {sprite = "boba", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["decorative", "town", "item"], version = 1}
 
-text_boba = {sprite = "text_boba", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["decorative", "town", "item"], version = 1}
+text_boba = {sprite = "text_boba", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["decorative", "town", "item"], version = 1, inactive_color = [6, 1]}
 
 badbad = {sprite = "badbad", tiling = "character", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
 
-text_badbad = {sprite = "text_badbad", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1}
+text_badbad = {sprite = "text_badbad", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["animal", "common"], version = 1, inactive_color = [1, 3]}
 
 what = {sprite = "what", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["decorative", "abstract"], version = 1}
 
-text_what = {sprite = "text_what", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["decorative", "abstract"], version = 1}
+text_what = {sprite = "text_what", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["decorative", "abstract"], version = 1, inactive_color = [0, 1]}
 
-text_boom = {sprite = "text_boom", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger"], version = 1}
+text_boom = {sprite = "text_boom", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "danger"], version = 1, inactive_color = [2, 1]}
 
-text_nextto = {sprite = "text_nextto", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_nextto = {sprite = "text_nextto", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [0, 1]}
 
 monster = {sprite = "monster", tiling = "character", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "danger", "animal"], version = 1}
 
-text_monster = {sprite = "text_monster", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "danger", "animal"], version = 1}
+text_monster = {sprite = "text_monster", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["ruins", "danger", "animal"], version = 1, inactive_color = [4, 0]}
 
-text_seeing = {sprite = "text_seeing", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1}
+text_seeing = {sprite = "text_seeing", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "common"], version = 1, inactive_color = [0, 1]}
 
 teeth = {sprite = "teeth", tiling = "animated", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1}
 
-text_teeth = {sprite = "text_teeth", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1}
+text_teeth = {sprite = "text_teeth", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["abstract", "decorative"], version = 1, inactive_color = [0, 2]}
 
 lever = {sprite = "lever", tiling = "directional", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "decorative"], version = 1}
 
-text_lever = {sprite = "text_lever", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "decorative"], version = 1}
+text_lever = {sprite = "text_lever", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "decorative"], version = 1, inactive_color = [0, 1]}
 
-text_write = {sprite = "text_write", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "text_special"], version = 1}
+text_write = {sprite = "text_write", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "text_special"], version = 1, inactive_color = [0, 1]}
 
-text_powered2 = {sprite = "text_powered2", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1}
+text_powered2 = {sprite = "text_powered2", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1, inactive_color = [5, 2]}
 
-text_power2 = {sprite = "text_power2", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1}
+text_power2 = {sprite = "text_power2", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1, inactive_color = [5, 2]}
 
-text_powered3 = {sprite = "text_powered3", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1}
+text_powered3 = {sprite = "text_powered3", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["text_condition", "text_prefix", "machine"], version = 1, inactive_color = [3, 2]}
 
-text_power3 = {sprite = "text_power3", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1}
+text_power3 = {sprite = "text_power3", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "machine"], version = 1, inactive_color = [3, 2]}
 
 chair = {sprite = "chair", tiling = "directional", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
 
-text_chair = {sprite = "text_chair", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
+text_chair = {sprite = "text_chair", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1, inactive_color = [6, 1]}
 
 table = {sprite = "table", tiling = "none", color = [6, 1], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
 
-text_table = {sprite = "text_table", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
+text_table = {sprite = "text_table", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1, inactive_color = [6, 1]}
 
 cheese = {sprite = "cheese", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
 
-text_cheese = {sprite = "text_cheese", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1}
+text_cheese = {sprite = "text_cheese", tiling = "none", color = [2, 4], author = "Hempuli", source = "vanilla", tags = ["town", "decorative", "item"], version = 1, inactive_color = [2, 3]}
 
 bomb = {sprite = "bomb", tiling = "none", color = [0, 1], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "item"], version = 1}
 
-text_bomb = {sprite = "text_bomb", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "item"], version = 1}
+text_bomb = {sprite = "text_bomb", tiling = "none", color = [0, 2], author = "Hempuli", source = "vanilla", tags = ["machine", "danger", "item"], version = 1, inactive_color = [0, 1]}
 
 paper = {sprite = "paper", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
 
-text_paper = {sprite = "text_paper", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1}
+text_paper = {sprite = "text_paper", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town"], version = 1, inactive_color = [0, 1]}
 
-scissors = {sprite = "scissors", tiling = "animated_directional", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
+scissors = {sprite = "scissors", tiling = "animated_directional", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
 
-text_scissors = {sprite = "text_scissors", tiling = "none", color = [1, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1}
+text_scissors = {sprite = "text_scissors", tiling = "none", color = [4, 4], author = "Hempuli", source = "vanilla", tags = ["item", "decorative", "town", "danger"], version = 1, inactive_color = [3, 2]}
 
 arm = {sprite = "arm", tiling = "animated_directional", color = [3, 1], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_arm = {sprite = "text_arm", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_arm = {sprite = "text_arm", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [3, 1]}
 
 bunny = {sprite = "bunny", tiling = "character", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
 
-text_bunny = {sprite = "text_bunny", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
+text_bunny = {sprite = "text_bunny", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1, inactive_color = [0, 1]}
 
 snail = {sprite = "snail", tiling = "directional", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
 
-text_snail = {sprite = "text_snail", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1}
+text_snail = {sprite = "text_snail", tiling = "none", color = [6, 2], author = "Hempuli", source = "vanilla", tags = ["animal", "forest"], version = 1, inactive_color = [6, 1]}
 
 bean = {sprite = "bean", tiling = "none", color = [2, 1], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_bean = {sprite = "text_bean", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_bean = {sprite = "text_bean", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [2, 1]}
 
 hotdog = {sprite = "hotdog", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1}
 
-text_hotdog = {sprite = "text_hotdog", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1}
+text_hotdog = {sprite = "text_hotdog", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["town", "item", "decorative"], version = 1, inactive_color = [2, 2]}
 
 yes = {sprite = "yes", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_yes = {sprite = "text_yes", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_yes = {sprite = "text_yes", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [5, 2]}
 
 no = {sprite = "no", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_no = {sprite = "text_no", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_no = {sprite = "text_no", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [2, 1]}
 
-text_hold = {sprite = "text_hold", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement", "obstacle"], version = 1}
+text_hold = {sprite = "text_hold", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "movement", "obstacle"], version = 1, inactive_color = [2, 1]}
 
 brain = {sprite = "brain", tiling = "directional", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
 
-text_brain = {sprite = "text_brain", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1}
+text_brain = {sprite = "text_brain", tiling = "none", color = [4, 2], author = "Hempuli", source = "vanilla", tags = ["abstract"], version = 1, inactive_color = [4, 1]}
 
 chili = {sprite = "chili", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_chili = {sprite = "text_chili", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_chili = {sprite = "text_chili", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [2, 1]}
 
-text_angry = {sprite = "text_angry", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_angry = {sprite = "text_angry", tiling = "none", color = [2, 2], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [2, 1]}
 
-text_happy = {sprite = "text_happy", tiling = "none", color = [5, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1}
+text_happy = {sprite = "text_happy", tiling = "none", color = [5, 4], author = "Hempuli", source = "vanilla", tags = ["text_quality", "decorative"], version = 1, inactive_color = [5, 2]}
 
 bone = {sprite = "bone", tiling = "directional", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["danger", "decorative"], version = 1}
 
-text_bone = {sprite = "text_bone", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["danger", "decorative"], version = 1}
+text_bone = {sprite = "text_bone", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["danger", "decorative"], version = 1, inactive_color = [0, 1]}
 
-text_become = {sprite = "text_become", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "abstract"], version = 1}
+text_become = {sprite = "text_become", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_verb", "abstract"], version = 1, inactive_color = [0, 1]}
 
-text_facedby = {sprite = "text_facedby", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1}
+text_facedby = {sprite = "text_facedby", tiling = "none", color = [0, 3], author = "Hempuli", source = "vanilla", tags = ["text_condition"], version = 1, inactive_color = [0, 1]}
 
 cactus = {sprite = "cactus", tiling = "directional", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
 
-text_cactus = {sprite = "text_cactus", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1}
+text_cactus = {sprite = "text_cactus", tiling = "none", color = [5, 2], author = "Hempuli", source = "vanilla", tags = ["plant", "forest", "decorative"], version = 1, inactive_color = [5, 1]}
 
 fox = {sprite = "fox", tiling = "character", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
 
-text_fox = {sprite = "text_fox", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1}
+text_fox = {sprite = "text_fox", tiling = "none", color = [2, 3], author = "Hempuli", source = "vanilla", tags = ["animal", "forest", "town"], version = 1, inactive_color = [2, 1]}
 
 palm = {sprite = "palm", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1}
 
-text_palm = {sprite = "text_palm", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1}
+text_palm = {sprite = "text_palm", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["forest", "plant", "obstacle"], version = 1, inactive_color = [5, 1]}

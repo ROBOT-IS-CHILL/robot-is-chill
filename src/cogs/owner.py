@@ -34,6 +34,7 @@ import discord
 from discord.ext import commands
 from PIL import Image, ImageChops, ImageDraw
 
+from src.log import LOG
 from ..db import TileData
 from ..types import Bot, Context
 
@@ -119,7 +120,7 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
                 if endsentence == "robot":  # Check if the argument is *actually* robot, making robot is not robot
                     await ctx.send("Poofing bot process...")
                     await self.bot.close()  # Trigger close before returning
-            print("Almost killed")
+            LOG.debug("Almost killed")
             return  # Doesn't close the bot if any of these logic statements is false
         elif ctx.invoked_with == "not":
             return  # Catch "robot is not"
@@ -177,9 +178,9 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
             macros = []
             for name, data in data.items():
                 macros.append({"name": name} | data)
-            async with ctx.bot.db.conn.cursor() as cur:
-                await cur.execute("DELETE FROM macros;")
-                await cur.executemany(
+            async with ctx.bot.db.conn.transaction():
+                await ctx.bot.db.conn.execute("DELETE FROM macros;")
+                await ctx.bot.db.conn.executemany(
                     '''
                     INSERT INTO macros
                     VALUES (
@@ -212,6 +213,18 @@ class OwnerCog(commands.Cog, name="Admin", command_attrs=dict(hidden=True)):
     async def run(self, ctx: Context, *, command: str):
         """Run a command from the command prompt."""
         result = subprocess.getoutput(command)
+        if len(result) + 15 > 2000:
+            result = result[:1982] + '...'
+        await ctx.send(f'Output:\n```\n{result}```')
+
+    @commands.command()
+    @commands.is_owner()
+    async def py(self, ctx: Context, *, command: str):
+        """Run some python."""
+        _loc = {}
+        lines = ["async def func(ctx, bot):", *("    " + line for line in command.splitlines())]
+        exec("\n".join(lines), locals = _loc)
+        result = str(await _loc["func"](ctx, self.bot))
         if len(result) + 15 > 2000:
             result = result[:1982] + '...'
         await ctx.send(f'Output:\n```\n{result}```')

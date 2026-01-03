@@ -1,1 +1,1 @@
-. .venv/bin/activate; until (python ROBOT.py) do :; done;
+. .venv/bin/activate; python ROBOT.py

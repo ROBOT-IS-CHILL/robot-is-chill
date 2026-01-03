@@ -1,4 +1,5 @@
 import discord
+import logging
 
 activity = "Booting..."
 description = "*An entertainment bot for rendering levels and custom scenes based on the indie game Baba Is You.*"
@@ -25,8 +26,8 @@ cogs = [
 	"src.cogs.macros",
 	"src.cogs.loading",
 	"src.cogs.filter",
-	"jishaku"
 ]
 danger_mode = False
 debug = False
 owner_only_mode = [False,'']
+logging_level = logging.INFO

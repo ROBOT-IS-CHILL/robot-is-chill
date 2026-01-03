@@ -27,9 +27,10 @@ from ..utils import ButtonPages
 
 
 class SearchPageSource(menus.ListPageSource):
-    def __init__(self, data: Sequence[Any], query: str):
+    def __init__(self, data: Sequence[Any], query: str, kind: str, per_page: int):
         self.query = query
-        super().__init__(data, per_page=constants.SEARCH_RESULT_UNITS_PER_PAGE)
+        self.kind = kind
+        super().__init__(data, per_page=per_page)
 
     async def format_page(self, menu: menus.Menu, entries: Sequence[Any]) -> discord.Embed:
         target = f" for `{self.query}`" if self.query else ""
@@ -37,27 +38,30 @@ class SearchPageSource(menus.ListPageSource):
             color=menu.bot.embed_color,
             title=f"Search results{target} (Page {menu.current_page + 1}/{self.get_max_pages()})"
         )
-        out.set_footer(text="Note: To search for things other than tiles, use command flags. See =help search.")
+        out.set_footer(text=f"Note: To search for things other than {self.kind}s, use command flags. See =help search.")
         lines = ["```"]
-        for (type, short), long in entries:
+        for (ty, short), long in entries:
             if isinstance(long, TileData):
                 lines.append(
-                    f"({type}) {short}\n    sprite: {long.sprite} source: {long.source}\n")
-                lines.append(
-                    f"    color: {long.inactive_color} active color: {long.active_color}\n    tiling: {src.types.TilingMode(long.tiling)}")
+                    f"({ty}) {short}\n  sprite: {long.sprite}\n  source: {long.source}\n")
+                lines.append(f"  color: {long.active_color}")
+                if long.inactive_color is not None:
+                    lines.append(f"\n  inactive color: {long.inactive_color}")
                 if len(long.tags) > 0:
-                    lines.append(f"\n    tags: {', '.join(long.tags)}")
+                    lines.append(f"\n  tags: {', '.join(long.tags)}")
                 if len(long.extra_frames) > 0:
-                    lines.append(f"\n    extra_frames: {', '.join(str(n) for n in long.extra_frames)}")
+                    lines.append(f"\n  extra_frames: {', '.join(str(n) for n in long.extra_frames)}")
             elif isinstance(long, LevelData):
-                lines.append(f"({type}) {short} {long.display()}")
+                lines.append(f"({ty}) {short} {long.display()}")
             elif isinstance(long, CustomLevelData):
                 lines.append(
-                    f"({type}) {short} {long.name} (by {long.author})")
+                    f"({ty}) {short} {long.name} (by {long.author})")
             elif long is None:
                 continue
+            elif type(long) is str:
+                lines.append(f"({ty}) {short}\n{long}")
             else:
-                lines.append(f"({type}) {short}")
+                lines.append(f"({ty}) {short}")
             lines.append("\n")
 
         if len(lines) > 1:
@@ -81,35 +85,6 @@ class FlagPageSource(menus.ListPageSource):
         embed.description = '\n'.join([str(entry) for entry in entries])
         embed.set_footer(text="Page " + str(menu.current_page +
                                             1) + "/" + str(self.get_max_pages()))
-        return embed
-
-
-type_format = {
-    "sprite": "sprite augmentation",
-    "tile": "tile creation",
-    "skel": "tile parsing",
-    "post": "compositing",
-    "sign": "sign text parsing"
-}
-
-class VariantSource(menus.ListPageSource):
-    def __init__(
-            self, data: list[Variant]):
-        super().__init__(data, per_page=3)
-
-    async def format_page(self, menu: menus.Menu, entries: list[Variant]) -> discord.Embed:
-        embed = discord.Embed(
-            title=f"{menu.current_page+1}/{self.get_max_pages()}",
-            color=menu.bot.embed_color
-        )
-        embed.description = "```ansi"
-        for entry in entries:
-            embed.description += f"""
-\u001b[1;4;37m{entry.__name__.removesuffix("Variant")}\u001b[0;30m - \u001b[0;37m{entry.__doc__}\u001b[0m
-\u001b[0;30m- \u001b[0;34mSyntax: {entry.syntax}
-\u001b[0;30m- \u001b[0;34mApplied during \u001b[1;36m{type_format[entry.type]}\u001b[0m
-"""
-        embed.description += "```"
         return embed
 
 
@@ -146,7 +121,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             ),
         ).start(ctx)
 
-    @commands.command()
+    @commands.command(aliases=["?"])
     @commands.cooldown(4, 8, type=commands.BucketType.channel)
     async def search(self, ctx: Context, *, query: str = ""):
         """Searches through bot data based on a query.
@@ -171,6 +146,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
         You can also filter by the result type:
         * `type`: What results to return. This can be `tile`, `level`, `palette`, `variant`, `world`, or `mod`.
         """
+        per_page = 15
         # Pattern to match flags in the format (flag)=(value)
         flag_pattern = r"--([\d\w_/]+)=([\d\w\-_/]+)"
         match = re.search(flag_pattern, query)
@@ -206,8 +182,6 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                     f_color_x = int(match.group(1))
                     f_color_y = int(match.group(2))
             tiling = flags.get("tiling")
-            if tiling is not None:
-                tiling = +src.types.TilingMode.parse(tiling)
             rows = await self.bot.db.conn.fetchall(
                 f'''
                 SELECT * FROM tiles
@@ -238,7 +212,7 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
                         )
                     )
                 ) AND (
-                    :f_tiling IS NULL OR CAST(tiling AS TEXT) == :f_tiling
+                    :f_tiling IS NULL OR tiling == :f_tiling
                 ) AND (
                     :f_tag IS NULL OR INSTR(tags, :f_tag)
                 )
@@ -338,29 +312,29 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             for a, b in out:
                 results[a] = b
 
+        if flags.get("type") == "variant":
+            per_page = 5
+            for variant in ctx.bot.variants.values():
+                if plain_query not in variant.identifier: continue
+                padded_desc = "\n".join("    " + line for line in variant.description.splitlines())
+                padded_syn_desc = "\n".join("    " + line for line in variant.syntax_description.splitlines())
+                results["variant", variant.identifier] = \
+                    f"  description:\n{padded_desc}\n  syntax:\n{padded_syn_desc}\n  applied: {variant.ty}"
+
         await ButtonPages(
             source=SearchPageSource(
                 list(results.items()),
-                plain_query
+                plain_query,
+                flags.get("type", "tile"),
+                per_page=per_page
             ),
         ).start(ctx)
 
-    @commands.command(name="variants", aliases=["var", "vars", "variant"])
-    @commands.cooldown(4, 8, type=commands.BucketType.channel)
-    async def variants(self, ctx: Context, query: Optional[str] = None):
-        """Shows all the bot's variants."""
-        def sort(variant):
-            return variant.__name__
-        variants = ctx.bot.variants._values
-        if query is not None:
-            variants = [var for var in variants if (query in var.__name__.lower() or query in var.__doc__) and not var.hidden]
-        assert len(variants) > 0, f"No variants were found with the query `{query}`!"
-        await ButtonPages(
-            source=VariantSource(
-                sorted(variants, key=sort)  # Sort alphabetically
-            ),
-        ).start(ctx)
-
+    @commands.cooldown(5, 8, type=commands.BucketType.channel)
+    @commands.command(name="variants", aliases=['vars', 'var'])
+    async def variants(self, ctx: Context, *, query: str = ""):
+        """Lists all available variants."""
+        return await ctx.invoke(ctx.bot.get_command("search"), query = "--type=variant " + query)
 
     @commands.command()
     @commands.cooldown(4, 8, type=commands.BucketType.channel)
@@ -443,7 +417,8 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             palette = (palette, None)
 
         if color is not None:
-            r, g, b, _ = Color.parse(Tile(name="<palette command>", palette=palette), self.bot.db, color)
+            color = Color.from_index(color, palette, self.bot.db)
+            r, g, b = color.r, color.g, color.b
             d = discord.Embed(
                 color=discord.Color.from_rgb(r, g, b),
                 title=f"Color: #{hex((r << 16) | (g << 8) | b)[2:].zfill(6)}"

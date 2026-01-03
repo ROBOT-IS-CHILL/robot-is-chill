@@ -55,16 +55,7 @@ class MacroCommandCog(commands.Cog, name='Macros'):
 
     @commands.group(aliases=["m", "macros"], pass_context=True, invoke_without_command=True)
     async def macro(self, ctx: Context):
-        """Front-end for letting users (that means you!) create, edit, and remove variant macros.
-    Macros are simply a way of aliasing one or more variants to one name.
-    For example, if a macro called `face` with the value `csel-1` exists,
-    rendering `baba:m!face` would actually render `baba:csel-1`.
-    Arguments can be specified in macros with $<number>. As an example,
-    `transpose` aliased to `rot$1:scale$2` would mean that
-    rendering `baba:m!transpose/45/2` would give you `baba:rot45:scale2`.
-    Important to note, double negatives are valid inputs to variants, so
-    something like `baba:scale--2` would give the same as `baba:scale2`.
-    $# will be replaced with the amount of arguments given to the macro."""
+        """Front-end for letting users (that means you!) create, edit, and remove variant macros."""
         await ctx.invoke(ctx.bot.get_command("cmds"), "macro")
 
     @macro.command(aliases=["r"])

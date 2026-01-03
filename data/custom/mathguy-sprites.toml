@@ -16,15 +16,15 @@ text_channel2 = {sprite = "text_channel2", color = [2, 4], tiling = "none"}
 
 text_channel3 = {sprite = "text_channel3", color = [4, 4], tiling = "none"}
 
-text_define = {sprite = "text_define", color = [0, 1], active_color = [0, 3], tiling = "none"}
+text_define = {sprite = "text_define", color = [0, 3], inactive_color = [0, 1], tiling = "none"}
 
 text_final = {sprite = "text_final", color = [5, 4], tiling = "none"}
 
 text_finish = {sprite = "text_finish", color = [2, 4], tiling = "none"}
 
-text_go = {sprite = "text_go", color = [5, 0], active_color = [5, 2], tiling = "none"}
+text_go = {sprite = "text_go", color = [5, 2], inactive_color = [5, 0], tiling = "none"}
 
-text_imply = {sprite = "text_imply", color = [0, 1], active_color = [0, 3], tiling = "none"}
+text_imply = {sprite = "text_imply", color = [0, 3], inactive_color = [0, 1], tiling = "none"}
 
 text_input = {sprite = "text_input", color = [4, 1], tiling = "none"}
 

@@ -5,10 +5,6 @@ grid = {sprite = "grid", source = "baba", color = [4, 2], tiling = "none"}
 
 plus = {sprite = "plus", color = [0, 3], tiling = "none"}
 
-text_become = {sprite = "text_become", color = [0, 3], tiling = "none", source = "vanilla"}
-
-text_rook = {sprite = "text_rook", color = [0, 1], tiling = "none", source = "vanilla"}
-
 goose = {sprite = "goose", color = [0, 3], tiling = "animated_directional"}
 
 level = {sprite = "level", color = [1, 2], tiling = "none", version = 0, extra_frames = [1, 2]}
@@ -89,8 +85,6 @@ text_alone2 = {sprite = "text_alone2", color = [2, 2], tiling = "none"}
 
 text_hold_old = {sprite = "text_hold_old", color = [2, 4], tiling = "none"}
 
-text_hold2 = {sprite = "text_hold", color = [2, 2], tiling = "none"}
-
 text_kill = {sprite = "text_kill", color = [2, 1], tiling = "none"}
 
 text_poof = {sprite = "text_poof", color = [2, 1], tiling = "none"}
@@ -100,10 +94,6 @@ text_metal = {sprite = "text_metal", color = [0, 0], tiling = "none"}
 text_isin = {sprite = "text_isin", color = [0, 3], tiling = "none"}
 
 text_isnot = {sprite = "text_isnot", color = [2, 2], tiling = "none"}
-
-text_no = {sprite = "text_no", color = [2, 2], tiling = "none"}
-
-text_yes = {sprite = "text_yes", color = [5, 3], tiling = "none"}
 
 hempuli = {sprite = "hempuli", color = [4, 2], tiling = "none"}
 
@@ -197,6 +187,8 @@ leaf_old = {sprite = "leaf_old", color = [2, 4], tiling = "none"}
 
 ice_old = {sprite = "ice_old", color = [1, 2], tiling = "none"}
 
+ice_old_old = {sprite = "ice_old_old", color = [1, 2], tiling = "none"}
+
 text_p1 = {sprite = "text_p1", color = [4, 1], tiling = "none"}
 
 tuto = {sprite = "tuto", color = [0, 3], tiling = "none"}
@@ -254,3 +246,15 @@ text_dec = {sprite = "text_dec", color = [6, 1], tiling = "none"}
 mobile = {sprite = "mobile", color = [0, 1], tiling = "none"}
 
 text_mobile = {sprite = "text_mobile", color = [0, 2], tiling = "none"}
+
+text_stick_old = {sprite = "text_stick", color = [2, 4], tiling = "none"}
+
+level_grid = {sprite = "level_grid", color = [1, 2], tiling = "none"}
+
+bug_old = {sprite = "bug_old", color = [6, 2], tiling = "directional"}
+
+nose_old = {sprite = "nose_old", color = [3, 1], tiling = "directional"}
+
+text_ok = {sprite = "text_ok", color = [0, 3], tiling = "none"}
+
+blossom3 = {sprite = "blossom3", color = [0, 3], tiling = "none"}
