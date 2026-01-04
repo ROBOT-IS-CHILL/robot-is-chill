@@ -183,11 +183,18 @@ async def setup(bot: Bot):
         tile.text_squish_width = width
 
     @TileVariantFactory.define_variant(names=["%", "dcol"])
-    async def default_color(
+    async def default_color_index(
         tile: Tile, ctx: TileVariantContext, px: int, py: int
     ):
-        """Sets the default color of a tile."""
+        """Sets the default color of a tile by index."""
         tile.color = (px, py)
+
+    @TileVariantFactory.define_variant(names=["%", "dcol"])
+    async def default_color_palette(
+        tile: Tile, ctx: TileVariantContext, name: Literal[*constants.COLOR_NAMES.keys()]
+    ):
+        """Sets the default color of a tile by name."""
+        tile.color = constants.COLOR_NAMES[name]
 
     @TileVariantFactory.define_variant(names=["inactive", "in"])
     async def inactive(
