@@ -70,7 +70,7 @@ rw_wanderer = {sprite = "wanderer", color = [1, 1], tiling = "none"}
 
 debugc = {sprite = "debugc", color = [0, 3], tiling = "character"}
 
-debug = {sprite = "debug", color = [0, 3], tiling = "none"}
+debug = {sprite = "debug", color = [0, 3], inactive_color = [5, 4], tiling = "none"}
 
 text_icely = {sprite = "text_icely", color = [1, 4], tiling = "none"}
 
