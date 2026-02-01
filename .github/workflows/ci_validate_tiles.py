@@ -78,7 +78,7 @@ entry_model = {
     "extra_frames": opt(islist(isint)),
     "author": opt(isstr),
     "tags": opt(islist(isstr)),
-    "active_color": opt(iscol),
+    "inactive_color": opt(iscol),
     "source": opt(isstr),
     "object_id": opt(isstr),
     "version": opt(isint),

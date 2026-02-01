@@ -210,10 +210,10 @@ Filters are formatted as follows:
         """Removes a filter from the database. You must have made it to do this."""
         async with self.bot.db.conn.cursor() as cursor:
             await cursor.execute(
-                f"SELECT name FROM filters WHERE name == ?{'' if await ctx.bot.is_owner(ctx.author) else ' AND creator == ?'};",
+                f"SELECT name FROM filters WHERE name == ?{'' if await ctx.bot.is_owner(ctx.author) else ' AND author == ?'};",
                 (name,) if await ctx.bot.is_owner(ctx.author) else (name, ctx.author.id))
             url = (await cursor.fetchone())
-            assert url is not None, f"The filter `{name}` doesn't exist, or you don't have permission to remove it!"
+            assert url is not None, f"The filter `{name}` doesn't exist, or you are not its author."
             await cursor.execute(f"DELETE FROM filters WHERE name == ?;", name)
             if name in self.bot.db.filter_cache:
                 del self.bot.db.filter_cache[name]

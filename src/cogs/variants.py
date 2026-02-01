@@ -182,12 +182,31 @@ async def setup(bot: Bot):
         """Sets the width of the custom text the text generator tries to expand to."""
         tile.text_squish_width = width
 
+    @TileVariantFactory.define_variant(names=["%", "dcol"])
+    async def default_color_index(
+        tile: Tile, ctx: TileVariantContext, px: int, py: int
+    ):
+        """Sets the default color of a tile by index."""
+        tile.color = (px, py)
+
+    @TileVariantFactory.define_variant(names=["%", "dcol"])
+    async def default_color_palette(
+        tile: Tile, ctx: TileVariantContext, name: Literal[*constants.COLOR_NAMES.keys()]
+    ):
+        """Sets the default color of a tile by name."""
+        tile.color = constants.COLOR_NAMES[name]
+
     @TileVariantFactory.define_variant(names=["inactive", "in"])
     async def inactive(
         tile: Tile, ctx: TileVariantContext,
     ):
         """Applies the color that an inactive text of a tile's color would have. This only operates on the default color!"""
-        tile.color = constants.INACTIVE_COLORS[tile.color]
+        tile_data = ctx.tile_data_cache.get(tile.name)
+        print(ctx.tile_data_cache, tile.name)
+        if tile_data is not None and tuple(tile.color) == tuple(tile_data.active_color) and tile_data.inactive_color is not None:
+            tile.color = tuple(tile_data.inactive_color)
+        else:
+            tile.color = constants.INACTIVE_COLORS[tile.color]
 
     @TileVariantFactory.define_variant(names=["custom", "ct"])
     async def custom(
@@ -249,15 +268,6 @@ async def setup(bot: Bot):
     ):
         """Applies a font to a sign text object."""
         sign.font = name
-
-    @SpriteVariantFactory.define_variant(names=["%", "dcol"])
-    async def default_color(
-        sprite: NumpySprite, ctx: SpriteVariantContext,
-        color: Color
-    ):
-        """Sets the default color of a sprite."""
-        ctx.color = color
-        return sprite
 
     @SpriteVariantFactory.define_variant(names=["apply", "ac", "~"])
     async def apply(
@@ -954,7 +964,10 @@ async def setup(bot: Bot):
                 reverse=True
             ))
             try:
-                selection = np.arange(len(colors))[color_slice]
+                if type(color_slice) != slice:
+                    selection = np.array(color_slice)
+                else:
+                    selection = np.arange(len(colors))[color_slice]
             except IndexError:
                 raise AssertionError(f'The color slice `{color_slice}` is invalid.')
             if isinstance(selection, np.ndarray):
@@ -1016,7 +1029,7 @@ async def setup(bot: Bot):
         clip_poly = np.tile(clip_poly, (4, 1, 1)).T
         return np.multiply(sprite, clip_poly, casting="unsafe").astype(np.uint8)
 
-    @SpriteVariantFactory.define_variant(names=["croppoly", ])
+    @SpriteVariantFactory.define_variant(names=["snippoly", ])
     async def snippoly(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         point_coords: list[int]

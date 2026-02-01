@@ -45,6 +45,7 @@ class SearchPageSource(menus.ListPageSource):
                 lines.append(
                     f"({ty}) {short}\n  sprite: {long.sprite}\n  source: {long.source}\n")
                 lines.append(f"  color: {long.active_color}")
+                lines.append(f"  tiling: {long.tiling}")
                 if long.inactive_color is not None:
                     lines.append(f"\n  inactive color: {long.inactive_color}")
                 if len(long.tags) > 0:
