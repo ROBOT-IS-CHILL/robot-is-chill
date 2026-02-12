@@ -418,7 +418,8 @@ class UtilityCommandsCog(commands.Cog, name="Utility Commands"):
             palette = (palette, None)
 
         if color is not None:
-            color = Color.from_index(color, palette, self.bot.db)
+            col_x, col_y = color.split('/')
+            color = Color.from_index((int(col_x), int(col_y)), palette, self.bot.db)
             r, g, b = color.r, color.g, color.b
             d = discord.Embed(
                 color=discord.Color.from_rgb(r, g, b),
