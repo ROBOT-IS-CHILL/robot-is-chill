@@ -28,6 +28,9 @@ from ..variant_types import \
     AbstractVariantContext, AbstractVariantFactory, \
     ALL_VARIANTS, Variant
 
+CARD_KERNEL = np.array(((0, 1, 0), (1, 0, 1), (0, 1, 0)))
+OBLQ_KERNEL = np.array(((1, 0, 1), (0, 0, 0), (1, 0, 1)))
+#who removed this
 
 async def setup(bot: Bot):
     ALL_VARIANTS.clear()
@@ -1198,7 +1201,7 @@ async def setup(bot: Bot):
         """Saturates or desaturates a sprite."""
         gray_sprite = sprite.copy()
         gray_sprite[..., :3] = (sprite[..., 0] * 0.299 + sprite[..., 1] * 0.587 + sprite[..., 2] * 0.114)[..., np.newaxis]
-        return composite(gray_sprite, sprite, saturation).astype(np.uint8)
+        return np.composite(gray_sprite, sprite, saturation).astype(np.uint8)
 
     @SpriteVariantFactory.define_variant(names=["blank", ])
     async def blank(
