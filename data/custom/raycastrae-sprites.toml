@@ -1,0 +1,5 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+
+chaba = {sprite = "chaba", color = [0, 3], tiling = "custom", extra_frames = [0, 31]}

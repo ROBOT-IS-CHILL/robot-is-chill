@@ -159,3 +159,13 @@ prism_moon = {sprite = "prism_moon", color = [2, 4], tiling = "none"}
 prism_ezu = {sprite = "prism_ezu", color = [3, 4], inactive_color = [6, 1], tiling = "none"}
 
 prism_cloud = {sprite = "prism_cloud", color = [1, 4], inactive_color = [1, 3], tiling = "none"}
+
+panel = {sprite = "panel", color = [4, 3], tiling = "tiling"}
+
+text_panel = {sprite = "text_panel", color = [4, 3], tiling = "none"}
+
+"it'st" = {sprite = "it'st", color = [3, 4], tiling = "character"}
+
+"text_it'st" = {sprite = "text_it'st", color = [3, 4], tiling = "none"}
+
+person = {sprite = "person", color = [2, 3], tiling = "character"}

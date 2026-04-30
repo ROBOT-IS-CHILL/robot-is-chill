@@ -6,9 +6,9 @@ iz = {sprite = "iz", color = [5, 2], tiling = "character"}
 
 text_iz = {sprite = "text_iz", color = [5, 2], tiling = "none"}
 
-billiam = {sprite = "billiam", color = [3, 0], tiling = "directional"}
+billiam_old = {sprite = "billiam_old", color = [3, 0], tiling = "directional"}
 
-text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none"}
+text_billiam_old = {sprite = "text_billiam_old", color = [3, 1], tiling = "none"}
 
 mage = {sprite = "mage", color = [2, 4], tiling = "character"}
 
@@ -595,3 +595,6 @@ bubbub = {sprite = "bubbub2", color = [1, 4], tiling = "character"}
 # moved here because, while it's based off of an official sprite, theopold made the wobble
 tag = {sprite = "tag", color = [0, 3], tiling = "none"}
 
+billiam = {sprite = "billiam", color = [3, 0], tiling = "character"}
+
+text_billiam = {sprite = "text_billiam", color = [3, 1], tiling = "none"}
