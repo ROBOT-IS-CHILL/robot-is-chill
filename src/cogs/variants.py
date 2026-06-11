@@ -1401,7 +1401,7 @@ If a value is negative, it removes pixels above the threshold instead."""
     async def splice(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         source_x: int, source_y: int, width: int, height: int, dest_x: int, dest_y: int,
-        color: Color = Color(255, 255, 255, 255),
+        color: Color = None,
         mode: Literal["replace", "composite", "add", "multiply"] = "replace",
     ):
         """Splices a portion of the sprite onto itself."""
@@ -1428,15 +1428,17 @@ If a value is negative, it removes pixels above the threshold instead."""
         if dest_width <= 0 or dest_height <= 0:
             return sprite
         source_splice = sprite[source_y: source_y + dest_height, source_x : source_x + dest_width]
-        source_splice = utils.recolor(source_splice, color)
+        source_splice = utils.recolor(source_splice, color if color is not None else ctx.color)
         source_splice = source_splice.astype(np.float64) / 255
         
-        # We need to apply color specificallt here
         col = ctx.color
         ctx.color = Color(255, 255, 255, 255)
         sprite = utils.recolor(sprite, col)
         
         dest_splice = sprite[dest_y : dest_y + dest_height, dest_x : dest_x + dest_width].astype(np.float64) / 255
+        
+        color = color if color is not None else Color(255, 255, 255, 255)
+        
         if mode == "replace":
             dest_splice = source_splice
         elif mode == "add":
