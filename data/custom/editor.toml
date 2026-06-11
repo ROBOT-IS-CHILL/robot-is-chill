@@ -302,7 +302,7 @@ text_facing = {sprite = "text_facing", tiling = "none", color = [0, 3], author =
 
 text_back = {sprite = "text_back", tiling = "none", color = [4, 1], author = "Hempuli", source = "vanilla", tags = ["text_quality", "abstract", "text_special", "movement"], version = 1, inactive_color = [4, 0]}
 
-text_fall = {sprite = "text_falldown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
+text_falldown = {sprite = "text_falldown", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 
 text_fallright = {sprite = "text_fallright", tiling = "none", color = [5, 3], author = "Hempuli", source = "vanilla", tags = ["text_quality", "sky", "movement"], version = 1, inactive_color = [5, 1]}
 

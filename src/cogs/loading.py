@@ -493,6 +493,8 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             for tag in re.finditer(tag_pattern, raw_tags):
                 # hack but i am Not touching that regex
                 tag_list.append(tag.group(0).replace('"', ''))
+            if name in constants.VANILLA_RENAMES:
+                name = constants.VANILLA_RENAMES[name]
             objects[name] = dict(
                 sprite=sprite,
                 tiling=str(tiling),
