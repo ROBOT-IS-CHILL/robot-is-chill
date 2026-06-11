@@ -1402,7 +1402,7 @@ If a value is negative, it removes pixels above the threshold instead."""
         sprite: NumpySprite, ctx: SpriteVariantContext,
         source_x: int, source_y: int, width: int, height: int, dest_x: int, dest_y: int,
         color: Color = Color(255, 255, 255, 255),
-        mode: Literal["replace", "composite", "add"] = "replace",
+        mode: Literal["replace", "composite", "add", "multiply"] = "replace",
     ):
         """Splices a portion of the sprite onto itself."""
         assert width > 0 and height > 0, f"Width and height of splice must be positive!"
@@ -1440,6 +1440,9 @@ If a value is negative, it removes pixels above the threshold instead."""
             dest_splice = source_splice
         elif mode == "add":
             dest_splice[:, :, :3] += source_splice[:, :, :3]
+            dest_splice[:, :, 3] = source_splice[:, :, 3] + dest_splice[:, :, 3] * (1 - source_splice[:, :, 3])
+        elif mode == "multiply":
+            dest_splice[:, :, :3] *= source_splice[:, :, :3]
             dest_splice[:, :, 3] = source_splice[:, :, 3] + dest_splice[:, :, 3] * (1 - source_splice[:, :, 3])
         elif mode == "composite":
             orig_alpha = dest_splice[:, :, 3, np.newaxis].copy()
