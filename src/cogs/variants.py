@@ -1430,6 +1430,12 @@ If a value is negative, it removes pixels above the threshold instead."""
         source_splice = sprite[source_y: source_y + dest_height, source_x : source_x + dest_width]
         source_splice = utils.recolor(source_splice, color)
         source_splice = source_splice.astype(np.float64) / 255
+        
+        # We need to apply color specificallt here
+        col = ctx.color
+        ctx.color = Color(255, 255, 255, 255)
+        sprite = utils.recolor(sprite, col)
+        
         dest_splice = sprite[dest_y : dest_y + dest_height, dest_x : dest_x + dest_width].astype(np.float64) / 255
         if mode == "replace":
             dest_splice = source_splice
