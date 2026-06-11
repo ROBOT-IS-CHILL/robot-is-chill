@@ -50,6 +50,8 @@ glyph_kuwi = {sprite = "glyph_kuwi", color = [4, 2], tiling = "none"}
 
 pft = {sprite = "pft", color = [0, 3], tiling = "character"}
 
+per = {sprite = "per", color = [0, 3], tiling = "directional"}
+
 ">:>" = {sprite = "greatercolongreater", color = [3, 3], tiling = "directional"}
 "text_>:>" = {sprite = "text_greatercolongreater", color = [3, 3], tiling = "none"}
 
