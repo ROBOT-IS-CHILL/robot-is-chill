@@ -1401,8 +1401,8 @@ If a value is negative, it removes pixels above the threshold instead."""
     async def splice(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         source_x: int, source_y: int, width: int, height: int, dest_x: int, dest_y: int,
-        color: Color = None,
         mode: Literal["replace", "composite", "add", "multiply"] = "replace",
+        color: Color = None,
     ):
         """Splices a portion of the sprite onto itself."""
         assert width > 0 and height > 0, f"Width and height of splice must be positive!"
