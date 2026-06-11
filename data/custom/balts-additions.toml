@@ -1,6 +1,8 @@
 # See CONTRIBUTING.md for how to properly edit this file.
 
-# This source needs to go.
+# This source needs to go. It's terribly credited.
+# If you can, please sort these into the proper folders.
+# I hope to delete this source someday.
 
 cucu = {sprite = "cucu", color = [0, 3], tiling = "character"}
 

@@ -161,3 +161,5 @@ text_fbufbu = {sprite = "text_fbufbu", color = [1, 4], tiling = "none", author =
 fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "baltdev"}
 
 cactus5 = {sprite = "cactus", color = [0, 3], tiling = "tiling"}
+
+pt = {sprite = "pt", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3, 4, 5]}
