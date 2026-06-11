@@ -1410,11 +1410,6 @@ If a value is negative, it removes pixels above the threshold instead."""
         assert source_x >= 0 and source_y >= 0 and source_x + width <= sprite_width and source_y + height <= sprite_height,\
             f"Splice source is out of bounds of the image!"
         
-        # We need to apply color here
-        col = ctx.color
-        ctx.color = Color(255, 255, 255, 255)
-        sprite = utils.recolor(sprite, col)
-        
         dest_width, dest_height = width, height
         if dest_x < 0:
             dest_width -= -dest_x
