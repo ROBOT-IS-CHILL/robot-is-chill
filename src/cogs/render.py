@@ -422,7 +422,7 @@ class Renderer:
         sprite[..., :3][sprite[..., 3] == 0] = 0
         sprite = cv2.resize(sprite, (int(sprite.shape[1] * ctx.gscale), int(sprite.shape[0] * ctx.gscale)),
                             interpolation=cv2.INTER_NEAREST)
-        return await self.apply_options_name(
+        return await self.apply_options(
             tile,
             sprite,
             frame
@@ -436,6 +436,7 @@ class Renderer:
         """woohoo."""
         final_tile = ProcessedTile()
         final_tile.name = tile.name
+        final_tile.displacement = [*tile.displacement, ]
         x, y = position
 
         rendered_frames = []
@@ -478,9 +479,10 @@ class Renderer:
             )
             rendered_frames += len(new_frames)
             for variant in tile.variants:
-                await variant.apply(
-                    processed_tile, PostVariantContext()
-                )
+                try:
+                    await variant.apply(processed_tile, PostVariantContext())
+                except Exception as e:
+                    raise errors.BadTileProperty(name, variant, e)
             d[y, x, z, t] = processed_tile
         return d, len(ctx.tile_cache), rendered_frames, time.perf_counter() - render_overhead
 
@@ -670,24 +672,6 @@ class Renderer:
             (int(sprite.width * ctx.gscale), int(sprite.height * ctx.gscale)), Image.NEAREST)
         return np.array(sprite)
 
-    async def apply_options_name(
-            self,
-            tile: Tile,
-            sprite: np.ndarray,
-            wobble: int
-    ) -> Image.Image:
-        """Takes an image, taking tile data from its name, and applies the
-        given options to it."""
-        try:
-            return await self.apply_options(
-                tile,
-                sprite,
-                wobble
-            )
-        except ValueError as e:
-            size = e.args[0]
-            raise errors.BadTileProperty(tile.name, size)
-
     async def apply_options(
         self,
         tile: Tile,
@@ -704,7 +688,10 @@ class Renderer:
         )
 
         for variant in tile.variants:
-            res = await variant.apply(sprite, ctx)
+            try:
+                res = await variant.apply(sprite, ctx)
+            except Exception as e:
+                raise errors.BadTileProperty(tile.name, variant, e)
             if res is not None:
                 sprite = res
             if not all(np.array(sprite.shape[:2]) <= constants.MAX_TILE_SIZE):

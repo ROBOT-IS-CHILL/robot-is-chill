@@ -180,7 +180,7 @@ belt = {sprite = "belt", tiling = "animated_directional", color = [1, 1], author
 
 text_make = {sprite = "text_make", tiling = "none", color = [0, 3], author = "Hempuli", object_id = "object088", version = 0, inactive_color = [0, 1]}
 
-text_fall = {sprite = "text_fall", tiling = "none", color = [5, 3], author = "Hempuli", object_id = "object089", version = 0, inactive_color = [5, 1]}
+text_falldown = {sprite = "text_fall", tiling = "none", color = [5, 3], author = "Hempuli", object_id = "object089", version = 0, inactive_color = [5, 1]}
 
 flower = {sprite = "flower", tiling = "none", color = [3, 3], author = "Hempuli", object_id = "object090", version = 0}
 

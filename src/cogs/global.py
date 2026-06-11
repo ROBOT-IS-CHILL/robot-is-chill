@@ -524,7 +524,7 @@ class GlobalCog(commands.Cog, name="Baba Is You"):
                 return await ctx.error(f"The tile `{word}` could not be found.")
             except errors.BadTileProperty as e:
                 traceback.print_exc()
-                return await ctx.error(f"Error! `{e.args[1]}`")
+                return await ctx.error(f"Error in variant `{e.args[1].full_string}` of scene element `{e.args[0]}`: `{e.args[2]}`")
             except errors.EmptyVariant as e:
                 word = e.args[0]
                 return await ctx.error(

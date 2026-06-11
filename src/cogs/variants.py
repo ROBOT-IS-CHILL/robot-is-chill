@@ -773,7 +773,7 @@ async def setup(bot: Bot):
         immul = (np.clip(immul, 0.0, 1.0) * 255).astype(np.uint8)
         return immul.reshape(img.shape)
 
-    @SpriteVariantFactory.define_variant(names=["clip", ])
+    @SpriteVariantFactory.define_variant(names=["clip", "cl"])
     async def clip(
         sprite: NumpySprite, ctx: SpriteVariantContext,
     ):
@@ -1241,7 +1241,7 @@ async def setup(bot: Bot):
         sprite[:, :, :3] = cv2.cvtColor(arr_hls.astype(np.uint8), cv2.COLOR_HLS2RGB)  # my question still stands
         return sprite
 
-    @SpriteVariantFactory.define_variant(names=["crop", ])
+    @SpriteVariantFactory.define_variant(names=["crop", "cr"])
     async def crop(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         x: int, y: int, u: int, v: int, change_bbox: bool = False
@@ -1255,7 +1255,7 @@ async def setup(bot: Bot):
             dummy[y:v, x:u] = sprite[y:v, x:u]
             return dummy
 
-    @SpriteVariantFactory.define_variant(names=["snip", ])
+    @SpriteVariantFactory.define_variant(names=["snip", "sn"])
     async def snip(
         sprite: NumpySprite, ctx: SpriteVariantContext,
         x: int, y: int, u: int, v: int
@@ -1396,6 +1396,62 @@ If a value is negative, it removes pixels above the threshold instead."""
         assert width * height == len(cell), f"Can't fit {len(cell)} values into a matrix that's {width}x{height}!"
         kernel = np.array(cell).reshape((height, width))
         return cv2.filter2D(src=sprite, ddepth=-1, kernel=kernel)
+        
+    @SpriteVariantFactory.define_variant(names=["splice", "sp"])
+    async def splice(
+        sprite: NumpySprite, ctx: SpriteVariantContext,
+        source_x: int, source_y: int, width: int, height: int, dest_x: int, dest_y: int,
+        color: Color = Color(255, 255, 255, 255),
+        mode: Literal["replace", "composite", "add"] = "replace",
+    ):
+        """Splices a portion of the sprite onto itself."""
+        assert width > 0 and height > 0, f"Width and height of splice must be positive!"
+        sprite_height, sprite_width = sprite.shape[:2]
+        assert source_x >= 0 and source_y >= 0 and source_x + width <= sprite_width and source_y + height <= sprite_height,\
+            f"Splice source is out of bounds of the image!"
+        
+        # We need to apply color here
+        col = ctx.color
+        ctx.color = Color(255, 255, 255, 255)
+        sprite = utils.recolor(sprite, col)
+        
+        dest_width, dest_height = width, height
+        if dest_x < 0:
+            dest_width -= -dest_x
+            source_x += -dest_x
+            dest_x = 0
+        if dest_x + dest_width >= sprite_width:
+            dest_width -= dest_x + dest_width - sprite_width
+            dest_x = sprite_width - dest_width
+        if dest_y < 0:
+            dest_height -= -dest_y
+            source_y += -dest_y
+            dest_y = 0
+        if dest_y + dest_height >= sprite_height:
+            dest_height -= dest_y + dest_height - sprite_height
+            dest_y = sprite_height - dest_height
+        if dest_width <= 0 or dest_height <= 0:
+            return sprite
+        source_splice = sprite[source_y: source_y + dest_height, source_x : source_x + dest_width]
+        source_splice = utils.recolor(source_splice, color)
+        source_splice = source_splice.astype(np.float64) / 255
+        dest_splice = sprite[dest_y : dest_y + dest_height, dest_x : dest_x + dest_width].astype(np.float64) / 255
+        if mode == "replace":
+            dest_splice = source_splice
+        elif mode == "add":
+            dest_splice[:, :, :3] += source_splice[:, :, :3]
+            dest_splice[:, :, 3] = source_splice[:, :, 3] + dest_splice[:, :, 3] * (1 - source_splice[:, :, 3])
+        elif mode == "composite":
+            orig_alpha = dest_splice[:, :, 3, np.newaxis].copy()
+            dest_splice[:, :, 3] = source_splice[:, :, 3] + dest_splice[:, :, 3] * (1 - source_splice[:, :, 3])
+            dest_splice[:, :, :3] = np.divide(
+                (source_splice[:, :, :3] * source_splice[:, :, 3, np.newaxis] + dest_splice[:, :, :3] * orig_alpha * (1 - source_splice[:, :, 3, np.newaxis])),
+                dest_splice[:, :, 3, np.newaxis],
+                where = dest_splice[:, :, 3, np.newaxis] != 0
+            )
+        sprite[dest_y : dest_y + dest_height, dest_x : dest_x + dest_width] = (np.clip(dest_splice, 0, 1) * 255).astype(np.uint8)
+        return sprite
+        
 
     @PostVariantFactory.define_variant(names=None)
     async def blending(

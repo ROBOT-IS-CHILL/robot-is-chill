@@ -157,6 +157,7 @@ class Tile:
     altered_frame: bool = False
     text_squish_width: int = 24
     undef: bool = False
+    displacement: tuple[int, int] = (0, 0)
 
     def __hash__(self):
         return hash((self.name, self.sprite if type(self.sprite) is tuple else 0, self.frame,
@@ -185,6 +186,7 @@ class Tile:
             value.color = color = metadata.active_color
             value.variants = variants=tile.variants
             value.palette = palette=tile.palette
+            value.displacement = metadata.displacement
             if metadata.tiling == TilingMode.TILING or metadata.tiling == TilingMode.DIAGONAL_TILING:
                 handle_tiling(value, grid, width, height, position, tile_borders=tile_borders)
         else:
@@ -222,9 +224,10 @@ class Tile:
         if tile.force_color is not None:
             value.color = tile.force_color
         for variant in value.variants:
-            await variant.apply(
-                value, TileVariantContext(tile_data_cache)
-            )
+            try:
+                await variant.apply(value, TileVariantContext(tile_data_cache))
+            except Exception as e:
+                raise errors.BadTileProperty(esc_name, variant, e)
             if value.surrounding != 0:
                 if metadata.tiling == TilingMode.TILING:
                     value.surrounding &= 0b11110000

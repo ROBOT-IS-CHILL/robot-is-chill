@@ -162,4 +162,4 @@ fbufbu = {sprite = "fbufbu", color = [1, 4], tiling = "character", author = "bal
 
 cactus5 = {sprite = "cactus", color = [0, 3], tiling = "tiling"}
 
-pt = {sprite = "pt", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3, 4, 5]}
+pt = {sprite = "pt", color = [0, 3], tiling = "custom", extra_frames = [0, 1, 2, 3, 4, 5], displacement = [-11, -11]}

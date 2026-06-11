@@ -95,6 +95,8 @@ class Database:
                     tags TEXT NOT NULL DEFAULT "",
                     extra_frames TEXT,
                     object_id TEXT,
+                    displacement_x INTEGER NOT NULL DEFAULT 0,
+                    displacement_y INTEGER NOT NULL DEFAULT 0,
                     UNIQUE(name, version)
                 );
                 CREATE TABLE IF NOT EXISTS levels (
@@ -243,6 +245,7 @@ class TileData:
     tiling: TilingMode
     tags: list[str]
     extra_frames: list[int]
+    displacement: tuple[int, int]
 
     @classmethod
     def from_row(cls, row: Row) -> TileData:
@@ -267,7 +270,8 @@ class TileData:
             (row["active_color_x"], row["active_color_y"]),
             TilingMode.parse(row["tiling"]),
             tags.split("\t") if tags is not None else [],
-            [int(frame) for frame in (extra_frames).split("\t")] if extra_frames is not None else []
+            [int(frame) for frame in (extra_frames).split("\t")] if extra_frames is not None else [],
+            (row["displacement_x"], row["displacement_y"])
         )
 
 

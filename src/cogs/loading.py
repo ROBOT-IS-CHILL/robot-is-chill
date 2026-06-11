@@ -320,8 +320,8 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         self.bot.loading = True
         await self.bot.db.conn.execute('DELETE FROM tiles')
         self.bot.db.filter_cache = {}
-        await self.load_initial_tiles()
-        await self.load_editor_tiles()
+        vanilla_tiles = await self.load_initial_tiles()
+        await self.load_editor_tiles(vanilla_tiles)
         await self.load_custom_tiles()
         self.bot.loading = False
         return await ctx.send("Done. Loaded all tile data.")
@@ -406,6 +406,8 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         objects: dict[str, dict[str, Any]] = {}
         for match in re.finditer(object_pattern, spanned):
             obj, name, sprite, tiling, type, c_x, c_y, a_x, a_y = match.groups()
+            if name in constants.VANILLA_RENAMES:
+                name = constants.VANILLA_RENAMES[name]
             if a_x is None:
                 inact_x = inact_y = None
                 act_x = int(c_x)
@@ -444,8 +446,10 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             doc.add(name, table)
         with open("data/custom/vanilla.toml", "w+") as f:
             tomlkit.dump(doc, f)
+        
+        return objects
 
-    async def load_editor_tiles(self):
+    async def load_editor_tiles(self, vanilla_tiles: dict[str, dict[str, Any]]):
         """Loads tile data from `data/editor_objectlist.lua`."""
 
         with open("data/editor_objectlist.lua", errors="replace") as fp:
@@ -472,6 +476,10 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
         objects = {}
         for match in re.finditer(object_pattern, spanned):
             name, sprite, raw_tags, tiling, text_type, c_x, c_y, a_x, a_y = match.groups()
+            if name in constants.VANILLA_RENAMES:
+                name = constants.VANILLA_RENAMES[name]
+            if name in vanilla_tiles:
+                continue
             sprite = name if sprite is None else sprite
             if a_x is None:
                 inact_x = inact_y = None
@@ -493,8 +501,6 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
             for tag in re.finditer(tag_pattern, raw_tags):
                 # hack but i am Not touching that regex
                 tag_list.append(tag.group(0).replace('"', ''))
-            if name in constants.VANILLA_RENAMES:
-                name = constants.VANILLA_RENAMES[name]
             objects[name] = dict(
                 sprite=sprite,
                 tiling=str(tiling),
@@ -538,6 +544,11 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                 db_dict["inactive_color_y"] = None
                 db_dict["active_color_x"] = color[0]
                 db_dict["active_color_y"] = color[1]
+            db_dict["displacement_x"] = 0
+            db_dict["displacement_y"] = 0
+            if (displacement := d.get("displacement")) is not None:
+                db_dict["displacement_x"] = int(displacement[0]) 
+                db_dict["displacement_y"] = int(displacement[1]) 
             db_dict["version"] = d.get("version", 2)
             db_dict["source"] = d.get("source", source)
             tmode = TilingMode.parse(d.get("tiling", "none"))
@@ -572,7 +583,9 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                     :tiling,
                     :tags,
                     :extra_frames,
-                    :object_id
+                    :object_id,
+                    :displacement_x,
+                    :displacement_y
                 )
                 ON CONFLICT(name, version)
                 DO UPDATE SET
@@ -585,7 +598,9 @@ class LoadingCog(commands.Cog, name="Loading", command_attrs=dict(hidden=True)):
                     tiling=excluded.tiling,
                     tags=excluded.tags,
                     extra_frames=excluded.extra_frames,
-                    object_id=excluded.object_id;
+                    object_id=excluded.object_id,
+                    displacement_x=excluded.displacement_x,
+                    displacement_y=excluded.displacement_y;
                 ''',
                 total_objects
             )
