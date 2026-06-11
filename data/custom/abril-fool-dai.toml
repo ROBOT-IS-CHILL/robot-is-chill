@@ -1,0 +1,84 @@
+# See CONTRIBUTING.md for how to properly edit this file.
+
+
+# Apple Fool Sun
+
+afd_apple = {sprite = "apple", color = [2, 2], tiling = "none"}
+afd_fool = {sprite = "fool", color = [2, 3], tiling = "none"}
+afd_sun = {sprite = "sun", color = [2, 4], tiling = "none"}
+
+text_afd_apple = {sprite = "text_apple", color = [2, 2], tiling = "none"}
+text_afd_fool = {sprite = "text_fool", color = [2, 3], tiling = "none"}
+text_afd_sun = {sprite = "text_sun", color = [2, 4], tiling = "none"}
+
+text_afd_fool2 = {sprite = "text_fool2", color = [2, 3], tiling = "none"}
+
+afd_babab = {sprite = "babab", color = [0, 3], tiling = "character"}
+afd_flaggf = {sprite = "flaggf", color = [2, 4], tiling = "none"}
+afd_walwl = {sprite = "walwl", color = [1, 1], tiling = "tiling"}
+afd_rookc = {sprite = "rookc", color = [6, 2], tiling = "none"}
+afd_keky = {sprite = "keky", color = [2, 4], tiling = "none"}
+afd_dorord = {sprite = "dorord", color = [2, 2], tiling = "none"}
+afd_wawar = {sprite = "wawar", color = [1, 3], tiling = "tiling"}
+afd_squarm = {sprite = "squarm", color = [4, 1], tiling = "none"}
+afd_gme = {sprite = "gme", color = [4, 2], tiling = "none"}
+
+text_afd_babab = {sprite = "text_babab", color = [4, 1], tiling = "none"}
+text_afd_flaggf = {sprite = "text_flaggf", color = [2, 4], tiling = "none"}
+text_afd_walwl = {sprite = "text_walwl", color = [1, 1], tiling = "none"}
+text_afd_rookc = {sprite = "text_rookc", color = [6, 2], tiling = "none"}
+text_afd_keky = {sprite = "text_keky", color = [2, 4], tiling = "none"}
+text_afd_dorord = {sprite = "text_dorord", color = [2, 2], tiling = "none"}
+text_afd_wawar = {sprite = "text_wawar", color = [1, 3], tiling = "none"}
+text_afd_squarm = {sprite = "text_squarm", color = [4, 1], tiling = "none"}
+text_afd_gme = {sprite = "text_gme", color = [4, 2], tiling = "none"}
+
+afd_downwards = {sprite = "downwards", color = [1, 0], tiling = "none"}
+
+text_afd_is! = {sprite = "text_is!", color = [0, 3], tiling = "none"}
+text_afd_and! = {sprite = "text_and!", color = [0, 3], tiling = "none"}
+
+text_afd_you! = {sprite = "text_yoy", color = [4, 1], tiling = "none"}
+text_afd_win! = {sprite = "text_wiw", color = [2, 4], tiling = "none"}
+text_afd_push! = {sprite = "text_puhs", color = [6, 1], tiling = "none"}
+text_afd_stop! = {sprite = "text_stoo", color = [5, 1], tiling = "none"}
+text_afd_open! = {sprite = "text_opeen", color = [2, 4], tiling = "none"}
+text_afd_shut! = {sprite = "text_shutu", color = [4, 1], tiling = "none"}
+text_afd_sink! = {sprite = "text_sinkn", color = [1, 3], tiling = "none"}
+
+
+# _RED_ Fool 1st
+
+text_afd__RED_ = {sprite = "text__RED_", color = [2, 2], tiling = "none"}
+text_afd__RED_2 = {sprite = "text__PROP_", color = [2, 2], tiling = "none"}
+
+afd_red_baba = {sprite = "red_baba", color = [2, 2], tiling = "directional"}
+afd_red_flag = {sprite = "red_flag", color = [2, 2], tiling = "none"}
+afd_red_wall = {sprite = "red_wall", color = [2, 2], tiling = "tiling"}
+afd_red_cog = {sprite = "red_cog", color = [2, 2], tiling = "animated"}
+text_afd_red_baba = {sprite = "text_red_baba", color = [2, 2], tiling = "none"}
+text_afd_red_flag = {sprite = "text_red_flag", color = [2, 2], tiling = "none"}
+text_afd_red_wall = {sprite = "text_red_wall", color = [2, 2], tiling = "none"}
+text_afd_red_cog = {sprite = "text_red_cog", color = [2, 2], tiling = "none"}
+
+text_afd_fool3 = {sprite = "text_fool3", color = [2, 3], tiling = "none"}
+
+afd_1st = {sprite = "1st", color = [2, 4], tiling = "character"}
+text_afd_1st = {sprite = "text_1st", color = [2, 4], tiling = "none"}
+text_afd_1st2 = {sprite = "text_1st_prop", color = [2, 4], tiling = "none"}
+
+afd_candy = {sprite = "candy", color = [3, 1], tiling = "none"}
+afd_trophy = {sprite = "trophy", color = [2, 4], tiling = "none"}
+afd_yesde = {sprite = "yesde", color = [5, 2], tiling = "none"}
+afd_nosde = {sprite = "nosde", color = [2, 2], tiling = "none"}
+
+text_afd_candy = {sprite = "text_candy", color = [3, 1], tiling = "none"}
+text_afd_trophy = {sprite = "text_trophy", color = [2, 4], tiling = "none"}
+text_afd_yesde = {sprite = "text_yesde", color = [5, 2], tiling = "none"}
+text_afd_nosde = {sprite = "text_nosde", color = [2, 2], tiling = "none"}
+
+text_afd_iuefjwioemfnoaieifo = {sprite = "text_scribble", color = [5, 4], tiling = "none"}
+text_afd_exit = {sprite = "text_exit", color = [2, 2], tiling = "none"}
+"text_afd_wate wate" = {sprite = "text_watewate", color = [1, 3], tiling = "none"}
+"text_afd_is the" = {sprite = "text_isthe", color = [0, 3], tiling = "none"}
+text_afd_sinker = {sprite = "text_sinker", color = [1, 3], tiling = "none"}

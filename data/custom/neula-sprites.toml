@@ -50,3 +50,14 @@ glyph_kuwi = {sprite = "glyph_kuwi", color = [4, 2], tiling = "none"}
 
 pft = {sprite = "pft", color = [0, 3], tiling = "character"}
 
+">:>" = {sprite = "greatercolongreater", color = [3, 3], tiling = "directional"}
+"text_>:>" = {sprite = "text_greatercolongreater", color = [3, 3], tiling = "none"}
+
+"-)==>" = {sprite = "-)==~", color = [2, 3], tiling = "directional"}
+"text_-)==>" = {sprite = "text_-)==~", color = [2, 3], tiling = "none"}
+
+"what:3" = {sprite = "whata3", color = [0, 3], tiling = "none"}
+"text_what:3" = {sprite = "text_whata3", color = [0, 3], tiling = "none"}
+
+wjat = {sprite = "wjat", color = [0, 2], tiling = "none"}
+text_wjat = {sprite = "text_wjat", color = [0, 2], tiling = "none"}
