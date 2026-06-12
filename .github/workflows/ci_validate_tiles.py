@@ -82,6 +82,7 @@ entry_model = {
     "source": opt(isstr),
     "object_id": opt(isstr),
     "version": opt(isint),
+    "displacement": opt(islist(isint))
 }
 
 def check_entries(entry: dict) -> list[str]:

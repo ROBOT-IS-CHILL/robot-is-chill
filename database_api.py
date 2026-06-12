@@ -1,3 +1,4 @@
+import io
 import config
 import asyncio
 import logging
@@ -5,11 +6,15 @@ from logging import info, debug, error, warn, exception
 import sys
 from datetime import timedelta
 from urllib.parse import parse_qs
+from functools import wraps
 
+import multiprocessing
 from quart import Quart, jsonify, globals, request
 from quart_rate_limiter import RateLimiter, rate_limit, rate_exempt
 import asqlite
 
+import numpy as np
+from PIL import Image
 
 app = Quart(__name__, instance_relative_config=True)
 rate_limiter = RateLimiter(app)
@@ -19,6 +24,25 @@ CORS_HEADERS = {
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type'
 }
+
+res_cache = {}
+CACHE_MAX_SIZE = 100
+
+with Image.open("data/palettes/vanilla/default.png") as im:
+    PALETTE = np.array(im.convert("RGBA"), dtype=np.uint8)
+
+def dumb_cache(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        key = request.full_path
+        if key in res_cache:
+            return res_cache[key]
+        if len(res_cache) > CACHE_MAX_SIZE:
+            res_cache.pop(next(iter(res_cache)))
+        response = await func(*args, **kwargs)
+        res_cache[key] = response
+        return response
+    return wrapper
 
 @app.before_serving
 async def init_globals():
@@ -31,14 +55,13 @@ async def init_globals():
         info("Starting up...")
         info(f"Connecting to database at {config.db_path}")
         globals.conn = await asqlite.connect(config.db_path)
-        info(f"Connected to database!")
+        info("Connected to database!")
 
 
 @app.route("/", methods = ["GET"])
 @rate_exempt
 async def root():
     return jsonify(["macros", "tiles", "filters"]), 200, CORS_HEADERS
-
 
 @app.route("/tiles.json", methods = ["GET"])
 @rate_limit(1, timedelta(seconds = 3))
@@ -91,6 +114,68 @@ async def tiles():
                 return ret[name], CORS_HEADERS
         return ret, CORS_HEADERS
 
+def save_to_gif(buf, frames):
+    save_images = []
+    for im in frames:
+        colors, counts = np.unique(im.reshape(-1, 4), axis=0, return_counts=True)
+        sort_indices = np.argsort(counts)
+        colors = colors[sort_indices[::-1]] # Sort in descending order
+        palette_colors = [0, 0, 0]
+        formatted_colors = colors[colors[:, 3] != 0][..., :3]
+        formatted_colors = formatted_colors[:255].flatten()
+        palette_colors.extend(formatted_colors)
+        dummy = Image.new('P', (16, 16))
+        dummy.putpalette(palette_colors)
+        save_images.append(Image.fromarray(im).convert('RGB').quantize(palette=dummy, dither=Image.Dither.NONE))
+    kwargs = {
+        'format': "GIF",
+        'interlace': True,
+        'save_all': True,
+        'append_images': save_images[1:],
+        'loop': 0,
+        'duration': 200,
+        'disposal': 2,
+        'background': 0,
+        'transparency': 0,
+        'optimize': False
+    }
+    save_images[0].save(buf, **kwargs)
+
+@app.route("/tiles/<string:tile_name>.gif", methods = ["GET"])
+@rate_limit(100, timedelta(minutes = 1))
+@dumb_cache
+async def tile_icon(tile_name: str):
+    try:
+        tile_frame = int(request.args.get('frame', '0'))
+    except ValueError:
+        return "Query parameter 'frame' must be an integer", 400, CORS_HEADERS
+    async with globals.conn.cursor() as cur:
+        res = await cur.execute("SELECT source, sprite, active_color_x, active_color_y from tiles WHERE name == ?", tile_name)
+        row = await res.fetchone()
+        if row is None:
+            return "No tile by the specified name exists in the database", 404, CORS_HEADERS
+        source, sprite, active_color_x, active_color_y = row
+        try:
+            palette_color = PALETTE[active_color_y, active_color_x].astype(np.float32) / 255
+        except IndexError:
+            return "The specified palette index is out of bounds", 400, CORS_HEADERS
+        frames = []
+        try:
+            for i in range(3):
+                with Image.open(f"data/sprites/{source}/{sprite}_{tile_frame}_{i+1}.png") as im:
+                    frames.append(np.array(im.convert("RGBA"), dtype=np.float32))
+        except FileNotFoundError:
+            return "One or more image sprites for the tile by the specified name at the specified animation frame does not exist", 404, CORS_HEADERS
+
+        all_frames = np.stack(frames)
+        all_frames[all_frames[..., 3] == 0] = 0
+        all_frames[..., :] *= palette_color
+        all_frames = np.clip(all_frames, 0, 255).astype(np.uint8)
+
+        buf = io.BytesIO()
+        save_to_gif(buf, all_frames)
+
+        return buf.getvalue(), 200, {"Content-Type": "image/gif"} | CORS_HEADERS
 
 @app.route("/macros.json", methods = ["GET"])
 @rate_limit(1, timedelta(seconds = 3))
@@ -185,6 +270,7 @@ async def filter_blob(filter_name):
         if row is None:
             return f"No filter by the name {filter_name} exists in the database", 404
         return row[0], 200, {"absolute": row[1], "Content-Type": "image/png"} | CORS_HEADERS
+
 
 
 @app.route("/<path:_>", methods = ["OPTIONS"])

@@ -309,4 +309,6 @@ LETTER_IGNORE = [
     "text_3d"
 ]
 
-
+VANILLA_RENAMES = {
+    "text_fall": "text_falldown"
+}
