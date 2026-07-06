@@ -4,7 +4,7 @@
 
 
 
- # keith = {sprite = "keith", color = [0, 3], tiling = "directional", author = "Springer29"}
+# keith = {sprite = "keith", color = [0, 3], tiling = "directional", author = "Springer29"}
 
 text_keith = {sprite = "text_keith", color = [1, 4], tiling = "none", author = "That1Squishy"}
 
@@ -26,7 +26,7 @@ text_stisti = {sprite = "text_stisti", color = [1, 3], tiling = "none", author =
 
 # hstisti = {sprite = "hstisti", color = [0, 3], tiling = "directional", author = "Springer29"}
 
-log = {sprite = "log", color = [6, 1], tiling = "none", author = "Springer29"}
+# log = {sprite = "log", color = [6, 1], tiling = "none", author = "Springer29"}
 
 text_log2 = {sprite = "text_log", color = [6, 1], tiling = "none", author = "Springer29"}
 

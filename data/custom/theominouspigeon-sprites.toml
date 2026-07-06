@@ -110,7 +110,7 @@ warp_stop = {sprite = "warp_stop", color = [5, 1], tiling = "none"}
 
 warp_swap = {sprite = "warp_swap", color = [3, 1], tiling = "none"}
 
-warp_text = {sprite = "warp_text", color = [4, 1], tiling = "none"}
+warp_text_ = {sprite = "warp_text_", color = [4, 1], tiling = "none"}
 
 warp_warp_ = {sprite = "warp_warp_", color = [1, 2], tiling = "none"}
 
