@@ -19,3 +19,5 @@ usp = {sprite = "usp", color = [4, 1], tiling = "character"}
 text_usp = {sprite = "text_usp", color = [4, 1], tiling = "none"}
 
 xexe = {sprite = "xexe", color = [3, 2], tiling = "character"}
+
+enter = {sprite = "enter", color = [0, 3], tiling = "none"}
